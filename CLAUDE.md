@@ -4,15 +4,32 @@ A cozy, capybara-themed smart alarm for iOS and Android, rebuilt from scratch
 against the illustrated mockups in
 `~/Downloads/CapyWake_Flutter_Rebuild_Handoff/`.
 
-## First-session checklist
+## Start of every session — do this before anything else
+
+**"Start phase NN", "continue", or "do what's next" all mean: run this
+checklist first.** It is not optional and it is not a formality — Phase 00
+skipped its own reviews and shipped a High defect because of it.
 
 1. `pwd && git branch --show-current` — must be `new_capywake` on `main`.
-2. Read `ai-orchestration/PHASE_TRACKER.md` → `Current phase:`.
+2. Read `ai-orchestration/PHASE_TRACKER.md` → `Current phase:` and the
+   protocol. **The tracker is canonical for what phase you are on and what
+   that phase contains.** Never take the phase number from the user's message
+   if the tracker disagrees — stop and explain instead.
 3. Read `memory/current-phase.md` and `docs/sessions/next.md`.
-4. Read `CAPYWAKE_LEGACY_AUDIT.md` and `CAPYWAKE_NEW_ARCHITECTURE_PLAN.md`.
-5. Read the handoff's `04_WORKSPACE_STATE/PROJECT_STATE.md`.
-6. Write the phase plan, then the **adversarial pre-review**, then revise, then
-   implement. Never code first.
+4. Read `CAPYWAKE_REUSE_AUDIT.md` — what is ported from `../capywake`.
+5. Read `CAPYWAKE_LEGACY_AUDIT.md` and `CAPYWAKE_NEW_ARCHITECTURE_PLAN.md`.
+6. Read `docs/phases/PHASE_<NN>_PLAN.md` for the current phase.
+7. Revise that plan, then write `docs/phases/PHASE_<NN>_PRE_REVIEW.md` —
+   adversarial, **before any code** — then revise again, then implement.
+   **Never code first.** A session that writes code before its pre-review
+   exists has broken the process, regardless of how the request was phrased.
+8. Full protocol — including the two self-reviews and the full-project review
+   that follow implementation — is in the tracker.
+
+The decisions already settled in Phase 00 (navigation, raster art, the
+two-tier fidelity contract, what is ported) are **not reopened** unless the
+owner says so. They are recorded with their evidence; re-deciding them wastes
+the session.
 
 ## The two projects
 
