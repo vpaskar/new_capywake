@@ -398,5 +398,11 @@
   "alarmAddAction": "Wecker",
   "alarmAddTitle": "Wecker hinzufügen",
   "alarmEditTitle": "Wecker bearbeiten",
-  "alarmBackAction": "Zurück"
+  "alarmBackAction": "Zurück",
+  "alarmRingNotificationTitle": "Wecker",
+  "alarmRingNotificationBody": "{label} klingelt.",
+  "alarmStopAction": "Stopp",
+  "permissionNotificationRationale": "CapyWake braucht Mitteilungszugriff, damit dein Wecker bei gesperrtem Bildschirm erscheinen und klingen kann.",
+  "permissionExactAlarmRationale": "Android benötigt die Berechtigung für exakte Wecker, sonst kann das System den Weckzeitpunkt verzögern.",
+  "permissionNotNowAction": "Jetzt nicht"
 }

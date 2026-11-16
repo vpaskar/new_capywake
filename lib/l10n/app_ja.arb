@@ -398,5 +398,11 @@
   "alarmAddAction": "追加",
   "alarmAddTitle": "アラームを追加",
   "alarmEditTitle": "アラームを編集",
-  "alarmBackAction": "戻る"
+  "alarmBackAction": "戻る",
+  "alarmRingNotificationTitle": "アラーム",
+  "alarmRingNotificationBody": "{label} が鳴っています。",
+  "alarmStopAction": "停止",
+  "permissionNotificationRationale": "画面がロックされていてもアラームを表示して鳴らすために、CapyWake には通知の許可が必要です。",
+  "permissionExactAlarmRationale": "正確なアラームには Android の許可が必要です。許可がないと、システムが鳴る時刻を遅らせることがあります。",
+  "permissionNotNowAction": "今はしない"
 }

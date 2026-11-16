@@ -398,5 +398,11 @@
   "alarmAddAction": "Añadir",
   "alarmAddTitle": "Añadir alarma",
   "alarmEditTitle": "Editar alarma",
-  "alarmBackAction": "Atrás"
+  "alarmBackAction": "Atrás",
+  "alarmRingNotificationTitle": "Alarma",
+  "alarmRingNotificationBody": "{label} está sonando.",
+  "alarmStopAction": "Detener",
+  "permissionNotificationRationale": "CapyWake necesita acceso a las notificaciones para que la alarma pueda mostrarse y sonar con la pantalla bloqueada.",
+  "permissionExactAlarmRationale": "Android necesita permiso para alarmas exactas; de lo contrario, el sistema puede retrasar el aviso.",
+  "permissionNotNowAction": "Ahora no"
 }

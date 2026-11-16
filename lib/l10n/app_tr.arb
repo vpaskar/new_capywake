@@ -398,5 +398,11 @@
   "alarmAddAction": "Alarm ekle",
   "alarmAddTitle": "Alarm ekle",
   "alarmEditTitle": "Alarmı düzenle",
-  "alarmBackAction": "Geri"
+  "alarmBackAction": "Geri",
+  "alarmRingNotificationTitle": "Alarm",
+  "alarmRingNotificationBody": "{label} çalıyor.",
+  "alarmStopAction": "Durdur",
+  "permissionNotificationRationale": "CapyWake'in alarmı kilit ekranında gösterip çalabilmesi için bildirim erişimine ihtiyacı var.",
+  "permissionExactAlarmRationale": "Android'in tam zamanlı alarm izni gerekir, yoksa sistem alarmın çalmasını geciktirebilir.",
+  "permissionNotNowAction": "Şimdi değil"
 }

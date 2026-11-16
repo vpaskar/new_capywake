@@ -398,5 +398,11 @@
   "alarmAddAction": "Aggiungi",
   "alarmAddTitle": "Aggiungi sveglia",
   "alarmEditTitle": "Modifica sveglia",
-  "alarmBackAction": "Indietro"
+  "alarmBackAction": "Indietro",
+  "alarmRingNotificationTitle": "Sveglia",
+  "alarmRingNotificationBody": "{label} sta suonando.",
+  "alarmStopAction": "Ferma",
+  "permissionNotificationRationale": "CapyWake ha bisogno delle notifiche perché la sveglia possa comparire e suonare a schermo bloccato.",
+  "permissionExactAlarmRationale": "Android richiede il permesso per le sveglie esatte, altrimenti il sistema può ritardarne il suono.",
+  "permissionNotNowAction": "Non ora"
 }

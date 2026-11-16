@@ -398,5 +398,11 @@
   "alarmAddAction": "Adicionar",
   "alarmAddTitle": "Adicionar alarme",
   "alarmEditTitle": "Editar alarme",
-  "alarmBackAction": "Voltar"
+  "alarmBackAction": "Voltar",
+  "alarmRingNotificationTitle": "Alarme",
+  "alarmRingNotificationBody": "{label} está tocando.",
+  "alarmStopAction": "Parar",
+  "permissionNotificationRationale": "O CapyWake precisa de acesso a notificações para o alarme aparecer e tocar com a tela bloqueada.",
+  "permissionExactAlarmRationale": "O Android precisa de permissão para alarmes exatos; sem ela, o sistema pode atrasar o toque.",
+  "permissionNotNowAction": "Agora não"
 }

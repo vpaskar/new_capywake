@@ -398,5 +398,11 @@
   "alarmAddAction": "إضافة منبه",
   "alarmAddTitle": "إضافة منبه",
   "alarmEditTitle": "تعديل المنبه",
-  "alarmBackAction": "رجوع"
+  "alarmBackAction": "رجوع",
+  "alarmRingNotificationTitle": "المنبّه",
+  "alarmRingNotificationBody": "{label} يرنّ الآن.",
+  "alarmStopAction": "إيقاف",
+  "permissionNotificationRationale": "يحتاج CapyWake إلى إذن الإشعارات ليظهر المنبّه ويصدر صوته والشاشة مقفلة.",
+  "permissionExactAlarmRationale": "يطلب أندرويد إذنًا للمنبّهات الدقيقة، وإلا فقد يؤخّر النظام وقت الرنين.",
+  "permissionNotNowAction": "ليس الآن"
 }

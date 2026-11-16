@@ -7,11 +7,21 @@ environment:
   sdk: ^3.12.0
 
 dependencies:
+  # The platform ring, behind core/engine/AlarmEngine. Only lib/data/ imports
+  # it. Android exact alarms + foreground service; on iOS it keeps a silent
+  # audio session alive and does NOT survive app termination.
+  alarm: ^5.3.0
+
   # Local persistence (offline-first, no backend). Drift over raw SQLite.
   drift: ^2.32.1
 
   flutter:
     sdk: flutter
+
+  # Pre-alarm reminders only — never the ring itself, which is not reliable
+  # enough on iOS. Behind core/engine/NotificationService.
+  flutter_local_notifications: ^21.0.0
+
   flutter_localizations:
     sdk: flutter
 
@@ -38,6 +48,10 @@ dependencies:
   # Finds the writable app-support directory for the database file. A no-op in
   # tests, which open an in-memory executor via AppDatabase.forTesting.
   path_provider: ^2.1.5
+
+  # OS permission flow behind core/permissions/PermissionService. Only
+  # lib/data/ imports it.
+  permission_handler: ^12.0.1
 
   # Native SQLite for device and simulator. Ships prebuilt iOS/Android
   # libraries, so it changes the pod install and the shipped binary —

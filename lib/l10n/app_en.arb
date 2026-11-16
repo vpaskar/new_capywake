@@ -1882,5 +1882,34 @@
   "alarmBackAction": "Back",
   "@alarmBackAction": {
     "description": "Tooltip on the alarm form back button."
+  },
+  "alarmRingNotificationTitle": "Alarm",
+  "@alarmRingNotificationTitle": {
+    "description": "Title of the platform alarm notification shown while an alarm rings."
+  },
+  "alarmRingNotificationBody": "{label} is ringing.",
+  "@alarmRingNotificationBody": {
+    "description": "Body of the ringing alarm notification. {label} is the user's alarm label.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "alarmStopAction": "Stop",
+  "@alarmStopAction": {
+    "description": "Stop button on the ringing alarm notification."
+  },
+  "permissionNotificationRationale": "CapyWake needs notification access so your alarm can show and sound when the screen is locked.",
+  "@permissionNotificationRationale": {
+    "description": "Just-in-time rationale shown before requesting OS notification permission. States what the permission enables; claims no reliability beyond the OS."
+  },
+  "permissionExactAlarmRationale": "Android needs permission for exact alarms, otherwise the system may delay when your alarm rings.",
+  "@permissionExactAlarmRationale": {
+    "description": "Just-in-time rationale shown before requesting Android exact-alarm permission. Honest about delay, never promises exactness."
+  },
+  "permissionNotNowAction": "Not now",
+  "@permissionNotNowAction": {
+    "description": "Dismiss action on a just-in-time permission rationale."
   }
 }

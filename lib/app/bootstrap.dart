@@ -1,9 +1,11 @@
 import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:timezone/data/latest_all.dart' as tzdata;
 
-/// Work that must finish before the first frame: `intl` throws until its
-/// symbol data is loaded, and every clock time goes through `DateFormat`.
+/// Loads the data `intl` and `package:timezone` both throw without, before any
+/// clock time is formatted or any alarm is armed.
 Future<void> bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting();
+  tzdata.initializeTimeZones();
 }

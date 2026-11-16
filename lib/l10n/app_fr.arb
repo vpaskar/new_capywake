@@ -398,5 +398,11 @@
   "alarmAddAction": "Ajouter",
   "alarmAddTitle": "Ajouter une alarme",
   "alarmEditTitle": "Modifier l’alarme",
-  "alarmBackAction": "Retour"
+  "alarmBackAction": "Retour",
+  "alarmRingNotificationTitle": "Alarme",
+  "alarmRingNotificationBody": "{label} sonne.",
+  "alarmStopAction": "Arrêter",
+  "permissionNotificationRationale": "CapyWake a besoin des notifications pour que votre alarme s'affiche et sonne quand l'écran est verrouillé.",
+  "permissionExactAlarmRationale": "Android a besoin de l'autorisation des alarmes exactes, sinon le système peut retarder la sonnerie.",
+  "permissionNotNowAction": "Pas maintenant"
 }
