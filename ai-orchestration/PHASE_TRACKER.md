@@ -77,6 +77,12 @@ dart run tool/check_coverage.dart --min 95 --path lib/core  # core >= 95%
 Generators run **before** the format check. A generator reporting "nothing to
 do" is acceptable.
 
+**Phase 01 exception:** skip the `--path lib/core` coverage line. `lib/core/`
+is not ported until Phase 02, and `check_coverage.dart` does **not** pass
+trivially on an absent path — it `exit(2)`s with "No coverage data matched"
+when no file matches the filter. Every other line runs from Phase 01 onward;
+this one turns on in Phase 02 and stays on.
+
 ## Git
 
 `main` is the only branch. No feature branches, no worktrees, no stashes.

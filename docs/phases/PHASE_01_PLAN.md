@@ -112,7 +112,13 @@ and prove it matches.
 - `tool/check_arb.dart` passes with all 10 locales.
 - `tool/audit_art.dart` passes; the manifest lists every bundled file.
 - `tool/check_bundle_size.dart` passes against the **measured** budget.
-- Coverage: project ≥ 85 %, `lib/core` ≥ 95 %.
+- Coverage: project ≥ 85 %. **The `lib/core` ≥ 95 % gate is skipped in Phase
+  01** — `lib/core/` is not ported until Phase 02, and
+  `tool/check_coverage.dart` does not pass trivially on an absent path: it
+  `exit(2)`s with "No coverage data matched" when no file matches the filter
+  (verified at `../capywake/tool/check_coverage.dart:77-83`). Running it here
+  would fail the build for the wrong reason. Phase 02 turns it on and it stays
+  on from then.
 - Every `design/` component has a widget test and a 393×852 golden.
 - Router test: push `/settings` from each of the three tabs, pop, land back on
   the originating tab.

@@ -181,6 +181,10 @@ dart run tool/check_bundle_size.dart
 flutter test --coverage
 dart run tool/check_coverage.dart                           # project >= 85%
 dart run tool/check_coverage.dart --min 95 --path lib/core  # core >= 95%
+                                   # ^ skip in Phase 01 only: lib/core is not
+                                   # ported until Phase 02, and this tool
+                                   # exit(2)s on an absent path rather than
+                                   # passing trivially.
 ```
 
 Generators run **before** the format check.
