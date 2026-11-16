@@ -80,8 +80,38 @@ both edges in every one, with 288 px of `Alignment.y` travel. `SceneHeader`
 exists to absorb exactly this. The finding was right to withdraw and wrong about
 the number; both are corrected in `asset_gaps.md`.
 
+## Phase 03 corrections — the detector reports glyph edges as blocks
+
+Phase 03 built Home against this table and the capture disagreed. Two of its
+rows were wrong, and both were wrong the same way: **a row-mean luminance
+detector cannot tell a block boundary from a line of text.**
+
+| Row | Was | Is | What the old value actually was |
+|---|---|---|---|
+| Game rail top | 605.0 | **485.7** | The tile art's *bottom* |
+| Game rail label band | 621.1 | **593.9** (labels end) | A glyph edge inside the labels |
+| My stats row top | 662.7 | **617.0** | A glyph edge in the second label line |
+| Meadow footer top | 709.3 | **672.4** | — |
+
+The corrected values were read off a crop of `01_HOME.png` at 520–700 pt, and
+cross-checked against a hard anchor the detector cannot confuse: the My Stats
+row's **orange bar-chart icon**, which occupies 632–651 pt by colour sampling
+and sits inside a card measuring 617.0–665.5.
+
+The tile band was measured separately by **saturation scan** — the tiles are
+the only strongly saturated art in that region — giving 74.0 pt, against the
+"≈ 94" the plan had inferred arithmetically from the two wrong rows.
+
+**Rule for later phases:** a block boundary between two flat areas may come
+from the detector. A boundary adjacent to text, or between two textured
+regions, must be read off a crop or anchored to something with a distinct
+colour. State which method produced each number.
+
+These four rows are measured **from the status bar**, like the capture, rather
+than as absolute mockup offsets like the rows above them.
+
 ## Status
 
 Home is measured. **Alarms, Add/Edit, Settings and Stats are measured by their
 own phases** (04, 04, 07, 08) and appended here, using the same detector so the
-numbers stay comparable.
+numbers stay comparable — subject to the correction above.

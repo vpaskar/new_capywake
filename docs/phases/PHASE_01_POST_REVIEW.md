@@ -100,6 +100,29 @@ Home gets content.
 A comparison tool that passed on an empty shell would be worthless. This one
 reports a measurement Phase 03 inherits rather than a claim it has to re-earn.
 
+> ### ⟲ Corrected by Phase 03 — the explanation above is wrong
+>
+> The two hero rows are **not** explained by the empty body. Only the nav bar
+> row was.
+>
+> `SceneHeader` drew the cream card **inside** the hero art's `Stack`, at
+> `top: bandHeight - overlap`, on a misreading of this table's own source
+> rows: `tier_a_blocks.md` records 292.3 pt ("hero scene lower edge") and
+> 303.4 pt ("card top"), and Phase 01 read the 11.1 pt between them as the
+> card *riding up over* the art. They are **one edge and a corner radius** —
+> the card begins flush with the art at 292.3, and its 28 pt radius reaches
+> full width at 303.4.
+>
+> So every hero band on every screen was 11.1 pt short, which is exactly the
+> −11.0 recorded above. Phase 03's first capture of a screen *with* a body
+> showed 13 of 14 blocks failing, all inheriting that shortfall. After the fix
+> the hero lower edge measures **0.0 pt delta**.
+>
+> **Phase 01 was right to record the numbers and wrong about their cause.**
+> Recording them is what let Phase 03 find it. The same wrong attribution was
+> repeated in `PHASE_02_POST_REVIEW.md` and `memory/current-phase.md`; all
+> three are corrected. See `PHASE_03_FULL_PROJECT_REVIEW.md` P1.
+
 ## Validation
 
 | Gate | Result |

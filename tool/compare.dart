@@ -27,10 +27,24 @@ const roundingTolerancePt = 1.0;
 /// header a constant 15pt error that no code change could fix.
 const statusBarPt = 44.0;
 
+/// 14 rows: tier_a_blocks.md's 13 less 2 device insets, plus 3 Phase 03
+/// measured. Was 4 until Phase 03 (pre-review H1) — see PHASE_03_PLAN.md.
 const referenceBlocks = <String, double>{
   'header band lower edge': 103.9 - statusBarPt,
   'hero scene lower edge': 292.3 - statusBarPt,
   'card top (overlap)': 303.4 - statusBarPt,
+  'next-alarm card top': 320.0 - statusBarPt,
+  'next-alarm card bottom': 385.1 - statusBarPt,
+  'section label baseline': 383.3 - statusBarPt,
+  'primary CTA top': 400.4 - statusBarPt,
+  'primary CTA bottom': 455.8 - statusBarPt,
+  'next section top': 498.8 - statusBarPt,
+  // Measured FROM the status bar (read off a crop), unlike the rows above.
+  // The detector reports glyph edges as boundaries; see tier_a_blocks.md.
+  'game rail tiles top': 485.7,
+  'game rail labels end': 593.9,
+  'my stats row top': 617.0,
+  'meadow footer top': 672.4,
   'nav bar top': 774.5 - statusBarPt,
 };
 

@@ -383,5 +383,16 @@
   "sleepLastSyncedAt": "Última leitura {time}",
   "sleepNeverSynced": "Ainda não lido",
   "sleepHistoryEmpty": "Ainda não há sono para mostrar. Conecte a Saúde para ver as suas noites aqui.",
-  "todayNoWakeData": "Ainda não há despertares registrados"
+  "todayNoWakeData": "Ainda não há despertares registrados",
+  "homeGamesHeading": "Jogos para acordar",
+  "homeGamesSeeAll": "Ver tudo",
+  "homeMyStats": "As minhas estatísticas",
+  "homeGameComingSoonTitle": "Ainda não está pronto",
+  "homeGameComingSoonBody": "{game} está a caminho. Vamos adicioná-lo numa atualização futura.",
+  "homeGameBlockedBody": "{game} precisa de uma permissão que o CapyWake ainda não pede.",
+  "homeGameUnavailableBadge": "Em breve",
+  "gameStepQuest": "Step Quest",
+  "gameShakeDj": "Shake DJ",
+  "gameCatchTheCapy": "Catch the Capy",
+  "gameFindTheImpostor": "Find the Impostor"
 }

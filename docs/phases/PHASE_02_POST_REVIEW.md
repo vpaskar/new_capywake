@@ -136,6 +136,23 @@ and should be designed against F1.**
 
 ## Coverage: the figure that needs its explanation attached
 
+> **⟲ Corrected by Phase 03.** The structural explanation below is true, and
+> the conclusion drawn from it — that 85.08% was therefore the honest figure —
+> was not. Part of that number was an **accident**: five providers
+> (`proStatusStreamProvider`, `puzzleSettingsStreamProvider`,
+> `sleepNightStoreProvider`, `sleepSyncStateStreamProvider`,
+> `sleepNightsStreamProvider`) were never read by any test and counted as
+> covered only because something in the suite constructed the graph far enough
+> to execute their declarations. When Phase 03's Home tests began overriding
+> `appDatabaseProvider` with an in-memory database, that stopped and the figure
+> fell to **82.76%** — the first honest measurement of the tree, not a
+> regression Home caused. A typo in any of those five would have shipped.
+> `test/data/providers_test.dart` now reads every provider against a real
+> database; `lib/data` is **86.40%**, earned rather than incidental. The
+> general lesson: *"this number is depressed for a structural reason"* needs
+> its own evidence, because it is equally consistent with the number being
+> inflated somewhere else. See `PHASE_03_FULL_PROJECT_REVIEW.md` P3.
+
 `lib/data` reads **85.08%** (422/496) and is the repository's weakest tree. The
 reason is structural, not a testing gap: `lib/data/database/app_database.dart`
 measures 8% (6/73) because its `Table` column getters —
@@ -189,6 +206,14 @@ CSQLite via SPM without error. The three captures were regenerated as a **build
 artifact, not a new fidelity measurement**. Phase 01's recorded state stands:
 header matches to **0.1 pt**, three body blocks still absent because the screens
 have no bodies — Phase 03's work.
+
+> **⟲ Corrected by Phase 03.** The clause "because the screens have no bodies"
+> is wrong and was repeated here from `PHASE_01_POST_REVIEW.md`. Only the nav
+> bar row had that cause. The two hero rows were a real `SceneHeader` defect —
+> the cream card drawn inside the art's `Stack`, shortening every hero band by
+> 11.1 pt — which Phase 03's first capture of a screen with a body exposed as
+> 13 of 14 blocks failing. Fixed; the hero lower edge now measures **0.0 pt**.
+> See `PHASE_03_FULL_PROJECT_REVIEW.md` P1.
 
 ## What Phase 03 may assume
 

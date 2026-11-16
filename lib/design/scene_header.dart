@@ -45,7 +45,8 @@ class SceneHeader extends StatelessWidget {
   /// Art band height in logical pixels, measured from `01_HOME.png`.
   final double bandHeight;
 
-  /// How far the card rides up over the art's lower edge.
+  /// Kept for callers; the card starts flush with the band. The mockup's
+  /// 292.3/303.4 edges are one edge plus a radius — see the post-review.
   final double overlap;
 
   /// Row drawn above the art — the wordmark and the settings gear.
@@ -59,46 +60,36 @@ class SceneHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (header != null) header!,
-        Stack(
-          children: [
-            SizedBox(
-              height: bandHeight,
-              width: double.infinity,
-              child: ExcludeSemantics(
-                child: ColorFiltered(
-                  colorFilter: dark
-                      ? const ColorFilter.mode(
-                          CapyColors.artScrim,
-                          BlendMode.srcOver,
-                        )
-                      : const ColorFilter.mode(
-                          Colors.transparent,
-                          BlendMode.dst,
-                        ),
-                  child: Image.asset(
-                    scene.asset,
-                    fit: BoxFit.cover,
-                    alignment: scene.alignment,
-                  ),
-                ),
+        SizedBox(
+          height: bandHeight,
+          width: double.infinity,
+          child: ExcludeSemantics(
+            child: ColorFiltered(
+              colorFilter: dark
+                  ? const ColorFilter.mode(
+                      CapyColors.artScrim,
+                      BlendMode.srcOver,
+                    )
+                  : const ColorFilter.mode(
+                      Colors.transparent,
+                      BlendMode.dst,
+                    ),
+              child: Image.asset(
+                scene.asset,
+                fit: BoxFit.cover,
+                alignment: scene.alignment,
               ),
             ),
-            Positioned.fill(
-              top: bandHeight - overlap,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(CapyRadius.xl),
-                  ),
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
         Expanded(
-          child: ColoredBox(
-            color: Theme.of(context).scaffoldBackgroundColor,
+          child: DecoratedBox(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(CapyRadius.xl),
+              ),
+            ),
             child: child,
           ),
         ),

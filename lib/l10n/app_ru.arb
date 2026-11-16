@@ -383,5 +383,16 @@
   "sleepLastSyncedAt": "Последнее чтение {time}",
   "sleepNeverSynced": "Ещё не читалось",
   "sleepHistoryEmpty": "Пока нечего показать. Подключите «Здоровье», чтобы видеть здесь свои ночи.",
-  "todayNoWakeData": "Пробуждений пока нет"
+  "todayNoWakeData": "Пробуждений пока нет",
+  "homeGamesHeading": "Игры для пробуждения",
+  "homeGamesSeeAll": "Все",
+  "homeMyStats": "Моя статистика",
+  "homeGameComingSoonTitle": "Ещё не готово",
+  "homeGameComingSoonBody": "{game} скоро появится. Мы добавим эту игру в одном из обновлений.",
+  "homeGameBlockedBody": "Для «{game}» нужно разрешение, которое CapyWake пока не запрашивает.",
+  "homeGameUnavailableBadge": "Скоро",
+  "gameStepQuest": "Step Quest",
+  "gameShakeDj": "Shake DJ",
+  "gameCatchTheCapy": "Catch the Capy",
+  "gameFindTheImpostor": "Find the Impostor"
 }

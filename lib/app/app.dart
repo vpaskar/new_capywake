@@ -9,14 +9,18 @@ class CapyWakeApp extends StatefulWidget {
   const CapyWakeApp({
     this.router,
     this.showDebugBanner = true,
+    this.scopeBuilder,
     super.key,
   });
 
   final GoRouter? router;
 
-  /// The capture harness turns this off: the DEBUG ribbon renders into the
-  /// screenshot's top-right corner, exactly where the header gear sits, and
-  /// would read as a permanent Tier A delta on every screen.
+  /// Caller-supplied scope; tests pass an in-memory database. A builder
+  /// because `flutter_riverpod` does not export riverpod's `Override`.
+  final Widget Function(Widget child)? scopeBuilder;
+
+  /// The capture harness turns this off: the DEBUG ribbon lands on the
+  /// header gear and would read as a permanent Tier A delta.
   final bool showDebugBanner;
 
   @override
@@ -28,16 +32,17 @@ class _CapyWakeAppState extends State<CapyWakeApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp.router(
-        onGenerateTitle: (context) => AppLocalizations.of(context).appName,
-        debugShowCheckedModeBanner: widget.showDebugBanner,
-        theme: capyTheme(),
-        darkTheme: capyTheme(brightness: Brightness.dark),
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        routerConfig: _router,
-      ),
+    final app = MaterialApp.router(
+      onGenerateTitle: (context) => AppLocalizations.of(context).appName,
+      debugShowCheckedModeBanner: widget.showDebugBanner,
+      theme: capyTheme(),
+      darkTheme: capyTheme(brightness: Brightness.dark),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      routerConfig: _router,
     );
+
+    final build = widget.scopeBuilder;
+    return build == null ? ProviderScope(child: app) : build(app);
   }
 }

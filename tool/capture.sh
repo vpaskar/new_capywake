@@ -15,7 +15,7 @@ set -euo pipefail
 DEVICE_NAME="iPhone 14 Pro"
 EXPECTED_W=1179
 EXPECTED_H=2556
-SCREENS=("${@:-shell alarms stats}")
+SCREENS=("${@:-home alarms stats}")
 read -r -a SCREENS <<<"${SCREENS[*]}"
 
 cd "$(dirname "$0")/.."

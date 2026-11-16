@@ -1,115 +1,101 @@
 # Current phase
 
-**Phase 02 — Domain and persistence: done, 2026-11-16. `Current phase: 03`.**
+**Phase 03 — Home / Today: done, 2026-11-16. `Current phase: 04`.**
 
-The legacy domain is ported. 62 `lib/core/` files (9,825 lines), 47
-`test/core/` files, 4 `lib/data/` files at `schemaVersion = 1`, 4 `test/data/`
-files, 12 sound assets. **1,051 tests**, analyze clean, `lib/core` **99.41%**.
+The first screen with a body, and therefore the first real test of the
+fidelity contract. **1,116 tests**, analyze clean, lib 97.38% / `lib/core`
+99.41% / `lib/data` 86.40%, 395 ARB keys × 10 locales.
 
-## The gate this phase existed to re-enable
+## What this phase actually found
 
-**`lib/core` ≥ 95% coverage is back on, at 99.41%.** Phase 01 skipped it
-legitimately — `lib/core/` did not exist and `check_coverage.dart` `exit(2)`s on
-an absent path rather than passing trivially — and Phase 01's pre-review made
-turning it back on a Phase 02 requirement so the skip could not become
-permanent. It is now in `CLAUDE.md`, the tracker and the acceptance criteria,
-and the exception note is marked closed.
+Four defects, none of them in Phase 03's own new code. All four were found by
+**running something and reading the result**.
 
-## Not 932 ported tests but 912, and why that mattered
+### 1. `SceneHeader` shortened every hero band by 11.1 pt
 
-`test/core/theme_test.dart` is **20** of the legacy's 932 and tests
-`lib/core/theme.dart`, the one file that imports Flutter *and* is not ported. So
-the handoff's "932 ported tests must pass" was right about the legacy suite and
-wrong about the ported one.
+`tier_a_blocks.md` records two edges: 292.3 ("hero scene lower edge") and
+303.4 ("card top"). Phase 01 read the 11.1 pt between them as *the card riding
+up over the art* and drew the cream card **inside** the art's `Stack`.
 
-Dropping it would have cost something real: those 20 asserted **AA contrast** and
-separator discipline on the legacy palette, and nothing asserted CapyWake's own
-palette. Its replacement, `test/design/tokens_contrast_test.dart`, found **two
-genuine accessibility defects** in Phase 01's sampled tokens:
+They are **one edge and a corner radius** — the card begins flush at 292.3 and
+its 28 pt radius reaches full width at 303.4. The first capture of a screen
+with content failed **13 of 14 blocks**, worst delta 38.7 pt, all inheriting
+that shortfall. After the fix the hero lower edge is **0.0 pt**.
 
-| Pair | Measured | Required |
-|---|---|---|
-| `accent` / `accentDeep` / `success` / `grass` on the three light surfaces | 1.76–2.68:1 | 3.0 (UI) |
-| `error` on `surfaceAlt` | 3.93:1 | 4.5 (body) |
+**Phase 01 measured −11.0 and −22.1 on exactly those rows and attributed them
+to "the screens have no bodies".** Only the nav-bar row had that cause. The
+same wrong explanation was repeated in Phase 02's post-review and the tracker —
+**wrong in three documents, all corrected in place.**
 
-Both are **open design constraints, not closed findings**, recorded as checked
-properties that fail if a token strengthens. Retuning a palette sampled from the
-mockups is Tier A and belongs to the owner and a UI phase. **Phase 03 is the
-first consumer.**
+### 2. Three of this phase's own block rows were glyph edges
 
-## What the identity discipline caught
+A row-mean luminance detector **cannot tell a line of text from a layout
+edge**. "Game rail top 605.0" was the tile art's *bottom*; "my stats row top
+662.7" was a glyph edge inside a label's second line. The tile size was then
+*inferred arithmetically* from two of those wrong rows: **94 pt against a
+measured 74**, 27% large.
 
-The pre-review fixed every test-count term **before** implementation so the
-result could not be rationalised afterwards. Its own first draft estimated the
-four data-test files at 66; measured, they are **83** — 26% out. Had the estimate
-stood, the post-review would have found 83 where it expected 66 and had to decide
-after the fact whether a surplus was good news.
+Fixed by reading a crop and anchoring to the My Stats row's orange icon, a
+colour the detector cannot confuse. **The rule is now in `CLAUDE.md`**, not
+only in a phase file.
 
-Final: 912 + 83 + 43 + **13 new** = **1,051**. N came out 13 rather than the
-budgeted 5 (the contrast test split into 9 cases), so the identity was
-**restated, not quietly passed**.
+### 3. `initializeDateFormatting` was never called in `lib/`
 
-## Seven failures after the raw copy — none a logic defect, none skipped
+`main.dart` was three lines. Every clock time goes through `DateFormat`, which
+throws until symbol data is loaded. It survived two phases because the ported
+`test/core/` suite calls it in its own `setUpAll` — **912 formatter tests
+passed against a domain that was covered, while the app would have thrown on
+the first screen that rendered a time.** Home is that screen.
 
-1. **3 × `alarm_sound_test`** — `assets/sounds/` was never in the plan.
-   `CAPYWAKE_REUSE_AUDIT.md` lists it; the plan paraphrased the audit instead of
-   working through it. **Would have shipped a sound catalogue pointing at twelve
-   absent files**, failing only when a user tapped one. Ported: 12 WAVs (7,752 KB)
-   + `LICENSES.md` + `tool/generate_tones.dart`.
-2. **3 × `sleep_boundary_test`** — asserted the *presence* of
-   `live_sleep_gateway.dart`, `NSHealthShareUsageDescription`, `READ_SLEEP`:
-   phase-07/08 infrastructure. Rewritten as the negative invariant they protect,
-   plus a conditional that binds the moment `READ_SLEEP` appears. **Restoration
-   obligation is in the tracker's 07/08 rows**, not only a code comment.
-3. **1 × iOS plist read `Capywake`** — Phase 01's 194-occurrence ARB casing fix
-   never reached the platform manifests. `CFBundleDisplayName` and
-   `android:label` now read **CapyWake**; both user-visible.
+`lib/app/bootstrap.dart` now does it, gated by a test that asserts the **app's
+own entry point** handles all ten locales.
+
+### 4. `lib/data`'s 85.08% was partly an accident
+
+Five providers (`proStatus`, `puzzleSettings`, and three sleep ones) were
+**never read by any test** and counted as covered only because something
+constructed the graph far enough to execute their declarations. Home's
+in-memory override removed the accident and the figure fell to **82.76% — the
+first honest measurement**, not a regression Home caused.
+
+A real provider test took it to **86.40%**, above both the gate and Phase 02's
+figure. **Phase 02's post-review claimed 85.08% was the honest number; that is
+corrected.** The general lesson: *"this number is depressed for a structural
+reason"* needs its own evidence, because it is equally consistent with the
+number being inflated somewhere else.
+
+Also: `compare.dart` reported **4 of the 13** documented blocks. Now 14.
 
 ## Decisions this phase made
 
 | Question | Decision |
 |---|---|
-| Migration history | `schemaVersion = 1`, `onUpgrade` dropped. N3 asserts an upgrade **throws**, because drift substitutes a non-null default closure — `onUpgrade == null` was the wrong guard |
-| Dropped columns | The legacy's v3→v4 *drops* two columns by table rebuild. Both verified absent and now asserted against the **live schema** (N4), not read off a migration comment |
-| `data/providers.dart` | Ported minus the two sleep-gateway providers (the only lines needing `package:health`). Excluding it whole would have left Phase 03 unable to read an alarm |
-| Port rule for tests | `lib/core/` imports no Flutter (asserted). `test/core/` may import `widgets.dart` **for `Locale` only** (asserted) — verified those five files use nothing else Flutter-shaped |
-| `prefer_initializing_formals` | 3 targeted `ignore_for_file`. A *private named* initializing formal compiles but is **not callable** — verified with a minimal program. `analysis_options.yaml` untouched |
-| 12-line comment ceiling | **Withdrawn.** Measured 50 runs over 12 lines; reading them showed the rule was wrong, not the code — they are a state-machine transition table and DST semantics. `gastrowerk`'s number was derived from `gastrowerk`'s tree |
+| Palette F1 | **Owner, mid-phase: "do as in the mockups."** No token retuned; `tokens.dart`'s only diff is the measured `gutter = 11.0` |
+| The mockup's green ring on Step Quest | Drawn in `cocoa` (11.8:1), not green (2.68:1) — a ring has no second channel, and Step Quest is `blocked`, so a highlight reading "available" would be a content lie. **Recorded as a named Tier A deviation** |
+| Header mascot | Ships. The plan filed it as a missing asset (G12); the pre-review found two matching cells already bundled. The fallback would have shipped five capybaras where the mockup has six |
+| Meadow band | Drawn, not raster (G13) — no supplied decor is the right shape, and tiling a 90 px tuft across 393 pt reads as a repeat. **Not** a return of the banned `CustomPaint` rule, which was about the mascot |
+| Toggle tap target | Paint stays at the mockup's 34.6 pt (Tier A); hit area grows to 44 pt. Both asserted |
+| Comment budget | Ported from `../protio` (trimmer) + `../gastrowerk` (ratchet) at the owner's request: **2 lines / 300 chars**, 113 inherited files baselined, **0 Phase 03 files** |
 
-## Gates that were green for the wrong reason
+## Tier A state
 
-Four, found across the review passes:
+Closed to within tolerance: hero lower edge **0.0**, CTA top **+0.9**, CTA
+bottom **+0.9**, rail tiles **−1.4**, labels end **+1.1**.
 
-- **`tool/audit_art.dart` does not exist** — documented in `CLAUDE.md` *and* the
-  tracker as a per-phase gate. Running it errors. The audit is
-  `lib/design/art_audit.dart` + two design tests inside `flutter test`.
-- **`check_bundle_size.dart` measured art only** (1818/2182 KB = "83%") while the
-  real asset payload had grown to **10.5 MB** with the sounds. Now budgets every
-  tree and states that native libraries are not counted.
-- **`lib/data` had no gate** at **85.08%**, the weakest tree, clearing the
-  project gate only because `lib/core`'s 2,526 lines at 99.41% dominated the
-  average. Gate added.
-- **That 85.08% is itself misleading**: 67 of 496 lines are Drift `Table` column
-  getters, evaluated at build time to generate `app_database.g.dart` and never at
-  runtime. Unreachable by any test. Hand-written data code is **422/429 = 98.4%**.
-  Do not "fix" it with a meaningless test, a `// coverage:ignore`, or a lowered
-  gate.
+8 blocks remain outside ±4 pt, recorded with their measured deltas in
+`docs/visual/home/`. Several are the matcher snapping two reference blocks onto
+one detected edge (full-project review P4) rather than independent defects.
 
-## Validation
+**A screen is done when the comparison is captured and its deviations are
+named.** They are.
 
-analyze clean (zero infos) · format clean · 10 locales × 384 keys · 1,051 tests ·
-project **97.14%** · `lib/core` **99.41%** · `lib/data` 85.08% · assets 10,517 KB
-of 11,082 KB across three budgeted trees · `capture.sh` 3 PNGs verified at
-1179×2556 · `../capywake` **byte-identical to the pre-port baseline**.
+## Next session — Phase 04, Alarms list and Add/Edit
 
-40 findings across pre-review, two self-reviews and a full-project review. All
-applied, none invalid.
+`02_ALARMS.png`, `03_ADD_EDIT_ALARM.png`. Measure their blocks with the method
+`CLAUDE.md` now requires — crop and colour anchor for anything near text — and
+append to `tier_a_blocks.md`.
 
-## Next session — Phase 03, Home / Today
-
-`01_HOME.png`. The domain is real: schedule math, next-alarm, today formatting,
-history and the puzzle engine are all ported and tested. **Nothing rings** —
-`AlarmEngine` is an interface plus a fake until phase 05.
-
-Design against **palette constraint F1**: in light mode no control may use
-accent, success or grass as its only channel for boundary or state.
+**P4 is left for Phase 04 to decide:** `compare.dart` snaps each reference
+block to the nearest detected edge, so a displaced layout can match several
+blocks to one edge. Changing the matcher while blocks are red would be tuning
+the instrument to the result; decide it on a screen that passes.

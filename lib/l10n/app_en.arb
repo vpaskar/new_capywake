@@ -1810,5 +1810,61 @@
   "todayNoWakeData": "No wake-ups recorded yet",
   "@todayNoWakeData": {
     "description": "Empty status for Today dashboard metrics before wake-up history is available."
+  },
+  "homeGamesHeading": "Wake-Up Games",
+  "@homeGamesHeading": {
+    "description": "Section heading above the wake-up game rail on Home."
+  },
+  "homeGamesSeeAll": "See All",
+  "@homeGamesSeeAll": {
+    "description": "Trailing action beside the game rail heading; opens the full list."
+  },
+  "homeMyStats": "My Stats",
+  "@homeMyStats": {
+    "description": "Row on Home that switches to the Stats tab."
+  },
+  "homeGameComingSoonTitle": "Not built yet",
+  "@homeGameComingSoonTitle": {
+    "description": "Title of the sheet shown when a game is not built yet."
+  },
+  "homeGameComingSoonBody": "{game} is on the way. We will add it in a future update.",
+  "@homeGameComingSoonBody": {
+    "description": "Body of the sheet shown when a game is not built yet.",
+    "placeholders": {
+      "game": {
+        "type": "String",
+        "example": "Shake DJ"
+      }
+    }
+  },
+  "homeGameBlockedBody": "{game} needs a permission CapyWake does not ask for yet.",
+  "@homeGameBlockedBody": {
+    "description": "Body of the sheet shown when a game needs a permission the app does not request.",
+    "placeholders": {
+      "game": {
+        "type": "String",
+        "example": "Step Quest"
+      }
+    }
+  },
+  "homeGameUnavailableBadge": "Soon",
+  "@homeGameUnavailableBadge": {
+    "description": "Short badge on a game tile that is not playable yet."
+  },
+  "gameStepQuest": "Step Quest",
+  "@gameStepQuest": {
+    "description": "Product name of the Step Quest wake-up game."
+  },
+  "gameShakeDj": "Shake DJ",
+  "@gameShakeDj": {
+    "description": "Product name of the Shake DJ wake-up game."
+  },
+  "gameCatchTheCapy": "Catch the Capy",
+  "@gameCatchTheCapy": {
+    "description": "Product name of the Catch the Capy wake-up game."
+  },
+  "gameFindTheImpostor": "Find the Impostor",
+  "@gameFindTheImpostor": {
+    "description": "Product name of the Find the Impostor wake-up game."
   }
 }

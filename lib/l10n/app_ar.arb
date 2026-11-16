@@ -383,5 +383,16 @@
   "sleepLastSyncedAt": "آخر قراءة {time}",
   "sleepNeverSynced": "لم تتم القراءة بعد",
   "sleepHistoryEmpty": "لا يوجد نوم لعرضه بعد. اربط تطبيق الصحة لرؤية لياليك هنا.",
-  "todayNoWakeData": "لم تُسجّل أي حالات استيقاظ بعد"
+  "todayNoWakeData": "لم تُسجّل أي حالات استيقاظ بعد",
+  "homeGamesHeading": "ألعاب الاستيقاظ",
+  "homeGamesSeeAll": "عرض الكل",
+  "homeMyStats": "إحصاءاتي",
+  "homeGameComingSoonTitle": "غير جاهزة بعد",
+  "homeGameComingSoonBody": "{game} في الطريق. سنضيفها في تحديث قادم.",
+  "homeGameBlockedBody": "تحتاج {game} إلى إذن لا يطلبه CapyWake بعد.",
+  "homeGameUnavailableBadge": "قريبًا",
+  "gameStepQuest": "Step Quest",
+  "gameShakeDj": "Shake DJ",
+  "gameCatchTheCapy": "Catch the Capy",
+  "gameFindTheImpostor": "Find the Impostor"
 }

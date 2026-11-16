@@ -1,13 +1,36 @@
 import 'package:capywake/app/app.dart';
 import 'package:capywake/app/router.dart';
+import 'package:capywake/data/database/app_database.dart';
+import 'package:capywake/data/providers.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 void main() {
+  setUpAll(initializeDateFormatting);
+
   Future<void> pumpApp(WidgetTester tester, {String at = Routes.home}) async {
+    final db = AppDatabase.forTesting(NativeDatabase.memory());
+    final container = ProviderContainer(
+      overrides: [appDatabaseProvider.overrideWithValue(db)],
+    );
+
+    // Dispose the container before the database: a live Drift stream keeps a
+    // timer alive, and the framework asserts none is pending at teardown.
+    addTearDown(() async {
+      container.dispose();
+      await db.close();
+    });
+
     await tester.pumpWidget(
-      CapyWakeApp(router: createRouter(initialLocation: at)),
+      CapyWakeApp(
+        router: createRouter(initialLocation: at),
+        scopeBuilder: (child) =>
+            UncontrolledProviderScope(container: container, child: child),
+      ),
     );
     await tester.pumpAndSettle();
   }

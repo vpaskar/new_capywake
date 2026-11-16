@@ -1,11 +1,7 @@
 import 'package:flutter/widgets.dart';
 
-/// Palette sampled from `reference/01_REFERENCES/screens/primary/`.
-///
-/// The mockups are compression-noisy, so every flat area is a cloud of
-/// near-identical values rather than one value. Each constant below is the
-/// centre of its sampled cluster; `docs/phases/PHASE_01_PLAN.md` records the
-/// measurement.
+/// Palette sampled from the mockups, each constant the centre of its cluster
+/// (they are compression-noisy). Measured in `PHASE_01_PLAN.md`.
 abstract final class CapyColors {
   static const cream = Color(0xFFFEF3E7);
   static const surface = Color(0xFFFEF4E8);
@@ -43,6 +39,10 @@ abstract final class CapyIconSize {
 
 /// The 4-based spacing scale. Widgets use these, never a raw number.
 abstract final class CapySpacing {
+  /// Screen side margin, from `01_HOME.png`'s game rail at 10.2 pt. The card
+  /// reads 12.5 pt because its hairline strokes inside the box.
+  static const gutter = 11.0;
+
   static const xs = 4.0;
   static const sm = 8.0;
   static const md = 12.0;

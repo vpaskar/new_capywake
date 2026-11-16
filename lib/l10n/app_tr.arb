@@ -383,5 +383,16 @@
   "sleepLastSyncedAt": "Son okuma {time}",
   "sleepNeverSynced": "Henüz okunmadı",
   "sleepHistoryEmpty": "Gösterilecek uyku yok. Gecelerini burada görmek için Sağlık'ı bağla.",
-  "todayNoWakeData": "Henüz kayıtlı uyanış yok"
+  "todayNoWakeData": "Henüz kayıtlı uyanış yok",
+  "homeGamesHeading": "Uyanma Oyunları",
+  "homeGamesSeeAll": "Tümü",
+  "homeMyStats": "İstatistiklerim",
+  "homeGameComingSoonTitle": "Henüz hazır değil",
+  "homeGameComingSoonBody": "{game} yolda. İlerideki bir güncellemede ekleyeceğiz.",
+  "homeGameBlockedBody": "{game} için CapyWake’in henüz istemediği bir izin gerekiyor.",
+  "homeGameUnavailableBadge": "Yakında",
+  "gameStepQuest": "Step Quest",
+  "gameShakeDj": "Shake DJ",
+  "gameCatchTheCapy": "Catch the Capy",
+  "gameFindTheImpostor": "Find the Impostor"
 }

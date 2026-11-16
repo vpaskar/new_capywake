@@ -383,5 +383,16 @@
   "sleepLastSyncedAt": "最終読み取り {time}",
   "sleepNeverSynced": "まだ読み取っていません",
   "sleepHistoryEmpty": "表示できる睡眠がまだありません。ヘルスケアを連携すると、ここに夜ごとの記録が表示されます。",
-  "todayNoWakeData": "まだ起床の記録がありません"
+  "todayNoWakeData": "まだ起床の記録がありません",
+  "homeGamesHeading": "目覚ましゲーム",
+  "homeGamesSeeAll": "すべて見る",
+  "homeMyStats": "マイ統計",
+  "homeGameComingSoonTitle": "まだ準備中です",
+  "homeGameComingSoonBody": "{game} は準備中です。今後のアップデートで追加します。",
+  "homeGameBlockedBody": "{game} には CapyWake がまだ要求していない権限が必要です。",
+  "homeGameUnavailableBadge": "近日",
+  "gameStepQuest": "Step Quest",
+  "gameShakeDj": "Shake DJ",
+  "gameCatchTheCapy": "Catch the Capy",
+  "gameFindTheImpostor": "Find the Impostor"
 }

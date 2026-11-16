@@ -40,6 +40,8 @@ Severity:
 | G8 | Nav bar icons | Not a gap | Mockup uses flat glyphs — these are real widgets, not art |
 | G9 | ~~Hero scene aspect ratio~~ | **Withdrawn** | Crop is 28.1% of the art band — large, but benign and already priced into `SceneHeader` |
 | G10 | Wordmark | **✅ Closed** | 2172×724 on transparency, 2103 px of ink — 4× what was needed |
+| G12 | ~~Header mascot missing~~ | **Withdrawn** | Phase 03 filed it, then found two matching cells already bundled |
+| G13 | Meadow footer band | Degraded | A continuous painted band; every supplied decor cutout is a small motif |
 
 ---
 
@@ -377,6 +379,92 @@ wide, or the vector/source file if one exists.
 
 ---
 
+---
+
+## G12 — Header mascot — **withdrawn, not a gap**
+
+**Severity: none.** Opened by Phase 03's plan and withdrawn by its own
+pre-review (H3) before any code was written. Kept visible, as G9 is, because
+the reasoning matters more than the verdict.
+
+`01_HOME.png` shows a sleeping capybara with `Zz` left of the wordmark. The
+plan filed it as missing after reading `lib/design/art.dart`, which catalogues
+only scenes, tiles and the wordmark — and then set a fallback: *if no sleeping
+pose exists, omit the mascot.*
+
+Checked against the bundle rather than the manifest, and it is there:
+
+| Cell | Size | Reading |
+|---|---|---|
+| `assets/art/mascots/collection_00.webp` | 282×271 | Nightcap, `Zz`, duck, lying down — the mockup's pose |
+| `assets/art/mascots/moments_12.webp` | — | Same pose, different framing |
+
+`pubspec.yaml` already declares `assets/art/mascots/`, and
+`art_manifest_test.dart` already ghost-audits the directory by scan. The only
+thing missing was a catalogue id.
+
+**The fallback would have cost a capybara.** `CLAUDE.md` requires *"as many
+capybaras per screen as the mockup shows — `01_HOME.png` has six"*; omitting
+the mascot ships five while the right asset sits unused in the bundle.
+
+**Resolved in Phase 03:** `CapyArt.mascots` gains `mascot.sleeping` →
+`collection_00.webp`.
+
+**One real finding came out of it.** The mascots are bundled and ghost-audited
+but were **not catalogued**, so `art_manifest_test.dart`'s `requiredPixels`
+check never ran on any of them — a mascot too small for its box would have
+shipped silently. Catalogued assets are now size-gated.
+
+---
+
+## G13 — No asset matches the meadow footer band
+
+**Severity: Degraded.**
+
+`01_HOME.png` draws a grass band 65.2 pt tall across the full 393 pt width,
+with two small daisies. Measured at full row resolution (every row, every
+pixel) rather than the sampled scan the first draft used — green dominance
+(mean G−R across the row):
+
+```
+709.3 pt   −23.3    band top, the card/footer boundary
+731.5 pt    −0.3    green crosses red
+748.1 pt   +24.0
+773.1 pt   +40.5    peak
+775.8 pt    −3.8    nav bar
+```
+
+A smooth monotonic ramp over 42 pt with **no periodicity** — one continuous
+painted band, not a tiled motif.
+
+Every supplied decor asset is a small motif:
+
+| File | px |
+|---|---|
+| `flower.png` | 22×53 |
+| `grass_tuft.png` | 90×63 |
+| `bush_round.png` | 107×71 |
+| `leafy_shrub.png` | 147×81 |
+
+The widest is 147 px ≈ 49 pt at 3×. Filling 393 pt means tiling a tuft ~4.4
+times, which reads as a repeat — worse than not having the art.
+
+**Using for now:** `lib/design/meadow_footer.dart` paints the band in `grass`
+with the mockup's silhouette — two layers of overlapping rounded crowns. Logged
+as a Tier B substitution.
+
+This is **not** a return of the legacy's banned `CustomPaint` rule. That rule
+was *"the capybara is vector `CustomPaint`, never a raster cutout"* — about the
+**mascot**, and it is why the painted look was unreachable. Every capybara on
+Home is a raster cutout. The meadow is a background shape.
+
+**To do it properly:** one painted meadow band at ≥1179 px wide × ~196 px tall
+(393 × 65.2 pt at 3×) on transparency, matching the mockup's crowns and
+daisies. It would drop into `MeadowFooter` with no layout change — the band's
+height is a measured constant either way.
+
+---
+
 ## What the owner would need to generate
 
 Ordered by impact:
@@ -388,6 +476,12 @@ Ordered by impact:
 3. **Mascots at ≥512²** (G3) — unblocks game tiles, empty states and any
    large-format use.
 4. **Wordmark on transparency at ≥1050 px** (G10).
-G9 was withdrawn on re-measurement — the header crop is benign and needs no art.
+5. **Meadow footer band** (G13) — ≥1179×196 px on transparency, matching the
+   mockup's crowns and daisies. Currently drawn; it would drop in with no
+   layout change. Visible on every tab, so it is worth more than its severity
+   suggests.
+
+G9 and **G12** were withdrawn on measurement — the header crop is benign, and
+the header mascot was bundled all along.
 
 G4, G5, G6 need no new art — Phase 01's import pipeline fixes them.

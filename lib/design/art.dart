@@ -69,11 +69,29 @@ abstract final class CapyArt {
     ),
   ];
 
+  /// The sleeping capybara beside the wordmark on `01_HOME.png`. The choice
+  /// is recorded against the mockup crop in `docs/visual/home/`.
+  static const mascots = <ArtAsset>[
+    ArtAsset(
+      'mascot.sleeping',
+      'assets/art/mascots/collection_00.webp',
+      ArtUse.mascotSmall,
+    ),
+  ];
+
   static const wordmark = ArtAsset(
     'wordmark',
     'assets/art/wordmark.webp',
     ArtUse.wordmark,
   );
 
-  static List<ArtAsset> get all => [...scenes, ...tiles, wordmark];
+  static List<ArtAsset> get all => [
+    ...scenes,
+    ...tiles,
+    ...mascots,
+    wordmark,
+  ];
+
+  static ArtAsset byId(String id) =>
+      all.firstWhere((a) => a.id == id, orElse: () => throw ArgumentError(id));
 }

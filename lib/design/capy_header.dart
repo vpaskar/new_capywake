@@ -1,16 +1,12 @@
 import 'package:capywake/app/router.dart';
+import 'package:capywake/design/art.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-/// Wordmark plus the gear that pushes Settings. Shown on all three tabs, so
-/// Settings is reachable from each without being a tab itself.
-///
-/// [height] is the content band only — the 59.9 pt the mockup leaves between
-/// the status bar and the hero art. The device's top inset sits above it,
-/// where the mockup draws its own status bar, so comparisons measure from the
-/// bottom of the inset rather than from the top of the screen.
+/// Sleeping mascot, wordmark and the Settings gear, on all three tabs.
+/// [height] is the 59.9 pt band between the status bar and the hero art.
 class CapyHeader extends StatelessWidget {
   const CapyHeader({super.key});
 
@@ -30,12 +26,20 @@ class CapyHeader extends StatelessWidget {
           ),
           child: Row(
             children: [
+              ExcludeSemantics(
+                child: Image.asset(
+                  CapyArt.byId('mascot.sleeping').path,
+                  height: CapyIconSize.wordmark + CapySpacing.sm,
+                  fit: BoxFit.contain,
+                ),
+              ),
+              const SizedBox(width: CapySpacing.sm),
               Semantics(
                 header: true,
                 label: 'CapyWake',
                 child: ExcludeSemantics(
                   child: Image.asset(
-                    'assets/art/wordmark.webp',
+                    CapyArt.wordmark.path,
                     height: CapyIconSize.wordmark,
                     fit: BoxFit.contain,
                   ),

@@ -2,120 +2,101 @@
 
 ## State
 
-Phases 00, 01 and 02 are **done** and committed.
+Phases 00–03 are **done** and committed.
 
-**Current phase: `03` — Home / Today (`01_HOME.png`).**
+**Current phase: `04` — Alarms list and Add/Edit (`02_ALARMS.png`,
+`03_ADD_EDIT_ALARM.png`).**
 
-The domain layer is real and tested: 1,051 tests pass, `lib/core` is at 99.41%
-coverage behind a 95% gate, and the Drift database is at `schemaVersion = 1`.
+1,116 tests pass. `lib` 97.38%, `lib/core` 99.41%, `lib/data` 86.40%. 395 ARB
+keys × 10 locales. Home is built, captured and its deviations are named.
 
 ## Read in this order
 
-1. `CLAUDE.md` — the project's rules.
+1. `CLAUDE.md` — the project's rules. **Two sections are new in Phase 03**:
+   "Measuring a block" and "Running the app on the simulator".
 2. `ai-orchestration/PHASE_TRACKER.md` — pointer, protocol, 20 phases.
-3. `memory/current-phase.md` — what Phase 02 established and decided.
-4. `docs/phases/PHASE_02_POST_REVIEW.md` — **especially the palette section**.
-5. `reference/01_REFERENCES/screens/primary/01_HOME.png` — the source of truth.
-6. `docs/visual/asset_gaps.md` — the standing register. Append, never restart.
+3. `memory/current-phase.md` — what Phase 03 found, which is mostly about
+   earlier phases being wrong in writing.
+4. `docs/phases/PHASE_03_FULL_PROJECT_REVIEW.md` — the five project-level
+   findings, one of which Phase 04 has to decide (P4).
+5. `docs/visual/tier_a_blocks.md` — **the corrected block table**.
+6. `docs/visual/asset_gaps.md` — append, never restart.
 
-## Do, in this order
+## What Phase 04 inherits that Phase 03 did not have
 
-1. Pre-flight: `pwd && git branch --show-current` → `new_capywake`, `main`.
-2. Write `docs/phases/PHASE_03_PLAN.md`.
-3. Write `docs/phases/PHASE_03_PRE_REVIEW.md` — adversarial, **before any
-   code**. Classify High/Medium/Low. Apply all, or mark invalid with a reason.
-4. Revise the plan against the findings.
-5. **Then** implement.
-6. Validate → self-review #1 → self-review #2 → full-project review.
-7. `PHASE_03_POST_REVIEW.md`, update tracker + memory + this file, commit.
+**The capture actually measures something now.** `compare.dart` reported 4 of
+13 documented blocks before this phase; it reports 14. If your screen's blocks
+pass, that means something.
 
-## What Phase 03 may assume
+**`SceneHeader` is fixed.** Every screen's hero band was 11.1 pt short. If you
+had built Alarms against the old one, every block below the hero would have
+been displaced and the cause would have looked like your layout.
 
-**Real and available:** all of `lib/core/` — models, DST-correct schedule math
-(`AlarmScheduleService`, `NextAlarmService`), today formatting, the puzzle
-engine, `HistoryService`, the lifecycle FSM, sleep aggregation, wake window,
-reliability copy. Plus the Drift database, mappers, `CapyWakeRepository`, and the
-Riverpod provider graph in `lib/data/providers.dart`.
+**`bootstrap()` exists and is called.** Nothing in `lib/` initialized `intl`
+before Phase 03; any screen rendering a clock time would have thrown.
 
-**Interface + fake only — no platform implementation:** `AlarmEngine`,
-`NotificationService`, `SleepGateway`, `MotionSensor`, `PermissionService`.
-`lib/core/engine/alarm_engine.dart` exists, **but nothing rings.** Adapters land
-in phase 05 (engine, notifications) and 07/08 (permissions, sleep). Do not
-conclude from the presence of these files that an alarm can fire.
+**The comment budget is enforced** (2 lines / 300 chars, inside `flutter
+test`). New files must meet it outright. Do not add a file to the baseline to
+silence it; long rationale goes in `docs/phases/`.
 
-**Not available:** any platform plugin (`alarm`, `flutter_local_notifications`,
-`health`, `sensors_plus`, `permission_handler`); migration history; sleep reads
-from Apple Health / Health Connect.
+## Measuring blocks — the rule that cost Phase 03 three wrong rows
 
-## Palette constraint F1 — binding on Phase 03
+A row-mean luminance detector **cannot tell a line of text from a layout
+edge**. Three rows of Phase 03's plan were glyph edges, and a fourth value was
+inferred arithmetically from two of them and came out 27% wrong.
 
-Phase 02's contrast test found two real AA failures in Phase 01's sampled tokens:
+- Between two flat areas → the detector is fine.
+- Adjacent to text, or between textured regions → **read a crop** and
+  cross-check against something the detector cannot confuse (Phase 03 used the
+  My Stats row's orange icon; the tiles were found by saturation scan).
+- **State the method next to the number.** An inference is not a measurement.
+- Measure what a widget *renders* (`tester.getRect`), not the constant you
+  gave it. Phase 03's next-alarm card was built at 167 pt against a mockup's
+  65 because nobody measured the rendered box.
 
-| Pair | Measured | Required |
-|---|---|---|
-| `accent` / `accentDeep` / `success` / `grass` on cream, surface, surfaceAlt | 1.76–2.68:1 | 3.0 (UI components) |
-| `error` on `surfaceAlt` | 3.93:1 | 4.5 (body text) |
+## One decision left for Phase 04
 
-So, in **light mode**:
+`compare.dart`'s `_nearest` snaps each reference block to the closest detected
+edge, so a displaced layout matches several blocks to one edge and overstates
+the damage. Phase 03 **recorded this and did not change it** — tuning the
+matcher while 13 blocks were red would be fitting the instrument to the result.
 
-- No control may use accent, success or grass as its **only** channel for
-  boundary or state. It needs ink, a shape change or a label too.
-- Error text may not sit on `surfaceAlt`.
-- The accent as a **fill** under `cocoa` text clears AA comfortably. That
-  pairing is fine and is asserted.
+Decide it on a screen that passes. See full-project review P4.
 
-`test/design/tokens_contrast_test.dart` asserts the current weakness and **fails
-if a token strengthens**, so improving the palette is a deliberate act: update
-the test and the constraint together. Retuning tokens sampled from the mockups is
-a **Tier A decision for the owner**, not something a phase does in passing.
+## Palette constraint F1 — settled by the owner
 
-## Measurement discipline that paid off, twice
+**"Do as in the mockups."** Do not retune tokens to chase a contrast ratio;
+`test/design/tokens_contrast_test.dart` asserts the current weakness
+deliberately. Design around it: in light mode no control may use `accent`,
+`accentDeep`, `success` or `grass` as its **only** channel for boundary or
+state. Accent as a fill under `cocoa` text is the preferred pattern.
 
-**Fix every countable term before implementing.** Phase 02's pre-review
-registered the expected test counts in advance; its own first draft *estimated*
-the four data-test files at 66 and measurement gave **83**. Had the estimate
-stood, the post-review would have found 83 where it expected 66 and had to decide
-after the fact whether a surplus was good news. Final identity:
-912 + 83 + 43 + 13 = **1,051**, restated when N came out 13 rather than 5.
+Where the mockup and an accessibility minimum genuinely cannot both hold,
+follow the mockup for the colour, carry the redundant channel in structure,
+and **record the pair with its measured ratio** in the post-review. Phase 03
+did this once — the Step Quest ring, green 2.68:1 in the mockup, drawn in
+`cocoa` 11.8:1 — and named it as a deviation.
 
-**Work through the reuse audit item by item, do not paraphrase it.**
-`CAPYWAKE_REUSE_AUDIT.md` lists `assets/sounds/`; Phase 02's plan missed it, and
-three ported tests failed. Without those tests the app would have shipped a
-sound catalogue pointing at twelve absent files, failing only when a user tapped
-one.
+## Running the app — you can, so do
 
-## Reading coverage figures
+An **iPhone 14 Pro simulator** is available at exactly the mockup geometry
+(1179×2556 px = 393×852 pt).
 
-Read the number from the `Coverage (...)` line, **never from `PASS` alone** — the
-Dart build-hooks preamble shares stdout, so pipe through `tr '\r' '\n'`:
+| Want | Use |
+|---|---|
+| A verified PNG for `docs/visual/<screen>/` | `tool/capture.sh <screen>` |
+| To drive the app — tap, scroll, screenshot | the iOS-simulator tools |
 
-```bash
-dart run tool/check_coverage.dart --min 95 --path lib/core 2>&1 | tr '\r' '\n' | grep Coverage
-```
+`tool/capture.sh` verifies the artifact rather than trusting an exit code, and
+is the **only** acceptable Tier A evidence. **Never** run
+`integration_test/capture_test.dart` with `flutter test` — it passes while
+writing nothing.
 
-`lib/data` reads **85.08%** and that is expected: 67 of its 496 lines are Drift
-`Table` column getters, evaluated at build time to generate
-`app_database.g.dart` and never executed at runtime. Hand-written data code is
-**422/429 = 98.4%**. **Do not** "fix" it with a meaningless test, a
-`// coverage:ignore` (forbidden by `CLAUDE.md`), or a lowered gate.
+Captures are taken against a **seeded** in-memory database (`captureSeed` in
+the integration test) so screens are comparable to the mockups; the app's own
+default is the empty state, and demo data never enters `lib/`.
 
-## Owed restorations
-
-**Phase 07/08** — when `package:health` and `live_sleep_gateway.dart` land,
-`test/core/sleep/sleep_boundary_test.dart` must go back to `exactly one`
-importer (it is `at most one` now) and re-assert that
-`NSHealthShareUsageDescription` and `READ_SLEEP` are **present**. Phase 02
-weakened those three to the negative invariant because asserting the presence of
-a key it may not add is satisfiable only by adding it — i.e. by implementing a
-future phase.
-
-## There is no `tool/audit_art.dart`
-
-`CLAUDE.md` and the tracker both listed it as a per-phase gate until Phase 02
-found it does not exist — running it errors. The art audit is
-`lib/design/art_audit.dart`, applied by `tool/import_art.dart` and gated by
-`test/design/art_audit_test.dart` + `art_manifest_test.dart`, so it runs inside
-`flutter test`. **Running the documented validation list should never error.**
+**No Android emulator on this machine.** Never mark Android tested.
 
 ## Validation (every phase)
 
@@ -127,17 +108,14 @@ dart format --set-exit-if-changed .
 flutter analyze                                             # zero issues
 dart run tool/check_arb.dart                                # 10 locales
 dart run tool/check_bundle_size.dart                        # every asset tree
-flutter test --coverage                     # incl. the art audit + manifest
+flutter test --coverage       # incl. art audit, manifest + comment budget
 dart run tool/check_coverage.dart --path lib                # project >= 85%
-dart run tool/check_coverage.dart --min 95 --path lib/core   # core >= 95%
-dart run tool/check_coverage.dart --min 85 --path lib/data   # data >= 85%
+dart run tool/check_coverage.dart --min 95 --path lib/core  # core >= 95%
+dart run tool/check_coverage.dart --min 85 --path lib/data  # data >= 85%
 ```
 
-Generators run **before** the format check.
-
-For screenshots use `tool/capture.sh`, which verifies the artifact. **Never**
-run `integration_test/capture_test.dart` with `flutter test` — it passes while
-writing nothing.
+Read coverage from the `Coverage (...)` line, never from `PASS` alone — the
+build-hooks preamble shares stdout, so pipe through `tr '\r' '\n'`.
 
 ## Reference paths
 
@@ -147,30 +125,24 @@ writing nothing.
 | Mockups (source of truth) | `reference/01_REFERENCES/screens/primary/` |
 | Hero scenes | `reference/02_ASSETS/header_scenes/*_integrated.png` |
 | Mascots | `reference/02_ASSETS/asset_library/mascots/` + `mascot_fixes/` |
-| Clean icons | `reference/02_ASSETS/clean_icons/` |
 | Legacy (READ-ONLY) | `../capywake` |
 
 `reference/` is reference material, never bundled (348 MB, git-ignored).
 
-## Environment
-
-- Dart 3.12.2 stable, macos_arm64.
-- **iPhone 14 Pro simulator** — matches the mockup geometry exactly (1179×2556
-  px = 393×852 pt).
-- A physical iPhone is reachable for real alarm testing in phase 05.
-- **No Android emulator has been run.** Android is unverified; never mark it
-  tested until one actually runs.
-
 ## Standing reminders
 
-- `../capywake` is **read-only**. It was **already dirty before this rebuild
-  began** — 10 modified `lib/features/`/`test/features/` files and 1 untracked
-  phase brief, all mtime 2026-11-15, legacy HEAD `80d009b`. That is the legacy's
-  own unfinished work. Acceptance compares `git status --porcelain` against that
-  recorded baseline, not against "clean".
-- **If a file imports Flutter, it is not ported.** Asserted by
-  `test/core/no_flutter_in_core_test.dart`.
+- `../capywake` is **read-only** and was already dirty before the rebuild —
+  compare `git status --porcelain` to the baseline in `PHASE_02_PLAN.md`.
+- **If a file imports Flutter, it is not ported.**
 - Never claim a screen matches without a recorded capture.
 - A finding is applied or invalid. Never deferred.
-- `main` only. No branches, no worktrees, no stashes.
+- `main` only. **No branches, no worktrees, no stashes** — Phase 03 used a
+  stash while diagnosing and recorded it as a violation (self-review #1 F5).
 - Store publishing is drafts only; the owner presses every final button.
+
+## Owed restorations
+
+**Phase 07/08** — when `package:health` and `live_sleep_gateway.dart` land,
+`test/core/sleep/sleep_boundary_test.dart` must go back to `exactly one`
+importer and re-assert `NSHealthShareUsageDescription` + `READ_SLEEP` are
+present.
