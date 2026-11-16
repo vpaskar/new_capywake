@@ -53,9 +53,24 @@ and prove it matches.
 - `tool/encode_art.dart` — downscale to 2× the largest on-screen render box,
   WebP (lossy `-q 82` for scenes, lossless for flat cutouts), verify parity at
   render size.
-- Import, per the architecture plan §4: 4 header scenes, 29 mascots (with the
-  two `mascot_fixes/` replacements), 11 clean icons, 14 decor, 5 WebP loops.
-  **Not** the 180 PNG frames, the 18 raster UI buttons, or the older scene set.
+- Import, per the architecture plan §4. **Source is `reference/02_ASSETS/`, in
+  this repo — never `../capywake/assets/`, whose art was processed for the old
+  vector-first design.** Sound is the one exception: the 12 WAVs come from the
+  legacy, re-generated via its `tool/generate_tones.dart` (Phase 05, not here).
+
+  | From `reference/02_ASSETS/` | To `assets/art/` | Count |
+  |---|---|---|
+  | `header_scenes/*_integrated.png` | `scenes/` | 4 |
+  | `asset_library/mascots/` + `mascot_fixes/` | `mascots/` | 29 + 2 replacements |
+  | `clean_icons/` | `icons/` | 11 |
+  | `asset_library/decor/` | `decor/` | 14 |
+  | `animations/*/loop.webp` | `anim/` | 5 |
+
+  **Not** imported: the 180 PNG animation frames, the 18 raster UI buttons in
+  `asset_library/ui/` (they carry baked-in English and become real widgets),
+  `asset_library/scenes/` (superseded by `header_scenes/`),
+  `header_scenes/upscaled_older/` and `alternate_*`, `SOURCE_ARCHIVES/`, or
+  `05_LEGACY_HANDOFFS/`.
 - **Measure the total, then set `tool/check_bundle_size.dart` at measured
   + 20 %.**
 

@@ -86,6 +86,33 @@ Never claim a substitute is the original.
 A screen is done when the comparison is captured and its deviations are named
 — not when it functions.
 
+### Missing or poor-quality assets — always report, never paper over
+
+**Say so, in the session, the moment an asset is missing, wrong, or too poor to
+ship.** Do not silently substitute, do not quietly downscale a broken cut, and
+do not let a Tier B substitution stand in for a report. The owner can generate
+or source replacement art; a substitution logged only in a phase document is
+not a report.
+
+Report when any of these is true:
+
+- The asset the mockup shows **does not exist** in the package (the Home hero's
+  nightcap, duck and nightstand clock).
+- The supplied file is **damaged** — severed crop, ghost pixels, missing alpha,
+  a visible matte edge, or a halo from automatic masking.
+- It is **too low-resolution** for its largest on-screen render box at 3×.
+- It is the **wrong variant** — baked-in English, a flattened background where a
+  cutout is needed, or an older generation superseded elsewhere in the package.
+- A screen needs art the package has **no near-equivalent** for at all.
+
+For each one, name the file, say what is wrong, say what is being used instead
+for now, and say what you would need to do it properly. **Flag it in the
+session — not only in a phase document.** Phase 01 collects these in
+`docs/visual/asset_gaps.md`, and every later phase appends to it.
+
+An asset gap is never a reason to generate new art (see Tier B) and never a
+reason to claim a screen matches.
+
 ## Navigation — decided in Phase 00, do not relitigate
 
 Three tabs: **Home · Alarms · Stats**. Settings is a **pushed route** from the
