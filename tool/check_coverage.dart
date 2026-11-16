@@ -12,7 +12,8 @@
 //   --lcov <file>   Path to the lcov file (default coverage/lcov.info).
 //
 // Generated files are excluded by default: *.g.dart and lib/l10n/generated/**.
-// They are machine-generated and would dilute the signal from hand-written code.
+// They are machine-generated and would dilute the signal from hand-written
+// code.
 
 import 'dart:io';
 

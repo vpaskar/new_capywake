@@ -11,7 +11,8 @@
 //   --allow-extra       Don't fail on keys present in a locale but not the
 //                       template (default: extras are an error).
 //
-// Metadata keys (@-prefixed) and @@locale are ignored — only message keys count.
+// Metadata keys (@-prefixed) and @@locale are ignored — only message keys
+// count.
 
 import 'dart:convert';
 import 'dart:io';
