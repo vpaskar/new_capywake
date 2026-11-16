@@ -1,0 +1,41 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+pubspec.lock.bak
+coverage/
+*.iml
+
+# Generated l10n
+lib/l10n/generated/
+
+# Generated Drift
+*.g.dart
+*.freezed.dart
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# macOS
+.DS_Store
+
+# Platform build output
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+android/.gradle/
+android/local.properties
+android/key.properties
+*.jks
+
+# Capture working files — the committed comparisons live in docs/visual/
+.capture_tmp/
