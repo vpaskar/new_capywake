@@ -17,9 +17,33 @@ against the illustrated mockups in
 ## The two projects
 
 - **This repo** is the only place anything is written.
-- **`../capywake` is READ-ONLY.** It is the behavior and process reference.
-  Never edit, refactor, reformat or delete anything in it. Harvest semantics
-  and edge cases; never copy widget code.
+- **`../capywake` is READ-ONLY.** Never edit, refactor, reformat or delete
+  anything in it. Read-only means *never modify it* — it does **not** mean
+  never take code from it.
+
+### What is ported, and what is not
+
+**If a file imports Flutter, it is not ported.** The sole exception is
+`lib/core/theme.dart`, which imports Flutter *and* is not ported.
+
+| Ported | Size |
+|---|---|
+| `lib/core/` minus `theme.dart` | 62 files, 9,825 lines — verified pure Dart |
+| `test/core/` | 48 files, **932 passing tests**, zero feature imports |
+| `lib/l10n/` | 383 keys × 10 locales; only 3 are navigation-coupled |
+| `lib/data/` tables + mappers | **at `schemaVersion = 1`** — drop the legacy's 6-version migration history; this app has no users |
+| `tool/check_arb.dart`, `check_coverage.dart`, `generate_tones.dart`, `assets/sounds/` | — |
+
+| Not ported | Why |
+|---|---|
+| `lib/features/`, `test/features/` | 26,710 lines of the old view tree |
+| `lib/features/common/capy/` | 1,939 lines of `CustomPaint` — the root cause |
+| `lib/core/theme.dart` | Our palette is sampled from the mockups |
+| `lib/app/shell.dart`, `router.dart` | Wrong navigation |
+
+File-level verdicts: `CAPYWAKE_REUSE_AUDIT.md`. The retrofit failed in the
+**view layer**; nothing in `lib/core/` has an opinion about how a capybara is
+drawn.
 
 ## Source of truth for the UI
 

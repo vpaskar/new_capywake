@@ -351,12 +351,15 @@ validate → **2 self-reviews + 1 full-project review** → post-review →
 tracker/memory/handoff update → commit. The handoff mandates the pre-review;
 the legacy mandates the post-reviews; we do both.
 
+**20 phases, 00–19.** `ai-orchestration/PHASE_TRACKER.md` is canonical for
+sequencing; this table is a summary and must be updated with it.
+
 | # | Name | Delivers |
 |---|---|---|
-| 00 | Discovery and source of truth | This plan, audit, pre-review, tracker, repo skeleton |
+| 00 | Discovery and source of truth | Audit, plan, pre-review, self-review, reuse audit, tracker, repo skeleton |
 | 01 | Foundation | Flutter project, 10-locale ARB, tokens from the sampled palette, font selection, `design/` components, router + shell, art import/audit/encode tooling, **working capture harness** |
-| 02 | Domain + persistence | `Alarm`, recurrence, schedule math, Drift schema, repositories — headless, ≥95% core |
-| 03 | Home / Today | `01_HOME.png`; next-alarm card on the **real** model, game rail, meadow footer |
+| 02 | Domain + persistence | **Port** `core/` + `test/core/` + ARB + Drift tables from `../capywake`; adapt, re-gate at ≥95% core |
+| 03 | Home / Today | `01_HOME.png`; next-alarm card on the real model, game rail, meadow footer |
 | 04 | Alarms list + Add/Edit | `02_ALARMS.png`, `03_ADD_EDIT_ALARM.png`; real form state, 0/1/4/20 alarms |
 | 05 | Alarm engine and reliability | Platform scheduling, timezone/DST, reboot, iOS 64-cap, just-in-time permissions, **device test** |
 | 06 | Ringing + emergency stop | Full-screen ring, snooze, dismiss-exactly-once, reachable escape |
@@ -364,9 +367,17 @@ the legacy mandates the post-reviews; we do both.
 | 08 | Stats | `05_STATS.png`; Sleep (Health), Alarms (wake events), Games (history); empty state is the default |
 | 09 | Onboarding | Welcome, first alarm, just-in-time permissions |
 | 10 | Puzzle chooser + the 10 existing puzzle types | Restyled into the cartoon language |
-| 11+ | The ten games | One per phase; permission rationale, a11y fallback, test evidence. The two blocked games come last |
-| ~ | Animation and polish | The 5 WebP loops, reduce-motion, dark mode pass |
-| ~ | Release QA | iOS + Android regression, bundle size, store readiness |
+| 11 | Game foundation | What a "game" is in this codebase |
+| 12 | Touch games I | Catch the Capy, Memory Hideout |
+| 13 | Touch games II | Rhythm Rescue, Capy Rocket |
+| 14 | Authored games | Morning Sort, Find the Impostor |
+| 15 | Motion games | Shake DJ, Tilt Maze — a11y fallback mandatory |
+| 16 | Capy Step Quest | **Blocked** — needs a step-count permission |
+| 17 | QR Treasure Hunt | **Blocked** — needs a camera dependency |
+| 18 | Animation and visual polish | The 5 WebP loops, reduce-motion, dark mode pass |
+| 19 | Release QA | iOS + Android regression, bundle size, store readiness |
+
+The five mockup screens are complete by phase 08.
 
 **The domain precedes the first screen, deliberately.** Home exists to show the
 next-alarm card; building it before `Alarm` exists would mean a throwaway
@@ -398,5 +409,42 @@ screen is ever rewritten to meet the domain.
 No auth, no cloud sync, no backend, no social or leaderboard features, no fake
 analytics. No sleep-stage detection or sleep *measurement* — CapyWake reads
 what the user's own wearable already recorded, or shows nothing. No claim of
-being more reliable than the OS clock app. No copied widget code from
-`../capywake`.
+being more reliable than the OS clock app.
+
+**No copied view code from `../capywake`** — no screens, no widgets, no theme,
+no router, no `CustomPaint` cast. The domain beneath is a different matter: see
+§10.
+
+## 10. What is ported from `../capywake`
+
+Revised 2026-11-16 (self-review SR-1). Phase 00 originally banned *all* reuse,
+which was a mistake — it conflated "never modify the legacy" with "never take
+anything from it". The master prompt's actual instruction is *"Do not copy the
+previous UI implementation or layouts"* and *"Preserve the product's
+capabilities, not its old view tree."* A pure-Dart schedule engine is a
+capability.
+
+**The rule, stated so it cannot be misread: if a file imports Flutter, it is
+not ported.** The sole exception is `lib/core/theme.dart`, which imports
+Flutter *and* is not ported.
+
+| Ported | Size | Verified |
+|---|---|---|
+| `lib/core/` minus `theme.dart` | 62 files, 9,825 lines | Only `theme.dart` imports Flutter, and nothing in `core/` depends on it |
+| `test/core/` | 48 files, 15,503 lines | **932 tests pass**; 0 of 48 import feature code |
+| `lib/l10n/` | 383 keys × 10 locales | Only 3 keys navigation-coupled |
+| `lib/data/` | 12 files, 2,500 lines | Tables and mappers only — **start at `schemaVersion = 1`**, drop the 6-version migration history (greenfield, no users) |
+| `tool/`, `assets/sounds/` | — | `check_arb`, `check_coverage`, `generate_tones` + 12 WAVs with clean licences |
+
+| Not ported | Size |
+|---|---|
+| `lib/features/`, `test/features/` | 82 files, 26,710 lines |
+| `lib/features/common/capy/` | 1,939 lines of `CustomPaint` |
+| `lib/core/theme.dart` | 704 lines |
+| `lib/app/shell.dart`, `router.dart` | 590 lines |
+
+Full file-level verdicts in `CAPYWAKE_REUSE_AUDIT.md`.
+
+This is not the retrofit that failed. That failed in the **view layer**, for a
+documented reason — a rule requiring the capybara be vector `CustomPaint`.
+Nothing in `lib/core/` has an opinion about how a capybara is drawn.

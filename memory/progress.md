@@ -37,3 +37,26 @@ against fabricated numbers.
 
 **Next:** Phase 01 — Foundation. Gated on `tool/capture.sh` producing a real
 PNG of the shell at 393×852.
+
+### Phase 00 addendum — reuse audit and self-review (same day)
+
+Owner asked what could be reused from `../capywake`. Answer: far more than
+Phase 00 allowed. Self-review found 8 findings (2H/3M/3L), all applied.
+
+Verified by running the commands, not by reading docs: only `lib/core/theme.dart`
+imports Flutter in all of `core/`; nothing in `core/` depends on it; 0 of 48
+core test files import feature code; `flutter test test/core` → **932 passed**;
+3 of 383 ARB keys are navigation-coupled.
+
+**SR-1 (High)** — Phase 00's "no code copied, and none will be" was wrong, and
+contradicted its own correctly-scoped "no copied *widget* code". Corrected to
+a greppable rule: **if a file imports Flutter, it is not ported.**
+
+**SR-2 (High)** — Phase 00 skipped its own post-implementation reviews, which
+is how SR-1 shipped. Tracker now applies steps 8–10 to documentation phases.
+
+Phase 02 changes from "build the domain" to "port and adapt the domain".
+~45,000 lines of tested, translated, non-UI work is portable.
+
+Added: `CAPYWAKE_REUSE_AUDIT.md`, `docs/phases/PHASE_00_SELF_REVIEW.md`,
+`NEXT_SESSION_PROMPT.md`.

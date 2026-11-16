@@ -92,10 +92,65 @@ catalogue with `comingSoon`/`blocked`), the unmeasured art budget (measure,
 then set at +20 %), and the undecided typeface (chosen in Phase 01 against a
 reference crop).
 
+## Re-opened and self-reviewed, same day
+
+The owner asked for a deep review of Phase 00 after asking whether anything
+from `../capywake` could be reused. It could — a great deal — and the review
+found 8 further findings (2 High, 3 Medium, 3 Low), all applied. See
+`docs/phases/PHASE_00_SELF_REVIEW.md` and `CAPYWAKE_REUSE_AUDIT.md`.
+
+**SR-1 (High).** Phase 00 wrote *"No code has been copied from `../capywake`,
+and none will be."* That was wrong. It conflated "never modify the legacy" with
+"never take anything from it" — but the master prompt's actual words are *"Do
+not copy the previous UI implementation or layouts"* and *"Preserve the
+product's capabilities, not its old view tree."* A pure-Dart schedule engine is
+a capability.
+
+Measured afterwards, the ban would have cost:
+
+| | |
+|---|---|
+| `lib/core/` minus `theme.dart` | 62 files, 9,825 lines — **only `theme.dart` imports Flutter in all of `core/`**, and nothing in `core/` depends on it |
+| `test/core/` | 48 files, 15,503 lines, **932 tests passing**, 0 feature imports |
+| `lib/l10n/` | 383 keys × 10 locales — **only 3 are navigation-coupled** |
+| `lib/data/` | 12 files, 2,500 lines of Drift tables, mappers, platform adapters |
+
+The 932 cover DST spring-forward, leap day, skip-next sequencing, and a
+one-time 00:30 alarm set at 23:55 firing after midnight. Rewriting that is
+choosing to rediscover those bugs in production.
+
+The rule is now mechanical and greppable: **if a file imports Flutter, it is
+not ported** — sole exception `lib/core/theme.dart`, which imports Flutter
+*and* is not ported. That line falls exactly where the retrofit actually
+failed: the view layer. Nothing in `core/` has an opinion about how a capybara
+is drawn.
+
+**SR-2 (High).** Phase 00 ran a pre-review and then committed, skipping the two
+self-reviews plus full-project review its own tracker mandates — on the
+reasoning that a planning phase has no code to review. That reasoning is what
+let SR-1 ship. The tracker now says steps 8–10 apply to documentation phases
+too.
+
+**Mediums:** Drift would have been ported at `schemaVersion = 6` with five
+historical migrations into an app with zero users (now: start at 1); "the
+legacy suite passes" was overclaimed from a `test/core` run alone (now stated
+precisely); and the plan's phase table disagreed with the tracker's 00–19 (now
+reconciled, tracker canonical).
+
+**Lows:** the HIGH-1 art claim was asserted before its evidence crops existed
+(correct outcome, backwards order); comparison artifacts should be WebP not
+PNG; and the handoff package sits in `~/Downloads`, where a cleanup would break
+every reference path at once — flagged for the owner, not moved unilaterally.
+
+**Net effect:** phase 02 becomes *port and adapt the domain* rather than *build
+the domain*, inheriting 932 tests instead of rediscovering the bugs behind
+them. Roughly 45,000 lines of tested, translated, non-UI work is portable.
+
 ## Next session
 
-Phase 01. Read `docs/phases/PHASE_01_PLAN.md`, revise it, write
-`PHASE_01_PRE_REVIEW.md` **before any code**, then implement.
+Phase 01. Paste `NEXT_SESSION_PROMPT.md`. Read
+`docs/phases/PHASE_01_PLAN.md`, revise it, write `PHASE_01_PRE_REVIEW.md`
+**before any code**, then implement.
 
 Phase 01 is not done until `tool/capture.sh` has produced a real PNG of the
 shell at 393×852. If the harness cannot be made to work, that is a blocker to

@@ -75,8 +75,13 @@ and prove it matches.
 - Placeholder screens only — real screens are phases 03+.
 
 ### l10n
-- 10 ARB files: `en de ru es tr fr it pt ar ja`, `en` the template.
-- `tool/check_arb.dart` — every key in all ten or the build fails.
+- **Port the 10 ARB files from `../capywake/lib/l10n/`** — 383 keys × 10
+  locales, human-quality, incl. Arabic RTL and Japanese. Only 3 keys are
+  navigation-coupled (`navTodayLabel`, `navAlarmsLabel`, `navSettingsLabel`);
+  rename to `navHomeLabel` / `navAlarmsLabel` / `navStatsLabel` and add the
+  Settings entry point. Keys for screens not yet built stay — they cost
+  nothing and phase 02+ consumes them.
+- **Port `tool/check_arb.dart`** rather than writing one.
 - RTL verified for `ar` on the shell.
 
 ### Capture harness — **the gating deliverable**
@@ -92,6 +97,9 @@ and prove it matches.
 ## Must not implement
 
 - No Home, Alarms, Add/Edit, Settings or Stats screen.
+- **No `core/` port** — phase 02 owns that, and it is a large, careful move.
+  Phase 01 ports only the l10n files and the two check tools, because the
+  shell needs strings and the gate must be green from the first commit.
 - No `Alarm` model, no Drift, no repositories — phase 02.
 - No alarm engine, notifications or permissions — phase 05.
 - No games, no puzzle types.

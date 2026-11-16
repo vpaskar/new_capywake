@@ -337,10 +337,18 @@ open item, not an assumed pass.
 
 ## 10. What this audit does not claim
 
-- No code has been copied from `../capywake`, and none will be. Behavior is
-  reproduced; the widget tree is written fresh.
+- ~~No code has been copied from `../capywake`, and none will be. Behavior is
+  reproduced; the widget tree is written fresh.~~
+  **Superseded 2026-11-16 by self-review SR-1.** That sentence conflated "never
+  modify the legacy" with "never take anything from it". The view layer is
+  written fresh; the pure-Dart domain, its tests, the 10-locale ARB set and the
+  Drift tables are **ported**. See `CAPYWAKE_REUSE_AUDIT.md` and
+  `docs/phases/PHASE_00_SELF_REVIEW.md`.
 - No device screenshots have been taken yet. The legacy repo never captured any
   either (`CAPYWAKE_REDESIGN_AUDIT.md`: "the auto-chain has no display").
-- The legacy test suite has not been run; its pass state is taken from the
-  tracker, not re-verified.
+- `flutter test test/core` was run: **932 tests passed**. `test/data`,
+  `test/features` and `test/app` were **not** run — no claim is made about
+  them. The legacy working tree also carries 11 uncommitted modified files
+  dated 2026-11-15 20:51–21:16; pre-existing, verified by mtime, not caused by
+  this session.
 - Android behavior is unverified on this machine today.
