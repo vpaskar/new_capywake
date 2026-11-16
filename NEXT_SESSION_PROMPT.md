@@ -21,7 +21,7 @@ next.** No app code exists yet — that is deliberate, not an oversight.
 8. `docs/phases/PHASE_00_PRE_REVIEW.md`
 9. `docs/phases/PHASE_01_PLAN.md`
 
-Also read `~/Downloads/CapyWake_Flutter_Rebuild_Handoff/00_AGENT_MASTER_PROMPT.md`
+Also read `reference/00_AGENT_MASTER_PROMPT.md`
 — it is the governing brief.
 
 ## What Phase 00 settled, so you do not relitigate it

@@ -46,18 +46,23 @@ blocker to raise in Phase 01, not a surprise in Phase 03.
 
 ## Reference paths
 
+The handoff package now lives **inside the repo** at `reference/`, git-ignored
+(348 MB). Paths are relative to the project root.
+
 | What | Where |
 |---|---|
-| Mockups (source of truth) | `~/Downloads/CapyWake_Flutter_Rebuild_Handoff/01_REFERENCES/screens/primary/` |
-| Hero scenes | `.../02_ASSETS/header_scenes/*_integrated.png` |
-| Mascots / decor / icons | `.../02_ASSETS/asset_library/`, `clean_icons/`, `mascot_fixes/` |
-| Animations | `.../02_ASSETS/animations/*/loop.webp` |
+| Master brief | `reference/00_AGENT_MASTER_PROMPT.md` |
+| Mockups (source of truth) | `reference/01_REFERENCES/screens/primary/` |
+| Hero scenes | `reference/02_ASSETS/header_scenes/*_integrated.png` |
+| Mascots | `reference/02_ASSETS/asset_library/mascots/` + `mascot_fixes/` |
+| Clean icons | `reference/02_ASSETS/clean_icons/` |
+| Decor | `reference/02_ASSETS/asset_library/decor/` |
+| Animations | `reference/02_ASSETS/animations/*/loop.webp` |
 | Legacy (READ-ONLY) | `../capywake` |
 
-**Recommendation for the owner:** the handoff package lives in `~/Downloads`,
-which is where browsers dump files and users clean up. Moving or copying it to
-`new_capywake/reference/` (git-ignored) would stop every reference path in the
-project from breaking at once if it disappears.
+`reference/` is reference material, never bundled. Phase 01's
+`tool/audit_art.dart` imports selected production assets from it into
+`assets/`.
 
 ## Environment
 

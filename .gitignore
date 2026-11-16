@@ -39,3 +39,9 @@ android/key.properties
 
 # Capture working files — the committed comparisons live in docs/visual/
 .capture_tmp/
+
+# The handoff package: 348 MB of mockups, assets, source archives and legacy
+# handovers, copied here so the source of truth lives with the project instead
+# of in ~/Downloads. Reference material, not source — never bundled. Selected
+# production assets are imported into assets/ by tool/audit_art.dart.
+reference/

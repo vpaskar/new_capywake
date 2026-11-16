@@ -2,7 +2,7 @@
 
 A cozy, capybara-themed smart alarm for iOS and Android, rebuilt from scratch
 against the illustrated mockups in
-`~/Downloads/CapyWake_Flutter_Rebuild_Handoff/`.
+`reference/`.
 
 ## Start of every session — do this before anything else
 
@@ -64,7 +64,7 @@ drawn.
 
 ## Source of truth for the UI
 
-`~/Downloads/CapyWake_Flutter_Rebuild_Handoff/01_REFERENCES/screens/primary/`
+`reference/01_REFERENCES/screens/primary/`
 — `01_HOME.png`, `02_ALARMS.png`, `03_ADD_EDIT_ALARM.png`, `04_SETTINGS.png`,
 `05_STATS.png`. These override every earlier board and exploration.
 

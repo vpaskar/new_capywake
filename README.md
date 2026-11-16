@@ -4,7 +4,7 @@ A cozy, capybara-themed smart alarm for iOS and Android. Flutter, offline-first,
 no backend.
 
 This is a **greenfield rebuild**. The UI is reconstructed from scratch against
-the illustrated mockups in `~/Downloads/CapyWake_Flutter_Rebuild_Handoff/`;
+the illustrated mockups in `reference/`;
 the alarm behavior reproduces semantics proven in the legacy `../capywake`,
 which is a **read-only** reference and is never modified.
 
