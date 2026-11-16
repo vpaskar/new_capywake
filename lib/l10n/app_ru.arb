@@ -394,5 +394,9 @@
   "gameStepQuest": "Step Quest",
   "gameShakeDj": "Shake DJ",
   "gameCatchTheCapy": "Catch the Capy",
-  "gameFindTheImpostor": "Find the Impostor"
+  "gameFindTheImpostor": "Find the Impostor",
+  "alarmAddAction": "Добавить",
+  "alarmAddTitle": "Новый будильник",
+  "alarmEditTitle": "Изменить будильник",
+  "alarmBackAction": "Назад"
 }

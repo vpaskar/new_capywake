@@ -1,0 +1,24 @@
+  capture 1179x2556px @ 3.0000 = 393x852pt
+  mockup  851x1847px @ 2.1653 = 393x853pt
+  reference scaled to captured height; +-1.0pt is rounding
+
+  capture top inset 59.0pt (mockup draws 44pt); offsets are measured from it
+
+  block                          ref   actual    delta
+  header band lower edge        59.9     60.0      0.1
+  hero scene lower edge        208.5    208.3     -0.2
+  alarm card 1 top             285.7    285.7     -0.0
+  alarm card 1 bottom          375.3    374.3     -1.0
+  alarm card 2 top             387.8    388.0      0.2
+  alarm card 2 bottom          474.6    476.7      2.1  within tolerance
+  alarm card 3 top             486.4    490.0      3.6  within tolerance
+  alarm card 3 bottom          573.9    578.7      4.8  TIER A FAIL
+  alarm card 4 top             586.4    592.0      5.6  TIER A FAIL
+  alarm card 4 bottom          672.7    694.3     21.6  TIER A FAIL
+  meadow footer top            684.3       --   absent
+  nav bar top                  730.5       --   absent
+
+  worst delta 21.6pt (Tier A tolerance 4.0pt)
+  wrote docs/visual/alarms/side_by_side.png
+
+5 block(s) outside Tier A tolerance.

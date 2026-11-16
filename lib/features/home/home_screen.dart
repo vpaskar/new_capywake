@@ -42,11 +42,15 @@ class HomeScreen extends ConsumerWidget {
 
     return SceneHeader(
       scene: SceneCrop.home,
+      bandHeight: _heroBandHeight,
       header: const CapyHeader(),
       child: _Body(next: next, settings: settings ?? UserSettings.initial),
     );
   }
 }
+
+/// 292.3 - 103.9 on `01_HOME.png`.
+const _heroBandHeight = 188.4;
 
 class _Body extends ConsumerWidget {
   const _Body({required this.next, required this.settings});

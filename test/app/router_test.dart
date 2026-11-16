@@ -2,6 +2,7 @@ import 'package:capywake/app/app.dart';
 import 'package:capywake/app/router.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/providers.dart';
+import 'package:capywake/design/capy_nav_bar.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -47,14 +48,21 @@ void main() {
     expect(find.byType(Scaffold), findsWidgets);
   });
 
+  /// The nav bar's own copy of a label. Phase 04 gave the Alarms screen a
+  /// title that reads the same as its tab, so plain text finders match twice.
+  Finder navTab(WidgetTester tester, int index) => find.descendant(
+    of: find.byType(CapyNavBar),
+    matching: find.text(labelOf(tester, index)),
+  );
+
   testWidgets('switches between all three tabs', (tester) async {
     await pumpApp(tester);
 
     for (var i = 0; i < 3; i++) {
-      await tester.tap(find.text(labelOf(tester, i)));
+      await tester.tap(navTab(tester, i));
       await tester.pumpAndSettle();
       expect(
-        find.text(labelOf(tester, i)),
+        navTab(tester, i),
         findsOneWidget,
         reason: 'tab $i stays reachable after selecting it',
       );
@@ -75,13 +83,13 @@ void main() {
         expect(find.byType(AppBar), findsOneWidget);
 
         // Settings is outside the shell, so the bottom bar is covered.
-        expect(find.text(labelOf(tester, index)), findsNothing);
+        expect(navTab(tester, index), findsNothing);
 
         await tester.pageBack();
         await tester.pumpAndSettle();
 
         expect(
-          find.text(labelOf(tester, index)),
+          navTab(tester, index),
           findsOneWidget,
           reason: 'popping settings returns to the tab it was pushed from',
         );

@@ -41,8 +41,10 @@ class CapyNavBar extends StatelessWidget {
       padding: EdgeInsets.only(
         bottom: MediaQuery.paddingOf(context).bottom,
       ),
-      child: SizedBox(
-        height: CapyNavBar.height,
+      // A minimum, not a cap: at accessibility text sizes the bar grows
+      // instead of clipping its labels. Tier A binds 64.6 pt at normal scale.
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minHeight: CapyNavBar.height),
         child: Row(
           children: [
             for (var i = 0; i < destinations.length; i++)
@@ -86,6 +88,7 @@ class _Tab extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(destination.icon, color: color, size: CapyIconSize.md),

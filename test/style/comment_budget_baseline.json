@@ -1,7 +1,7 @@
 {
   "lib/core/alarm_dismiss_summary.dart": 416,
   "lib/core/alarm_draft.dart": 1576,
-  "lib/core/alarm_format.dart": 868,
+  "lib/core/alarm_format.dart": 725,
   "lib/core/alarm_repeat.dart": 786,
   "lib/core/alarm_sound.dart": 1361,
   "lib/core/countdown_format.dart": 1110,

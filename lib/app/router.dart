@@ -1,5 +1,6 @@
 import 'package:capywake/app/shell.dart';
 import 'package:capywake/features/alarms/alarms_screen.dart';
+import 'package:capywake/features/alarms/edit/alarm_edit_screen.dart';
 import 'package:capywake/features/home/home_screen.dart';
 import 'package:capywake/features/settings/settings_screen.dart';
 import 'package:capywake/features/stats/stats_screen.dart';
@@ -11,6 +12,12 @@ abstract final class Routes {
   static const alarms = '/alarms';
   static const stats = '/stats';
   static const settings = '/settings';
+
+  static const alarmNew = '/alarms/new';
+
+  /// The edit route for one alarm. `new` is a sibling literal, so an alarm
+  /// whose id were the string "new" would collide; ids are UUIDs.
+  static String alarmEdit(String id) => '/alarms/$id';
 }
 
 final _rootKey = GlobalKey<NavigatorState>();
@@ -42,6 +49,21 @@ GoRouter createRouter({String initialLocation = Routes.home}) {
               GoRoute(
                 path: Routes.alarms,
                 builder: (context, state) => const AlarmsScreen(),
+                // On the root navigator: `03_ADD_EDIT_ALARM.png` draws no tab
+                // bar, and a form covering it is also one way out, not two.
+                routes: [
+                  GoRoute(
+                    path: 'new',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) => const AlarmEditScreen(),
+                  ),
+                  GoRoute(
+                    path: ':id',
+                    parentNavigatorKey: _rootKey,
+                    builder: (context, state) =>
+                        AlarmEditScreen(alarmId: state.pathParameters['id']),
+                  ),
+                ],
               ),
             ],
           ),

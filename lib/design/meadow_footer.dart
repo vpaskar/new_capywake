@@ -6,9 +6,13 @@ import 'package:flutter/material.dart';
 /// The grass band above the nav bar, 65.2 pt in `01_HOME.png`. Drawn, not
 /// bundled: asset gap G13 — no supplied decor is the right shape.
 class MeadowFooter extends StatelessWidget {
-  const MeadowFooter({super.key});
+  const MeadowFooter({this.height = defaultHeight, super.key});
 
-  static const height = 65.2;
+  /// `01_HOME.png`'s band. `02_ALARMS.png` draws 52.2, so each screen passes
+  /// its own measurement rather than inheriting Home's.
+  static const defaultHeight = 65.2;
+
+  final double height;
 
   @override
   Widget build(BuildContext context) {

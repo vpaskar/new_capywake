@@ -1,0 +1,24 @@
+  capture 1179x2556px @ 3.0000 = 393x852pt
+  mockup  851x1847px @ 2.1653 = 393x853pt
+  reference scaled to captured height; +-1.0pt is rounding
+
+  capture top inset 59.0pt (mockup draws 44pt); offsets are measured from it
+
+  block                          ref   actual    delta
+  header band lower edge        59.9     60.0      0.1
+  hero scene lower edge        172.0    172.0      0.0
+  time stepper card top        205.8    206.0      0.2
+  time stepper card bottom     318.5    333.7     15.2  TIER A FAIL
+  repeat card top              355.9    347.0     -8.9  TIER A FAIL
+  repeat card bottom           438.6    469.7     31.1  TIER A FAIL
+  label card top               467.7    483.0     15.3  TIER A FAIL
+  sound card top               559.1    581.3     22.2  TIER A FAIL
+  snooze card top              616.4    607.0     -9.4  TIER A FAIL
+  save CTA top                 680.6    687.0      6.4  TIER A FAIL
+  save CTA bottom              734.1       --   absent
+  meadow footer top            749.4       --   absent
+
+  worst delta 31.1pt (Tier A tolerance 4.0pt)
+  wrote docs/visual/add_edit_alarm/side_by_side.png
+
+9 block(s) outside Tier A tolerance.

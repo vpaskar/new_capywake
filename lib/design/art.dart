@@ -14,6 +14,9 @@ enum ArtUse {
   /// A mascot in a list row or beside a label.
   mascotSmall(renderBoxPt: 44),
 
+  /// Alarm-row art panel, 124 pt wide on `02_ALARMS.png`.
+  thumbnail(renderBoxPt: 124),
+
   /// An icon inside a control.
   icon(renderBoxPt: 44),
 
@@ -79,6 +82,36 @@ abstract final class CapyArt {
     ),
   ];
 
+  /// Alarm-row art for `02_ALARMS.png`'s four rows. Cutouts standing in for
+  /// painted panels, under-resolution: gaps G14/G15 in `asset_gaps.md`.
+  static const thumbnails = <ArtAsset>[
+    ArtAsset(
+      'thumb.sleeping',
+      'assets/art/mascots/moments_01.webp',
+      ArtUse.thumbnail,
+    ),
+    ArtAsset(
+      'thumb.workout',
+      'assets/art/mascots/moments_03.webp',
+      ArtUse.thumbnail,
+    ),
+    ArtAsset(
+      'thumb.walk',
+      'assets/art/mascots/collection_02.webp',
+      ArtUse.thumbnail,
+    ),
+    ArtAsset(
+      'thumb.music',
+      'assets/art/mascots/collection_06.webp',
+      ArtUse.thumbnail,
+    ),
+  ];
+
+  /// Row art by position, not by label — the choice must not vary by
+  /// language.
+  static ArtAsset thumbnailForIndex(int index) =>
+      thumbnails[index % thumbnails.length];
+
   static const wordmark = ArtAsset(
     'wordmark',
     'assets/art/wordmark.webp',
@@ -89,6 +122,7 @@ abstract final class CapyArt {
     ...scenes,
     ...tiles,
     ...mascots,
+    ...thumbnails,
     wordmark,
   ];
 

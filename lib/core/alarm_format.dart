@@ -1,5 +1,26 @@
 import 'package:capywake/core/models/models.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:meta/meta.dart';
+
+/// A clock time split into the digits and the AM/PM marker, for surfaces
+/// that style the two differently. See `PHASE_04_PRE_REVIEW.md` H1.
+@immutable
+class ClockTimeParts {
+  const ClockTimeParts({required this.time, required this.period});
+
+  /// The digits with their separator — "7:00", "07:00", "٧:٠٠".
+  final String time;
+
+  /// The localized AM/PM marker, or `null` when the format shows none.
+  final String? period;
+
+  @override
+  bool operator ==(Object other) =>
+      other is ClockTimeParts && other.time == time && other.period == period;
+
+  @override
+  int get hashCode => Object.hash(time, period);
+}
 
 /// Pure-Dart formatters for alarm metadata.
 ///
@@ -29,6 +50,47 @@ abstract final class AlarmFormat {
     return fmt.format(base);
   }
 
+  /// [time], split. Each part is formatted by `intl` in its own right, never
+  /// cut out of a combined string. `period` is null when none is shown.
+  static ClockTimeParts timeParts({
+    required int minutes,
+    required String localeName,
+    required TimeFormatPreference format,
+  }) {
+    final base = DateTime(2000, 1, 1, minutes ~/ 60, minutes % 60);
+    final twelveHour = switch (format) {
+      TimeFormatPreference.h12 => true,
+      TimeFormatPreference.h24 => false,
+      TimeFormatPreference.system => _localeUsesTwelveHour(localeName),
+    };
+    final digits = intl.DateFormat(
+      twelveHour ? 'h:mm' : 'HH:mm',
+      localeName,
+    ).format(base);
+    return ClockTimeParts(
+      time: digits,
+      period: twelveHour ? intl.DateFormat('a', localeName).format(base) : null,
+    );
+  }
+
+  /// The locale's AM and PM markers, read from `intl` rather than written
+  /// out — `tr` is "ÖÖ"/"ÖS", `ar` "ص"/"م".
+  static (String, String) periodLabels({required String localeName}) {
+    final fmt = intl.DateFormat('a', localeName);
+    return (
+      fmt.format(DateTime(2000, 1, 1, 9)),
+      fmt.format(DateTime(2000, 1, 1, 21)),
+    );
+  }
+
+  /// Whether the locale's default clock is 12-hour. Asked of `intl` — there
+  /// is no public flag, and a hardcoded list would drift from its data.
+  static bool _localeUsesTwelveHour(String localeName) {
+    final afternoon = DateTime(2000, 1, 1, 13);
+    final marker = intl.DateFormat('a', localeName).format(afternoon);
+    return intl.DateFormat.jm(localeName).format(afternoon).contains(marker);
+  }
+
   /// Returns the locale's *abbreviated* weekday name for the given ISO
   /// weekday (Monday = 1 .. Sunday = 7) — "Mon" in English, "Mo" in German.
   ///
@@ -49,10 +111,8 @@ abstract final class AlarmFormat {
   /// Returns the locale's *narrow* weekday name for the given ISO weekday
   /// (Monday = 1 .. Sunday = 7) — "M" in English, "月" in Japanese.
   ///
-  /// Used for the seven repeat-day toggles, which are a fixed square and have
-  /// room for one glyph. Narrow names are deliberately ambiguous (English
-  /// repeats "T" and "S"), which is fine for a row of seven in weekday order
-  /// and is why the summary line beneath spells the days out.
+  /// Not used by the repeat-day chips: the mockup's pills read "Mon", so
+  /// they take [shortWeekday]. See `PHASE_04_PRE_REVIEW.md` H2.
   static String narrowWeekday({
     required int weekday,
     required String localeName,

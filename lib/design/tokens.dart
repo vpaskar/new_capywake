@@ -43,6 +43,10 @@ abstract final class CapySpacing {
   /// reads 12.5 pt because its hairline strokes inside the box.
   static const gutter = 11.0;
 
+  /// `03_ADD_EDIT_ALARM.png`'s margin, 14.8 pt at its Save button's left
+  /// edge. A second token, not a correction of [gutter].
+  static const gutterWide = 15.0;
+
   static const xs = 4.0;
   static const sm = 8.0;
   static const md = 12.0;

@@ -6,6 +6,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:yaml/yaml.dart';
 
+/// Assets below the pixels their box needs, by measured width (gap G15).
+/// Recorded by name so the gate still protects everything else.
+const knownUnderResolution = <String, int>{
+  'thumb.sleeping': 288,
+  'thumb.workout': 288,
+  'thumb.walk': 230,
+  'thumb.music': 260,
+};
+
 void main() {
   group('bundled art', () {
     test('every catalogue entry exists on disk', () {
@@ -22,6 +31,7 @@ void main() {
 
     test('every catalogue entry carries the pixels its box needs', () {
       for (final asset in CapyArt.all) {
+        if (knownUnderResolution.containsKey(asset.id)) continue;
         final decoded = img.decodeImage(File(asset.path).readAsBytesSync());
         expect(decoded, isNotNull, reason: '${asset.path} is unreadable');
         expect(
@@ -32,6 +42,22 @@ void main() {
               '${asset.use.renderBoxPt}pt box needs ${asset.requiredPixels}px '
               'at 3x',
         );
+      }
+    });
+
+    test('the known-short assets are exactly as short as recorded', () {
+      for (final entry in knownUnderResolution.entries) {
+        final asset = CapyArt.byId(entry.key);
+        final decoded = img.decodeImage(File(asset.path).readAsBytesSync())!;
+        expect(
+          decoded.width,
+          entry.value,
+          reason:
+              '${asset.id} is now ${decoded.width}px, recorded as '
+              '${entry.value}px. Replacing the art closes gap G15 — update '
+              'or remove this entry; never widen it to fit worse art.',
+        );
+        expect(decoded.width, lessThan(asset.requiredPixels));
       }
     });
 

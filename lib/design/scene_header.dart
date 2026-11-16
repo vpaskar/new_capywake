@@ -31,8 +31,7 @@ class SceneHeader extends StatelessWidget {
   const SceneHeader({
     required this.scene,
     required this.child,
-    this.bandHeight = 188.4,
-    this.overlap = 11.1,
+    required this.bandHeight,
     this.header,
     super.key,
   });
@@ -42,12 +41,9 @@ class SceneHeader extends StatelessWidget {
   /// Content of the cream card that overlaps the art.
   final Widget child;
 
-  /// Art band height in logical pixels, measured from `01_HOME.png`.
+  /// Art band height, measured per screen: Home 188.4, Alarms 148.6,
+  /// Add/Edit 112.1. Required, because a default was inherited silently.
   final double bandHeight;
-
-  /// Kept for callers; the card starts flush with the band. The mockup's
-  /// 292.3/303.4 edges are one edge plus a radius — see the post-review.
-  final double overlap;
 
   /// Row drawn above the art — the wordmark and the settings gear.
   final Widget? header;

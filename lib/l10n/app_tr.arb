@@ -394,5 +394,9 @@
   "gameStepQuest": "Step Quest",
   "gameShakeDj": "Shake DJ",
   "gameCatchTheCapy": "Catch the Capy",
-  "gameFindTheImpostor": "Find the Impostor"
+  "gameFindTheImpostor": "Find the Impostor",
+  "alarmAddAction": "Alarm ekle",
+  "alarmAddTitle": "Alarm ekle",
+  "alarmEditTitle": "Alarmı düzenle",
+  "alarmBackAction": "Geri"
 }

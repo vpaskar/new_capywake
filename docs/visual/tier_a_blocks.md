@@ -115,3 +115,73 @@ than as absolute mockup offsets like the rows above them.
 Home is measured. **Alarms, Add/Edit, Settings and Stats are measured by their
 own phases** (04, 04, 07, 08) and appended here, using the same detector so the
 numbers stay comparable — subject to the correction above.
+
+## Blocks — Alarms (`02_ALARMS.png`), Phase 04
+
+Measured with the method `CLAUDE.md` requires. **The method is named beside
+every number**, because three of Phase 03's rows were glyph edges read by a
+detector that cannot tell text from a layout boundary.
+
+| Block | Edge (pt) | Method |
+|---|---|---|
+| Hero art lower edge | **252.5** | Full-width green-pixel count collapses 67→58. Flat art → flat cream, so the row-mean detector is valid here |
+| Add Alarm pill | **272.5–309.4** | Orange colour anchor, x 232.8–377.3. 36.9 pt tall |
+| Alarm card 1 | **329.7–419.3** | Hairline minima at x=360 pt, a column with no text in it |
+| Alarm card 2 | **431.8–518.6** | same |
+| Alarm card 3 | **530.4–617.9** | same |
+| Alarm card 4 | **630.4–716.7** | same |
+| Meadow footer | **728.3–780.5** | Green-saturation run, ≥40 hits per row |
+| Nav bar top | 774.5 | Inherited from Home — same `CapyNavBar` |
+
+Derived (inference, not measurement):
+
+| | pt | From |
+|---|---|---|
+| Card height | 89.6 | 419.3 − 329.7 |
+| Card pitch | 101.6 | 431.8 − 330.2 |
+| Card gap | 12.5 | 431.8 − 419.3 |
+| Hero band | **148.6** | 252.5 − 103.9 — **not Home's 188.4** |
+| Meadow height | **52.2** | 780.5 − 728.3 — **not Home's 65.2** |
+
+Horizontal, from a row profile at y=345 pt: card 11.5 → 379.6, thumbnail panel
+11.5 → ~136 (the art fades out; there is no hard divider), toggle track
+302.0 → 339.9 at 30.5 pt tall.
+
+## Blocks — Add/Edit (`03_ADD_EDIT_ALARM.png`), Phase 04
+
+Card boundaries are hairline minima at **x=19 pt**, the column between the
+outer card edge (15.2) and the inner panel (23.1) — text-free by construction.
+Cross-checked at x=372 pt, which agreed within 0.5 pt on both cards it covers.
+
+| Block | Edge (pt) | Method |
+|---|---|---|
+| Hero art lower edge | **216.0** | Full-width green collapse 63→56 |
+| Time stepper card | **249.8–362.5** | Hairline, x=19 |
+| AM pill (selected) | **265.5–300.6** | Orange anchor, x 277.5–347.7 → 70.2 × 35.1 |
+| Repeat card | **399.9–482.6** | Hairline, x=19 |
+| Weekday chip row | **442.9–474.7** | Orange anchor, x 27.2–271.1, 31.8 pt tall |
+| Label card | **511.7–577.7** | Hairline, x=19 |
+| Sound card | **603.1–643.3** | Hairline, x=372 |
+| Snooze card | **660.4–703.8** | Hairline, x=372 |
+| Save CTA | **724.6–778.1** | Orange anchor, x 14.8–377.8 → 363.0 × 53.5 |
+| Meadow footer | **793.4–852.5** | Green-saturation run |
+
+Derived: gutter **14.8** (not Home's 11.0 — `CapySpacing.gutterWide`), hero
+band **112.1**, hour/minute wells ~91 pt wide (x 54.5–145.9, 171.3–262.8).
+
+**Each screen's hero band and meadow differ.** Home 188.4/65.2, Alarms
+148.6/52.2, Add/Edit 112.1/59.1. Phase 04 took Home's defaults and read +39.8
+pt on the first capture; `SceneHeader.bandHeight` is now a required parameter
+so Phases 07 and 08 cannot repeat it.
+
+## Phase 04 — the detector could not see a card border
+
+`compare.dart`'s row-mean scan needs |ΔL| > 18. A 1-px card border moves a
+393-pt row mean by **under one unit**, so every alarm card was reported
+`absent` while all four were on screen and correctly placed. A second miss:
+the first fix cut at L < 235 and still could not see the two **disabled**
+rows, whose 55%-opacity borders land near 236.
+
+`_hairlines` now reads local minima down the same text-free column the mockup
+rows were measured at, at L < 244. **A boundary the tool cannot see is
+reported as a layout failure it never measured.**

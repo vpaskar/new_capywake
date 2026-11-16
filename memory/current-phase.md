@@ -1,101 +1,93 @@
 # Current phase
 
-**Phase 03 — Home / Today: done, 2026-11-16. `Current phase: 04`.**
+**Phase 04 — Alarms list and Add/Edit: done, 2026-11-16. `Current phase: 05`.**
 
-The first screen with a body, and therefore the first real test of the
-fidelity contract. **1,116 tests**, analyze clean, lib 97.38% / `lib/core`
-99.41% / `lib/data` 86.40%, 395 ARB keys × 10 locales.
+The first screens that **write**, and the first to use the ported `AlarmDraft`
+as the form model it was built to be. **1,189 tests**, analyze clean, lib
+97.54% / `lib/core` 99.41% / `lib/data` 86.40%, **399 ARB keys × 10 locales**.
 
 ## What this phase actually found
 
-Four defects, none of them in Phase 03's own new code. All four were found by
-**running something and reading the result**.
+### 1. A design-system default was one screen's measurement — the third time
 
-### 1. `SceneHeader` shortened every hero band by 11.1 pt
+`SceneHeader.bandHeight` defaulted to **188.4 pt**, which is `01_HOME.png`'s
+band. Alarms measures **148.6**, Add/Edit **112.1**. Both new screens took the
+default and the first capture read the hero **+39.8 pt**, displacing
+everything below.
 
-`tier_a_blocks.md` records two edges: 292.3 ("hero scene lower edge") and
-303.4 ("card top"). Phase 01 read the 11.1 pt between them as *the card riding
-up over the art* and drew the cream card **inside** the art's `Stack`.
+Making the parameter **required** immediately surfaced two more callers: Home
+(correct, now explicit) and **Stats, which was silently carrying Home's
+number** and must measure it in Phase 08.
 
-They are **one edge and a corner radius** — the card begins flush at 292.3 and
-its 28 pt radius reaches full width at 303.4. The first capture of a screen
-with content failed **13 of 14 blocks**, worst delta 38.7 pt, all inheriting
-that shortfall. After the fix the hero lower edge is **0.0 pt**.
+`MeadowFooter.height` was the same shape — 65.2 Home, **52.2** Alarms, **59.1**
+Add/Edit — and its excess is why the fourth alarm card fell off the fold.
 
-**Phase 01 measured −11.0 and −22.1 on exactly those rows and attributed them
-to "the screens have no bodies".** Only the nav-bar row had that cause. The
-same wrong explanation was repeated in Phase 02's post-review and the tracker —
-**wrong in three documents, all corrected in place.**
+**The pattern is the finding.** After Phase 03's overlap bug this is the third
+occurrence: a shared widget whose default is one screen's measurement is wrong
+on every other screen, silently, and the compiler cannot help while a default
+exists. `bandHeight` is required now; `MeadowFooter.height` is not, because a
+footer that is slightly tall is cosmetic rather than displacing — an
+asymmetry that is deliberate and recorded.
 
-### 2. Three of this phase's own block rows were glyph edges
+### 2. `compare.dart` could not see a card border at all
 
-A row-mean luminance detector **cannot tell a line of text from a layout
-edge**. "Game rail top 605.0" was the tile art's *bottom*; "my stats row top
-662.7" was a glyph edge inside a label's second line. The tile size was then
-*inferred arithmetically* from two of those wrong rows: **94 pt against a
-measured 74**, 27% large.
+A 1-px border moves a 393-pt row mean by **under one unit**, so all four alarm
+cards read `absent` while on screen and correctly placed. The first fix
+(`L < 235`) still could not see the two **disabled** rows, whose 55%-opacity
+borders land near 236 — the screen's own content hiding it from its own
+measurement.
 
-Fixed by reading a crop and anchoring to the My Stats row's orange icon, a
-colour the detector cannot confuse. **The rule is now in `CLAUDE.md`**, not
-only in a phase file.
+Phase 03 extended this tool from 4 blocks to 14 and the gap survived, because
+Home's blocks are all large flat bands. **Three phases, four blindnesses.**
 
-### 3. `initializeDateFormatting` was never called in `lib/`
+### 3. `lib/core` could not drive either screen
 
-`main.dart` was three lines. Every clock time goes through `DateFormat`, which
-throws until symbol data is loaded. It survived two phases because the ported
-`test/core/` suite calls it in its own `setUpAll` — **912 formatter tests
-passed against a domain that was covered, while the app would have thrown on
-the first screen that rendered a time.** Home is that screen.
+`AlarmFormat.time` returns one string (`'7:00 AM'`); both mockups style the
+digits and the marker differently. Splitting it in a widget is locale-fragile
+(`ar` → `ص`, `it` → `m.`, `tr` → `ÖÖ`, 24-hour locales → none).
 
-`lib/app/bootstrap.dart` now does it, gated by a test that asserts the **app's
-own entry point** handles all ten locales.
+`ClockTimeParts` + `timeParts` added to `lib/core/`, tested across ten locales.
+**A proposed `periodLeads` field was dropped on measurement** — probing all
+ten showed no locale leads with the marker. It would have shipped
+always-false, on reasoning alone.
 
-### 4. `lib/data`'s 85.08% was partly an accident
+### 4. `CapyNavBar` overflowed at 2× text on every screen
 
-Five providers (`proStatus`, `puzzleSettings`, and three sleep ones) were
-**never read by any test** and counted as covered only because something
-constructed the graph far enough to execute their declarations. Home's
-in-memory override removed the accident and the figure fell to **82.76% — the
-first honest measurement**, not a regression Home caused.
+Found incidentally by Phase 04's first accessibility test. Home's tests never
+caught it because they pump `HomeScreen` directly, without the shell.
 
-A real provider test took it to **86.40%**, above both the gate and Phase 02's
-figure. **Phase 02's post-review claimed 85.08% was the honest number; that is
-corrected.** The general lesson: *"this number is depressed for a structural
-reason"* needs its own evidence, because it is equally consistent with the
-number being inflated somewhere else.
+### 5. `narrowWeekday`'s doc pointed at the wrong control
 
-Also: `compare.dart` reported **4 of the 13** documented blocks. Now 14.
+It said the formatter is "used for the seven repeat-day toggles… room for one
+glyph" — describing the **legacy's** control. The mockup draws ~48 pt pills
+reading "Mon". Corrected in place.
 
 ## Decisions this phase made
 
 | Question | Decision |
 |---|---|
-| Palette F1 | **Owner, mid-phase: "do as in the mockups."** No token retuned; `tokens.dart`'s only diff is the measured `gutter = 11.0` |
-| The mockup's green ring on Step Quest | Drawn in `cocoa` (11.8:1), not green (2.68:1) — a ring has no second channel, and Step Quest is `blocked`, so a highlight reading "available" would be a content lie. **Recorded as a named Tier A deviation** |
-| Header mascot | Ships. The plan filed it as a missing asset (G12); the pre-review found two matching cells already bundled. The fallback would have shipped five capybaras where the mockup has six |
-| Meadow band | Drawn, not raster (G13) — no supplied decor is the right shape, and tiling a 90 px tuft across 393 pt reads as a repeat. **Not** a return of the banned `CustomPaint` rule, which was about the mascot |
-| Toggle tap target | Paint stays at the mockup's 34.6 pt (Tier A); hit area grows to 44 pt. Both asserted |
-| Comment budget | Ported from `../protio` (trimmer) + `../gastrowerk` (ratchet) at the owner's request: **2 lines / 300 chars**, 113 inherited files baselined, **0 Phase 03 files** |
+| Phase 03's **P4** (`_nearest`) | **Decided.** An edge is consumed by the block that claims it. Limits stated: greedy in table order, and the table's *completeness* now matters — two missing card-bottom rows were corrupting the row after them |
+| Mockup control sizes under 44 pt | Paint the mockup's size, grow only the hit region (chevrons 19.4, chips 31.8, Add pill 36.9). The split `CapyToggle` already used |
+| Row and nav-bar heights | A **minimum**, not a cap — they grow at accessibility text sizes rather than clipping |
+| Two gutters | `CapySpacing.gutterWide = 15.0` beside `gutter = 11.0`. Both measured; Tier A binds each screen to its own mockup |
+| Add/Edit's route | Root navigator, not the shell branch — the mockup draws no tab bar |
 
 ## Tier A state
 
-Closed to within tolerance: hero lower edge **0.0**, CTA top **+0.9**, CTA
-bottom **+0.9**, rail tiles **−1.4**, labels end **+1.1**.
+**Alarms is close.** Hero **−0.2**, cards 1–3 at −0.0 / −1.0 / +0.2 / +2.1 /
++3.6, pitch 102.3 against the mockup's 102.1. Cards 3b/4 drift 4.8–5.6 by
+accumulation; card 4's bottom, the meadow and the nav read `absent` because
+the list scrolls.
 
-8 blocks remain outside ±4 pt, recorded with their measured deltas in
-`docs/visual/home/`. Several are the matcher snapping two reference blocks onto
-one detected edge (full-project review P4) rather than independent defects.
+**Add/Edit is the weaker screen and is named as such.** Its anchor is right
+(hero 0.0, first card +0.2) and its card *contents* are taller than the
+mockup's, so the error accumulates down the form. Closing it needs per-card
+internal measurement inside `CapyCard`, which three screens share.
 
-**A screen is done when the comparison is captured and its deviations are
-named.** They are.
+## Next session — Phase 05, alarm engine and reliability
 
-## Next session — Phase 04, Alarms list and Add/Edit
-
-`02_ALARMS.png`, `03_ADD_EDIT_ALARM.png`. Measure their blocks with the method
-`CLAUDE.md` now requires — crop and colour anchor for anything near text — and
-append to `tier_a_blocks.md`.
-
-**P4 is left for Phase 04 to decide:** `compare.dart` snaps each reference
-block to the nearest detected edge, so a displaced layout can match several
-blocks to one edge. Changing the matcher while blocks are red would be tuning
-the instrument to the result; decide it on a screen that passes.
+**Chase the simulator build first.** `flutter build ios --simulator` fails with
+an opaque Xcode 255 on this machine and taps did not reach the booted
+simulator, so **no control was exercised by hand this phase** and nothing
+claims otherwise. `flutter drive` works, which is why all four captures are
+verified. Phase 05 needs a working device path.

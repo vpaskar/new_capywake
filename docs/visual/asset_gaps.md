@@ -485,3 +485,61 @@ G9 and **G12** were withdrawn on measurement — the header crop is benign, and
 the header mascot was bundled all along.
 
 G4, G5, G6 need no new art — Phase 01's import pipeline fixes them.
+
+---
+
+# Phase 04 — Alarms and Add/Edit
+
+## G14 — the alarm-row thumbnails are cutouts, the mockup paints panels
+
+**Tier B substitution, logged by name.** `02_ALARMS.png` gives each row a
+thumbnail with its own painted background — cream gradient, grass, sky —
+bleeding into the card. The bundled cells are transparent cutouts.
+
+| Mockup row | Using | Match |
+|---|---|---|
+| Sleeping, blue blanket | `assets/art/mascots/moments_01.webp` | pose and subject near-exact; no painted bed |
+| Headband, dumbbells | `assets/art/mascots/moments_03.webp` | near-exact; mockup adds a grass strip |
+| Backpack, walking | `assets/art/mascots/collection_02.webp` | near-exact; mockup adds sky, cap and grass |
+| Headphones, notes | `assets/art/mascots/collection_06.webp` | pose exact; **headphones are purple, the mockup's are blue** |
+
+Each is drawn on a `surfaceAlt` panel so the row still reads as a picture
+rather than a floating cutout. **None of these is the mockup's art**, and no
+new art was generated.
+
+**To do it properly:** four painted thumbnails at ≥372 px wide, capybara on
+its own background, matching the mockup's poses and palette.
+
+## G15 — those four cells are under-resolution for the panel
+
+The panel is ~124 × 88 pt, needing **372 px** at 3×. The cells carry:
+
+| Asset | px | Short by |
+|---|---|---|
+| `moments_01` | 288 × 190 | 84 |
+| `moments_03` | 288 × 217 | 84 |
+| `collection_02` | 230 × 242 | 142 |
+| `collection_06` | 260 × 256 | 112 |
+
+These are the **largest poses the package supplies** — there is no better
+source in `reference/`. Recorded by name in
+`test/design/art_manifest_test.dart`'s `knownUnderResolution`, so the gate
+still protects every other asset and a *worse* file fails. The entry is
+deleted, not widened, when the art is replaced.
+
+## G16 — 30 of 31 bundled mascot cells were unreferenced
+
+Before this phase only `mascot.sleeping` was in `CapyArt`. Phase 04 adds four.
+**26 cells are still bundled bytes nothing draws.** Not a defect yet —
+Settings, Stats and the empty states will want them — but if they are still
+unused at Phase 09 they are payload, and `check_bundle_size.dart` counts them
+against the budget either way.
+
+## Not a gap — the hero scene
+
+Both screens use `assets/art/scenes/alarms.webp`, which is a waking-in-bed
+composition. `02_ALARMS.png` shows the capybara hugging an alarm clock and
+`03_ADD_EDIT_ALARM.png` a third composition again. The supplied scene is
+closest to neither, but it is a real supplied hero at the right aspect and the
+mockups' two are not in the package. **Tier B: logged, not substituted
+silently.**

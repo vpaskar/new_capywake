@@ -27,26 +27,71 @@ const roundingTolerancePt = 1.0;
 /// header a constant 15pt error that no code change could fix.
 const statusBarPt = 44.0;
 
-/// 14 rows: tier_a_blocks.md's 13 less 2 device insets, plus 3 Phase 03
-/// measured. Was 4 until Phase 03 (pre-review H1) — see PHASE_03_PLAN.md.
-const referenceBlocks = <String, double>{
+/// Blocks every screen is measured against. A screen may add rows to its
+/// own table, never drop one of these (Phase 01 M5).
+const sharedBlocks = <String, double>{
   'header band lower edge': 103.9 - statusBarPt,
-  'hero scene lower edge': 292.3 - statusBarPt,
-  'card top (overlap)': 303.4 - statusBarPt,
-  'next-alarm card top': 320.0 - statusBarPt,
-  'next-alarm card bottom': 385.1 - statusBarPt,
-  'section label baseline': 383.3 - statusBarPt,
-  'primary CTA top': 400.4 - statusBarPt,
-  'primary CTA bottom': 455.8 - statusBarPt,
-  'next section top': 498.8 - statusBarPt,
-  // Measured FROM the status bar (read off a crop), unlike the rows above.
-  // The detector reports glyph edges as boundaries; see tier_a_blocks.md.
-  'game rail tiles top': 485.7,
-  'game rail labels end': 593.9,
-  'my stats row top': 617.0,
-  'meadow footer top': 672.4,
-  'nav bar top': 774.5 - statusBarPt,
 };
+
+/// Per-screen blocks: nine of Home's fourteen cannot exist on a pushed
+/// route. See `PHASE_04_PRE_REVIEW.md` M4.
+const screenBlocks = <String, Map<String, double>>{
+  'home': {
+    'hero scene lower edge': 292.3 - statusBarPt,
+    'card top (overlap)': 303.4 - statusBarPt,
+    'next-alarm card top': 320.0 - statusBarPt,
+    'next-alarm card bottom': 385.1 - statusBarPt,
+    'section label baseline': 383.3 - statusBarPt,
+    'primary CTA top': 400.4 - statusBarPt,
+    'primary CTA bottom': 455.8 - statusBarPt,
+    'next section top': 498.8 - statusBarPt,
+    // Measured from the status bar, unlike the rows above.
+    'game rail tiles top': 485.7,
+    'game rail labels end': 593.9,
+    'my stats row top': 617.0,
+    'meadow footer top': 672.4,
+    'nav bar top': 774.5 - statusBarPt,
+  },
+  // Phase 04. Methods are named per row in docs/visual/tier_a_blocks.md.
+  'alarms': {
+    'hero scene lower edge': 252.5 - statusBarPt,
+    'alarm card 1 top': 329.7 - statusBarPt,
+    'alarm card 1 bottom': 419.3 - statusBarPt,
+    'alarm card 2 top': 431.8 - statusBarPt,
+    'alarm card 2 bottom': 518.6 - statusBarPt,
+    'alarm card 3 top': 530.4 - statusBarPt,
+    'alarm card 3 bottom': 617.9 - statusBarPt,
+    'alarm card 4 top': 630.4 - statusBarPt,
+    'alarm card 4 bottom': 716.7 - statusBarPt,
+    'meadow footer top': 728.3 - statusBarPt,
+    'nav bar top': 774.5 - statusBarPt,
+  },
+  'add_edit_alarm': {
+    'hero scene lower edge': 216.0 - statusBarPt,
+    'time stepper card top': 249.8 - statusBarPt,
+    'time stepper card bottom': 362.5 - statusBarPt,
+    'repeat card top': 399.9 - statusBarPt,
+    'repeat card bottom': 482.6 - statusBarPt,
+    'label card top': 511.7 - statusBarPt,
+    'sound card top': 603.1 - statusBarPt,
+    'snooze card top': 660.4 - statusBarPt,
+    'save CTA top': 724.6 - statusBarPt,
+    'save CTA bottom': 778.1 - statusBarPt,
+    'meadow footer top': 793.4 - statusBarPt,
+  },
+};
+
+Map<String, double> blocksFor(String screen) {
+  final own = screenBlocks[screen];
+  if (own == null) {
+    stderr
+      ..writeln('No block table for "$screen". Add one to screenBlocks here')
+      ..writeln('and to docs/visual/tier_a_blocks.md: a screen with no')
+      ..writeln('blocks is unmeasured, not passing.');
+    exit(2);
+  }
+  return {...sharedBlocks, ...own};
+}
 
 void main(List<String> args) {
   if (args.length < 2) {
@@ -107,8 +152,11 @@ void main(List<String> args) {
     '${'actual'.padLeft(8)} ${'delta'.padLeft(8)}',
   );
 
-  for (final entry in referenceBlocks.entries) {
-    final nearest = _nearest(captureEdges, entry.value);
+  final blocks = blocksFor(screen);
+  final claimed = <double, String>{};
+
+  for (final entry in blocks.entries) {
+    final nearest = _nearest(captureEdges, entry.value, claimed: claimed);
     if (nearest == null) {
       stdout.writeln(
         '  ${entry.key.padRight(26)} '
@@ -166,7 +214,8 @@ img.Image _load(String path) {
   return decoded;
 }
 
-/// Rows where the mean luminance jumps — the structural block boundaries.
+/// Row boundaries: luminance jumps plus card hairlines. A 1px border moves
+/// a row mean under 1 unit, so |dL|>18 alone called cards absent.
 List<double> _edgesPt(img.Image image, double scale) {
   final means = <double>[];
   for (var y = 0; y < image.height; y++) {
@@ -180,11 +229,41 @@ List<double> _edgesPt(img.Image image, double scale) {
     means.add(total / n);
   }
 
-  final edges = <double>[];
+  final edges = <double>{};
   for (var y = 1; y < means.length; y++) {
     if ((means[y] - means[y - 1]).abs() > 18) edges.add(y / scale);
   }
-  return edges;
+  for (final y in _hairlines(image, scale)) {
+    edges.add(y);
+  }
+  final sorted = edges.toList()..sort();
+  return sorted;
+}
+
+/// Luminance minima down a text-free column: the borders the row-mean scan
+/// averages away.
+List<double> _hairlines(img.Image image, double scale) {
+  final x = (360 * scale).round().clamp(0, image.width - 1);
+  final column = <double>[];
+  for (var y = 0; y < image.height; y++) {
+    final p = image.getPixel(x, y);
+    column.add(0.299 * p.r + 0.587 * p.g + 0.114 * p.b);
+  }
+
+  final found = <double>[];
+  for (var y = 2; y < column.length - 2; y++) {
+    final v = column[y];
+    // 244, not 235: a disabled row's border lands near 236 at 55% opacity.
+    if (v >= 244) continue;
+    if (v <= column[y - 1] &&
+        v <= column[y + 1] &&
+        v < column[y - 2] &&
+        v < column[y + 2]) {
+      final pt = y / scale;
+      if (found.isEmpty || pt - found.last > 3) found.add(pt);
+    }
+  }
+  return found;
 }
 
 /// The device's top inset, read from the capture metadata the harness writes
@@ -205,17 +284,26 @@ double _topInsetPt(String screen) {
   return double.parse(file.readAsStringSync().trim());
 }
 
-double? _nearest(List<double> edges, double target) {
+/// The unclaimed edge nearest [target]. Phase 04's call on P4; its limits
+/// are named in `PHASE_04_POST_REVIEW.md`.
+double? _nearest(
+  List<double> edges,
+  double target, {
+  required Map<double, String> claimed,
+}) {
   double? best;
   var bestDistance = double.infinity;
   for (final e in edges) {
+    if (claimed.containsKey(e)) continue;
     final d = (e - target).abs();
     if (d < bestDistance) {
       bestDistance = d;
       best = e;
     }
   }
-  return bestDistance > 40 ? null : best;
+  if (bestDistance > 40 || best == null) return null;
+  claimed[best] = '';
+  return best;
 }
 
 void _writeSideBySide(img.Image capture, img.Image mockup, String path) {

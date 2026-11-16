@@ -9,16 +9,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-/// The alarm the captures are taken against, so the screens are comparable to
-/// the mockups. Demo data lives here, never in `lib/`; `docs/visual/<screen>/`
-/// records that the capture was seeded and with what.
-final captureSeed = <Alarm>[
-  Alarm(
-    id: 'capture-weekday',
-    label: 'Workdays',
-    enabled: true,
-    targetTimeMinutes: 7 * 60,
-    repeatWeekdays: const {1, 2, 3, 4, 5},
+Alarm _seedAlarm({
+  required String id,
+  required String label,
+  required int minutes,
+  required Set<int> repeat,
+  required bool enabled,
+}) {
+  final stamp = DateTime.utc(2026, 5, 21, 8);
+  return Alarm(
+    id: id,
+    label: label,
+    enabled: enabled,
+    targetTimeMinutes: minutes,
+    repeatWeekdays: repeat,
     wakeMode: WakeMode.standard,
     wakeWindowStartMinutesBefore: 15,
     soundId: 'gentle',
@@ -29,8 +33,46 @@ final captureSeed = <Alarm>[
     dismissMethod: DismissMethod.normalButton,
     dismissChallengeDifficulty: null,
     confirmationEnabled: false,
-    createdAt: DateTime.utc(2026, 5, 21, 8),
-    updatedAt: DateTime.utc(2026, 5, 21, 8),
+    createdAt: stamp,
+    updatedAt: stamp,
+  );
+}
+
+/// The alarms the captures are taken against, so the screens are comparable
+/// to the mockups. Demo data lives here, never in `lib/`;
+/// `docs/visual/<screen>/` records that the capture was seeded and with what.
+///
+/// `02_ALARMS.png`'s four rows, two of them off, so the capture carries both
+/// toggle states. `capture-weekday` keeps its id and position because Home's
+/// recorded comparison was taken against it.
+final captureSeed = <Alarm>[
+  _seedAlarm(
+    id: 'capture-weekday',
+    label: 'Wake Up',
+    minutes: 7 * 60,
+    repeat: const {1, 2, 3, 4, 5},
+    enabled: true,
+  ),
+  _seedAlarm(
+    id: 'capture-workout',
+    label: 'Workout',
+    minutes: 7 * 60 + 30,
+    repeat: const {1, 3, 5},
+    enabled: true,
+  ),
+  _seedAlarm(
+    id: 'capture-walk',
+    label: 'Morning Walk',
+    minutes: 8 * 60,
+    repeat: const {6, 7},
+    enabled: false,
+  ),
+  _seedAlarm(
+    id: 'capture-winddown',
+    label: 'Wind Down',
+    minutes: 21 * 60 + 30,
+    repeat: const {1, 2, 3, 4, 5, 6, 7},
+    enabled: false,
   ),
 ];
 
@@ -47,6 +89,7 @@ Future<void> main() async {
   const screens = <String, String>{
     'home': Routes.home,
     'alarms': Routes.alarms,
+    'add_edit_alarm': Routes.alarmNew,
     'stats': Routes.stats,
   };
 

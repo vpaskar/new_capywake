@@ -9,6 +9,8 @@ class StatsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const SceneHeader(
       scene: SceneCrop.stats,
+      // Phase 08 measures this from `05_STATS.png`; Home's 188.4 until then.
+      bandHeight: 188.4,
       header: CapyHeader(),
       child: SizedBox.shrink(),
     );

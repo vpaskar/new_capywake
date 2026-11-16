@@ -1866,5 +1866,21 @@
   "gameFindTheImpostor": "Find the Impostor",
   "@gameFindTheImpostor": {
     "description": "Product name of the Find the Impostor wake-up game."
+  },
+  "alarmAddAction": "Add Alarm",
+  "@alarmAddAction": {
+    "description": "Visible label on the Add Alarm button in the alarm list header."
+  },
+  "alarmAddTitle": "Add Alarm",
+  "@alarmAddTitle": {
+    "description": "Title of the alarm form when creating a new alarm."
+  },
+  "alarmEditTitle": "Edit Alarm",
+  "@alarmEditTitle": {
+    "description": "Title of the alarm form when editing an existing alarm."
+  },
+  "alarmBackAction": "Back",
+  "@alarmBackAction": {
+    "description": "Tooltip on the alarm form back button."
   }
 }
