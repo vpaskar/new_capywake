@@ -75,7 +75,7 @@ ThemeData capyTheme({Brightness brightness = Brightness.light}) {
     onPrimary: Colors.white,
     secondary: CapyColors.grass,
     onSecondary: Colors.white,
-    error: const Color(0xFFC4452B),
+    error: CapyColors.error,
     onError: Colors.white,
     surface: surface,
     onSurface: ink,

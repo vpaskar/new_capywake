@@ -8,7 +8,7 @@
     "description": "Opens the full wake-puzzle settings from the Today shortcut row."
   },
   "@@locale": "en",
-  "appName": "Capywake",
+  "appName": "CapyWake",
   "@appName": {
     "description": "The product name, shown on the app bar and store listing. Not translated."
   },
@@ -224,7 +224,7 @@
   },
   "alarmSchedulingNote": "Alarms become active once you finish set-up.",
   "@alarmSchedulingNote": {
-    "description": "Calm, honest note shown at the foot of the alarm form. Capywake stays honest about reliability — see the reliability checklist for platform truth."
+    "description": "Calm, honest note shown at the foot of the alarm form. CapyWake stays honest about reliability — see the reliability checklist for platform truth."
   },
   "alarmWakeModeLabel": "Wake mode",
   "@alarmWakeModeLabel": {
@@ -280,7 +280,7 @@
   "@alarmWakeWindowExplanationStrict": {
     "description": "Replaces the soft-start explanation when the alarm is in Strict mode. Strict never fades in, so the window only makes the alarm start earlier — this says so rather than letting the fading-mode wording stand."
   },
-  "alarmReliabilityHonestyNote": "Capywake's wake modes only adjust volume, sound, and snooze rules. There is no sleep-stage detection on any phone.",
+  "alarmReliabilityHonestyNote": "CapyWake's wake modes only adjust volume, sound, and snooze rules. There is no sleep-stage detection on any phone.",
   "@alarmReliabilityHonestyNote": {
     "description": "Honest one-liner shown under the wake-mode section. Hard guardrail copy — no sleep-stage claim, no per-phone parity claim. Sourced from ReliabilityCopyService discipline."
   },
@@ -446,35 +446,35 @@
       }
     }
   },
-  "reliabilitySummaryAndroid": "On Android, Capywake uses exact alarms and a foreground service so alarms ring on time even when the phone is asleep.",
+  "reliabilitySummaryAndroid": "On Android, CapyWake uses exact alarms and a foreground service so alarms ring on time even when the phone is asleep.",
   "@reliabilitySummaryAndroid": {
     "description": "One-line per-platform reliability summary for Android. Calm and honest — no 'never oversleep' claims, no parity with iOS."
   },
-  "reliabilitySummaryIos": "On iOS, Capywake rings reliably while the app is open or in the background. Keep the app available to be woken on time.",
+  "reliabilitySummaryIos": "On iOS, CapyWake rings reliably while the app is open or in the background. Keep the app available to be woken on time.",
   "@reliabilitySummaryIos": {
     "description": "One-line per-platform reliability summary for iOS. Honest about the platform's limits — never implies termination survival or silent-mode bypass."
   },
-  "reliabilityCautionBatteryOptimization": "Some Android phones aggressively close background apps. Exempt Capywake from battery optimisation so alarms can ring.",
+  "reliabilityCautionBatteryOptimization": "Some Android phones aggressively close background apps. Exempt CapyWake from battery optimisation so alarms can ring.",
   "@reliabilityCautionBatteryOptimization": {
     "description": "Android caution: surface OEM battery-optimisation kill behaviour (the real failure mode per dontkillmyapp.com). Calm guidance, no fear language."
   },
-  "reliabilityCautionTerminationIos": "If you force-quit Capywake or iOS clears it from memory, alarms stop ringing.",
+  "reliabilityCautionTerminationIos": "If you force-quit CapyWake or iOS clears it from memory, alarms stop ringing.",
   "@reliabilityCautionTerminationIos": {
     "description": "iOS caution: a terminated/memory-evicted app cannot fire alarms (until AlarmKit). Honest, neutral wording."
   },
-  "reliabilityCautionSilentModeIos": "iOS silent mode and Focus mute alarm sounds. Capywake does not override them.",
+  "reliabilityCautionSilentModeIos": "iOS silent mode and Focus mute alarm sounds. CapyWake does not override them.",
   "@reliabilityCautionSilentModeIos": {
     "description": "iOS caution: no Critical Alerts entitlement, so silent mode / DND mute the alarm. Honest, no implied bypass."
   },
-  "reliabilityCautionScheduleCapIos": "iOS keeps at most 64 scheduled reminders per app. Capywake schedules the soonest first.",
+  "reliabilityCautionScheduleCapIos": "iOS keeps at most 64 scheduled reminders per app. CapyWake schedules the soonest first.",
   "@reliabilityCautionScheduleCapIos": {
     "description": "iOS caution: 64-pending-notifications cap. Honest, technical, no overpromising."
   },
-  "reliabilityPermissionNotificationDenied": "Notifications are turned off for Capywake. Alarms cannot show on the lock screen until you allow them.",
+  "reliabilityPermissionNotificationDenied": "Notifications are turned off for CapyWake. Alarms cannot show on the lock screen until you allow them.",
   "@reliabilityPermissionNotificationDenied": {
     "description": "Calm prompt shown when OS notification permission is denied. Honest about the consequence — no fear/shame language."
   },
-  "reliabilityPermissionExactAlarmDenied": "Exact alarms are turned off for Capywake. Alarms may not ring at the right time until you allow them.",
+  "reliabilityPermissionExactAlarmDenied": "Exact alarms are turned off for CapyWake. Alarms may not ring at the right time until you allow them.",
   "@reliabilityPermissionExactAlarmDenied": {
     "description": "Calm prompt shown on Android when exact-alarm permission is denied. Honest about the consequence."
   },
@@ -522,7 +522,7 @@
   },
   "ringingStillUpTitle": "Still up?",
   "@ringingStillUpTitle": {
-    "description": "Heading on the post-dismiss confirmation screen. Non-judgmental — Capywake stays honest about whether you actually got up."
+    "description": "Heading on the post-dismiss confirmation screen. Non-judgmental — CapyWake stays honest about whether you actually got up."
   },
   "ringingStillUpBody": "Tap to confirm you're up.",
   "@ringingStillUpBody": {
@@ -556,7 +556,7 @@
   "@reliabilityScreenTitle": {
     "description": "AppBar title of the reliability checklist screen."
   },
-  "reliabilityScreenIntro": "These are the things that decide whether your alarm rings. Capywake stays honest about what each phone can and cannot guarantee.",
+  "reliabilityScreenIntro": "These are the things that decide whether your alarm rings. CapyWake stays honest about what each phone can and cannot guarantee.",
   "@reliabilityScreenIntro": {
     "description": "Calm intro shown above the checklist. Sets honest expectations — no overpromising."
   },
@@ -564,7 +564,7 @@
   "@reliabilityChecklistNotificationTitle": {
     "description": "Checklist row title for the OS notification permission."
   },
-  "reliabilityChecklistNotificationOkBody": "Capywake can show alarms on the lock screen.",
+  "reliabilityChecklistNotificationOkBody": "CapyWake can show alarms on the lock screen.",
   "@reliabilityChecklistNotificationOkBody": {
     "description": "Calm body shown when notification permission is granted."
   },
@@ -594,7 +594,7 @@
   },
   "reliabilityChecklistDndAndroidBody": "Do Not Disturb and silent modes can mute alarms. Check your phone's allowances if you rely on alarm sound.",
   "@reliabilityChecklistDndAndroidBody": {
-    "description": "Body shown for the DND row on Android. Honest — Capywake does not bypass DND."
+    "description": "Body shown for the DND row on Android. Honest — CapyWake does not bypass DND."
   },
   "reliabilityChecklistAcknowledgeAction": "Mark as checked",
   "@reliabilityChecklistAcknowledgeAction": {
@@ -742,7 +742,7 @@
   "@settingsDisplayHeading": {
     "description": "Section heading above the time-format and theme controls on the Settings screen."
   },
-  "settingsAboutHeading": "About Capywake",
+  "settingsAboutHeading": "About CapyWake",
   "@settingsAboutHeading": {
     "description": "Section heading above the links to reliability, history, and setup on the Settings screen."
   },
@@ -796,7 +796,7 @@
   },
   "notificationChannelName": "Alarms",
   "@notificationChannelName": {
-    "description": "Android notification channel display name (visible in system settings) for Capywake's alarm reminders. Plain noun."
+    "description": "Android notification channel display name (visible in system settings) for CapyWake's alarm reminders. Plain noun."
   },
   "notificationChannelDescription": "Reminders before your alarm rings.",
   "@notificationChannelDescription": {
@@ -1263,7 +1263,7 @@
   "@alarmMotionCheckLabel": {
     "description": "Switch label for the per-alarm motion check. Says the phone moves, never that the user got up."
   },
-  "alarmMotionCheckDescription": "Capywake watches whether the phone moves after you stop this alarm. It can only tell that the phone moved — not that you are out of bed.",
+  "alarmMotionCheckDescription": "CapyWake watches whether the phone moves after you stop this alarm. It can only tell that the phone moved — not that you are out of bed.",
   "@alarmMotionCheckDescription": {
     "description": "Honest explanation of the motion check under the switch. States the limit of an accelerometer plainly — it sees the phone, not the person — so a user can decide whether it suits how they sleep."
   },
@@ -1390,7 +1390,7 @@
   "@onboardingPuzzleTitle": {
     "description": "Title of setup step 2, where puzzle types are chosen."
   },
-  "onboardingPuzzleBody": "Capywake picks a fresh puzzle from the games you leave on. Try each one and keep the ones you’d enjoy first thing in the morning.",
+  "onboardingPuzzleBody": "CapyWake picks a fresh puzzle from the games you leave on. Try each one and keep the ones you’d enjoy first thing in the morning.",
   "@onboardingPuzzleBody": {
     "description": "Body of setup step 2. Explains rotation and generation without gamifying it."
   },
@@ -1622,7 +1622,7 @@
   "alarmSoundPreviewPlay": "Play preview",
   "alarmSoundPreviewStop": "Stop preview",
   "alarmSoundPreviewUnavailable": "Preview unavailable",
-  "alarmSoundAppDefault": "Capywake default",
+  "alarmSoundAppDefault": "CapyWake default",
   "alarmScheduleFailed": "Couldn’t schedule every alarm. Check alarm reliability and try again.",
   "alarmSaveFailed": "Couldn’t save the alarm. Try again.",
   "todaySnoozedHeading": "Snoozed",
@@ -1648,7 +1648,7 @@
   },
   "sleepSectionTitle": "Sleep",
   "@sleepSectionTitle": {
-    "description": "Section heading for sleep read from the platform health store. Capywake measures no sleep itself."
+    "description": "Section heading for sleep read from the platform health store. CapyWake measures no sleep itself."
   },
   "sleepSettingsEntryLabel": "Sleep from Health",
   "@sleepSettingsEntryLabel": {
@@ -1666,7 +1666,7 @@
   "@sleepDisableAction": {
     "description": "Action that opts out of reading sleep and clears cached nights."
   },
-  "sleepWhatIsRead": "Capywake reads only sleep your watch or band already recorded. It never writes to Health, and your sleep stays on this phone.",
+  "sleepWhatIsRead": "CapyWake reads only sleep your watch or band already recorded. It never writes to Health, and your sleep stays on this phone.",
   "@sleepWhatIsRead": {
     "description": "Explains exactly what is read and that nothing is written back. Honesty copy — keep the read-only and on-device claims intact."
   },
@@ -1674,7 +1674,7 @@
   "@sleepNoAlarmTimingNote": {
     "description": "States that sleep data never affects alarm timing. Required by the reliability-honesty boundary: stage-based waking is a claim no phone can support."
   },
-  "sleepPermissionUnknowniOS": "If no sleep appears, open Health › Sharing › Apps and allow Capywake to read Sleep. iOS does not tell apps whether reading was allowed.",
+  "sleepPermissionUnknowniOS": "If no sleep appears, open Health › Sharing › Apps and allow CapyWake to read Sleep. iOS does not tell apps whether reading was allowed.",
   "@sleepPermissionUnknowniOS": {
     "description": "Shown on iOS, which never discloses READ authorization, so the app cannot confirm a grant. Must not claim permission was given."
   },
@@ -1690,7 +1690,7 @@
   "@sleepUnsupportedPlatform": {
     "description": "Shown where no platform health store exists."
   },
-  "sleepPermissionDenied": "Capywake does not have permission to read sleep.",
+  "sleepPermissionDenied": "CapyWake does not have permission to read sleep.",
   "@sleepPermissionDenied": {
     "description": "Shown when sleep read access was declined. Neutral, no pressure."
   },

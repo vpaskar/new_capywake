@@ -76,15 +76,15 @@ class _CapyButtonState extends State<CapyButton> {
                         children: [
                           if (widget.icon != null) ...[
                             Container(
-                              width: 28,
-                              height: 28,
+                              width: CapyIconSize.badge,
+                              height: CapyIconSize.badge,
                               decoration: const BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
                               child: Icon(
                                 widget.icon,
-                                size: 18,
+                                size: CapyIconSize.sm,
                                 color: CapyColors.accentDeep,
                               ),
                             ),

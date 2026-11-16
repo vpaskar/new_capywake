@@ -88,7 +88,7 @@ class _Tab extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(destination.icon, color: color, size: 26),
+              Icon(destination.icon, color: color, size: CapyIconSize.md),
               const SizedBox(height: CapySpacing.xs),
               Text(
                 destination.label,

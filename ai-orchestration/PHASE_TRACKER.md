@@ -7,7 +7,7 @@ table, or the literal word `none`.
 Convention inherited from `../capywake/ai-orchestration/PHASE_TRACKER.md`
 (read-only reference). Advancing the pointer is part of each phase's completion.
 
-Current phase: `01`
+Current phase: `02`
 
 ## Protocol per phase
 
@@ -94,8 +94,8 @@ Per-phase commit `feat: complete phase <id> - <name>`, then
 | ID | Name | Status | Phase file | Commit | Completed | Notes |
 |----|------|--------|------------|--------|-----------|-------|
 | 00 | Discovery, legacy audit, architecture and navigation decision | done | `docs/phases/PHASE_00_PLAN.md` | `f49a882` | 2026-11-16 | Legacy audited read-only: 40/47 phases done, 137 Dart files, 99 test files, full phase ritual found. Root cause of the failed retrofit identified: the "capybara is vector CustomPaint, never a raster cutout" rule made the mockups unreachable. Nav conflict resolved from the primary mockups: **Home/Alarms/Stats tabs, Settings pushed from the gear**. Owner decisions: raster art, all three Stats segments, full rigor incl. 10 locales. Pre-review raised 12 findings (4H/5M/3L), all applied. **Re-opened and self-reviewed 2026-11-16** (see `PHASE_00_SELF_REVIEW.md`): 8 further findings (2H/3M/3L), all applied — the Highs being that Phase 00 had banned reuse of the legacy's 9,825-line pure-Dart domain and 932 passing tests, and had skipped its own post-implementation review. `CAPYWAKE_REUSE_AUDIT.md` added. |
-| 01 | Foundation: tokens, type, art pipeline, shell, capture harness | pending | `docs/phases/PHASE_01_PLAN.md` | | | Must end with a real PNG from `tool/capture.sh` |
-| 02 | Domain and persistence — **port from `../capywake`** | pending | | | | Port `core/` (minus `theme.dart`) + `test/core/` (932 tests) + 10-locale ARB + Drift tables at `schemaVersion = 1`. Adapt the 3 nav-coupled ARB keys; add ~20 for Home/Stats. Re-gate ≥95% core |
+| 01 | Foundation: tokens, type, art pipeline, shell, capture harness | done | `docs/phases/PHASE_01_PLAN.md` | | 2026-11-16 | Gate met: `tool/capture.sh` writes 3 verified PNGs at 1179x2556 (393x852pt) and **checks the artifact, not the exit code** — the pre-review proved the planned `flutter test` mechanism passes while writing nothing, the legacy's 40-phase failure but green. 14 pre-review findings (5H/6M/3L) + 8 self-review (7L/1M), all applied. Typeface **Baloo 2**, chosen on measurements; it does **not** cover Cyrillic/Arabic/Japanese (a `getmask` check wrongly said it did — only rendering shows tofu), so `ru`→Nunito, `ar`/`ja`→system. Art patch closed G1/G2/G3/G10; **G11** found (91% of ink at alpha 250–254) and fixed in-pipeline; **G9 withdrawn**. Tier A: header matches to **0.1pt**; 3 blocks still off because the screens have no bodies — Phase 03's work, recorded as a measurement. 43 tests, lib coverage 97.92%, art 1818KB of 2182KB. |
+| 02 | Domain and persistence — **port from `../capywake`** | pending | | | | Port `core/` (minus `theme.dart`) + `test/core/` (932 tests) + Drift tables at `schemaVersion = 1`. **ARB is already done** — Phase 01 ported all 384 keys × 10 locales and adapted the 3 nav-coupled ones. **Must re-enable the `lib/core` ≥95% coverage gate**, which Phase 01 skips legitimately (`check_coverage.dart` `exit(2)`s on an absent path) |
 | 03 | Home / Today | pending | | | | `01_HOME.png` |
 | 04 | Alarms list and Add/Edit | pending | | | | `02_ALARMS.png`, `03_ADD_EDIT_ALARM.png` |
 | 05 | Alarm engine and reliability | pending | | | | Device test required |

@@ -28,6 +28,17 @@ abstract final class CapyColors {
   static const darkInk = Color(0xFFF4E4D4);
   static const darkInkSoft = Color(0xFFBFA896);
   static const artScrim = Color(0x66120A06);
+
+  static const error = Color(0xFFC4452B);
+}
+
+/// Icon and inline-art sizes. Widgets name these rather than carrying a
+/// literal, so a change lands everywhere at once.
+abstract final class CapyIconSize {
+  static const sm = 18.0;
+  static const md = 26.0;
+  static const badge = 28.0;
+  static const wordmark = 30.0;
 }
 
 /// The 4-based spacing scale. Widgets use these, never a raw number.

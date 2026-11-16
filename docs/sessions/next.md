@@ -5,11 +5,11 @@ this file.
 
 ## State
 
-Phase 00 is **done**, committed, and has been re-reviewed. No app code exists
-yet, by design — the master prompt forbids implementation before a plan has
-survived a critical review.
+Phases 00 and 01 are **done** and committed. The app builds, runs on the
+iPhone 14 Pro simulator, and `tool/capture.sh` produces verified screenshots —
+the gate Phase 01 existed to prove.
 
-**Current phase: `01` — Foundation.**
+**Current phase: `02` — Domain and persistence (port from `../capywake`).**
 
 ## Read in this order
 
@@ -34,15 +34,20 @@ survived a critical review.
 6. Validate → self-review #1 → self-review #2 → full-project review.
 7. `PHASE_01_POST_REVIEW.md`, update tracker + memory + this file, commit.
 
-## The one thing that gates Phase 01
+## The gate Phase 01 met
 
-**`tool/capture.sh` must produce a real PNG of the shell at 393×852**,
-committed under `docs/visual/shell/`.
+`tool/capture.sh` writes three verified PNGs at 1179×2556 px (393×852 pt) and
+**checks the artifact rather than the exit code** — the planned `flutter test`
+mechanism was proven to pass while writing nothing.
 
-The legacy captured zero screenshots across 40 phases because its runner had no
-display. Every fidelity claim depends on this harness working. Prove it on the
-empty shell before building any real screen. If it cannot work, that is a
-blocker to raise in Phase 01, not a surprise in Phase 03.
+Use it. Never run `integration_test/capture_test.dart` with `flutter test`.
+
+## The two things that gate Phase 02
+
+1. **Re-enable the `lib/core` ≥ 95% coverage gate.** Phase 01 skips it
+   legitimately; a skip nobody turns back on is how a gate dies.
+2. The 932 ported tests must pass. They are the regression net for DST,
+   leap day, skip-next sequencing and the 00:30-set-at-23:55 case.
 
 ## Reference paths
 

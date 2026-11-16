@@ -36,7 +36,7 @@ class CapyHeader extends StatelessWidget {
                 child: ExcludeSemantics(
                   child: Image.asset(
                     'assets/art/wordmark.webp',
-                    height: 30,
+                    height: CapyIconSize.wordmark,
                     fit: BoxFit.contain,
                   ),
                 ),
@@ -48,7 +48,7 @@ class CapyHeader extends StatelessWidget {
                 icon: const Icon(
                   Icons.settings_rounded,
                   color: CapyColors.cocoa,
-                  size: 26,
+                  size: CapyIconSize.md,
                 ),
               ),
             ],
