@@ -12,20 +12,118 @@ Severity:
 - **Degraded** — shippable with a named substitution, visibly below the mockup.
 - **Fixable** — we can repair it in the import pipeline, no new art needed.
 
+## Patch received — 2026-11-16
+
+`CapyWake_Art_Request_Patch` delivered 8 files against `ART_REQUEST.md`.
+**Four gaps closed, one new defect found.** Audit: `#patch-audit` below.
+
+| | |
+|---|---|
+| **Closed** | G1 (hero), G2 (game tiles — the Blocking one), G3 (mascot resolution), G10 (wordmark) |
+| **New** | **G11 — ~91% of ink sits at alpha 250–254, not 255.** Fixable in the import pipeline |
+| **Still open** | G4, G5, G6 (pipeline fixes), G7 (decor, low impact) |
+
+**No blocking gap remains.** Phase 03 can reach Tier A on the game rail.
+
 ## Summary
 
 | # | Asset | Severity | One line |
 |---|---|---|---|
-| G1 | Home hero (`today_integrated.png`) | Degraded | Mockup capybara wears a nightcap and holds a duck; supplied art has neither |
-| G2 | Four game tiles | Blocking | No game-tile art exists at all; mockup tiles have painted backgrounds |
-| G3 | 31 mascots at 114–343 px | Degraded | Too small for a 3× render above ~57 pt; game tiles need ~120 pt |
+| G1 | Home hero (`today_integrated.png`) | **✅ Closed** | Replacement has the nightcap, duck, clock and `Zz`, tighter framing |
+| G2 | Four game tiles | **✅ Closed** | All four delivered 1254², painted backgrounds, correct poses and colours |
+| G3 | 31 mascots at 114–343 px | **✅ Closed** | Two sticker sheets add 16+ poses at ~300 px; needs slicing |
+| G11 | Alpha 250–254 instead of 255 | Fixable | ~91% of ink in all three alpha files; art is ~2% translucent |
 | G4 | All 31 mascots: ghost pixels | Fixable | 112–384 ghost pixels each, every file untrimmed |
 | G5 | `clean_icons/` mixed resolution | Fixable | 9 are 1254², but `book` and `chart` are 256² |
 | G6 | `clean_icons/` ghost pixels | Fixable | Up to 14,091 ghost pixels (`bell.png`) |
 | G7 | Decor at 22–147 px | Degraded | Usable only as small footer decor, nothing larger |
 | G8 | Nav bar icons | Not a gap | Mockup uses flat glyphs — these are real widgets, not art |
-| G9 | ~~Hero scene aspect ratio~~ | **Withdrawn** | Re-measured: crop is 28 pt (10.7%), not 28%. Benign, already priced in |
-| G10 | Wordmark | Degraded | Must be cropped from a compressed mockup; no clean source |
+| G9 | ~~Hero scene aspect ratio~~ | **Withdrawn** | Crop is 28.1% of the art band — large, but benign and already priced into `SceneHeader` |
+| G10 | Wordmark | **✅ Closed** | 2172×724 on transparency, 2103 px of ink — 4× what was needed |
+
+---
+
+<a id="patch-audit"></a>
+
+## Patch audit — what arrived and whether it is enough
+
+### ✅ G2 — the four game tiles (was the only Blocking gap)
+
+`reference/02_ASSETS/game_tiles/`, all **1254×1254 RGB opaque**, 1.6–1.9 MB.
+Every correction from the request landed — checked by eye against the mockup
+crop, not just by filename:
+
+| Tile | Asked for | Delivered |
+|---|---|---|
+| `step_quest` | Blue backpack, **white headband**, park, motion marks | ✅ all four |
+| `shake_dj` | **Pink** headphones, purple stage, music notes | ✅ pink, not grey |
+| `catch_the_capy` | **Mid-leap**, meadow, speed lines | ✅ leaping, not sitting |
+| `find_the_impostor` | Detective hat, magnifier | ✅ + paw prints |
+
+Style matches the existing package. 1254² is 3.5× the 360 px minimum, so they
+downscale cleanly to the ~120 pt tile.
+
+### ✅ G1 — the Home hero
+
+`header_scenes/today_integrated.png`, **1536×1024 RGB**. All four missing props
+present: blue nightcap with white bobble, yellow duck, alarm clock on the
+nightstand, `Zz`. Framed much tighter — the capybara now fills the frame as in
+the mockup.
+
+**Verified against the real header crop**, which is the question that mattered:
+rendered top / centre / bottom at the measured 2.086:1 art band (28.1% crop).
+The face, cap, duck and clock survive at every alignment. **Top alignment keeps
+the `Zz`** and is what `SceneHeader` will use for this scene.
+
+The previous file is kept as `today_integrated_ORIGINAL.png` for comparison.
+
+### ✅ G3 — mascot resolution, via sticker sheets
+
+Two files in `sticker_sheets/` — not the per-file re-export that was requested,
+but they solve the problem:
+
+| File | Size | Holds |
+|---|---|---|
+| `cozy_capybara_sticker_collection.png` | 1254×1254 | 16 poses in a 4×4 grid, ~300 px each |
+| `capybara_cozy_moments_sticker_sheet.png` | 1619×971 | further poses |
+
+~300 px per pose beats the 114–343 px originals and clears the 288 px needed
+for a 96 pt empty-state illustration.
+
+**They need slicing** — `tool/audit_art.dart` gains a sheet-splitter that cuts
+on transparent gutters, trims each cell to its alpha bbox, and names them. Extra
+work in this phase, not a gap.
+
+### ✅ G10 — wordmark
+
+`wordmark.png`, **2172×724 RGBA**, ink bbox 2103×689. The request asked for
+≥1050 px; this is **2× that**. Clean transparency, no compression fringing, and
+it is the mockup's own lettering rather than a font match.
+
+### ⚠️ G11 — new defect: the art is not quite opaque
+
+Found by measuring, and it affects **all three alpha files**:
+
+| File | ink at alpha 250–254 | ink at 255 |
+|---|---|---|
+| `cozy_capybara_sticker_collection` | **90.7%** | 0.5% |
+| `capybara_cozy_moments_sticker_sheet` | **91.4%** | 0.7% |
+| `wordmark` | **91.3%** | 0.9% |
+
+The artwork is ~2% translucent, so the background bleeds through everywhere.
+On cream it is invisible; over the hero art or a coloured tile it would tint,
+and it defeats any "is this pixel opaque" assertion.
+
+It is a lossy-compression artifact of the generation pipeline, **not a drawing
+error** — and **no new art is needed.** The import pipeline snaps alpha ≥ 250 to
+255, alongside the existing ghost-clearing at ≤ 16.
+
+**Verified safe before adopting:** sampled the 250–254 band and it is **interior
+fill, not antialiased edge** — 3,243 interior pixels against 64 edge-adjacent,
+a 50:1 ratio. Snapping it will not harden the outlines. (Ghost counts are high
+for the same reason: 27,998–79,872 per file. Same fix, other end of the scale.)
+
+---
 
 ---
 
@@ -225,21 +323,26 @@ re-measured and withdrawn.
 Supplied: 1536×1024 = **3:2**. Header band in `01_HOME.png`: y ≈ 62→296 pt over
 393 pt wide = **1.679:1**.
 
-The first draft said `BoxFit.cover` crops "~28% of the height". **That was
-wrong** — it reported the aspect-ratio delta as if it were the crop fraction.
-Measured properly:
+**Corrected twice — the first two figures were both wrong, in opposite
+directions.** Edge detection later separated the header from the art
+(`tier_a_blocks.md`), which settles it:
+
+| Attempt | Band used | Crop | Status |
+|---|---|---|---|
+| 1st draft | guessed | "~28%" | Right number, wrong reasoning — it reported the aspect delta as the crop |
+| 2nd (withdrawal) | header + art, 234 pt | 10.7% | **Too small** — 59.9 pt of that band is header, not art |
+| **Measured** | **art only, 188.4 pt** | **28.1%** | Edges detected at 103.9 pt and 292.3 pt |
 
 ```
-cover at full width → 393 × 262.0 pt; the band needs 234 pt
-vertical crop = 28.0 pt of 262.0 pt = 10.7%
+hero band  393 × 188.4 pt = 2.086:1
+3:2 source, cover at full width → 393 × 262.0 pt
+crop = 73.6 pt of 262.0 = 28.1%, leaving 288 px of Alignment.y travel
 ```
 
-28 **pt**, not 28 **percent**. The crop keeps 89.3% of the source height and
-leaves 28 pt of `Alignment.y` travel.
-
-Rendered all three extremes (top / center / bottom) from `today_integrated.png`.
-At center the capybara's face sits well clear of both edges and the composition
-— plant shelf, lamp, nightstand, window — survives intact. The crop is benign.
+**The crop is large. It is still benign**, which is what decides this. Rendered
+all three alignment extremes from `today_integrated.png` at the true 2.086:1:
+the capybara's face sits clear of both edges in every one, and the composition
+— plant shelf, lamp, nightstand, window — survives at centre.
 
 This is a cost Phase 00 **already priced in**: `SceneHeader` was designed around
 a per-scene `BoxFit`/`Alignment` crop precisely so the face is never cut. The

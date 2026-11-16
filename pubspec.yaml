@@ -1,0 +1,48 @@
+name: capywake
+description: A cozy capybara-themed smart alarm.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  # Navigation. StatefulShellRoute for the three tabs; /settings is declared
+  # outside the shell so popping it returns to the originating tab.
+  go_router: ^17.2.2
+
+  # Formatting + localization (numbers, dates, times, plurals via ICU).
+  intl: ^0.20.2
+
+  # @immutable for the pure-Dart domain models ported in phase 02.
+  meta: ^1.16.0
+
+  # State management. Riverpod 3 only, no riverpod_generator.
+  flutter_riverpod: ^3.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+
+  # Reads PNG/WebP in tool/ for the art audit and the capture comparison.
+  image: ^4.3.0
+
+  very_good_analysis: ^9.0.0
+
+flutter:
+  uses-material-design: true
+  generate: true
+
+  assets:
+    - assets/art/scenes/
+    - assets/art/mascots/
+    - assets/art/icons/
+    - assets/art/decor/
+    - assets/art/anim/

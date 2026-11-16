@@ -1,0 +1,1814 @@
+{
+  "todayWakePuzzlesHeading": "Wake-up puzzles",
+  "todayWakePuzzlesSeeAll": "See all",
+  "@todayWakePuzzlesHeading": {
+    "description": "Heading above the row of wake-puzzle shortcuts on Today."
+  },
+  "@todayWakePuzzlesSeeAll": {
+    "description": "Opens the full wake-puzzle settings from the Today shortcut row."
+  },
+  "@@locale": "en",
+  "appName": "Capywake",
+  "@appName": {
+    "description": "The product name, shown on the app bar and store listing. Not translated."
+  },
+  "appTagline": "A calm alarm you have to wake up to solve.",
+  "@appTagline": {
+    "description": "The canonical one-line product positioning, kept in step with the store listing's headline. Calm and plain — never hype, never fear-based. Not currently rendered by any screen: the Phase 00 launch surface it was written for was replaced by the app shell, and it is retained as the localized home for this line for a future about surface."
+  },
+  "navHomeLabel": "Home",
+  "@navHomeLabel": {
+    "description": "Bottom navigation label for the Home tab."
+  },
+  "navAlarmsLabel": "Alarms",
+  "@navAlarmsLabel": {
+    "description": "Bottom navigation label for the Alarms tab — the list and editor for alarms."
+  },
+  "navStatsLabel": "Stats",
+  "navSettingsOpenLabel": "Open settings",
+  "@navStatsLabel": {
+    "description": "Bottom navigation label for the Stats tab."
+  },
+  "@navSettingsOpenLabel": {
+    "description": "Accessibility label for the gear that opens Settings from the header."
+  },
+  "todayTitle": "Today",
+  "@todayTitle": {
+    "description": "Screen title for the Today tab. Calm, plain — same word as the nav label."
+  },
+  "alarmsTitle": "Alarms",
+  "@alarmsTitle": {
+    "description": "Screen title for the Alarms tab."
+  },
+  "historyTitle": "History",
+  "@historyTitle": {
+    "description": "Screen title for the History screen, opened from Settings."
+  },
+  "settingsTitle": "Settings",
+  "@settingsTitle": {
+    "description": "Screen title for the Settings tab."
+  },
+  "commonErrorTitle": "Couldn't load this",
+  "@commonErrorTitle": {
+    "description": "Calm heading shown when a screen's data fails to load. Plain and non-alarming — never a raw error or stack trace."
+  },
+  "commonErrorBody": "Something went wrong loading your data. Please try again.",
+  "@commonErrorBody": {
+    "description": "Calm supporting line shown when a screen's data fails to load. Plain and reassuring, no technical detail."
+  },
+  "alarmsEmptyTitle": "No alarms yet",
+  "@alarmsEmptyTitle": {
+    "description": "Empty-state heading on the Alarms list when there are zero alarms. Calm and plain."
+  },
+  "alarmsEmptyBody": "Tap \"Add alarm\" to create your first one.",
+  "@alarmsEmptyBody": {
+    "description": "Empty-state guidance on the Alarms list. Concrete and friendly."
+  },
+  "addAlarmTooltip": "Add alarm",
+  "@addAlarmTooltip": {
+    "description": "Tooltip / a11y label for the floating add-alarm button on the Alarms list."
+  },
+  "newAlarmTitle": "New alarm",
+  "@newAlarmTitle": {
+    "description": "Screen title for the create-alarm screen."
+  },
+  "editAlarmTitle": "Edit alarm",
+  "@editAlarmTitle": {
+    "description": "Screen title for the edit-alarm screen."
+  },
+  "alarmEnabledLabel": "Enabled",
+  "@alarmEnabledLabel": {
+    "description": "Label for the per-alarm enable/disable switch on the form."
+  },
+  "alarmTimeLabel": "Time",
+  "@alarmTimeLabel": {
+    "description": "Label above the time picker on the alarm form."
+  },
+  "alarmRepeatLabel": "Repeat",
+  "@alarmRepeatLabel": {
+    "description": "Label above the weekday selector on the alarm form."
+  },
+  "alarmRepeatNever": "Once, then it stays off",
+  "@alarmRepeatNever": {
+    "description": "Repeat-summary text shown on the list when no weekdays are selected (the alarm fires once)."
+  },
+  "alarmRepeatEveryDay": "Every day",
+  "@alarmRepeatEveryDay": {
+    "description": "Repeat-summary text shown when all seven weekdays are selected."
+  },
+  "alarmRepeatWeekdays": "Weekdays",
+  "@alarmRepeatWeekdays": {
+    "description": "Repeat-summary text shown when only Mon–Fri are selected."
+  },
+  "alarmRepeatWeekends": "Weekends",
+  "@alarmRepeatWeekends": {
+    "description": "Repeat-summary text shown when only Sat & Sun are selected."
+  },
+  "alarmLabelLabel": "Label",
+  "@alarmLabelLabel": {
+    "description": "Label for the free-text alarm-label field."
+  },
+  "alarmLabelHint": "e.g. Workdays, Yoga",
+  "@alarmLabelHint": {
+    "description": "Placeholder text inside the alarm-label field. Plain examples."
+  },
+  "alarmSoundLabel": "Sound",
+  "@alarmSoundLabel": {
+    "description": "Label above the sound selector on the alarm form."
+  },
+  "alarmSoundDefault": "Your phone's alarm sound",
+  "@alarmSoundDefault": {
+    "description": "Display name for the sound option that bundles no file — the platform plays the device's own alarm tone. Name the behaviour rather than saying 'Default', which does not tell the user what they will hear."
+  },
+  "alarmSoundChimes": "Chimes",
+  "@alarmSoundChimes": {
+    "description": "Display name for the 'Chimes' built-in alarm sound."
+  },
+  "alarmSoundMorning": "Morning",
+  "@alarmSoundMorning": {
+    "description": "Display name for the 'Morning' built-in alarm sound."
+  },
+  "alarmSoundGentle": "Gentle",
+  "@alarmSoundGentle": {
+    "description": "Display name for the 'Gentle' built-in alarm sound."
+  },
+  "alarmVibrationLabel": "Vibration",
+  "@alarmVibrationLabel": {
+    "description": "Label for the per-alarm vibration toggle."
+  },
+  "alarmSnoozeLabel": "Snooze",
+  "@alarmSnoozeLabel": {
+    "description": "Label for the snooze-on/off switch on the alarm form."
+  },
+  "alarmSnoozeDurationLabel": "Snooze length",
+  "@alarmSnoozeDurationLabel": {
+    "description": "Label for the snooze-duration field shown when snooze is on."
+  },
+  "alarmSnoozeDurationValue": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "@alarmSnoozeDurationValue": {
+    "description": "Localized snooze duration with plural minutes.",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "9"
+      }
+    }
+  },
+  "alarmDismissMethodLabel": "Dismiss",
+  "@alarmDismissMethodLabel": {
+    "description": "Label above the dismiss-method selector on the alarm form."
+  },
+  "alarmDismissMethodNormal": "Tap to stop",
+  "@alarmDismissMethodNormal": {
+    "description": "Dismiss method: a single tap on a clearly labelled stop button."
+  },
+  "alarmDismissMethodHold": "Press and hold",
+  "@alarmDismissMethodHold": {
+    "description": "Dismiss method: press-and-hold to stop, defends against a half-asleep tap."
+  },
+  "alarmDismissDifficultyLabel": "Difficulty",
+  "@alarmDismissDifficultyLabel": {
+    "description": "Label above the math-challenge difficulty selector on the alarm form."
+  },
+  "alarmDismissDifficultyEasy": "Easy",
+  "@alarmDismissDifficultyEasy": {
+    "description": "Math-challenge difficulty: easy — single-digit arithmetic."
+  },
+  "alarmDismissDifficultyMedium": "Medium",
+  "@alarmDismissDifficultyMedium": {
+    "description": "Math-challenge difficulty: medium — two-digit arithmetic."
+  },
+  "alarmDismissDifficultyHard": "Hard",
+  "@alarmDismissDifficultyHard": {
+    "description": "Math-challenge difficulty: hard — multi-step problem."
+  },
+  "alarmSaveAction": "Save",
+  "@alarmSaveAction": {
+    "description": "Save button on the alarm form."
+  },
+  "alarmCancelAction": "Cancel",
+  "@alarmCancelAction": {
+    "description": "Cancel button on the alarm form / dialogs."
+  },
+  "alarmDeleteAction": "Delete",
+  "@alarmDeleteAction": {
+    "description": "Delete action label on the alarm form."
+  },
+  "alarmDuplicateAction": "Duplicate",
+  "@alarmDuplicateAction": {
+    "description": "Duplicate-alarm action label."
+  },
+  "alarmEnableAction": "Enable alarm",
+  "@alarmEnableAction": {
+    "description": "Accessibility label for the enable toggle on a list row."
+  },
+  "alarmDisableAction": "Disable alarm",
+  "@alarmDisableAction": {
+    "description": "Accessibility label for the disable toggle on a list row."
+  },
+  "alarmDeleteConfirmTitle": "Delete this alarm?",
+  "@alarmDeleteConfirmTitle": {
+    "description": "Title of the confirmation dialog shown before deleting an alarm. Calm, neutral wording."
+  },
+  "alarmDeleteConfirmBody": "This alarm and its history will be removed.",
+  "@alarmDeleteConfirmBody": {
+    "description": "Body of the delete-alarm confirmation dialog. Honest about what is removed."
+  },
+  "alarmValidationLabelTooLong": "Label is too long.",
+  "@alarmValidationLabelTooLong": {
+    "description": "Inline error shown when the label field exceeds the maximum length. Plain wording."
+  },
+  "alarmValidationSnoozeOutOfRange": "Snooze must be between 1 and 30 minutes.",
+  "@alarmValidationSnoozeOutOfRange": {
+    "description": "Inline error shown when the snooze duration is outside the allowed range."
+  },
+  "alarmSchedulingNote": "Alarms become active once you finish set-up.",
+  "@alarmSchedulingNote": {
+    "description": "Calm, honest note shown at the foot of the alarm form. Capywake stays honest about reliability — see the reliability checklist for platform truth."
+  },
+  "alarmWakeModeLabel": "Wake mode",
+  "@alarmWakeModeLabel": {
+    "description": "Section label above the wake-mode picker on the alarm form."
+  },
+  "alarmWakeModeGentle": "Gentle",
+  "@alarmWakeModeGentle": {
+    "description": "Wake-mode picker option — Gentle. Single word so the segmented button stays readable in every locale."
+  },
+  "alarmWakeModeStandard": "Standard",
+  "@alarmWakeModeStandard": {
+    "description": "Wake-mode picker option — Standard."
+  },
+  "alarmWakeModeStrict": "Strict",
+  "@alarmWakeModeStrict": {
+    "description": "Wake-mode picker option — Strict."
+  },
+  "alarmWakeModeGentleDescription": "A soft volume ramp across the soft start. Without a soft start it rings like Standard.",
+  "@alarmWakeModeGentleDescription": {
+    "description": "Plain-language description of Gentle mode shown under the picker. Honest — describes a volume ramp, never a sleep-stage detection."
+  },
+  "alarmWakeModeStandardDescription": "A single ring at the alarm time, with normal snoozes.",
+  "@alarmWakeModeStandardDescription": {
+    "description": "Plain-language description of Standard mode shown under the picker."
+  },
+  "alarmWakeModeStrictDescription": "Short, capped snoozes and a confirmation tap so a sleepy press doesn't lie.",
+  "@alarmWakeModeStrictDescription": {
+    "description": "Plain-language description of Strict mode shown under the picker. Calm wording — no fear/shame language."
+  },
+  "alarmWakeWindowLabel": "Soft-start window",
+  "@alarmWakeWindowLabel": {
+    "description": "Section label above the soft-start slider on the alarm form."
+  },
+  "alarmWakeWindowOff": "Off — alarm rings only at the target time.",
+  "@alarmWakeWindowOff": {
+    "description": "Status line shown next to the soft-start slider when it is set to 0 minutes (no ramp)."
+  },
+  "alarmWakeWindowValue": "{minutes, plural, =1{Starts 1 minute before the alarm time} other{Starts {minutes} minutes before the alarm time}}",
+  "@alarmWakeWindowValue": {
+    "description": "Status line shown next to the soft-start slider when it is set to a non-zero number of minutes. Honest — describes the timing, never claims sleep-stage detection.",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "15"
+      }
+    }
+  },
+  "alarmWakeWindowExplanation": "A soft-start ramps the volume up in the minutes before the alarm time. It is a volume fade, not a sleep-stage wake.",
+  "@alarmWakeWindowExplanation": {
+    "description": "Plain-language explanation of what the soft-start window does. Strictly honest — names the volume fade and explicitly disclaims sleep-stage detection."
+  },
+  "alarmWakeWindowExplanationStrict": "Strict does not fade in. With a soft start the alarm begins earlier, at full volume.",
+  "@alarmWakeWindowExplanationStrict": {
+    "description": "Replaces the soft-start explanation when the alarm is in Strict mode. Strict never fades in, so the window only makes the alarm start earlier — this says so rather than letting the fading-mode wording stand."
+  },
+  "alarmReliabilityHonestyNote": "Capywake's wake modes only adjust volume, sound, and snooze rules. There is no sleep-stage detection on any phone.",
+  "@alarmReliabilityHonestyNote": {
+    "description": "Honest one-liner shown under the wake-mode section. Hard guardrail copy — no sleep-stage claim, no per-phone parity claim. Sourced from ReliabilityCopyService discipline."
+  },
+  "todayNextAlarmHeading": "Next alarm",
+  "@todayNextAlarmHeading": {
+    "description": "Heading above the large next-alarm card on the Today screen."
+  },
+  "todayNoAlarmTitle": "No alarm set",
+  "@todayNoAlarmTitle": {
+    "description": "Heading shown on the Today screen when no enabled alarm exists. Calm and plain."
+  },
+  "todayNoAlarmBody": "When you add an alarm, it will show up here so you can see at a glance what is next.",
+  "@todayNoAlarmBody": {
+    "description": "Calm body shown on the Today screen when no alarm is set. Sets expectations honestly without overpromising reliability."
+  },
+  "todayCreateAlarmAction": "Set an alarm",
+  "@todayCreateAlarmAction": {
+    "description": "Primary action on the Today empty-state — opens the create-alarm form."
+  },
+  "todayEditAction": "Edit",
+  "@todayEditAction": {
+    "description": "Quick action on the Today next-alarm card — opens the edit-alarm form."
+  },
+  "todaySkipNextAction": "Skip next",
+  "@todaySkipNextAction": {
+    "description": "Quick action on the Today next-alarm card — skips the next ring of this alarm."
+  },
+  "todayUndoSkipAction": "Undo skip",
+  "@todayUndoSkipAction": {
+    "description": "Quick action shown on the Today card when the next ring is currently skipped — restores it."
+  },
+  "todaySetForTomorrowAction": "Set for tomorrow",
+  "@todaySetForTomorrowAction": {
+    "description": "Quick action on the Today screen — creates a one-time alarm for tomorrow morning at the user's default wake mode + sound."
+  },
+  "todayRingsTodayAt": "Rings today at {time}",
+  "@todayRingsTodayAt": {
+    "description": "Caption on the next-alarm card when the alarm rings later today.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "07:00"
+      }
+    }
+  },
+  "todayRingsTomorrowAt": "Rings tomorrow at {time}",
+  "@todayRingsTomorrowAt": {
+    "description": "Caption on the next-alarm card when the alarm rings tomorrow.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "07:00"
+      }
+    }
+  },
+  "todayRingsOnDayAt": "Rings on {weekday} at {time}",
+  "@todayRingsOnDayAt": {
+    "description": "Caption on the next-alarm card when the alarm rings on a specific weekday more than one day away.",
+    "placeholders": {
+      "weekday": {
+        "type": "String",
+        "example": "Monday"
+      },
+      "time": {
+        "type": "String",
+        "example": "07:00"
+      }
+    }
+  },
+  "todaySoftWakeStartsAt": "Starts quietly at {time}",
+  "@todaySoftWakeStartsAt": {
+    "description": "Line on the next-alarm card showing the wake-window start time. Calm wording — no claims about sleep stages or detection.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "06:45"
+      }
+    }
+  },
+  "todayWakeWindowStartsAt": "Starts at {time}",
+  "@todayWakeWindowStartsAt": {
+    "description": "Line on the next-alarm card for a Strict alarm with a soft start: the alarm begins earlier but not quieter, so it must not say 'quietly'.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "06:45"
+      }
+    }
+  },
+  "todayWakeModeGentle": "Gentle wake",
+  "@todayWakeModeGentle": {
+    "description": "Wake-mode chip on the next-alarm card — Gentle."
+  },
+  "todayWakeModeStandard": "Standard wake",
+  "@todayWakeModeStandard": {
+    "description": "Wake-mode chip on the next-alarm card — Standard."
+  },
+  "todayWakeModeStrict": "Strict wake",
+  "@todayWakeModeStrict": {
+    "description": "Wake-mode chip on the next-alarm card — Strict."
+  },
+  "todaySnoozeOff": "Snooze off",
+  "@todaySnoozeOff": {
+    "description": "Snooze-rule line on the next-alarm card when snooze is disabled."
+  },
+  "todaySnoozeUnlimited": "{minutes, plural, =1{Snooze 1 minute, no cap} other{Snooze {minutes} minutes, no cap}}",
+  "@todaySnoozeUnlimited": {
+    "description": "Snooze-rule line shown when snooze is enabled with no cap on the number of snoozes.",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "9"
+      }
+    }
+  },
+  "todaySnoozeCapped": "{count, plural, =1{Snooze {minutes} min, up to 1 time} other{Snooze {minutes} min, up to {count} times}}",
+  "@todaySnoozeCapped": {
+    "description": "Snooze-rule line shown when snooze is enabled with a maximum number of snoozes. The minutes parameter is non-pluralized in the snooze-length part — it is always paired with 'min' as a short-form abbreviation.",
+    "placeholders": {
+      "minutes": {
+        "type": "int",
+        "example": "9"
+      },
+      "count": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "todayConfirmRequired": "Asks if you are up after dismiss",
+  "@todayConfirmRequired": {
+    "description": "Note on the next-alarm card when the alarm requires a 'still up?' confirmation after dismiss. Honest about what the app does — no fear/shame language."
+  },
+  "todaySkipConfirmTitle": "Skip the next alarm?",
+  "@todaySkipConfirmTitle": {
+    "description": "Title of the confirmation dialog shown before skipping the next ring."
+  },
+  "todaySkipConfirmBody": "{time} will not ring. Other alarms continue as usual.",
+  "@todaySkipConfirmBody": {
+    "description": "Body of the skip-next confirmation dialog. Honest and concrete.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "Mon 07:00"
+      }
+    }
+  },
+  "todaySkipConfirmAction": "Skip",
+  "@todaySkipConfirmAction": {
+    "description": "Action label on the skip-next confirmation dialog."
+  },
+  "todaySkippedBanner": "Next ring is skipped",
+  "@todaySkippedBanner": {
+    "description": "Banner shown on the Today card when the user has explicitly skipped the very next ring of this alarm. Calm wording, matched with an Undo skip action."
+  },
+  "todayTomorrowSetSnack": "Alarm set for tomorrow at {time}",
+  "@todayTomorrowSetSnack": {
+    "description": "Snackbar shown after the 'Set for tomorrow' quick action persists a one-time alarm.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "07:00"
+      }
+    }
+  },
+  "reliabilitySummaryAndroid": "On Android, Capywake uses exact alarms and a foreground service so alarms ring on time even when the phone is asleep.",
+  "@reliabilitySummaryAndroid": {
+    "description": "One-line per-platform reliability summary for Android. Calm and honest — no 'never oversleep' claims, no parity with iOS."
+  },
+  "reliabilitySummaryIos": "On iOS, Capywake rings reliably while the app is open or in the background. Keep the app available to be woken on time.",
+  "@reliabilitySummaryIos": {
+    "description": "One-line per-platform reliability summary for iOS. Honest about the platform's limits — never implies termination survival or silent-mode bypass."
+  },
+  "reliabilityCautionBatteryOptimization": "Some Android phones aggressively close background apps. Exempt Capywake from battery optimisation so alarms can ring.",
+  "@reliabilityCautionBatteryOptimization": {
+    "description": "Android caution: surface OEM battery-optimisation kill behaviour (the real failure mode per dontkillmyapp.com). Calm guidance, no fear language."
+  },
+  "reliabilityCautionTerminationIos": "If you force-quit Capywake or iOS clears it from memory, alarms stop ringing.",
+  "@reliabilityCautionTerminationIos": {
+    "description": "iOS caution: a terminated/memory-evicted app cannot fire alarms (until AlarmKit). Honest, neutral wording."
+  },
+  "reliabilityCautionSilentModeIos": "iOS silent mode and Focus mute alarm sounds. Capywake does not override them.",
+  "@reliabilityCautionSilentModeIos": {
+    "description": "iOS caution: no Critical Alerts entitlement, so silent mode / DND mute the alarm. Honest, no implied bypass."
+  },
+  "reliabilityCautionScheduleCapIos": "iOS keeps at most 64 scheduled reminders per app. Capywake schedules the soonest first.",
+  "@reliabilityCautionScheduleCapIos": {
+    "description": "iOS caution: 64-pending-notifications cap. Honest, technical, no overpromising."
+  },
+  "reliabilityPermissionNotificationDenied": "Notifications are turned off for Capywake. Alarms cannot show on the lock screen until you allow them.",
+  "@reliabilityPermissionNotificationDenied": {
+    "description": "Calm prompt shown when OS notification permission is denied. Honest about the consequence — no fear/shame language."
+  },
+  "reliabilityPermissionExactAlarmDenied": "Exact alarms are turned off for Capywake. Alarms may not ring at the right time until you allow them.",
+  "@reliabilityPermissionExactAlarmDenied": {
+    "description": "Calm prompt shown on Android when exact-alarm permission is denied. Honest about the consequence."
+  },
+  "reliabilityRequestNotificationAction": "Allow notifications",
+  "@reliabilityRequestNotificationAction": {
+    "description": "Action label that triggers the system notification permission prompt."
+  },
+  "reliabilityRequestExactAlarmAction": "Allow exact alarms",
+  "@reliabilityRequestExactAlarmAction": {
+    "description": "Action label (Android only) that opens the system exact-alarm permission settings."
+  },
+  "reliabilityOpenSettingsAction": "Open Settings",
+  "@reliabilityOpenSettingsAction": {
+    "description": "Action label shown when a permission is permanently denied — opens the device Settings app."
+  },
+  "ringingIdleBody": "Waiting for the next alarm.",
+  "@ringingIdleBody": {
+    "description": "Calm fallback body shown on the ringing screen when no alarm is currently ringing. Defensive only — users normally land here via a ringing event."
+  },
+  "ringingAlarmTimeHeading": "Alarm",
+  "@ringingAlarmTimeHeading": {
+    "description": "Small heading above the large time on the ringing screen. The number below it is the alarm's set time, not the clock — during a wake window the alarm starts before it, so the number must not be readable as the current time. Mirrors the Today card's 'Next alarm' heading."
+  },
+  "ringingSnoozeAction": "Snooze",
+  "@ringingSnoozeAction": {
+    "description": "Label of the large Snooze button on the ringing screen."
+  },
+  "ringingDismissAction": "Stop alarm",
+  "@ringingDismissAction": {
+    "description": "Label of the large Dismiss button on the ringing screen for the tap-to-stop and math-challenge dismiss methods. Plain and direct."
+  },
+  "ringingHoldToDismissAction": "Hold to stop",
+  "@ringingHoldToDismissAction": {
+    "description": "Label and accessibility description for the press-and-hold dismiss control. Honest about the gesture — a tap won't dismiss."
+  },
+  "ringingSnoozedCount": "{count, plural, =1{Snoozed once} other{Snoozed {count} times}}",
+  "@ringingSnoozedCount": {
+    "description": "Calm, non-judgmental snooze-count feedback shown above the controls while the alarm rings.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "ringingStillUpTitle": "Still up?",
+  "@ringingStillUpTitle": {
+    "description": "Heading on the post-dismiss confirmation screen. Non-judgmental — Capywake stays honest about whether you actually got up."
+  },
+  "ringingStillUpBody": "Tap to confirm you're up.",
+  "@ringingStillUpBody": {
+    "description": "Calm body on the still-up confirmation. Plain — no fear/shame language and no overpromise: the screen waits for the tap, nothing else."
+  },
+  "ringingStillUpAction": "I'm up",
+  "@ringingStillUpAction": {
+    "description": "Primary action on the still-up confirmation. Plain wording."
+  },
+  "settingsReliabilityEntryLabel": "Alarm reliability",
+  "@settingsReliabilityEntryLabel": {
+    "description": "Settings entry that opens the alarm reliability checklist. Calm wording — never claims 'never miss an alarm'."
+  },
+  "settingsReliabilityEntryDescription": "Check what affects whether alarms ring on this phone.",
+  "@settingsReliabilityEntryDescription": {
+    "description": "One-line description of the reliability checklist entry. Honest — surfaces the platform-by-platform truth."
+  },
+  "settingsHistoryEntryLabel": "History",
+  "@settingsHistoryEntryLabel": {
+    "description": "Settings entry that opens the History screen. History is no longer a tab."
+  },
+  "settingsHistoryEntryDescription": "Look back at how your recent mornings went.",
+  "@settingsHistoryEntryDescription": {
+    "description": "One-line description of the History entry. Calm and non-judgmental — never implies the user did badly."
+  },
+  "settingsHistoryEntrySemanticLabel": "Opens a summary of your recent wake-ups.",
+  "@settingsHistoryEntrySemanticLabel": {
+    "description": "Screen-reader label for the History entry's description line — states what opening the entry does."
+  },
+  "reliabilityScreenTitle": "Alarm reliability",
+  "@reliabilityScreenTitle": {
+    "description": "AppBar title of the reliability checklist screen."
+  },
+  "reliabilityScreenIntro": "These are the things that decide whether your alarm rings. Capywake stays honest about what each phone can and cannot guarantee.",
+  "@reliabilityScreenIntro": {
+    "description": "Calm intro shown above the checklist. Sets honest expectations — no overpromising."
+  },
+  "reliabilityChecklistNotificationTitle": "Notifications allowed",
+  "@reliabilityChecklistNotificationTitle": {
+    "description": "Checklist row title for the OS notification permission."
+  },
+  "reliabilityChecklistNotificationOkBody": "Capywake can show alarms on the lock screen.",
+  "@reliabilityChecklistNotificationOkBody": {
+    "description": "Calm body shown when notification permission is granted."
+  },
+  "reliabilityChecklistExactAlarmTitle": "Exact alarms allowed",
+  "@reliabilityChecklistExactAlarmTitle": {
+    "description": "Checklist row title for Android's exact-alarm permission."
+  },
+  "reliabilityChecklistExactAlarmOkBody": "Alarms can ring at the exact minute you set.",
+  "@reliabilityChecklistExactAlarmOkBody": {
+    "description": "Calm body shown when exact-alarm permission is granted on Android."
+  },
+  "reliabilityChecklistBatteryTitle": "Battery optimisation",
+  "@reliabilityChecklistBatteryTitle": {
+    "description": "Checklist row title for the Android OEM battery optimisation step."
+  },
+  "reliabilityChecklistVolumeTitle": "Sound and volume",
+  "@reliabilityChecklistVolumeTitle": {
+    "description": "Checklist row title for the alarm sound and volume check."
+  },
+  "reliabilityChecklistVolumeBody": "Make sure your alarm has a sound chosen and the media volume is audible.",
+  "@reliabilityChecklistVolumeBody": {
+    "description": "Calm guidance for the sound/volume row. Plain — no fear language."
+  },
+  "reliabilityChecklistDndTitle": "Do Not Disturb",
+  "@reliabilityChecklistDndTitle": {
+    "description": "Checklist row title for the Do Not Disturb / silent-mode posture."
+  },
+  "reliabilityChecklistDndAndroidBody": "Do Not Disturb and silent modes can mute alarms. Check your phone's allowances if you rely on alarm sound.",
+  "@reliabilityChecklistDndAndroidBody": {
+    "description": "Body shown for the DND row on Android. Honest — Capywake does not bypass DND."
+  },
+  "reliabilityChecklistAcknowledgeAction": "Mark as checked",
+  "@reliabilityChecklistAcknowledgeAction": {
+    "description": "Action label for user-judged checklist rows that the user must confirm themselves (volume, DND, battery)."
+  },
+  "reliabilityChecklistAcknowledgedAction": "Checked",
+  "@reliabilityChecklistAcknowledgedAction": {
+    "description": "Action label shown after the user has acknowledged a row. Tapping it again clears the acknowledgement."
+  },
+  "reliabilityChecklistStateOkLabel": "Looks good",
+  "@reliabilityChecklistStateOkLabel": {
+    "description": "Accessibility label for the ok state badge on a checklist row."
+  },
+  "reliabilityChecklistStateNeedsAttentionLabel": "Needs attention",
+  "@reliabilityChecklistStateNeedsAttentionLabel": {
+    "description": "Accessibility label for the needs-attention state badge on a checklist row. Calm — not 'failed'."
+  },
+  "reliabilityChecklistStateUnknownLabel": "Not checked yet",
+  "@reliabilityChecklistStateUnknownLabel": {
+    "description": "Accessibility label for the unknown badge on a checklist row."
+  },
+  "reliabilityChecklistOpenSettingsFailed": "Could not open Settings. Open it manually from your phone.",
+  "@reliabilityChecklistOpenSettingsFailed": {
+    "description": "Snackbar shown when the Open Settings deep-link fails. Calm fallback."
+  },
+  "historyEmptyTitle": "Nothing to look back on yet",
+  "@historyEmptyTitle": {
+    "description": "Empty-state heading on the History tab when no occurrences have been recorded. Calm — never judgmental."
+  },
+  "historyEmptyBody": "Once your alarms start ringing, calm summaries of your wake-ups will appear here.",
+  "@historyEmptyBody": {
+    "description": "Empty-state body on the History tab. Plain — no fake science, no shame language."
+  },
+  "historyWindowLabel": "{days, plural, =1{Last day} other{Last {days} days}}",
+  "@historyWindowLabel": {
+    "description": "Section heading describing the history window length. Plain copy.",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "14"
+      }
+    }
+  },
+  "historySummaryHeading": "Your wake-ups",
+  "@historySummaryHeading": {
+    "description": "Heading above the summary card on the History screen. Calm, non-judgmental."
+  },
+  "historyOnTimeLabel": "On time",
+  "@historyOnTimeLabel": {
+    "description": "Label for the count of dismissed alarms with no snoozes. Plain — never 'good morning' or hype."
+  },
+  "historyLateLabel": "After a snooze",
+  "@historyLateLabel": {
+    "description": "Label for the count of dismissed alarms where the user snoozed at least once. Calm — never 'late' or 'bad'."
+  },
+  "historyMissedLabel": "Missed",
+  "@historyMissedLabel": {
+    "description": "Label for the count of missed alarms. Honest — never 'failure'."
+  },
+  "historySkippedLabel": "Skipped",
+  "@historySkippedLabel": {
+    "description": "Label for the count of skipped alarms. Plain — skipping is a normal user choice."
+  },
+  "historyAverageSnoozeLabel": "Average snoozes",
+  "@historyAverageSnoozeLabel": {
+    "description": "Label for the average snooze count across dismissed alarms. Plain wording."
+  },
+  "historyAverageSnoozeValue": "{count, plural, =0{None} =1{About 1} other{About {count}}}",
+  "@historyAverageSnoozeValue": {
+    "description": "Approximate average snooze count value. Calm — 'about' rather than precise.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "historyOccurrenceCount": "{count, plural, =1{1 alarm} other{{count} alarms}}",
+  "@historyOccurrenceCount": {
+    "description": "Pluralised count of alarms in the window — used as a sub-line on the summary card.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
+  "historyDailyHeading": "Day by day",
+  "@historyDailyHeading": {
+    "description": "Heading above the per-day breakdown list."
+  },
+  "historyInsightsHeading": "Gentle observations",
+  "@historyInsightsHeading": {
+    "description": "Heading above the insights list. Calm wording — 'observations', never 'verdicts'."
+  },
+  "historyInsightAverageSnooze": "{count, plural, =0{You usually dismiss without a snooze.} =1{You usually dismiss after about one snooze.} other{You usually dismiss after about {count} snoozes.}}",
+  "@historyInsightAverageSnooze": {
+    "description": "Calm, non-judgmental insight about typical snooze count.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "historyInsightFrequentlySkippedWeekday": "{weekday, select, monday{You often skip Monday alarms.} tuesday{You often skip Tuesday alarms.} wednesday{You often skip Wednesday alarms.} thursday{You often skip Thursday alarms.} friday{You often skip Friday alarms.} saturday{You often skip Saturday alarms.} sunday{You often skip Sunday alarms.} other{You often skip alarms on this weekday.}}",
+  "@historyInsightFrequentlySkippedWeekday": {
+    "description": "Calm insight when the user has skipped the same weekday several times. Neutral — never blamey.",
+    "placeholders": {
+      "weekday": {
+        "type": "String",
+        "example": "friday"
+      }
+    }
+  },
+  "historyInsightStrictModeHelped": "{count, plural, =1{Strict mode helped on 1 morning.} other{Strict mode helped on {count} mornings.}}",
+  "@historyInsightStrictModeHelped": {
+    "description": "Calm, encouraging-without-hype insight about strict mode helping the user dismiss without snoozing.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "historyExtendedHeading": "Extended summary",
+  "@historyExtendedHeading": {
+    "description": "Heading on the deeper-history card that shows the extended summary."
+  },
+  "historyDeeperWindowLabel": "{days, plural, =1{Last day} other{Last {days} days}}",
+  "@historyDeeperWindowLabel": {
+    "description": "Window length label on the deeper-history card.",
+    "placeholders": {
+      "days": {
+        "type": "int",
+        "example": "90"
+      }
+    }
+  },
+  "settingsDefaultsHeading": "Defaults for new alarms",
+  "@settingsDefaultsHeading": {
+    "description": "Section heading above the default-alarm preferences on the Settings screen. Calm, plain wording."
+  },
+  "settingsDisplayHeading": "Display",
+  "@settingsDisplayHeading": {
+    "description": "Section heading above the time-format and theme controls on the Settings screen."
+  },
+  "settingsAboutHeading": "About Capywake",
+  "@settingsAboutHeading": {
+    "description": "Section heading above the links to reliability, history, and setup on the Settings screen."
+  },
+  "settingsDefaultWakeModeLabel": "Default wake mode",
+  "@settingsDefaultWakeModeLabel": {
+    "description": "Field label above the default-wake-mode segmented button on Settings. New alarms inherit this mode."
+  },
+  "settingsDefaultSoundLabel": "Default sound",
+  "@settingsDefaultSoundLabel": {
+    "description": "Field label above the default-sound dropdown on Settings."
+  },
+  "settingsDefaultSnoozeLabel": "Default snooze length",
+  "@settingsDefaultSnoozeLabel": {
+    "description": "Field label above the default-snooze-minutes slider on Settings."
+  },
+  "settingsTimeFormatLabel": "Time format",
+  "@settingsTimeFormatLabel": {
+    "description": "Field label above the 12h/24h/system time-format selector on Settings."
+  },
+  "settingsTimeFormatSystem": "System",
+  "@settingsTimeFormatSystem": {
+    "description": "Time-format option that follows the OS locale's preference. Single word so the segmented button stays readable."
+  },
+  "settingsTimeFormatH12": "12-hour",
+  "@settingsTimeFormatH12": {
+    "description": "Time-format option for 12-hour clocks (e.g. 7:00 AM)."
+  },
+  "settingsTimeFormatH24": "24-hour",
+  "@settingsTimeFormatH24": {
+    "description": "Time-format option for 24-hour clocks (e.g. 07:00)."
+  },
+  "settingsThemeLabel": "Theme",
+  "@settingsThemeLabel": {
+    "description": "Field label above the system/light/dark theme selector on Settings."
+  },
+  "settingsThemeSystem": "System",
+  "@settingsThemeSystem": {
+    "description": "Theme option that follows the OS dark-mode preference."
+  },
+  "settingsThemeLight": "Light",
+  "@settingsThemeLight": {
+    "description": "Theme option that forces the warm light palette."
+  },
+  "settingsThemeDark": "Dark",
+  "@settingsThemeDark": {
+    "description": "Theme option that forces the calm dark palette — readable at night."
+  },
+  "alarmRingingNotificationBody": "Your alarm",
+  "@alarmRingingNotificationBody": {
+    "description": "Body of the system alarm notification shown while the alarm is ringing (the title is the app name). Plain and calm — no overpromising, no urgency."
+  },
+  "notificationChannelName": "Alarms",
+  "@notificationChannelName": {
+    "description": "Android notification channel display name (visible in system settings) for Capywake's alarm reminders. Plain noun."
+  },
+  "notificationChannelDescription": "Reminders before your alarm rings.",
+  "@notificationChannelDescription": {
+    "description": "Android notification channel description (visible in system settings). Honest about being a pre-alarm reminder; no reliability promise."
+  },
+  "notificationSoftWakeTitle": "Wake window",
+  "@notificationSoftWakeTitle": {
+    "description": "Title of the pre-alarm soft-wake reminder notification. Calm, matches the in-app 'Soft wake starts …' wording."
+  },
+  "notificationSoftWakeBody": "Your wake window has started. The alarm time is {time}.",
+  "@notificationSoftWakeBody": {
+    "description": "Body of the soft-wake reminder notification. {time} is the formatted alarm time (via intl). Honest: states the wake window opened and when the alarm rings; no sleep-stage claim.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "mascotContentLabel": "A content capybara",
+  "@mascotContentLabel": {
+    "description": "Accessibility label for the drawn capybara on the 'You're up' confirmation after an alarm has been dismissed. Plain description of the illustration for screen readers."
+  },
+  "puzzleInstructionArithmetic": "What is the result?",
+  "@puzzleInstructionArithmetic": {
+    "description": "Wake-puzzle instruction for the arithmetic type. A quiet instruction, never a taunt."
+  },
+  "puzzleInstructionSequenceNext": "Which number comes next?",
+  "@puzzleInstructionSequenceNext": {
+    "description": "Wake-puzzle instruction for the number-sequence type."
+  },
+  "puzzleInstructionMissingOperator": "Which sign makes this true?",
+  "@puzzleInstructionMissingOperator": {
+    "description": "Wake-puzzle instruction for the missing-operator type. 'Sign' means the arithmetic symbol."
+  },
+  "puzzleInstructionCompareLargest": "Tap the largest number.",
+  "@puzzleInstructionCompareLargest": {
+    "description": "Wake-puzzle instruction for the compare-values type when the task is to pick the largest value."
+  },
+  "puzzleInstructionCompareSmallest": "Tap the smallest number.",
+  "@puzzleInstructionCompareSmallest": {
+    "description": "Wake-puzzle instruction for the compare-values type when the task is to pick the smallest value."
+  },
+  "puzzleInstructionCompareAscending": "Tap the numbers from smallest to largest.",
+  "@puzzleInstructionCompareAscending": {
+    "description": "Wake-puzzle instruction for the compare-values type when the task is to order every value."
+  },
+  "puzzleInstructionOddOneOut": "Which one is not a multiple of {divisor}?",
+  "@puzzleInstructionOddOneOut": {
+    "description": "Wake-puzzle instruction for the odd-one-out type. The rule MUST be stated: a hidden-rule odd-one-out over integers has no single defensible answer.",
+    "placeholders": {
+      "divisor": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "puzzleInstructionDigitRecall": "Enter the digits you saw.",
+  "@puzzleInstructionDigitRecall": {
+    "description": "Wake-puzzle instruction for the digit-recall type, shown after the digits are hidden."
+  },
+  "puzzleInstructionDigitRecallReversed": "Enter the digits backwards.",
+  "@puzzleInstructionDigitRecallReversed": {
+    "description": "Wake-puzzle instruction for the reversed digit-recall type, shown after the digits are hidden."
+  },
+  "puzzleInstructionGridPattern": "Tap the squares that lit up.",
+  "@puzzleInstructionGridPattern": {
+    "description": "Wake-puzzle instruction for the grid-pattern-recall type, shown after the pattern is hidden."
+  },
+  "puzzleInstructionSpotTheChange": "Which shape changed?",
+  "@puzzleInstructionSpotTheChange": {
+    "description": "Wake-puzzle instruction for the spot-the-change type, shown with the second row of shapes."
+  },
+  "puzzleInstructionShapeRotation": "Which shape is a quarter turn clockwise?",
+  "@puzzleInstructionShapeRotation": {
+    "description": "Wake-puzzle instruction for the shape-rotation type. A quarter turn clockwise from the reference shape."
+  },
+  "puzzleMemoriseDigits": "Remember these digits.",
+  "@puzzleMemoriseDigits": {
+    "description": "Shown while the digits of a recall puzzle are still visible. No countdown, no timer language."
+  },
+  "puzzleMemorisePattern": "Remember these squares.",
+  "@puzzleMemorisePattern": {
+    "description": "Shown while the lit squares of a grid puzzle are still visible."
+  },
+  "puzzleMemoriseShapes": "Look at this row.",
+  "@puzzleMemoriseShapes": {
+    "description": "Shown while the first row of a spot-the-change puzzle is still visible."
+  },
+  "puzzleProgress": "{current} of {total}",
+  "@puzzleProgress": {
+    "description": "Task progress in a multi-task wake-puzzle round, e.g. '2 of 3'. Only shown when more than one task is asked for. Never a score.",
+    "placeholders": {
+      "current": {
+        "type": "int",
+        "example": "2"
+      },
+      "total": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "puzzleFeedbackCorrect": "Correct",
+  "@puzzleFeedbackCorrect": {
+    "description": "The single word shown in the momentary confirmation after a correct wake-puzzle answer. A quiet acknowledgement, never a cheer: do not translate as 'Bravo', 'Well done', 'Nice one' or anything with an exclamation mark. No score, no streak, no praise."
+  },
+  "puzzleFeedbackIncorrect": "Not quite — here's another one.",
+  "@puzzleFeedbackIncorrect": {
+    "description": "Calm feedback after a wrong answer. The next puzzle is easier. Never scolds — no 'wrong again'."
+  },
+  "puzzleFeedbackEmpty": "Enter your answer to stop the alarm.",
+  "@puzzleFeedbackEmpty": {
+    "description": "Calm feedback when the answer was submitted empty. A hint, not a correction."
+  },
+  "puzzleFeedbackUnparseable": "Use digits only.",
+  "@puzzleFeedbackUnparseable": {
+    "description": "Calm feedback when the typed answer is not in the shape the puzzle expects."
+  },
+  "puzzleAnswerLabel": "Your answer",
+  "@puzzleAnswerLabel": {
+    "description": "Accessibility label of the answer field on the wake-puzzle surface."
+  },
+  "puzzleSubmitAction": "Check",
+  "@puzzleSubmitAction": {
+    "description": "Label of the button that checks the wake-puzzle answer."
+  },
+  "puzzleDeleteAction": "Delete last digit",
+  "@puzzleDeleteAction": {
+    "description": "Accessibility label of the keypad's backspace key on the wake-puzzle surface."
+  },
+  "puzzleUndoAction": "Undo last tap",
+  "@puzzleUndoAction": {
+    "description": "Label of the control that undoes the last tap when ordering or selecting in a wake puzzle."
+  },
+  "puzzleBackAction": "Back",
+  "@puzzleBackAction": {
+    "description": "Label of the control that leaves the wake puzzle and returns to the ringing screen. The alarm keeps ringing — this is not the emergency escape."
+  },
+  "puzzleOperatorAdd": "plus",
+  "@puzzleOperatorAdd": {
+    "description": "Spoken name of the '+' sign, used for screen readers and for the operator option buttons."
+  },
+  "puzzleOperatorSubtract": "minus",
+  "@puzzleOperatorSubtract": {
+    "description": "Spoken name of the minus sign."
+  },
+  "puzzleOperatorMultiply": "times",
+  "@puzzleOperatorMultiply": {
+    "description": "Spoken name of the multiplication sign."
+  },
+  "puzzleOperatorDivide": "divided by",
+  "@puzzleOperatorDivide": {
+    "description": "Spoken name of the division sign."
+  },
+  "puzzleArithmeticSemantics": "{left} {operator} {right}",
+  "@puzzleArithmeticSemantics": {
+    "description": "Screen-reader reading of an arithmetic puzzle. Numbers are pre-formatted via intl; operator is the spoken name.",
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "operator": {
+        "type": "String"
+      },
+      "right": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleMissingOperatorSemantics": "{left}, missing sign, {right}, equals {result}",
+  "@puzzleMissingOperatorSemantics": {
+    "description": "Screen-reader reading of a missing-operator puzzle. Numbers are pre-formatted via intl.",
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "right": {
+        "type": "String"
+      },
+      "result": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleNumberListSemantics": "The numbers are: {values}",
+  "@puzzleNumberListSemantics": {
+    "description": "Screen-reader reading of a row of numbers. {values} is the already-formatted, comma-joined list.",
+    "placeholders": {
+      "values": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleDigitsSemantics": "The digits are: {digits}",
+  "@puzzleDigitsSemantics": {
+    "description": "Screen-reader reading of the digits shown by a recall puzzle. {digits} is the already-formatted, comma-joined list.",
+    "placeholders": {
+      "digits": {
+        "type": "String"
+      }
+    }
+  },
+  "puzzleGridCellLabel": "Row {row}, column {column}",
+  "@puzzleGridCellLabel": {
+    "description": "Accessibility label of one cell in the wake-puzzle grid. 1-based.",
+    "placeholders": {
+      "row": {
+        "type": "int",
+        "example": "2"
+      },
+      "column": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "puzzleGridCellSelected": "Selected",
+  "@puzzleGridCellSelected": {
+    "description": "Accessibility state suffix announced for a selected grid cell."
+  },
+  "puzzlePositionLabel": "Position {position}",
+  "@puzzlePositionLabel": {
+    "description": "Accessibility label for a position in a row of shapes. 1-based.",
+    "placeholders": {
+      "position": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "puzzleSelectedCount": "{count, plural, =1{1 square selected} other{{count} squares selected}}",
+  "@puzzleSelectedCount": {
+    "description": "How many grid squares are currently selected. Hidden at zero, so no zero case. Never a score.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "puzzleOrderingCount": "{count, plural, =1{1 number chosen} other{{count} numbers chosen}}",
+  "@puzzleOrderingCount": {
+    "description": "How many numbers have been chosen so far when ordering. Hidden at zero, so no zero case.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "puzzleVisualOnlyNotice": "This puzzle has to be seen. If you can't, use Stop without solving.",
+  "@puzzleVisualOnlyNotice": {
+    "description": "Announced on the puzzle types that cannot be conveyed by a screen reader, pointing at the always-available emergency escape. Honest, never apologetic."
+  },
+  "puzzleEscapeAction": "Stop without solving",
+  "@puzzleEscapeAction": {
+    "description": "Label of the emergency escape on the wake-puzzle surface — the always-available way to stop the alarm without solving. Plain and findable by a half-asleep user; never framed as giving up."
+  },
+  "puzzleEscapeConfirmTitle": "Stop without solving?",
+  "@puzzleEscapeConfirmTitle": {
+    "description": "Title of the confirmation shown before the emergency escape stops the alarm."
+  },
+  "puzzleEscapeConfirmBody": "The alarm stops now, and your history records it as stopped without the puzzle. That's what it's here for.",
+  "@puzzleEscapeConfirmBody": {
+    "description": "Body of the emergency-escape confirmation. States plainly what will be recorded and reassures the user that using it is fine. No guilt, no 'you gave up'."
+  },
+  "puzzleEscapeConfirmAction": "Stop the alarm",
+  "@puzzleEscapeConfirmAction": {
+    "description": "Confirming action of the emergency-escape dialog."
+  },
+  "puzzleEscapeCancelAction": "Back to the puzzle",
+  "@puzzleEscapeCancelAction": {
+    "description": "Dismissing action of the emergency-escape dialog — returns to the puzzle."
+  },
+  "historyEscapedLabel": "Stopped without the puzzle",
+  "@historyEscapedLabel": {
+    "description": "History stat label for alarms stopped with the wake puzzle's emergency escape. A plain outcome, never a failure."
+  },
+  "alarmDismissMethodPuzzle": "Solve a puzzle",
+  "@alarmDismissMethodPuzzle": {
+    "description": "Dismiss method: solve a freshly generated wake puzzle to stop the alarm. Free, never paywalled."
+  },
+  "settingsPuzzleHeading": "Wake puzzle",
+  "@settingsPuzzleHeading": {
+    "description": "Settings section heading for the wake-puzzle defaults."
+  },
+  "puzzleSettingsTypesLabel": "Puzzle types",
+  "@puzzleSettingsTypesLabel": {
+    "description": "Label for the multi-select of enabled puzzle types."
+  },
+  "puzzleSettingsGroupSpoken": "Numbers and sequences",
+  "@puzzleSettingsGroupSpoken": {
+    "description": "Heading for the puzzle types that can be solved without sight."
+  },
+  "puzzleSettingsGroupVisual": "Shapes and positions",
+  "@puzzleSettingsGroupVisual": {
+    "description": "Heading for the puzzle types that need to be seen."
+  },
+  "puzzleSettingsTypesFloorNote": "At least one type stays on.",
+  "@puzzleSettingsTypesFloorNote": {
+    "description": "Caption stating that the enabled-type set can never be emptied."
+  },
+  "puzzleTypeArithmetic": "Arithmetic",
+  "@puzzleTypeArithmetic": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeSequenceNext": "Number sequences",
+  "@puzzleTypeSequenceNext": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeMissingOperator": "Missing sign",
+  "@puzzleTypeMissingOperator": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeCompareValues": "Compare numbers",
+  "@puzzleTypeCompareValues": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeOddOneOut": "Odd one out",
+  "@puzzleTypeOddOneOut": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeDigitRecall": "Remember digits",
+  "@puzzleTypeDigitRecall": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeDigitRecallReversed": "Digits backwards",
+  "@puzzleTypeDigitRecallReversed": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeGridPattern": "Grid patterns",
+  "@puzzleTypeGridPattern": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeSpotTheChange": "Spot the change",
+  "@puzzleTypeSpotTheChange": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "puzzleTypeShapeRotation": "Rotated shapes",
+  "@puzzleTypeShapeRotation": {
+    "description": "Display name of one wake-puzzle type in the settings list."
+  },
+  "historyRowAlarmTime": "Alarm {time}",
+  "@historyRowAlarmTime": {
+    "description": "A history row's alarm time — the earliest time an alarm was set for on that day. A recorded fact, never an inference.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "07:00"
+      }
+    }
+  },
+  "historyRowUpAt": "Up at {time}",
+  "@historyRowUpAt": {
+    "description": "A history row's actual dismiss time — when the alarm was really stopped. Plain and non-judgmental: it never comments on the gap between this and the alarm time.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "07:12"
+      }
+    }
+  },
+  "puzzleAccessibilitySpokenLabel": "Works with a screen reader",
+  "@puzzleAccessibilitySpokenLabel": {
+    "description": "Shown on a puzzle type's card: this type can be read out and answered without sight. A plain statement of fact, never a quality rating."
+  },
+  "puzzleAccessibilityVisualLabel": "Needs the screen",
+  "@puzzleAccessibilityVisualLabel": {
+    "description": "Shown on a puzzle type's card: this type depends on seeing shapes or positions. Neutral — a sighted user choosing it has done nothing wrong."
+  },
+  "settingsPreferencesHeading": "Preferences",
+  "@settingsPreferencesHeading": {
+    "description": "Heading above the grouped preference sections on the Settings screen (alarm defaults, puzzles, display, mornings)."
+  },
+  "settingsMoreHeading": "More",
+  "@settingsMoreHeading": {
+    "description": "Heading above the Settings entries that open their own screen (History, Sleep, reliability checklist, setup walkthrough)."
+  },
+  "puzzleSettingsVisualOnlyTitle": "These puzzles need to be seen",
+  "@puzzleSettingsVisualOnlyTitle": {
+    "description": "Title of the notice shown when every enabled puzzle type needs sight."
+  },
+  "puzzleSettingsVisualOnlyBody": "Every type you have turned on uses the screen. If you use a screen reader, turn on a number puzzle too.",
+  "@puzzleSettingsVisualOnlyBody": {
+    "description": "Body of the visual-only notice. States the fact and the way out; never scolds a sighted user who chose the visual types deliberately."
+  },
+  "puzzleSettingsTaskCountLabel": "Puzzles to solve",
+  "@puzzleSettingsTaskCountLabel": {
+    "description": "Label for how many puzzles must be solved to stop the alarm."
+  },
+  "puzzleSettingsTaskCountValue": "{count, plural, =1{1 puzzle} other{{count} puzzles}}",
+  "@puzzleSettingsTaskCountValue": {
+    "description": "Pluralised puzzle count; also the accessible label of each count segment.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "puzzleSettingsToleranceLabel": "When Stop without solving stands out",
+  "@puzzleSettingsToleranceLabel": {
+    "description": "Label for when the emergency escape starts being offered prominently."
+  },
+  "puzzleSettingsToleranceValue": "{count, plural, =1{After 1 wrong answer} other{After {count} wrong answers}}",
+  "@puzzleSettingsToleranceValue": {
+    "description": "The wrong answer at which the escape becomes prominent. Pluralised.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "4"
+      }
+    }
+  },
+  "puzzleSettingsToleranceExplanation": "Stop without solving is on the screen from the first moment. This only sets when it becomes more prominent.",
+  "@puzzleSettingsToleranceExplanation": {
+    "description": "Explains that the escape is always present; this only sets prominence."
+  },
+  "puzzleSettingsToleranceSooner": "Sooner",
+  "@puzzleSettingsToleranceSooner": {
+    "description": "Tooltip on the stepper button that makes the escape stand out sooner."
+  },
+  "puzzleSettingsToleranceLater": "Later",
+  "@puzzleSettingsToleranceLater": {
+    "description": "Tooltip on the stepper button that makes the escape stand out later."
+  },
+  "puzzleSettingsEscapeLabel": "Stopping without the puzzle",
+  "@puzzleSettingsEscapeLabel": {
+    "description": "Label for how deliberate reaching the emergency escape has to be."
+  },
+  "puzzleSettingsEscapeConfirm": "One confirmation",
+  "@puzzleSettingsEscapeConfirm": {
+    "description": "Escape strictness: a labelled control plus one confirmation."
+  },
+  "puzzleSettingsEscapeHold": "Confirm, then hold",
+  "@puzzleSettingsEscapeHold": {
+    "description": "Escape strictness: a confirmation followed by a short deliberate hold."
+  },
+  "puzzleSettingsEscapeExplanation": "You can always stop the alarm without solving. This only sets how deliberate that has to be.",
+  "@puzzleSettingsEscapeExplanation": {
+    "description": "States the safety rule: the escape always exists; this only sets how deliberate reaching it has to be."
+  },
+  "alarmPuzzleSectionLabel": "Wake puzzle",
+  "@alarmPuzzleSectionLabel": {
+    "description": "Section heading for the per-alarm wake-puzzle settings."
+  },
+  "alarmPuzzleUseDefaultsLabel": "Use my default puzzle",
+  "@alarmPuzzleUseDefaultsLabel": {
+    "description": "Switch label: this alarm follows the app-wide puzzle settings."
+  },
+  "alarmPuzzleUseDefaultsDescription": "This alarm follows your puzzle settings and changes with them.",
+  "@alarmPuzzleUseDefaultsDescription": {
+    "description": "Shown under the switch while the alarm follows the app-wide settings."
+  },
+  "alarmPuzzleCustomDescription": "This alarm has its own puzzle settings.",
+  "@alarmPuzzleCustomDescription": {
+    "description": "Shown under the switch while the alarm carries its own puzzle settings."
+  },
+  "alarmMotionCheckSectionLabel": "Motion check",
+  "@alarmMotionCheckSectionLabel": {
+    "description": "Section heading for the per-alarm post-dismiss motion check in the alarm form. Names what is measured (movement), not what it is taken to mean."
+  },
+  "alarmMotionCheckLabel": "Check that the phone moves",
+  "@alarmMotionCheckLabel": {
+    "description": "Switch label for the per-alarm motion check. Says the phone moves, never that the user got up."
+  },
+  "alarmMotionCheckDescription": "Capywake watches whether the phone moves after you stop this alarm. It can only tell that the phone moved — not that you are out of bed.",
+  "@alarmMotionCheckDescription": {
+    "description": "Honest explanation of the motion check under the switch. States the limit of an accelerometer plainly — it sees the phone, not the person — so a user can decide whether it suits how they sleep."
+  },
+  "alarmMotionCheckWindowNote": "{seconds, plural, =1{If the phone does not move within 1 second, the alarm rings once more.} other{If the phone does not move within {seconds} seconds, the alarm rings once more.}}",
+  "@alarmMotionCheckWindowNote": {
+    "description": "How long the motion check watches, and what happens if it sees nothing. Plain statement of the one extra ring, with no fear or shame framing.",
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "alarmMotionCheckGlobalOffNote": "The motion check is switched off in Settings, so this alarm stops with a tap as usual.",
+  "@alarmMotionCheckGlobalOffNote": {
+    "description": "Shown under the per-alarm switch when the global motion check in Settings is off. Explains, without blame, that the alarm falls back to the plain tap."
+  },
+  "settingsMotionCheckLabel": "Motion check after dismiss",
+  "@settingsMotionCheckLabel": {
+    "description": "Label for the global motion-check switch in Settings."
+  },
+  "settingsMotionCheckDescription": "Lets alarms watch whether the phone moves after you stop them. Off here means off for every alarm.",
+  "@settingsMotionCheckDescription": {
+    "description": "Description under the global motion-check switch. Makes the kill-switch semantics explicit: off here overrides every alarm."
+  },
+  "todayMotionCheck": "Checks that the phone moves after you stop it",
+  "@todayMotionCheck": {
+    "description": "Note on the next-alarm card when the alarm runs the motion check. Honest about measuring the phone."
+  },
+  "ringingFinalAlarmNote": "This is the final alarm.",
+  "@ringingFinalAlarmNote": {
+    "description": "Shown on the ringing screen in place of the Snooze button when the occurrence has reached the alarm's snooze limit. States the fact once; never a taunt, a countdown, or a congratulation. Uses the same noun the paywall and store listing use for this ring."
+  },
+  "ringingMotionReRingNote": "The phone did not move after the alarm was stopped.",
+  "@ringingMotionReRingNote": {
+    "description": "Shown on the ringing screen when this ring is the motion check's one extra ring. States what was observed, with no accusation."
+  },
+  "onboardingArithmeticExample": "Work out the answer. For 7 + 5, enter 12.",
+  "@onboardingArithmeticExample": {
+    "description": "Worked example of an arithmetic wake puzzle."
+  },
+  "onboardingSequenceExample": "Find what comes next. After 2, 4, 6, enter 8.",
+  "@onboardingSequenceExample": {
+    "description": "Worked example of a number sequence wake puzzle."
+  },
+  "onboardingOperatorExample": "Pick the sign that fits. For 3 ? 4 = 12, choose ×.",
+  "@onboardingOperatorExample": {
+    "description": "Worked example of a missing operator wake puzzle."
+  },
+  "onboardingTryGame": "Try it",
+  "@onboardingTryGame": {
+    "description": "Button to open a playable wake puzzle example."
+  },
+  "onboardingPracticeNote": "Practice the puzzle here before using it with an alarm.",
+  "@onboardingPracticeNote": {
+    "description": "Introductory note on a practice puzzle."
+  },
+  "onboardingPracticeRetry": "Try another answer.",
+  "@onboardingPracticeRetry": {
+    "description": "Feedback after an incorrect practice answer."
+  },
+  "onboardingSaveError": "Couldn’t save your choice. Please try again.",
+  "@onboardingSaveError": {
+    "description": "Shown when an onboarding choice could not be saved."
+  },
+  "puzzleExampleCompare": "Find the biggest or smallest, or sort. Biggest of 12, 27, 19? 27.",
+  "puzzleExampleOddOneOut": "Find the number that breaks the rule. Of 8, 12, 15, 20, only 15 is not a multiple of 4.",
+  "puzzleExampleRecall": "The digits disappear. See 7294, then enter 7294.",
+  "puzzleExampleReversed": "The digits disappear. See 729, then enter 927.",
+  "puzzleExampleGrid": "Watch squares flash, then tap those same squares.",
+  "puzzleExampleChange": "Watch two rows of shapes. Tap the position where the shape changed.",
+  "puzzleExampleRotation": "Pick the shape turned a quarter turn clockwise. An up arrow would point right.",
+  "puzzlePreviewAction": "Try {game}",
+  "puzzlePreviewReplay": "Show again",
+  "puzzleRotationHelp": "Turn on the games you want in your rotation. Tap play to try one.",
+  "@puzzlePreviewAction": {
+    "description": "Accessible label for the playable example button beside a puzzle type.",
+    "placeholders": {
+      "game": {
+        "type": "String"
+      }
+    }
+  },
+  "onboardingBack": "Back",
+  "@onboardingBack": {
+    "description": "Tooltip on the back control in first-run setup."
+  },
+  "onboardingNext": "Next",
+  "@onboardingNext": {
+    "description": "Primary button that advances to the next setup step."
+  },
+  "onboardingFinish": "Finish",
+  "@onboardingFinish": {
+    "description": "Primary button on the last setup step. Completes setup."
+  },
+  "onboardingSkip": "Skip setup",
+  "@onboardingSkip": {
+    "description": "Secondary control, present from the first step. Skipping is an ordinary path, never framed as a loss."
+  },
+  "onboardingStepProgress": "Step {current} of {total}",
+  "@onboardingStepProgress": {
+    "description": "Screen-reader label for the step-dot indicator.",
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "onboardingWelcomeTitle": "A calmer way to get up",
+  "@onboardingWelcomeTitle": {
+    "description": "Title of setup step 1."
+  },
+  "onboardingWelcomeBody": "When your alarm rings, solve a short puzzle to stop it. It gives you something to focus on while you wake up.",
+  "@onboardingWelcomeBody": {
+    "description": "Body of setup step 1. Claims only what the app does; makes no promise about the alarm always reaching you."
+  },
+  "onboardingWelcomeSetupNote": "Try a few games, choose how your alarm wakes you, then set a time.",
+  "@onboardingWelcomeSetupNote": {
+    "description": "Supporting line on setup step 1. Sets the length honestly and points at the skip control."
+  },
+  "onboardingPuzzleTitle": "Your morning puzzle",
+  "@onboardingPuzzleTitle": {
+    "description": "Title of setup step 2, where puzzle types are chosen."
+  },
+  "onboardingPuzzleBody": "Capywake picks a fresh puzzle from the games you leave on. Try each one and keep the ones you’d enjoy first thing in the morning.",
+  "@onboardingPuzzleBody": {
+    "description": "Body of setup step 2. Explains rotation and generation without gamifying it."
+  },
+  "onboardingPuzzleAdjustNote": "Keep at least one game on. Find more games and adjust the difficulty in Settings.",
+  "@onboardingPuzzleAdjustNote": {
+    "description": "Supporting line on setup step 2. Points at the settings this step deliberately leaves out, including the emergency escape."
+  },
+  "onboardingStrictnessTitle": "How firm should mornings be?",
+  "@onboardingStrictnessTitle": {
+    "description": "Title of setup step 3, the behavioural switches."
+  },
+  "onboardingStrictnessBody": "Choose how new alarms ring and snooze.",
+  "@onboardingStrictnessBody": {
+    "description": "Body of setup step 3. Calm, no pressure, no productivity framing."
+  },
+  "onboardingStrictnessDefaultsNote": "Every alarm can be set differently once you create it.",
+  "@onboardingStrictnessDefaultsNote": {
+    "description": "Supporting line on setup step 3, clarifying that these are defaults rather than a global rule."
+  },
+  "settingsOnboardingEntryLabel": "Setup walkthrough",
+  "@settingsOnboardingEntryLabel": {
+    "description": "Settings entry that replays first-run setup."
+  },
+  "settingsOnboardingEntryDescription": "Go through the first-run questions again",
+  "@settingsOnboardingEntryDescription": {
+    "description": "Description under the Settings entry that replays first-run setup."
+  },
+  "todayCountdownRingsIn": "Rings in {duration}",
+  "@todayCountdownRingsIn": {
+    "description": "Countdown line on the Today next-alarm card. The duration is already composed from the hours and minutes parts, so each locale keeps its own word order.",
+    "placeholders": {
+      "duration": {
+        "type": "String",
+        "example": "12 hours 19 minutes"
+      }
+    }
+  },
+  "todayCountdownHours": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@todayCountdownHours": {
+    "description": "Whole-hours part of the Today countdown. Never stands alone as a sentence; it is fed into todayCountdownRingsIn or todayCountdownHoursMinutes.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "12"
+      }
+    }
+  },
+  "todayCountdownMinutes": "{count, plural, =1{1 minute} other{{count} minutes}}",
+  "@todayCountdownMinutes": {
+    "description": "Whole-minutes part of the Today countdown. Never stands alone as a sentence; it is fed into todayCountdownRingsIn or todayCountdownHoursMinutes.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "19"
+      }
+    }
+  },
+  "todayCountdownHoursMinutes": "{hours} {minutes}",
+  "@todayCountdownHoursMinutes": {
+    "description": "Joins the hours and minutes parts of the Today countdown. Locales that need a conjunction (Spanish 'y', French 'et') put it here.",
+    "placeholders": {
+      "hours": {
+        "type": "String",
+        "example": "12 hours"
+      },
+      "minutes": {
+        "type": "String",
+        "example": "19 minutes"
+      }
+    }
+  },
+  "todayCountdownUnderAMinute": "Rings in under a minute",
+  "@todayCountdownUnderAMinute": {
+    "description": "Countdown line when the alarm is less than a minute away. Replaces 'in 0 minutes', which reads oddly and is not true."
+  },
+  "puzzleHeaderTimeAndLabel": "{time} · {label}",
+  "@puzzleHeaderTimeAndLabel": {
+    "description": "Header on the wake-puzzle surface: the alarm time and its label, so a half-asleep user can see which alarm is ringing without leaving the puzzle.",
+    "placeholders": {
+      "time": {
+        "type": "String",
+        "example": "06:41"
+      },
+      "label": {
+        "type": "String",
+        "example": "Work"
+      }
+    }
+  },
+  "alarmRepeatDaySeparator": ", ",
+  "@alarmRepeatDaySeparator": {
+    "description": "Separator between weekday names in a custom repeat summary (e.g. 'Mon, Wed, Fri'). Includes its trailing space where the script uses one."
+  },
+  "alarmsGroupOnHeader": "{count, plural, =1{1 alarm on} other{{count} alarms on}}",
+  "@alarmsGroupOnHeader": {
+    "description": "Header above the enabled alarms in the list. {count} is how many are on.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "alarmsGroupOffHeader": "Off",
+  "@alarmsGroupOffHeader": {
+    "description": "Header above the disabled alarms in the list. They are kept, never deleted."
+  },
+  "alarmsRowSummary": "{repeat} · {dismiss}",
+  "@alarmsRowSummary": {
+    "description": "The support line under an alarm row, joining the repeat summary and how the alarm is stopped. Locales that prefer a comma or a different separator change it here.",
+    "placeholders": {
+      "repeat": {
+        "type": "String",
+        "example": "Weekdays"
+      },
+      "dismiss": {
+        "type": "String",
+        "example": "Solve a puzzle"
+      }
+    }
+  },
+  "alarmTimeStepperCaption": "Hours on the left, five-minute steps on the right.",
+  "@alarmTimeStepperCaption": {
+    "description": "Caption under the time stepper explaining what the two button columns do. Mirror left/right for right-to-left locales."
+  },
+  "alarmTimeStepperHourUp": "An hour later",
+  "@alarmTimeStepperHourUp": {
+    "description": "Accessibility label for the step button that moves the alarm an hour later."
+  },
+  "alarmTimeStepperHourDown": "An hour earlier",
+  "@alarmTimeStepperHourDown": {
+    "description": "Accessibility label for the step button that moves the alarm an hour earlier."
+  },
+  "alarmTimeStepperMinuteUp": "Five minutes later",
+  "@alarmTimeStepperMinuteUp": {
+    "description": "Accessibility label for the step button that moves the alarm five minutes later."
+  },
+  "alarmTimeStepperMinuteDown": "Five minutes earlier",
+  "@alarmTimeStepperMinuteDown": {
+    "description": "Accessibility label for the step button that moves the alarm five minutes earlier."
+  },
+  "alarmTimePickerAction": "Pick a time",
+  "@alarmTimePickerAction": {
+    "description": "Labelled control that opens the platform time picker. The stepper is the primary control; this is the second, discoverable route."
+  },
+  "alarmPuzzleFreshNote": "A freshly generated puzzle every morning — never the same one twice in a row.",
+  "@alarmPuzzleFreshNote": {
+    "description": "Note under the wake-puzzle section. States the generated-not-authored promise plainly; never a boast."
+  },
+  "settingsMorningsHeading": "Your mornings",
+  "@settingsMorningsHeading": {
+    "description": "Heading of the plain three-figure summary in Settings."
+  },
+  "settingsMorningsOnTime": "{count, plural, =1{1 day up on time} other{{count} days up on time}}",
+  "@settingsMorningsOnTime": {
+    "description": "First figure: how many days in the window ended with a dismissal and no snooze. A count, never a percentage.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsMorningsAverageSnooze": "{value} snoozes on average",
+  "@settingsMorningsAverageSnooze": {
+    "description": "Second figure. {value} is a locale-formatted decimal (e.g. '1.4'), so it is a plain placeholder rather than a plural.",
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsMorningsUsualWake": "{time} usual wake",
+  "@settingsMorningsUsualWake": {
+    "description": "Third figure. {time} is an already-formatted clock time.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsMorningsHabitFirstAlarm": "You usually get up on the first alarm. Nothing to fix — just so you know.",
+  "@settingsMorningsHabitFirstAlarm": {
+    "description": "Plain closing sentence when the user usually rises on the first alarm. Never praise, never a score."
+  },
+  "settingsMorningsHabitOneSnooze": "You usually get up after one snooze. Nothing to fix — just so you know.",
+  "@settingsMorningsHabitOneSnooze": {
+    "description": "Plain closing sentence when the user usually rises after one snooze."
+  },
+  "settingsMorningsHabitSeveralSnoozes": "You usually get up after a few snoozes. Nothing to fix — just so you know.",
+  "@settingsMorningsHabitSeveralSnoozes": {
+    "description": "Plain closing sentence when the user usually rises after several snoozes. Deliberately as neutral as the other two."
+  },
+  "settingsMorningsEmpty": "No mornings recorded yet. Once an alarm rings, a plain summary appears here.",
+  "@settingsMorningsEmpty": {
+    "description": "Shown in place of the three figures before any alarm has been stopped."
+  },
+  "reliabilityAttentionTitle": "{count, plural, =1{One thing needs attention} other{{count} things need attention}}",
+  "@reliabilityAttentionTitle": {
+    "description": "Title of the card leading the reliability checklist when something needs attention. Warm clay, never red.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reliabilityAttentionEverythingElseFine": "Everything else on this list is fine.",
+  "@reliabilityAttentionEverythingElseFine": {
+    "description": "Appended to the attention card when exactly one item needs attention, so the rest of the list is not left ambiguous."
+  },
+  "reliabilityAttentionNoneTitle": "Nothing needs attention",
+  "@reliabilityAttentionNoneTitle": {
+    "description": "Title of the leading card when every check that can be judged is fine."
+  },
+  "reliabilityAttentionNoneBody": "Every check on this list looks right on this phone.",
+  "@reliabilityAttentionNoneBody": {
+    "description": "Body of the leading card when nothing needs attention. Careful not to promise the alarm will always ring."
+  },
+  "alarmSoundSoftMallets": "Soft Mallets",
+  "alarmSoundFirstLight": "First Light",
+  "alarmSoundGlassDrops": "Glass Drops",
+  "alarmSoundWoodenKnocks": "Wooden Knocks",
+  "alarmSoundBambooPulse": "Bamboo Pulse",
+  "alarmSoundSyncopatedMarimba": "Syncopated Marimba",
+  "alarmSoundMechanicalBell": "Mechanical Bell",
+  "alarmSoundStationSignal": "Station Signal",
+  "alarmSoundThreeToneBeacon": "Three-Tone Beacon",
+  "alarmSoundCategoryGentle": "Gentle",
+  "alarmSoundCategoryRhythmic": "Rhythmic",
+  "alarmSoundCategoryFirm": "Firm",
+  "alarmSoundPreviewPlay": "Play preview",
+  "alarmSoundPreviewStop": "Stop preview",
+  "alarmSoundPreviewUnavailable": "Preview unavailable",
+  "alarmSoundAppDefault": "Capywake default",
+  "alarmScheduleFailed": "Couldn’t schedule every alarm. Check alarm reliability and try again.",
+  "alarmSaveFailed": "Couldn’t save the alarm. Try again.",
+  "todaySnoozedHeading": "Snoozed",
+  "todayLastWake": "Last wake-up",
+  "@todayLastWake": {
+    "description": "Label for the time of the most recent completed wake-up on Today."
+  },
+  "todayRecentMornings": "Mornings up",
+  "@todayRecentMornings": {
+    "description": "Label for how many mornings in the displayed history window have a recorded wake-up. Deliberately NOT a streak and not consecutive days: streaks are a competitive mechanic and are banned (see CLAUDE.md). This count cannot be broken, only added to, and it carries no goal, grade or judgement."
+  },
+  "todayOnTimeRate": "Dismissed on time",
+  "@todayOnTimeRate": {
+    "description": "Share of completed alarms dismissed without snoozing in the displayed history window."
+  },
+  "alarmAdvancedOptions": "Advanced alarm options",
+  "@alarmAdvancedOptions": {
+    "description": "Expandable group heading in the alarm form."
+  },
+  "ringingSolvePuzzle": "Solve wake puzzle",
+  "@ringingSolvePuzzle": {
+    "description": "Action that opens the required wake puzzle while the alarm is ringing."
+  },
+  "sleepSectionTitle": "Sleep",
+  "@sleepSectionTitle": {
+    "description": "Section heading for sleep read from the platform health store. Capywake measures no sleep itself."
+  },
+  "sleepSettingsEntryLabel": "Sleep from Health",
+  "@sleepSettingsEntryLabel": {
+    "description": "Settings entry that opens the sleep-reading surface. 'Health' is the platform store (Apple Health / Health Connect)."
+  },
+  "sleepSettingsEntryDescription": "Show last night next to this morning. Read-only.",
+  "@sleepSettingsEntryDescription": {
+    "description": "One-line description of the sleep entry. Calm, states read-only."
+  },
+  "sleepEnableAction": "Connect",
+  "@sleepEnableAction": {
+    "description": "Action that opts in to reading sleep and asks for permission."
+  },
+  "sleepDisableAction": "Disconnect",
+  "@sleepDisableAction": {
+    "description": "Action that opts out of reading sleep and clears cached nights."
+  },
+  "sleepWhatIsRead": "Capywake reads only sleep your watch or band already recorded. It never writes to Health, and your sleep stays on this phone.",
+  "@sleepWhatIsRead": {
+    "description": "Explains exactly what is read and that nothing is written back. Honesty copy — keep the read-only and on-device claims intact."
+  },
+  "sleepNoAlarmTimingNote": "Sleep data never changes when your alarm rings. The alarm is set before the night happens.",
+  "@sleepNoAlarmTimingNote": {
+    "description": "States that sleep data never affects alarm timing. Required by the reliability-honesty boundary: stage-based waking is a claim no phone can support."
+  },
+  "sleepPermissionUnknowniOS": "If no sleep appears, open Health › Sharing › Apps and allow Capywake to read Sleep. iOS does not tell apps whether reading was allowed.",
+  "@sleepPermissionUnknowniOS": {
+    "description": "Shown on iOS, which never discloses READ authorization, so the app cannot confirm a grant. Must not claim permission was given."
+  },
+  "sleepProviderUnavailable": "Health Connect is not available on this phone.",
+  "@sleepProviderUnavailable": {
+    "description": "Android only: Health Connect missing or too old."
+  },
+  "sleepProviderInstallAction": "Get Health Connect",
+  "@sleepProviderInstallAction": {
+    "description": "Action that opens the Health Connect store listing on Android."
+  },
+  "sleepUnsupportedPlatform": "Reading sleep is not available on this platform.",
+  "@sleepUnsupportedPlatform": {
+    "description": "Shown where no platform health store exists."
+  },
+  "sleepPermissionDenied": "Capywake does not have permission to read sleep.",
+  "@sleepPermissionDenied": {
+    "description": "Shown when sleep read access was declined. Neutral, no pressure."
+  },
+  "sleepReadFailed": "Sleep could not be read just now.",
+  "@sleepReadFailed": {
+    "description": "Shown when a read failed for a transient reason. Carries no detail."
+  },
+  "sleepRetryAction": "Try again",
+  "@sleepRetryAction": {
+    "description": "Action that retries a failed sleep read."
+  },
+  "sleepNoDataForNight": "No sleep recorded",
+  "@sleepNoDataForNight": {
+    "description": "Shown for a morning whose night has no recording. Not an error — a user without a wearable is the normal case."
+  },
+  "sleepDurationHoursMinutes": "{hours}h {minutes}m",
+  "@sleepDurationHoursMinutes": {
+    "description": "Sleep duration of an hour or more. {hours} and {minutes} are integers formatted by intl.",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "sleepDurationMinutesOnly": "{minutes, plural, =1{1 minute} other{{minutes} minutes}}",
+  "@sleepDurationMinutesOnly": {
+    "description": "Sleep duration under one hour. Pluralized.",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "sleepAsleepLabel": "Asleep",
+  "@sleepAsleepLabel": {
+    "description": "Label for total time asleep."
+  },
+  "sleepInBedLabel": "In bed",
+  "@sleepInBedLabel": {
+    "description": "Label for total time in bed (asleep plus in-bed-awake)."
+  },
+  "sleepStageDeepLabel": "Deep",
+  "@sleepStageDeepLabel": {
+    "description": "Label for the deep-sleep portion of a night."
+  },
+  "sleepStageLightLabel": "Light",
+  "@sleepStageLightLabel": {
+    "description": "Label for the light-sleep portion of a night."
+  },
+  "sleepStageRemLabel": "REM",
+  "@sleepStageRemLabel": {
+    "description": "Label for the REM portion of a night."
+  },
+  "sleepStageAwakeLabel": "Awake",
+  "@sleepStageAwakeLabel": {
+    "description": "Label for time awake during the recorded night — a 3am waking, not the final rising."
+  },
+  "sleepFellAsleepAt": "Asleep at {time}",
+  "@sleepFellAsleepAt": {
+    "description": "When the recording first scored sleep. {time} is formatted by intl.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sleepWokeAt": "Woke at {time}",
+  "@sleepWokeAt": {
+    "description": "When the recording last scored sleep. {time} is formatted by intl.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sleepSourceAttribution": "from {source}",
+  "@sleepSourceAttribution": {
+    "description": "Attributes a night to the device that recorded it. {source} is the health store's own source name.",
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "sleepNightSemanticLabel": "Slept {duration}, recorded by {source}.",
+  "@sleepNightSemanticLabel": {
+    "description": "Screen-reader label for one night row. {duration} is an already formatted duration string.",
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      },
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "sleepLastSyncedAt": "Last read {time}",
+  "@sleepLastSyncedAt": {
+    "description": "When sleep was last read successfully. {time} is formatted by intl.",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "sleepNeverSynced": "Not read yet",
+  "@sleepNeverSynced": {
+    "description": "Shown before the first successful sleep read."
+  },
+  "sleepHistoryEmpty": "No sleep to show yet. Connect Health to see your nights here.",
+  "@sleepHistoryEmpty": {
+    "description": "Empty state for the sleep part of History when nothing is cached."
+  },
+  "todayNoWakeData": "No wake-ups recorded yet",
+  "@todayNoWakeData": {
+    "description": "Empty status for Today dashboard metrics before wake-up history is available."
+  }
+}
