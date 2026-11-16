@@ -288,8 +288,15 @@ under CLAUDE.md's reporting rule. One is **Blocking**:
 
 The rest are Degraded or Fixable: G1 (hero does not match the mockup — no
 nightcap, duck, clock or `Zz`, much wider framing), G3 (mascots 114–343 px, too
-small above ~57 pt), G9 (scenes are 3:2 against a ~1.68:1 band), G10 (wordmark),
-G7 (decor), and G4/G5/G6 which the import pipeline fixes.
+small above ~57 pt), G10 (wordmark), G7 (decor), and G4/G5/G6 which the import
+pipeline fixes.
+
+**G9 was withdrawn after this review was written.** It claimed the hero crop
+loses "~28% of the height"; re-measured, the loss is 28 **pt** of 262 — 10.7%.
+The aspect-ratio delta had been reported as the crop fraction. Rendering all
+three alignment extremes confirms the face stays clear and the composition
+survives, and `SceneHeader` was designed around exactly this crop. Raised by the
+Phase 00 session, verified here, agreed. No art needed.
 
 ---
 

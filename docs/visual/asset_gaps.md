@@ -24,7 +24,7 @@ Severity:
 | G6 | `clean_icons/` ghost pixels | Fixable | Up to 14,091 ghost pixels (`bell.png`) |
 | G7 | Decor at 22–147 px | Degraded | Usable only as small footer decor, nothing larger |
 | G8 | Nav bar icons | Not a gap | Mockup uses flat glyphs — these are real widgets, not art |
-| G9 | Hero scenes are 3:2, header is ~1.7:1 | Degraded | Every hero crops; one composition is lost per screen |
+| G9 | ~~Hero scene aspect ratio~~ | **Withdrawn** | Re-measured: crop is 28 pt (10.7%), not 28%. Benign, already priced in |
 | G10 | Wordmark | Degraded | Must be cropped from a compressed mockup; no clean source |
 
 ---
@@ -217,23 +217,39 @@ nav bar shows. Do not bundle it for the nav bar.
 
 ---
 
-## G9 — Hero scenes are the wrong aspect ratio
+## G9 — Hero scene aspect ratio — **withdrawn, not a gap**
 
-**Severity: Degraded**, affects all five screens.
+**Severity: none.** Logged as Degraded in the first draft on a miscalculation;
+re-measured and withdrawn.
 
 Supplied: 1536×1024 = **3:2**. Header band in `01_HOME.png`: y ≈ 62→296 pt over
-393 pt wide = **~1.68:1**.
+393 pt wide = **1.679:1**.
 
-To fill the band, `BoxFit.cover` keeps full width and crops **~28% of the
-height**. Combined with G1's wide framing, the Home hero needs a crop that is
-both tall-lossy and tight enough to make the capybara read at header size —
-while never cutting the face.
+The first draft said `BoxFit.cover` crops "~28% of the height". **That was
+wrong** — it reported the aspect-ratio delta as if it were the crop fraction.
+Measured properly:
 
-**Using for now:** per-scene `Alignment`, tuned against the mockup in Phase 03
-and recorded in `SceneHeader`'s catalogue.
+```
+cover at full width → 393 × 262.0 pt; the band needs 234 pt
+vertical crop = 28.0 pt of 262.0 pt = 10.7%
+```
 
-**To do it properly:** export the four header scenes at the header's own aspect
-ratio (e.g. 1536×915), composed for it.
+28 **pt**, not 28 **percent**. The crop keeps 89.3% of the source height and
+leaves 28 pt of `Alignment.y` travel.
+
+Rendered all three extremes (top / center / bottom) from `today_integrated.png`.
+At center the capybara's face sits well clear of both edges and the composition
+— plant shelf, lamp, nightstand, window — survives intact. The crop is benign.
+
+This is a cost Phase 00 **already priced in**: `SceneHeader` was designed around
+a per-scene `BoxFit`/`Alignment` crop precisely so the face is never cut. The
+mechanism exists because this crop was expected.
+
+Raised by the Phase 00 session on review; verified here and agreed. Per-scene
+alignment is tuned in Phase 03 as planned — ordinary work, not a gap.
+
+**No new art needed.** The earlier suggestion to re-export at 1536×915 is
+withdrawn with the finding.
 
 ---
 
@@ -269,7 +285,6 @@ Ordered by impact:
 3. **Mascots at ≥512²** (G3) — unblocks game tiles, empty states and any
    large-format use.
 4. **Wordmark on transparency at ≥1050 px** (G10).
-5. **Header scenes at the header aspect ratio** (G9) — nice to have; per-scene
-   alignment covers it.
+G9 was withdrawn on re-measurement — the header crop is benign and needs no art.
 
 G4, G5, G6 need no new art — Phase 01's import pipeline fixes them.

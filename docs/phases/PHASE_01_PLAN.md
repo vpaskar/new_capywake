@@ -170,8 +170,9 @@ and prove it matches.
     wrong-pose (`athletic` sits, mockup leaps), with no backgrounds at all.
     **Phase 03 cannot reach Tier A on the game rail without new art.**
   - Degraded: G1 (hero lacks the nightcap, duck, clock and `Zz`, and is framed
-    far wider), G3 (mascots 114–343 px — too small above ~57 pt), G9 (scenes are
-    3:2 against a ~1.68:1 band), G10 (wordmark), G7 (decor).
+    far wider), G3 (mascots 114–343 px — too small above ~57 pt), G10
+    (wordmark), G7 (decor). **G9 withdrawn** — the header crop re-measured at
+    28 pt (10.7%), not 28%, and is already priced into `SceneHeader`.
   - Fixable in this phase's pipeline: G4, G5, G6.
 
 ### Design components — `lib/design/`
