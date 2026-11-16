@@ -2,75 +2,68 @@
 
 ## State
 
-Phases 00–05 are **done** and committed.
+Phases 00–06 are **done** and committed.
 
-**Current phase: `06` — Ringing and emergency stop.** Dismiss-exactly-once;
-reachable escape.
+**Current phase: `07` — Settings, reliability checklist, walkthrough.**
+`04_SETTINGS.png` is a **real Tier A mockup**, so the full fidelity contract
+applies again — unlike Phase 06, which had no primary mockup at all.
 
-**1,279 tests** pass. `lib` 97.46%, `lib/core` 99.49%, `lib/data` 88.95%.
-**405 ARB keys × 10 locales.** Home, Alarms and Add/Edit are built, captured
-and their deviations named — **and as of Phase 05 a saved alarm actually
-reaches the platform.**
+**1,372 tests** pass. `lib` 97.63%, `lib/core` 99.49%, `lib/data` 88.95%,
+`lib/features/ringing` 94.67%. **405 ARB keys × 10 locales.**
+
+Home, Alarms and Add/Edit are built and captured. A saved alarm reaches the
+platform (Phase 05) — **and as of Phase 06 a ringing alarm reaches a surface
+the user can actually stop, including without solving the puzzle.**
 
 ## Read in this order
 
 1. `CLAUDE.md` — the project's rules.
 2. `ai-orchestration/PHASE_TRACKER.md` — pointer, protocol, 20 phases.
-3. `memory/current-phase.md` — what Phase 05 found.
-4. `docs/phases/PHASE_05_POST_REVIEW.md` — including what did **not** run.
+3. `memory/current-phase.md` — what Phase 06 found.
+4. `docs/phases/PHASE_06_POST_REVIEW.md` — including what did **not** run.
 5. `docs/visual/tier_a_blocks.md` and `docs/visual/asset_gaps.md` — append.
 
-## The simulator build is solved. Do not chase it again.
+## What Phase 07 owes, from two earlier phases
 
-**`flutter build ios --simulator` fails for a reason that is not ours.**
-`flutter_tools` runs `lipo <binary> -verify_arch arm64 x86_64`, and Xcode
-27.2's lipo answers "requires exactly one input file". A stock
-`flutter create` project fails identically. The binary is correct; the
-verifier is broken.
+1. **`AlarmPermissionGate` is still called by nothing in `lib/`.** Phase 05
+   said "Phase 06 or 07 wires it". **Phase 06 declined it with a reason**
+   (pre-review M3): the gate fires on the first transition leaving an alarm
+   enabled — a save/enable event on the Alarms screen — so by the time an
+   alarm rings the permission was granted or the alarm would not have fired.
+   A prompt on the ringing path is a no-op at best and a modal over a ringing
+   alarm at worst. **It belongs to the alarm-enable path and it is yours.**
+2. **The sleep-boundary restoration.** When `package:health` and
+   `live_sleep_gateway.dart` land, `test/core/sleep/sleep_boundary_test.dart`
+   must go back to `exactly one` importer (it is `at most one` now) and
+   re-assert `NSHealthShareUsageDescription` + `READ_SLEEP`.
 
-**Use `flutter run -d <udid>`.** It works, and it is also why `flutter drive`
-and `tool/capture.sh` have worked all along (single arch → one argument).
+## What Phase 06 leaves you
 
-**Two devices, two jobs:**
+**The ringing surface is hosted in `MaterialApp.builder`, above the router.**
+That is deliberate — a ring must cover a pushed Settings route too — and it
+has a sharp edge you will hit if you touch it: **there is no root Navigator in
+that context.** `RingingHost` supplies its own, and `showEscapeSheet` must
+never pass `useRootNavigator: true`. Phase 06 shipped a version where the
+emergency escape threw instead of opening for exactly this reason, and every
+standalone screen test passed throughout.
 
-| Job | Device | Why |
-|---|---|---|
-| Interaction, taps | iPhone 18 Pro, **iOS 27.0** | Taps do not reach the app on iOS 16.4 |
-| Tier A capture | iPhone 14 Pro, **iOS 16.4** | 393×852 is the mockup geometry; the 18 Pro is 402×874 |
+**Seven of ten puzzle types have no renderer.** `RingingHost.renderableTypes`
+restricts the enabled set to arithmetic / sequence-next / missing-operator;
+`PuzzleView` **throws** on anything else rather than captioning it wrongly.
+The puzzle chooser is Phase 10 — until then a puzzle alarm always shows a
+puzzle that can be answered.
 
-**Never measure Tier A on the 18 Pro.**
+**Escape visibility is held on the occurrence, not the round.** A snooze
+re-ring regenerates the round, which would reset `wrongThisRound` to zero and
+demote the escape at the worst possible moment. `RingingController` keys it by
+occurrence id.
 
-A caution from this phase: a `flutter drive` of a *new* integration target
-after adding three plugins did not finish within ten minutes and was stopped.
-`tool/capture.sh` is the proven path; budget time if you add a target.
+**`AlarmEngine.ringNow` is called by nothing in `lib/`** — like
+`AlarmScheduleCoordinator` was for three phases before Phase 05 noticed.
+Recorded so it is inherited, not rediscovered. It exists for the post-dismiss
+motion check, which has no phase row.
 
-## What Phase 05 leaves you
-
-**The engine is wired and nothing was wired before it.**
-`AlarmScheduleCoordinator` existed, fully tested, and was never constructed.
-Now `AppShell` watches `alarmScheduleCoordinatorProvider` — **that watch is
-load-bearing**: a Riverpod provider with no subscriber is disposed at once and
-arms nothing. Removing it silently stops every alarm. There is a test that
-fails if you do.
-
-**`AlarmEngine.ringingStream` is your surface for Phase 06.** The platform
-engine de-duplicates ring events already, because `Alarm.ringing` is a seeded
-`BehaviorSubject` that replays to late subscribers.
-
-**Adapters are split pure-mapper / thin-shell**, and that is why `lib/data`
-went *up* to 88.95% while adding 165 lines. Keep the split: put every decision
-in the mapper, leave the shell a pass-through. A decision that reaches the
-shell becomes untestable by construction.
-
-**Permissions are gated, not requested.** `AlarmPermissionGate` decides *when*
-to ask — on the first transition leaving at least one alarm enabled, never on
-app start, never once only Settings can help. **Nothing calls it yet.** Phase
-06 or 07 wires it to a real prompt with the reason shown.
-
-**Six new ARB keys** (399 → 405): ring notification title/body, a stop action,
-two permission rationales, "Not now".
-
-## The measurement rule, now with a third half
+## The measurement rule, now with a fourth half
 
 Phase 03: a row-mean detector cannot tell text from a layout edge — state the
 method next to the number.
@@ -78,25 +71,29 @@ method next to the number.
 Phase 04: a method named beside a number is not enough if it ran against the
 wrong artifact.
 
-**Phase 05: when a tool reports a failure, check whether the tool is wrong
-before believing it about your code.** Xcode 255 was read as a project defect
-for a whole phase; it was a broken `lipo` call in `flutter_tools`, provable in
-one command against a stock project. The same shape as `compare.dart`
-reporting blocks "absent" that were on screen.
+Phase 05: when a tool reports a failure, check whether the tool is wrong
+before believing it about your code.
+
+**Phase 06: a guard whose test cannot fail when the guard is removed is a
+guard on trust.** Disabling `_claim` left all six "exactly once" tests green —
+with in-memory fakes, the async window the latch defends never opens. **Mutate
+the thing and see the test fail**, or you have tested nothing.
+
+Phase 06 also hit Phase 05's rule again twice: `tool/capture.sh`'s
+DEBUG-banner detector called painted brown a banner, and a "the tap gets
+through" test was measuring its own bad coordinates.
 
 ## Owed, and honest gaps
 
-- **No arming was watched interactively.** The Save button did not respond
-  while the run session was ending. The evidence that arming works is 87 tests
-  against the real provider graph plus a device log proving the notification
-  adapter reached iOS UserNotifications. **Do not inherit this as "tested".**
 - **Android is untested and has no emulator.** Never mark it tested.
-- **`check_bundle_size.dart` cannot see the three new native plugins.** It
-  measures `assets/` only and still reads 95% of budget while the shipped
-  binary certainly grew.
-- **Phase 07/08** — when `package:health` and `live_sleep_gateway.dart` land,
-  `test/core/sleep/sleep_boundary_test.dart` must go back to `exactly one`
-  importer and re-assert `NSHealthShareUsageDescription` + `READ_SLEEP`.
+- **An alarm was not watched ringing by hand.** Phase 06 drove the simulator
+  but the `flutter run` session kept ending before the surface could be
+  exercised interactively; the evidence is 93 tests against the real provider
+  graph plus a **verified capture of the live ringing surface** taken by
+  firing a ring into the running app. **Do not inherit this as "tested by
+  hand".**
+- **`check_bundle_size.dart` cannot see the three native plugins.** It
+  measures `assets/` only and reads 95% of budget.
 
 ## Validation (every phase)
 
@@ -117,6 +114,24 @@ dart run tool/check_coverage.dart --min 85 --path lib/data  # data >= 85%
 Read coverage from the `Coverage (...)` line, never from `PASS` alone — pipe
 through `tr '\r' '\n'`.
 
+## The simulator
+
+**`flutter build ios --simulator` fails for a reason that is not ours**
+(Xcode 27.2's `lipo` refuses two architectures; a stock `flutter create`
+project fails identically). Use **`flutter run -d <udid>`** — and run it
+somewhere that persists, not a backgrounded shell: the Xcode build outlives a
+short-lived process and the app then launches with no Dart VM attached.
+
+| Job | Device |
+|---|---|
+| Interaction, taps | iPhone 18 Pro, iOS 27.0 (`0B2FFE02-34B9-4C9A-9A86-61AE61F508E2`) |
+| Tier A capture | iPhone 14 Pro via `tool/capture.sh` — 393×852 is the mockup geometry |
+
+**Never measure Tier A on the 18 Pro** (it is 402×874).
+
+`integration_test/capture_test.dart` now has a **ringing** case: the surface
+has no route, so it fires a ring into the live provider graph.
+
 ## Standing reminders
 
 - `../capywake` is **read-only** and was already dirty before the rebuild.
@@ -125,5 +140,8 @@ through `tr '\r' '\n'`.
 - A finding is applied or invalid. Never deferred.
 - `main` only. **No branches, no worktrees, no stashes.**
 - The comment budget bites every new file. Trim by hand — the auto-fix cuts
-  mid-sentence. **Never add a file to the baseline.**
+  mid-sentence. **Never add a file to the baseline**; a file that improves must
+  tighten its entry (`--update-baseline`, which may only shrink).
+- **Name the layer, not the phase number**, in any doc comment. Phase 06 found
+  12 ported references pointing at phases that mean something else here.
 - Store publishing is drafts only.

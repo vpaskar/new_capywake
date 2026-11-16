@@ -35,8 +35,8 @@ enum PuzzleEscapeStrictness {
 
 /// Everything the user decides about their wake puzzle.
 ///
-/// Immutable, validated on construction, and pure — Phase 19 persists it and
-/// adds per-alarm overrides; this type only defines and defends the shape.
+/// Immutable, validated on construction, and pure: the settings layer
+/// persists it and adds per-alarm overrides, this type defends the shape.
 ///
 /// The invariants exist because each one is a way the puzzle could otherwise
 /// fail someone at 03:00:
@@ -170,8 +170,8 @@ class PuzzleSettings {
 
   /// Whether every enabled type needs sight.
   ///
-  /// The settings UI (Phase 19) uses this to warn a screen-reader user before
-  /// they leave themselves an unsolvable morning.
+  /// The settings UI uses this to warn a screen-reader user before they
+  /// leave themselves an unsolvable morning.
   bool get isVisualOnly => enabledTypes.every((t) => !t.isScreenReaderSolvable);
 
   PuzzleSettings copyWith({

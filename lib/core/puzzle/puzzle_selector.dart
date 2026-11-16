@@ -31,7 +31,7 @@ abstract final class PuzzleTypeSelector {
   /// simply not random, and a caller expecting randomness should keep the
   /// window short enough that several types tie.
   ///
-  /// [seed] makes the choice reproducible for tests and for the Phase 18 debug
+  /// [seed] makes the choice reproducible for tests and for the debug
   /// gallery. Throws [ArgumentError] when [enabled] is empty — an empty set is
   /// unrepresentable in `PuzzleSettings`, so reaching this is a caller bug.
   static PuzzleType next({

@@ -543,3 +543,109 @@ composition. `02_ALARMS.png` shows the capybara hugging an alarm clock and
 closest to neither, but it is a real supplied hero at the right aspect and the
 mockups' two are not in the package. **Tier B: logged, not substituted
 silently.**
+
+---
+
+# Phase 06 — ringing and emergency stop
+
+## G17 — no *dedicated* ringing scene, but the Alarms scene already is one
+
+**Filed, investigated, and largely withdrawn in the same pass.** Recorded in
+full because the first answer was wrong and the correction is the useful part.
+
+### What was filed
+
+`AppArt.scenes` holds exactly four entries (`lib/design/art.dart:53-58`):
+`scene.home`, `scene.alarms`, `scene.stats`, `scene.settings`. The Ringing
+board panel (`boards/01_earlier_all_screens.png`, bottom-right) shows a
+bedroom hero — capybara stretching awake in bed, window with sunrise, plant —
+and no scene is named for it. Filed as "no ringing scene exists".
+
+### The nearest candidates, measured
+
+Measured with PIL against the file, not read off a manifest:
+
+| Candidate | Size | Mode |
+|---|---|---|
+| `header_scenes/upscaled_older/cozy_bedroom.png` | 1200×800 | RGB |
+| `header_scenes/upscaled_older/night_bedroom.png` | 1200×800 | RGB |
+| `asset_library/scenes/sunrise_bedroom.png` | **256×183** | RGBA |
+| `asset_library/scenes/cozy_bedroom.png` | **282×194** | RGBA |
+| `asset_library/mascots/waking_in_bed.png` | **343×235** | RGBA |
+
+The plan's first draft proposed substituting `upscaled_older/cozy_bedroom.png`
+and logging two sub-gaps: that it is the older generation, and that it
+contains **no capybara** where the board's hero is a capybara waking.
+
+### Why that was wrong
+
+**`assets/art/scenes/alarms.webp` is already the board's ringing hero.**
+Measured 1179×786 RGB — the current generation, and exactly the width a
+393 pt-wide hero needs at 3×. Viewed rather than assumed from its filename, it
+shows: capybara in bed with both arms up mid-stretch, mouth open yawning,
+sunrise through a window, and a **ringing alarm clock on the nightstand with
+motion marks**. That is the board's composition element for element.
+
+G16's own note already said as much — *"Both screens use
+`assets/art/scenes/alarms.webp`, which is a waking-in-bed composition"* — and
+called it the weaker fit for Alarms and Add/Edit, whose mockups show a
+capybara hugging a clock and a third composition again.
+
+So the asset is not missing. It is **currently used on the two screens it fits
+worst, and not on the one screen it fits best.**
+
+### Verdict
+
+| | |
+|---|---|
+| Severity | **Not a gap** for Phase 06 |
+| Used | `assets/art/scenes/alarms.webp`, unmodified, as the ringing hero |
+| Tier B substitution | None — this is the matching asset, not a stand-in |
+
+**What remains genuinely open**, and is *not* this phase's to fix: Alarms and
+Add/Edit keep using a waking-in-bed scene their own mockups do not show (G16's
+"Not a gap — the hero scene" note). Phase 06 does not change those screens.
+Reusing one scene on three surfaces is a real redundancy the owner may want to
+close, but no screen is blocked and nothing is substituted silently.
+
+### What the owner would need for a dedicated ringing scene
+
+Nothing, to ship. If the three screens should stop sharing one hero, the gap
+is **two** scenes, not one: an Alarms hero (capybara hugging an alarm clock,
+per `02_ALARMS.png`) and an Add/Edit hero (per `03_ADD_EDIT_ALARM.png`), each
+1536×1024 in the `*_integrated.png` generation — which would leave
+`alarms.webp` free to become the ringing scene it already is.
+
+## Not a gap — the stale simulator database (recorded here because it looked like one)
+
+Phase 06 drove the app by hand on the iPhone 18 Pro and **the Save button on
+Add/Edit did nothing** — the exact symptom Phase 05 recorded and could not
+explain, and which it honestly logged as unverified rather than claiming.
+
+The device log gives the cause:
+
+```
+Unhandled Exception: Exception: You've bumped the schema version for your
+drift database but didn't provide a strategy for schema updates.
+```
+
+**Not an app defect.** `AppDatabase.schemaVersion` is `1` with an `onCreate`-
+only `MigrationStrategy`, deliberately and with a test
+(`test/data/migration_origin_test.dart`: *"a fresh database is the only
+supported origin"*). The simulator was carrying a database file from an
+install made before Phase 02 set the schema to 1, so Drift found a stored
+version it could not reconcile and threw on open — **after** the UI had
+rendered, which is why the screen looked fine and only writes failed.
+
+**Fix, for any session that sees it:**
+
+```bash
+xcrun simctl uninstall <udid> com.capywake.capywake
+```
+
+then `flutter run` again. Nothing in the app changes.
+
+Worth the entry because two phases now have lost time to it, and because the
+failure mode is deceptive: the app launches, navigates and paints correctly,
+and only the first write fails — with the exception on the device log, not on
+screen.

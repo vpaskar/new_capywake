@@ -18,7 +18,7 @@ enum DismissMethod {
   /// Solve a freshly generated wake puzzle to stop the alarm. Free, and the
   /// reason the product exists. Difficulty is carried by the alarm itself via
   /// [DismissChallengeDifficulty]; which types are enabled and how many tasks
-  /// are asked for become user settings in Phase 19.
+  /// are asked for are user settings.
   puzzle,
 }
 

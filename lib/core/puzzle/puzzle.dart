@@ -112,7 +112,7 @@ final class OrderingAnswer extends PuzzleAnswer {
 /// One generated puzzle: what to show, and what answers it.
 ///
 /// Carries its [seed] so a puzzle can be regenerated identically — useful for
-/// reproducing a report and for the Phase 18 debug gallery. Nothing here is a
+/// reproducing a report and for the debug gallery. Nothing here is a
 /// display string; the surface renders [content] and the ARB layer supplies
 /// only the instruction and the accessibility labels.
 @immutable

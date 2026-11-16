@@ -91,12 +91,17 @@ print(im.size[0], im.size[1])
 from PIL import Image
 im = Image.open('$png').convert('RGB')
 w, _ = im.size
-# Flutter's DEBUG ribbon is a saturated red diagonal in the top-right corner.
+# Flutter's DEBUG ribbon is a saturated red (~#F44336) diagonal in the
+# top-right corner. The red channel alone is not enough: painted art reaches
+# (151, 92, 48) there, which the old 'r>140 and g<90 and b<90' rule called a
+# banner. Saturation separates them — the ribbon's r-g is ~177, the art's 63.
 hits = sum(
     1
     for y in range(0, 160, 4)
     for x in range(w - 160, w, 4)
-    if (lambda p: p[0] > 140 and p[1] < 90 and p[2] < 90)(im.getpixel((x, y)))
+    if (lambda p: p[0] > 180 and p[1] < 80 and p[2] < 80 and p[0] - p[1] > 120)(
+        im.getpixel((x, y))
+    )
 )
 print(hits)
 "

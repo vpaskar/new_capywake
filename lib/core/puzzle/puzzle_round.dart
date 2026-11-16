@@ -59,9 +59,8 @@ class PuzzleRound {
   /// always produce the same sequence of puzzles, which is what the tests and
   /// the debug gallery rely on.
   ///
-  /// [recentTypes] is the recently-served history, **oldest first**. Phase 18
-  /// starts every round with an empty history; Phase 19 may carry it across
-  /// mornings. It is trimmed to [recentWindow] before use.
+  /// [recentTypes] is the recently-served history, **oldest first**, trimmed
+  /// to [recentWindow]. The ringing surface starts every round empty.
   factory PuzzleRound.start({
     required PuzzleSettings settings,
     required int seed,

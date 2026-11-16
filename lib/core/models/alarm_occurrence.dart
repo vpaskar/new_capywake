@@ -4,9 +4,8 @@ import 'package:meta/meta.dart';
 /// A single, concrete fire of an `Alarm`.
 ///
 /// One `Alarm` (the user-configured rule) yields many [AlarmOccurrence]s (the
-/// individual rings). The schedule engine (Phase 05) creates these; the
-/// lifecycle layer (Phase 07) advances the [status] field through the state
-/// machine. History reads them and produces calm, non-judgmental summaries.
+/// individual rings). The ringing layer creates one when an alarm fires and
+/// advances [status] through the state machine; History reads them.
 ///
 /// Times stored as **UTC `DateTime`s** in the database; the schedule engine
 /// converts to/from local time using the `timezone` package so DST works

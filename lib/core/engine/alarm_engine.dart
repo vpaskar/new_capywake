@@ -65,8 +65,8 @@ abstract class AlarmEngine {
   Future<void> rescheduleAll(List<AlarmOccurrencePlan> plans);
 
   /// Stream of `(alarmId)` events emitted when a platform alarm starts
-  /// ringing. The lifecycle layer (Phase 07) listens here to drive the
-  /// ringing UI and write the `AlarmOccurrence.triggeredAt` field.
+  /// ringing. `RingingController` listens here to drive the ringing UI and
+  /// write the `AlarmOccurrence.triggeredAt` field.
   ///
   /// The stream is broadcast — multiple listeners (the ringing screen +
   /// History) are allowed.

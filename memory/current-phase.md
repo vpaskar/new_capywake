@@ -1,83 +1,93 @@
 # Current phase
 
-**Phase 05 — Alarm engine and reliability: done, 2026-11-16. `Current phase: 06`.**
+**Phase 06 — Ringing and emergency stop: done, 2026-11-16. `Current phase: 07`.**
 
-The phase that made a saved alarm actually reach the platform. **1,279 tests**,
-analyze clean, lib 97.46% / `lib/core` 99.49% / `lib/data` 88.95%, **405 ARB
-keys × 10 locales**.
+**1,372 tests**, analyze clean including infos, lib 97.63% / `lib/core` 99.49%
+/ `lib/data` 88.95% / `lib/features/ringing` 94.67%, **405 ARB keys × 10
+locales (zero new)**.
 
 ## What this phase actually found
 
-### 1. Nothing armed anything, and the code to do it was already written
+### 1. The legacy has no dismiss-exactly-once guard — the defect this row is named after
 
-`AlarmScheduleCoordinator` — 275 lines of orchestration, fully tested in
-Phase 02 — was **never constructed anywhere in `lib/`**. Four grep hits, all
-doc comments. Alarms could be created, edited, enabled and deleted, and no
-platform alarm was ever set.
+`../capywake/lib/features/ringing/ringing_controller.dart:339` (`dismiss`) and
+`:500` (`escape`) both open with `if (session == null) return;` and then await
+twice before `_emit(null)` clears `_current`. The screen holds no busy flag
+(grep finds only `_puzzleOpen`), and `test/features/ringing/` has no test for
+a double call. **The previous project shipped it.**
 
-So the phase wrote no scheduling logic, no DST handling, no 64-cap calculator
-and no snooze math. It wrote three adapters and the wiring.
+### 2. A third duplicate-row path, found by this phase's own test
 
-### 2. `initializeTimeZones()` was never called in `lib/` — Phase 03's defect, one layer down
+`AlarmScheduleService.targetForRing` returns the fire instant when a ring has
+"no window left to belong to" — its own doc names **a snooze** as such a case.
+Measured: a 07:00 Berlin alarm resolves `06:00Z` then `06:09Z`. So matching an
+occurrence on `scheduledAt` alone created **a second row on every snooze
+re-ring**, `snoozeCount` back at 0, silently defeating the cap and the
+final-alarm boundary. The final-alarm test is what surfaced it.
 
-The whole schedule engine is built on `package:timezone`. Every test loaded
-the database itself (`setUpAll(tzdata.initializeTimeZones)`), and **nothing in
-`lib/` ever did**. The suite could stay green forever while the app threw on
-the path that arms alarms.
+### 3. The emergency escape threw instead of opening
 
-This is exactly Phase 03's `initializeDateFormatting` finding — tests
-initialising what the app does not — and it is worse here, because a formatter
-throwing is a visibly broken screen while this is an alarm that does not ring.
+Self-review #1. `RingingHost` sits in `MaterialApp.builder`, **above** the
+router's Navigator, so `showModalBottomSheet` had no Navigator in context:
+*in the app as wired, the escape did not work.* Every standalone screen test
+passed, because they wrap `RingingScreen` in their own `MaterialApp`. Only the
+host test — which rings an alarm into the live app — could see it.
 
-### 3. The plan said "reboot" and nothing in it survived a reboot
+Also: `escapeStrictness` was resolved from `PuzzleSettings.defaults()`,
+discarding the user's app-wide settings, so *Confirm, then hold* was one tap.
 
-The draft re-synced "on app resume and on timezone change". **Neither fires
-after a reboot** — the app is not running and there is no resume event.
-Shipping that under a tracker row headed "reboot" is an overpromise, which
-`CLAUDE.md` makes a High finding. Now stated per platform: Android persists
-via `package:alarm`, iOS does not survive termination and the adapter never
-claims it does.
+### 4. The guard's test passed for the wrong reason — proven by mutation
 
-### 4. Two defects in this phase's own code, found by self-review
+Self-review #2. Disabling `_claim` left **all six "exactly once" tests green**
+and failed only the ring test: with in-memory fakes the async window the latch
+defends never opens. Fixed with an engine whose `cancel` blocks until the test
+releases it; disabling the latch now fails **three** tests.
 
-- **`arm`'s idempotence guard could never match.** It keyed on the ring time
-  *floored to now*, which for a past-due plan differs on every call — so the
-  alarm was re-armed on every sync, and the stored key could collide with a
-  genuine re-arm. The rule now lives in `AlarmPlanMapper.armKeyFor`, tested.
-- **`Alarm.ringing` is a seeded `BehaviorSubject`**, so a late subscriber
-  replays the current set and one ring was reported twice.
+**Generalisable:** a guard whose test cannot fail when the guard is removed is
+a guard on trust. Mutate it and see.
 
-### 5. The coverage prediction was right about the mechanism, wrong in the good direction
+### 5. Twelve ported dartdoc references name the wrong phase
 
-The pre-review proved the legacy's 750 adapter lines would take `lib/data`
-from 86.40% to under 70% against an 85% gate, and forced the **pure-mapper /
-thin-shell split**. Measured result: **88.95%, up**. Registered 25–40 new
-tests; measured **87**. Both restated rather than passed quietly.
+Full-project review. Phase 02 ported 62 files with dartdoc verbatim, carrying
+the **legacy's** numbering: "settings UI (Phase 19)" where 19 is Release QA,
+"wake surface (Phase 18)" where 18 is Animation polish, "lifecycle layer
+(Phase 07)" where 07 is Settings. Five phases read past it. All now name the
+**layer**, which cannot go stale when phases renumber.
 
-## The simulator build — solved, and it was never ours
+### 6. `tool/capture.sh`'s DEBUG-banner detector was wrong
 
-`flutter_tools` runs `lipo <binary> -verify_arch arm64 x86_64`; Xcode 27.2's
-lipo refuses two architectures in one call. **A stock `flutter create` project
-fails identically.** Use `flutter run`, never `flutter build ios --simulator`.
+`r>140 and g<90 and b<90` called painted brown **(151, 92, 48)** a banner, so
+the first screen whose art reaches the top-right corner failed its capture.
+Flutter's ribbon is ~(244, 67, 54): **r−g ≈ 177 against the art's 63.**
+Tightened on saturation and verified it still fires on a synthetic banner.
 
-**Taps land on the iOS 27.0 runtime, not 16.4** — the rest of Phase 04's
-symptom. But the iPhone 18 Pro is 402×874, not the mockup's 393×852, so
-**Tier A capture stays on the iPhone 14 Pro**. Two devices, two jobs.
+## Predictions, both restated
 
-## What ran on a device, and what did not
+- **Tests:** registered 55–80 new, measured **93**. The scope grew for stated
+  reasons after the band was set.
+- **`lib` coverage:** registered a **fall** to 95.5–97.3%, measured a **rise**
+  to 97.63%. The first measurement was 96.95% — inside the band. The two
+  self-reviews' 18 extra tests lifted it past its own starting point. *A
+  prediction made before the reviews cannot account for the reviews.*
 
-Verified on iPhone 18 Pro (iOS 27.0): the app builds and launches with all
-three plugins, and **`PlatformNotificationService` really reached iOS
-UserNotifications** (device log: pending queried, 1 category registered).
-Navigation by hand worked.
+## No Tier A claim for this screen
 
-**Not verified:** the Save button did not respond while the `flutter run`
-session was ending, so **no alarm was created through the UI and no arming was
-watched interactively.** Recorded, not claimed. Android untested — no emulator.
+There is **no primary mockup** for ringing. The only reference is a board
+panel — a ~333×467 px crop of a 1448×1086 board. Declared non-Tier-A in the
+plan before measuring. Held instead to design tokens, the tap-target floor
+measured with `tester.getRect`, and board **order and presence**; 6 deviations
+named in `docs/visual/ringing/README.md`, including that **the board shows no
+escape at all** and we ship one anyway.
 
-## Next session — Phase 06, ringing and emergency stop
+## Next session — Phase 07, Settings
 
-`AlarmEngine.ringingStream` is the surface it gets. **Never ship a puzzle
-without a reachable emergency escape** — always a High finding. Nothing in
-this phase constrains that escape. `AlarmFormat.timeParts` (Phase 04) is the
-formatter the ringing screen wants.
+`04_SETTINGS.png` is a real Tier A mockup, so the fidelity contract applies in
+full again. **Phase 07 owes two things from earlier phases:**
+
+1. **`AlarmPermissionGate` is still called by nothing in `lib/`.** Phase 05
+   said "Phase 06 or 07"; Phase 06 declined it with a reason (it fires on the
+   alarm-enable path, not the ringing one). It is Phase 07's.
+2. **The sleep-boundary restoration** — when `package:health` and
+   `live_sleep_gateway.dart` land, `test/core/sleep/sleep_boundary_test.dart`
+   goes back to `exactly one` importer and re-asserts
+   `NSHealthShareUsageDescription` + `READ_SLEEP`.

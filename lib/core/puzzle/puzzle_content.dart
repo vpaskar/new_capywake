@@ -4,7 +4,7 @@ import 'package:meta/meta.dart';
 /// The four arithmetic operations a puzzle can reference.
 ///
 /// Deliberately carries **no symbol string**. `+`, `−`, `×`, `÷` are rendered
-/// at the UI boundary (Phase 18); the model stays free of display strings so
+/// at the UI boundary; the model stays free of display strings so
 /// nothing in `lib/core/puzzle/` can ever become locale-dependent.
 enum ArithmeticOperator { add, subtract, multiply, divide }
 
@@ -62,7 +62,7 @@ class GridCell {
 /// The generated, locale-neutral content of a puzzle.
 ///
 /// Numbers, operators, digits, grid coordinates, shape enums and rotations —
-/// never a display string. Sealed so the render dispatch in Phase 18 is
+/// never a display string. Sealed so the render dispatch in the view is
 /// exhaustive and adding an eleventh type cannot silently miss a surface.
 @immutable
 sealed class PuzzleContent {

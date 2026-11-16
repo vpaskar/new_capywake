@@ -1,5 +1,6 @@
 import 'package:capywake/app/router.dart';
 import 'package:capywake/design/theme.dart';
+import 'package:capywake/features/ringing/ringing_host.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,6 +41,9 @@ class _CapyWakeAppState extends State<CapyWakeApp> {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: _router,
+      // Over the router's output: a ring must cover a pushed route too.
+      builder: (context, child) =>
+          RingingHost(child: child ?? const SizedBox.shrink()),
     );
 
     final build = widget.scopeBuilder;

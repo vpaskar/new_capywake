@@ -1,8 +1,7 @@
 /// Accessibility profile of a puzzle type.
 ///
-/// Declared per type so the settings layer (Phase 19) and the wake surface
-/// (Phase 18) can reason about who a type actually works for, rather than
-/// discovering it at 03:00.
+/// Declared per type so the settings layer and the wake surface can reason
+/// about who a type works for, rather than discovering it at 03:00.
 enum PuzzleAccessibility {
   /// The puzzle can be read out and answered without sight — the content is
   /// numbers and operators, and the answer is typed or picked from a labelled
@@ -20,7 +19,7 @@ enum PuzzleAccessibility {
 ///
 /// Every type's *content* is numbers, shapes, positions or patterns — nothing
 /// that translates. Only the instruction and the accessibility labels live in
-/// ARB (Phase 18). The rejected alternatives, and why, are recorded in
+/// ARB. The rejected alternatives, and why, are recorded in
 /// `ai-orchestration/phases/phase-17-puzzle-engine.md`.
 enum PuzzleType {
   /// `17 + 28`, `63 − 19`, `8 × 7` — type the result.

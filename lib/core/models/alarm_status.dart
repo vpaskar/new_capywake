@@ -1,8 +1,7 @@
 /// Lifecycle state of a single `AlarmOccurrence`.
 ///
-/// The full state machine (transitions, "still up?" handling, missed-alarm
-/// detection) is implemented in the Phase 07 `AlarmStatusService`; this enum
-/// is the underlying value type both data and core layers agree on.
+/// The full state machine (transitions, missed-alarm detection) lives in
+/// `AlarmStatusService`; this enum is the value type both layers agree on.
 ///
 /// Persisted as the [name] string so reordering values stays non-breaking.
 enum AlarmStatus {

@@ -1,8 +1,10 @@
 import 'package:capywake/app/app.dart';
 import 'package:capywake/app/bootstrap.dart';
 import 'package:capywake/app/router.dart';
+import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/data/database/app_database.dart';
+import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -136,4 +138,62 @@ Future<void> main() async {
       };
     });
   }
+
+  // The ringing surface has no route: it is opened by the engine. Captured by
+  // firing a ring into the live provider graph, which is also the only way a
+  // user ever sees it.
+  testWidgets('capture ringing', (tester) async {
+    await bootstrap();
+
+    final clock = DateTime.utc(2026, 5, 21, 5);
+    final db = AppDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(db.close);
+    final engine = FakeAlarmEngine(now: () => clock);
+    addTearDown(engine.dispose);
+    final container = ProviderContainer(
+      overrides: [
+        appDatabaseProvider.overrideWithValue(db),
+        alarmEngineProvider.overrideWithValue(engine),
+        engineNowProvider.overrideWithValue(() => clock),
+      ],
+    );
+    addTearDown(container.dispose);
+    for (final alarm in captureSeed) {
+      await container.read(capywakeRepositoryProvider).upsertAlarm(alarm);
+    }
+
+    await tester.pumpWidget(
+      CapyWakeApp(
+        router: createRouter(),
+        showDebugBanner: false,
+        scopeBuilder: (child) =>
+            UncontrolledProviderScope(container: container, child: child),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    if (!surfaceConverted) {
+      await binding.convertFlutterSurfaceToImage();
+      surfaceConverted = true;
+    }
+
+    // Puzzle-backed, because that is the configuration the board draws and
+    // the one where the emergency escape must be visible.
+    await container
+        .read(capywakeRepositoryProvider)
+        .upsertAlarm(
+          captureSeed.first.copyWith(dismissMethod: DismissMethod.puzzle),
+        );
+    await tester.pumpAndSettle();
+
+    engine.fire('capture-weekday', firedAt: clock);
+    await tester.pumpAndSettle();
+
+    final inset = tester.view.padding.top / tester.view.devicePixelRatio;
+    await binding.takeScreenshot('ringing');
+    binding.reportData = <String, dynamic>{
+      ...?binding.reportData,
+      'ringing': inset,
+    };
+  });
 }
