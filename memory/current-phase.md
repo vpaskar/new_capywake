@@ -1,83 +1,115 @@
 # Current phase
 
-**Phase 01 — Foundation: done, 2026-11-16. `Current phase: 02`.**
+**Phase 02 — Domain and persistence: done, 2026-11-16. `Current phase: 03`.**
 
-## The gate, and why it was set higher than the plan asked
+The legacy domain is ported. 62 `lib/core/` files (9,825 lines), 47
+`test/core/` files, 4 `lib/data/` files at `schemaVersion = 1`, 4 `test/data/`
+files, 12 sound assets. **1,051 tests**, analyze clean, `lib/core` **99.41%**.
 
-`tool/capture.sh` writes three verified PNGs from the iPhone 14 Pro simulator
-at **1179×2556 px = 393×852 pt**.
+## The gate this phase existed to re-enable
 
-The plan's bar was "has produced a real PNG". The pre-review probed the planned
-mechanism before writing any code and found it **passes while writing
-nothing**: `takeScreenshot` hands bytes to a driver, and under `flutter test`
-there is no driver, so they are dropped and the process exits 0. That is the
-legacy's 40-phase failure with a green tick on top — and the old criterion
-would have been satisfied by it forever.
+**`lib/core` ≥ 95% coverage is back on, at 99.41%.** Phase 01 skipped it
+legitimately — `lib/core/` did not exist and `check_coverage.dart` `exit(2)`s on
+an absent path rather than passing trivially — and Phase 01's pre-review made
+turning it back on a Phase 02 requirement so the skip could not become
+permanent. It is now in `CLAUDE.md`, the tracker and the acceptance criteria,
+and the exception note is marked closed.
 
-So the gate is now the artifact, not the exit code: `capture.sh` checks the
-file exists, is non-empty, is 1179×2556, is newer than the run, and has no
-DEBUG banner, and exits non-zero otherwise.
+## Not 932 ported tests but 912, and why that mattered
 
-Two more that only running could find: `flutter create` emits an iOS deployment
-target that **cannot build for the simulator** on Flutter 3.44.7, and
-`convertFlutterSurfaceToImage()` is mandatory on iOS.
+`test/core/theme_test.dart` is **20** of the legacy's 932 and tests
+`lib/core/theme.dart`, the one file that imports Flutter *and* is not ported. So
+the handoff's "932 ported tests must pass" was right about the legacy suite and
+wrong about the ported one.
+
+Dropping it would have cost something real: those 20 asserted **AA contrast** and
+separator discipline on the legacy palette, and nothing asserted CapyWake's own
+palette. Its replacement, `test/design/tokens_contrast_test.dart`, found **two
+genuine accessibility defects** in Phase 01's sampled tokens:
+
+| Pair | Measured | Required |
+|---|---|---|
+| `accent` / `accentDeep` / `success` / `grass` on the three light surfaces | 1.76–2.68:1 | 3.0 (UI) |
+| `error` on `surfaceAlt` | 3.93:1 | 4.5 (body) |
+
+Both are **open design constraints, not closed findings**, recorded as checked
+properties that fail if a token strengthens. Retuning a palette sampled from the
+mockups is Tier A and belongs to the owner and a UI phase. **Phase 03 is the
+first consumer.**
+
+## What the identity discipline caught
+
+The pre-review fixed every test-count term **before** implementation so the
+result could not be rationalised afterwards. Its own first draft estimated the
+four data-test files at 66; measured, they are **83** — 26% out. Had the estimate
+stood, the post-review would have found 83 where it expected 66 and had to decide
+after the fact whether a surplus was good news.
+
+Final: 912 + 83 + 43 + **13 new** = **1,051**. N came out 13 rather than the
+budgeted 5 (the contrast test split into 9 cases), so the identity was
+**restated, not quietly passed**.
+
+## Seven failures after the raw copy — none a logic defect, none skipped
+
+1. **3 × `alarm_sound_test`** — `assets/sounds/` was never in the plan.
+   `CAPYWAKE_REUSE_AUDIT.md` lists it; the plan paraphrased the audit instead of
+   working through it. **Would have shipped a sound catalogue pointing at twelve
+   absent files**, failing only when a user tapped one. Ported: 12 WAVs (7,752 KB)
+   + `LICENSES.md` + `tool/generate_tones.dart`.
+2. **3 × `sleep_boundary_test`** — asserted the *presence* of
+   `live_sleep_gateway.dart`, `NSHealthShareUsageDescription`, `READ_SLEEP`:
+   phase-07/08 infrastructure. Rewritten as the negative invariant they protect,
+   plus a conditional that binds the moment `READ_SLEEP` appears. **Restoration
+   obligation is in the tracker's 07/08 rows**, not only a code comment.
+3. **1 × iOS plist read `Capywake`** — Phase 01's 194-occurrence ARB casing fix
+   never reached the platform manifests. `CFBundleDisplayName` and
+   `android:label` now read **CapyWake**; both user-visible.
 
 ## Decisions this phase made
 
 | Question | Decision |
 |---|---|
-| Typeface | **Baloo 2** (x-height/cap 0.786 vs the reference's heavy rounded terminals) |
-| Script fallback | Baloo 2 covers Latin+Turkish **only**. `ru`→Nunito, `ar`/`ja`→system face |
-| Encode target | **3×**, not the plan's 2× — the plan contradicted its own sharpness check |
-| Coverage scope | project gate is `--path lib`; `tool/` is entry points with file I/O |
-| Comparison | offsets measured **from the status bar**, inset recorded per capture |
+| Migration history | `schemaVersion = 1`, `onUpgrade` dropped. N3 asserts an upgrade **throws**, because drift substitutes a non-null default closure — `onUpgrade == null` was the wrong guard |
+| Dropped columns | The legacy's v3→v4 *drops* two columns by table rebuild. Both verified absent and now asserted against the **live schema** (N4), not read off a migration comment |
+| `data/providers.dart` | Ported minus the two sleep-gateway providers (the only lines needing `package:health`). Excluding it whole would have left Phase 03 unable to read an alarm |
+| Port rule for tests | `lib/core/` imports no Flutter (asserted). `test/core/` may import `widgets.dart` **for `Locale` only** (asserted) — verified those five files use nothing else Flutter-shaped |
+| `prefer_initializing_formals` | 3 targeted `ignore_for_file`. A *private named* initializing formal compiles but is **not callable** — verified with a minimal program. `analysis_options.yaml` untouched |
+| 12-line comment ceiling | **Withdrawn.** Measured 50 runs over 12 lines; reading them showed the rule was wrong, not the code — they are a state-machine transition table and DST semantics. `gastrowerk`'s number was derived from `gastrowerk`'s tree |
 
-The typeface check nearly shipped wrong: a `PIL.getmask` test reported all five
-scripts OK for both finalists. It returns a non-empty box for `.notdef` too.
-**Only rendering shows the tofu.** Russian is a shipping locale, so the
-fallback is decided here rather than discovered in Phase 03.
+## Gates that were green for the wrong reason
 
-## Tier A — the honest state
+Four, found across the review passes:
 
-`compare.dart` **fails today, and that is correct.** The header matches to
-**0.1 pt**; the hero lower edge (−11.0), card top (−22.1) and nav bar (absent)
-are off because the screens have no bodies yet. Phase 03 closes them. A tool
-that passed on an empty shell would be worthless.
-
-## Art
-
-The owner's patch closed **G1** (hero with nightcap, duck, clock, `Zz`),
-**G2** (the four game tiles — the only Blocking gap), **G3** (31 mascots via
-sticker sheets) and **G10** (wordmark). No blocking gap remains.
-
-Two defects found by measuring rather than assuming:
-
-- **G11** — ~91% of ink sits at alpha 250–254, not 255, so the art is ~2%
-  translucent. Fixed in-pipeline; verified first that the band is interior fill,
-  not antialiased edge, so snapping does not harden outlines.
-- **The sheets do not slice on gutters alone** — three cells held two touching
-  poses each. `splitWideCell` cuts at coverage valleys. 31 poses, 0 merged.
-
-**G9 withdrawn** after being measured wrong twice. The real crop is 28.1% of the
-art band — large, but the face stays clear at every alignment, which is what
-`SceneHeader` exists for.
+- **`tool/audit_art.dart` does not exist** — documented in `CLAUDE.md` *and* the
+  tracker as a per-phase gate. Running it errors. The audit is
+  `lib/design/art_audit.dart` + two design tests inside `flutter test`.
+- **`check_bundle_size.dart` measured art only** (1818/2182 KB = "83%") while the
+  real asset payload had grown to **10.5 MB** with the sounds. Now budgets every
+  tree and states that native libraries are not counted.
+- **`lib/data` had no gate** at **85.08%**, the weakest tree, clearing the
+  project gate only because `lib/core`'s 2,526 lines at 99.41% dominated the
+  average. Gate added.
+- **That 85.08% is itself misleading**: 67 of 496 lines are Drift `Table` column
+  getters, evaluated at build time to generate `app_database.g.dart` and never at
+  runtime. Unreachable by any test. Hand-written data code is **422/429 = 98.4%**.
+  Do not "fix" it with a meaningless test, a `// coverage:ignore`, or a lowered
+  gate.
 
 ## Validation
 
-analyze clean · format clean · 10 locales × 384 keys · art 1818 KB of 2182 KB
-(83%) · **43 tests** · **lib coverage 97.92%** against 85%.
+analyze clean (zero infos) · format clean · 10 locales × 384 keys · 1,051 tests ·
+project **97.14%** · `lib/core` **99.41%** · `lib/data` 85.08% · assets 10,517 KB
+of 11,082 KB across three budgeted trees · `capture.sh` 3 PNGs verified at
+1179×2556 · `../capywake` **byte-identical to the pre-port baseline**.
 
-## Next session — Phase 02
+40 findings across pre-review, two self-reviews and a full-project review. All
+applied, none invalid.
 
-Port `lib/core/` minus `theme.dart` (62 files, 9,825 lines, verified pure Dart)
-and `test/core/` (48 files, **932 passing tests**) from the read-only
-`../capywake`. Drift tables at `schemaVersion = 1`, not the legacy's 6.
+## Next session — Phase 03, Home / Today
 
-**ARB is already done** — Phase 01 ported all 384 keys × 10 locales and adapted
-the 3 nav-coupled ones, so the five `core/` files that take `AppLocalizations`
-as a parameter port directly.
+`01_HOME.png`. The domain is real: schedule math, next-alarm, today formatting,
+history and the puzzle engine are all ported and tested. **Nothing rings** —
+`AlarmEngine` is an interface plus a fake until phase 05.
 
-**Re-enable the `lib/core` ≥ 95% coverage gate** in the plan's acceptance
-criteria. Phase 01 skips it legitimately — `lib/core/` does not exist and
-`check_coverage.dart` `exit(2)`s on an absent path rather than passing
-trivially — but a skip nobody turns back on is how a gate dies.
+Design against **palette constraint F1**: in light mode no control may use
+accent, success or grass as its only channel for boundary or state.

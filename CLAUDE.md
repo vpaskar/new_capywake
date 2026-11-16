@@ -131,8 +131,10 @@ why the previous attempt could not match the mockups.
 - Scenes crop (`BoxFit.cover` + per-scene `Alignment`), never distort, never
   cut the capybara's face.
 - As many capybaras per screen as the mockup shows. `01_HOME.png` has six.
-- Every imported asset passes `tool/audit_art.dart` (alpha, ghost pixels,
-  margins, intrinsic size).
+- Every imported asset passes the art audit (alpha, ghost pixels, margins,
+  intrinsic size): `lib/design/art_audit.dart` is the audit, `tool/import_art.dart`
+  is the pipeline that applies it, and `test/design/art_audit_test.dart` +
+  `art_manifest_test.dart` are the gate, so it runs inside `flutter test`.
 - No animation on the ringing surface. Honor `disableAnimations` everywhere.
 
 ## Content integrity — the three screens that will try to lie
@@ -203,16 +205,23 @@ dart run build_runner build --delete-conflicting-outputs    # if Drift changed
 dart format --set-exit-if-changed .
 flutter analyze                                             # zero issues
 dart run tool/check_arb.dart                                # 10 locales
-dart run tool/audit_art.dart
-dart run tool/check_bundle_size.dart
-flutter test --coverage
-dart run tool/check_coverage.dart                           # project >= 85%
+dart run tool/check_bundle_size.dart                        # every asset tree
+flutter test --coverage                     # incl. the art audit + manifest
+dart run tool/check_coverage.dart --path lib                # project >= 85%
 dart run tool/check_coverage.dart --min 95 --path lib/core  # core >= 95%
-                                   # ^ skip in Phase 01 only: lib/core is not
-                                   # ported until Phase 02, and this tool
-                                   # exit(2)s on an absent path rather than
-                                   # passing trivially.
+dart run tool/check_coverage.dart --min 85 --path lib/data  # data  >= 85%
 ```
+
+Read every figure from the `Coverage (...)` line, never from `PASS` alone — the
+Dart build-hooks preamble shares stdout, so pipe through `tr '\r' '\n'`.
+
+There is **no `tool/audit_art.dart`** — the art audit is a library driven by
+tests, not a script (Phase 02 self-review F3 found the old line here failing
+with "Could not find file"). Running the list above should never error.
+
+The `lib/core` gate was skipped in Phase 01 only, legitimately: `lib/core/` did
+not exist yet and `check_coverage.dart` `exit(2)`s on an absent path rather than
+passing trivially. **Phase 02 turned it back on and it stays on.**
 
 Generators run **before** the format check.
 
