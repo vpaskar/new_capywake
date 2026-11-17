@@ -79,6 +79,14 @@ const screenBlocks = <String, Map<String, double>>{
     'save CTA bottom': 778.1 - statusBarPt,
     'meadow footer top': 793.4 - statusBarPt,
   },
+  // Phase 07. Only the blocks the shipped row set cannot move; the cut rows
+  // move everything below Appearance's top. See docs/visual/settings/.
+  'settings': {
+    'hero scene lower edge': 212.9 - statusBarPt,
+    'group 1 card top': 231.4 - statusBarPt,
+    'group 1 card bottom': 341.8 - statusBarPt,
+    'group 2 card top': 355.6 - statusBarPt,
+  },
 };
 
 Map<String, double> blocksFor(String screen) {
@@ -240,10 +248,20 @@ List<double> _edgesPt(img.Image image, double scale) {
   return sorted;
 }
 
-/// Luminance minima down a text-free column: the borders the row-mean scan
-/// averages away.
+/// Luminance minima down text-free columns. Several, because none is clean
+/// on every screen: x=360 is clear on Alarms, under the art on Settings.
 List<double> _hairlines(img.Image image, double scale) {
-  final x = (360 * scale).round().clamp(0, image.width - 1);
+  final found = <double>[];
+  for (final xPt in const [360.0, 22.0, 8.0]) {
+    for (final pt in _hairlinesAt(image, scale, xPt)) {
+      if (!found.any((f) => (f - pt).abs() < 3)) found.add(pt);
+    }
+  }
+  return found..sort();
+}
+
+List<double> _hairlinesAt(img.Image image, double scale, double xPt) {
+  final x = (xPt * scale).round().clamp(0, image.width - 1);
   final column = <double>[];
   for (var y = 0; y < image.height; y++) {
     final p = image.getPixel(x, y);
@@ -255,6 +273,9 @@ List<double> _hairlines(img.Image image, double scale) {
     final v = column[y];
     // 244, not 235: a disabled row's border lands near 236 at 55% opacity.
     if (v >= 244) continue;
+    // Below ~150 is painted art: the hero band otherwise contributes
+    // dozens of minima that outrank the edge being looked for.
+    if (v < 150) continue;
     if (v <= column[y - 1] &&
         v <= column[y + 1] &&
         v < column[y - 2] &&
@@ -284,12 +305,13 @@ double _topInsetPt(String screen) {
   return double.parse(file.readAsStringSync().trim());
 }
 
-/// The unclaimed edge nearest [target]. Phase 04's call on P4; its limits
-/// are named in `PHASE_04_POST_REVIEW.md`.
+/// The unclaimed edge nearest [target], within [searchPt]: reaching further
+/// lets an undetected block claim an unrelated edge and report a false delta.
 double? _nearest(
   List<double> edges,
   double target, {
   required Map<double, String> claimed,
+  double searchPt = 12.0,
 }) {
   double? best;
   var bestDistance = double.infinity;
@@ -301,7 +323,7 @@ double? _nearest(
       best = e;
     }
   }
-  if (bestDistance > 40 || best == null) return null;
+  if (bestDistance > searchPt || best == null) return null;
   claimed[best] = '';
   return best;
 }

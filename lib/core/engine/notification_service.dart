@@ -101,14 +101,14 @@ class PendingNotification {
 
 /// The kind of pre-alarm reminder.
 ///
-/// Phase 06 schedules only the `softWakeStart` reminder; later phases may
+/// The alarm engine schedules only the `softWakeStart` reminder; later work may
 /// add more (e.g. a calm "final alarm coming up" nudge). Each kind maps
 /// to a localised body string in the platform adapter.
 enum NotificationKind {
   /// The wake window opening, scheduled at the alarm's
   /// [AlarmOccurrencePlan.softStart].
   ///
-  /// Since Phase 31 the *ring* also starts there, so on Android and on a live
+  /// The *ring* also starts there, so on Android and on a live
   /// iOS app this reminder arrives beside an alarm that is already sounding —
   /// which is why its copy says the window has started rather than that an
   /// alarm is coming. It earns its place on the one platform path where the

@@ -37,7 +37,7 @@ class VolumeRampStep {
 /// Samples a [WakeRamp] into the stepped curve the platform alarm engine
 /// arms with.
 ///
-/// Phase 08 built [WakeRamp] — a start volume, an end volume and an easing
+/// The legacy built [WakeRamp] — a start volume, an end volume and an easing
 /// curve per wake mode — and nothing ever read it: the engine applied a fixed
 /// five-second fade to every alarm in every mode. This is the piece that was
 /// missing between the two.

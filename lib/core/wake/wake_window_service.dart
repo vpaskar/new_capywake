@@ -5,8 +5,8 @@ import 'package:meta/meta.dart';
 ///
 /// `WakeWindowService` is a thin, focused calculator that turns an [Alarm]
 /// (whose target and window durations live as integer minutes) into a
-/// concrete [WakeWindow] anchored on a given target instant. Phase 05's
-/// scheduling engine emits the target instant; this service describes the
+/// concrete [WakeWindow] anchored on a given target instant. The scheduling
+/// engine emits the target instant; this service describes the
 /// soft-start ramp leading up to it.
 ///
 /// Why a separate service when the schedule engine already returns

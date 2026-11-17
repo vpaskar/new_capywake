@@ -9,6 +9,7 @@ import 'package:capywake/design/meadow_footer.dart';
 import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
+import 'package:capywake/features/alarms/alarm_permission_prompt.dart';
 import 'package:capywake/features/alarms/edit/alarm_edit_header.dart';
 import 'package:capywake/features/alarms/edit/alarm_form_rows.dart';
 import 'package:capywake/features/alarms/edit/time_stepper_field.dart';
@@ -311,8 +312,23 @@ class _FormState extends ConsumerState<_Form> {
   }
 
   Future<void> _save() async {
+    final before = ref.read(alarmsStreamProvider).value ?? const <Alarm>[];
     final alarm = _draft.toAlarm(now: ref.read(alarmEditClockProvider)());
     await ref.read(capywakeRepositoryProvider).upsertAlarm(alarm);
+
+    // Before popping: the gate's prompt belongs to the save that enabled the
+    // first alarm, and this route is where the user just acted.
+    if (mounted) {
+      await AlarmPermissionPrompt(ref).maybeRequest(
+        context: context,
+        before: before,
+        after: [
+          for (final a in before)
+            if (a.id != alarm.id) a,
+          alarm,
+        ],
+      );
+    }
     if (mounted) context.pop();
   }
 

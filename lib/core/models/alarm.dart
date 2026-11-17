@@ -7,7 +7,7 @@ import 'package:meta/meta.dart';
 /// A user-configured alarm.
 ///
 /// Pure-Dart, immutable, value-equal — the source of truth for what the user
-/// asked for. The schedule engine (Phase 05) turns this into concrete
+/// asked for. The schedule engine turns this into concrete
 /// `AlarmOccurrence`s; this model itself never carries derived state like
 /// "next fire time" — derived data is computed on demand to stay honest.
 ///

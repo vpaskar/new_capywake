@@ -3,6 +3,7 @@ import 'package:capywake/app/router.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_nav_bar.dart';
+import 'package:capywake/features/settings/settings_screen.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -80,7 +81,7 @@ void main() {
 
         await tester.tap(find.byIcon(Icons.settings_rounded));
         await tester.pumpAndSettle();
-        expect(find.byType(AppBar), findsOneWidget);
+        expect(find.byType(SettingsScreen), findsOneWidget);
 
         // Settings is outside the shell, so the bottom bar is covered.
         expect(navTab(tester, index), findsNothing);

@@ -1,6 +1,6 @@
 import 'package:meta/meta.dart';
 
-/// The three MVP wake modes (Phase 00 scope cut: 5 → 3).
+/// The three MVP wake modes (scoped down from five).
 ///
 /// Each value carries a small descriptor — its escalation profile, default
 /// snooze rules, and whether the "still up?" confirmation is required — so the
@@ -52,7 +52,7 @@ enum WakeMode {
 
 /// Defaults and behaviour flags carried by a [WakeMode].
 ///
-/// Pure data — used by Phase 03's alarm form to seed sensible defaults and by
+/// Pure data — used by the alarm form to seed sensible defaults and by
 /// the schedule/ringing layers to decide mode-specific behaviour without
 /// branching on the enum value directly.
 @immutable

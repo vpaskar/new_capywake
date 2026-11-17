@@ -144,8 +144,24 @@ Derived (inference, not measurement):
 | Meadow height | **52.2** | 780.5 − 728.3 — **not Home's 65.2** |
 
 Horizontal, from a row profile at y=345 pt: card 11.5 → 379.6, thumbnail panel
-11.5 → ~136 (the art fades out; there is no hard divider), toggle track
-302.0 → 339.9 at 30.5 pt tall.
+11.5 → ~136 (the art fades out; there is no hard divider).
+
+**⟲ Phase 07 correction — the toggle figure on this row was wrong.** It read
+"toggle track 302.0 → 339.9 at 30.5 pt tall", taken from that same y=345 pt row
+profile. The toggle does not start until **356.5 pt**: at y=345 the profile was
+crossing the pill's rounded cap, not its body, so both the x-range and the
+height were understated.
+
+Measured by green anchor (`g>r+15, g>b+30, g>90`) scanned **per row** through
+card 1, which gives the pill's full extent rather than one row's slice:
+
+| | pt |
+|---|---|
+| Alarms toggle track | **x 294.2 → 348.2 (54.0 wide), y 356.5 → 388.5 (32.0 tall)** |
+
+A row profile taken at a single y is a slice, not a bounding box, and on a
+rounded shape the slice is smaller than the shape. **Scan the rows and take the
+extremes.**
 
 ## Blocks — Add/Edit (`03_ADD_EDIT_ALARM.png`), Phase 04
 
@@ -185,3 +201,87 @@ rows, whose 55%-opacity borders land near 236.
 `_hairlines` now reads local minima down the same text-free column the mockup
 rows were measured at, at L < 244. **A boundary the tool cannot see is
 reported as a layout failure it never measured.**
+
+## Blocks — Settings (`04_SETTINGS.png`), Phase 07
+
+Absolute pt from the top of the mockup, which draws a 44 pt status bar.
+The method is named beside every number.
+
+| Block | Edge (pt) | Method |
+|---|---|---|
+| Header band lower edge | **103.9** | **Inherited** from Home (same `CapyHeader`), cross-checked against the art's fade-in at 103–104. The art's top edge is soft, so there is nothing to detect — not independently derived |
+| Hero art lower edge | **212.9** | Green-saturation count per row collapses 53→30 between 212.4 and 213.4; midpoint. The rule Phase 04 used on Alarms (67→58) |
+| Group 1 (Alarms) card | **231.4 – 341.8** | **Left-card-edge trace** — see below |
+| Group 2 (Appearance) card | **355.6 – 472.5** | same |
+| Group 3 (Notifications) card | **486.3 – 598.5** | same |
+| Group 4 (Account) card | **611.9 – 753.2** | same |
+| Meadow footer top | **770.3** | Green-saturation run crosses 20 hits at 2-px sampling |
+
+Inside the groups:
+
+| Block | Edge (pt) | Method |
+|---|---|---|
+| G1 header band | 232.3 – 263.7 | `blue < 218` at x=22.2 pt (band cream 249,229,207 vs card 254,244,229). **31.4 here**, 28.2 on the other three |
+| G2 header band | 356.1 – 384.2 | `blue < 218`, **28.2** |
+| G3 header band | 486.3 – 514.0 | `blue < 218`, **28.2** |
+| G4 header band | 612.4 – 640.6 | `blue < 218`, **28.2** |
+| Row dividers | 301.1 / 429.5 / 551.4 / 677.5 / 712.6 | Single-row full-width faint lines |
+
+Control geometry:
+
+| | pt | Method |
+|---|---|---|
+| **Gutter** | **9.70** | `blue < 222` band edge; agreed to 0.00 pt on three groups independently |
+| **Card width** | **373.6** | 9.70 → 383.32 |
+| Corner radius | ≈16 | The left-edge ramp 22.2 → 9.7 in the trace below |
+| Toggle track | x 321.9–366.2, y 520.5–545.5 | Green anchor — **44.3 × 25.0** |
+| Theme tiles | x 180.6–240.2 / 247.1–303.0 / 310.8–366.2, y 384.7–429.5 | Saturation/dark column scan |
+| "Settings" title | y 59.6 – 97.4 | `L < 100` bbox |
+| Back chevron | x 23.1–35.1, y 55.9–76.7 | `L < 120` bbox, left region |
+
+Derived (**inference, not measurement**):
+
+| | pt | From |
+|---|---|---|
+| **Hero band** | **109.0** | 212.9 − 103.9 — **a fourth distinct value** |
+| **Meadow** | **82.7** | 853 − 770.3, assuming it runs to the bottom — **a fifth** |
+| Inter-group gap | 13.9 / 13.9 / 13.4 | top − previous bottom |
+| Group heights | 110.4 / 116.9 / 112.2 / 141.3 | bottom − top |
+| Row height | ≈39.1 (G1), ≈37.5 (G4) | span ÷ row count. **Not used as a layout constant** — this is the division that was 27% wrong on Home's tiles |
+
+### The left-card-edge trace — the method that caught my own misreading
+
+For each row, the first x in 0…30 pt with L < 238. A row **inside** a card has
+a dark edge pixel at x = 9.7 pt; a row **in a gap** has none anywhere in that
+span. The corner radius shows up in the same trace as an inward ramp.
+
+My first pass read the isolated dark lines at **340.4 / 471.1 / 597.1 /
+752.3 pt** as each next group's **top**. Each is a ~1.5 pt dark line with flat
+page cream on both sides, which is exactly what a card edge looks like. They
+are the **previous** card's bottom drop-shadow. Taking them as tops put every
+group ≈15 pt high and every gap at **−1.4 pt** — a negative gap, which should
+have been the tell and nearly wasn't.
+
+**Phase 03's rule in new clothes:** the shadow is adjacent to a textured
+region (the card it belongs to), so no single-column detector can place it.
+**Phase 05's rule too:** the instrument was not broken, the reading of it was,
+and only a second independent method could say which.
+
+## Phase 07 — the detector could not see the card under the hero art
+
+`compare.dart`'s `_hairlines` read **one column, x=360 pt**. Text-free on
+Alarms, where Phase 04 chose it — and **under the hero art** on Settings,
+where it returned dozens of art minima (L≈90–135) and never saw the card edge
+at 184.7. It now scans x=360, 22 and 8, merges them, and treats anything below
+L=150 as paint rather than a hairline.
+
+`_nearest` searched **±40 pt**. With a block's own edge undetected it claimed
+an unrelated one and printed a confident delta for a position never measured:
+Settings' group 1 reported **−18.7** while sitting **−2.7** from its mark. The
+search is now **±12 pt**; past that the answer is `absent`, which still counts
+as a failure.
+
+Checked against all three already-captured screens before keeping: no new
+failures, and the false deltas fell sharply (Home 36.2 → 1.4 worst, Add/Edit
+31.1 → 10.5). **Their remaining failures are theirs, not this change's** —
+see `PHASE_07_POST_REVIEW.md`.

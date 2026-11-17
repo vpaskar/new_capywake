@@ -120,3 +120,79 @@ test, none deferred.
 **No control was exercised by hand**: `flutter build ios --simulator` fails
 with Xcode 255 and taps did not reach the simulator. `flutter drive` works, so
 all four captures are verified. Phase 05 owns the fix.
+
+## Phase 05 — Alarm engine and reliability
+
+**The phase that made a saved alarm actually reach the platform** — nothing
+armed anything before it. `AlarmScheduleCoordinator` existed, fully tested, and
+was never constructed in `lib/`.
+
+1. **`initializeTimeZones()` was never called in `lib/`.** The whole schedule
+   engine is built on `package:timezone`, and every test loaded the database in
+   its own `setUpAll` — so the suite could stay green forever while the app
+   threw on the path that arms alarms. **Phase 03's `initializeDateFormatting`
+   defect, one layer down.**
+2. The plan said "reboot" and **nothing in it survived a reboot** — an
+   overpromise under its own heading, now stated per platform.
+3. `arm`'s idempotence key floored to *now* for a past-due plan, so it never
+   matched and **re-armed on every sync**.
+4. **Phase 04's Xcode 255 was never ours**: `lipo -verify_arch arm64 x86_64`,
+   which Xcode 27.2 refuses; a stock `flutter create` project fails identically.
+
+Three adapters split pure-mapper / thin-shell on the pre-review's arithmetic.
+**1,279 tests**, 405 ARB keys, lib 97.46% / core 99.49% / data **88.95%**
+(registered 25–40 new tests, measured **87** — restated).
+
+## Phase 06 — Ringing and emergency stop
+
+**The phase whose own row named a defect the previous project shipped**: the
+legacy has **no dismiss-exactly-once guard** anywhere.
+
+1. **The emergency escape threw instead of opening.** `RingingHost` sits in
+   `MaterialApp.builder`, above the router's Navigator, so `showModalBottomSheet`
+   had no Navigator — *in the app as wired, the escape did not work*, while every
+   standalone screen test passed.
+2. **The guard's test passed for the wrong reason, proven by mutation.**
+   Disabling `_claim` left all six "exactly once" tests green: with in-memory
+   fakes the async window never opens.
+3. A third duplicate-row path: `targetForRing` returns the fire instant for a
+   ring with no window left, so matching on `scheduledAt` created **a second
+   occurrence on every snooze re-ring**, silently defeating the cap.
+4. **Twelve ported dartdocs named the wrong phases**, read past by five phases.
+5. `tool/capture.sh`'s DEBUG-banner detector called painted brown a banner.
+
+**No Tier A claim** — there is no primary mockup for ringing. **1,372 tests**
+(registered 55–80 new, measured **93**), lib 97.63%.
+
+## Phase 07 — Settings, reliability checklist, walkthrough
+
+**The phase where the mockup and the content-integrity rule disagreed.**
+
+1. **The mockup drew a switch that would silence every alarm.** Alarm
+   Notifications ships as a **status row that grants and never revokes**;
+   revoking stays in the OS, where the OS states the consequence.
+2. **The permanently-denied user got nothing at all** — `shouldOpenSettings`
+   was asked *inside* a branch that is false for exactly that grant.
+3. **Nine of ten gate tests passed with the gate deleted.** "Disabling the only
+   alarm" seeded one alarm, so a *different* rule suppressed the prompt.
+   **Phase 06's lesson in a new costume: one rule covering for another.**
+4. **`compare.dart` invented a delta** — one column at x=360, under the hero
+   art here, then a ±40 pt search that claimed the hero's edge and printed
+   "−18.7 FAIL" for a card −2.7 from its mark.
+5. **Three screens fail their own Tier A tables, and two phases wrote down only
+   their passing blocks.** Home's six failures are all `absent` (worst measured
+   delta **1.4 pt** — the layout is fine, the reporting was not); Phase 03's row
+   listed 4 of 14 blocks, Phase 04's 6 of 11. Both corrected in place.
+6. **Nineteen more stale dartdocs** after Phase 06 fixed twelve — counted, 20
+   before and 1 after.
+7. **`tool/check_no_fake_stats.dart` has never existed**, though `CLAUDE.md`
+   claimed it enforced the rule on the screen most likely to lie. *Phase 02's
+   `audit_art.dart` finding, again.*
+8. **Four screens, four toggle sizes.** `trackSize` now required.
+
+**Tier A: one failure, and it is a rule conflict** — the mockup's row is
+41.1 pt against a 44 pt tap floor, so group 1 cannot be under 116.2 vs 110.4.
+Declared with the arithmetic. **1,452 tests** (registered 70–100, measured
+**80**), 427 ARB keys, lib 97.80% / core **99.61%** (registered *unchanged* —
+this phase is the first **caller** of the ported reliability services).
+38 findings across four passes, all applied.

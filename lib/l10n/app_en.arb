@@ -48,6 +48,99 @@
   "@settingsTitle": {
     "description": "Screen title for the Settings tab."
   },
+  "settingsAlarmsHeading": "Alarms",
+  "@settingsAlarmsHeading": {
+    "description": "Group heading over the default sound and snooze rows on Settings."
+  },
+  "settingsAppearanceHeading": "Appearance",
+  "@settingsAppearanceHeading": {
+    "description": "Group heading over the theme selector on Settings."
+  },
+  "settingsNotificationsHeading": "Notifications",
+  "@settingsNotificationsHeading": {
+    "description": "Group heading over the alarm-notification status row on Settings."
+  },
+  "settingsSupportHeading": "Alarms that ring",
+  "@settingsSupportHeading": {
+    "description": "Group heading over the reliability checklist and setup walkthrough rows on Settings. Calm and factual — never a promise that an alarm will ring."
+  },
+  "settingsNotificationRowTitle": "Alarm notifications",
+  "@settingsNotificationRowTitle": {
+    "description": "Row title for the OS notification permission state on Settings. A status row, never a switch: a switch here would silence every alarm from inside Settings."
+  },
+  "settingsNotificationAllowed": "Allowed on this phone",
+  "@settingsNotificationAllowed": {
+    "description": "Status line when the OS notification permission is granted. States what the phone allows, never that an alarm will ring."
+  },
+  "settingsNotificationNotAllowed": "Not allowed on this phone",
+  "@settingsNotificationNotAllowed": {
+    "description": "Status line when the OS notification permission is denied. Plain and non-alarming."
+  },
+  "settingsNotificationAllowAction": "Allow",
+  "@settingsNotificationAllowAction": {
+    "description": "Action on the alarm-notification status row that asks the OS for permission. Only ever grants; revoking stays in the OS."
+  },
+  "settingsNotificationManageHint": "You can turn these off again in your phone's settings.",
+  "@settingsNotificationManageHint": {
+    "description": "Second line on the alarm-notification row once permission is granted. Says where to revoke, because this screen deliberately cannot."
+  },
+  "settingsAboutVersion": "v{version}",
+  "@settingsAboutVersion": {
+    "description": "Version value on the About row. The number comes from the build, never a literal.",
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsAboutBody": "A cozy capybara-themed alarm. Made to wake you gently.",
+  "@settingsAboutBody": {
+    "description": "Body of the About sheet. Calm and plain — no reliability claim and no marketing."
+  },
+  "reliabilityTitle": "Alarm reliability",
+  "@reliabilityTitle": {
+    "description": "Screen title for the reliability checklist, pushed from Settings."
+  },
+  "reliabilityChecklistHeading": "On this phone",
+  "@reliabilityChecklistHeading": {
+    "description": "Heading over the per-item checklist rows on the reliability screen."
+  },
+  "walkthroughTitle": "Setup walkthrough",
+  "@walkthroughTitle": {
+    "description": "Screen title for the replayable setup summary, pushed from Settings."
+  },
+  "walkthroughIntro": "What CapyWake set up for you, and what you can change.",
+  "@walkthroughIntro": {
+    "description": "Opening line of the setup walkthrough. Plain and factual."
+  },
+  "walkthroughAlarmsTitle": "Your alarms",
+  "@walkthroughAlarmsTitle": {
+    "description": "Walkthrough section title covering alarm creation."
+  },
+  "walkthroughAlarmsBody": "Add an alarm from the Alarms tab. Each one keeps its own time, days, sound and snooze.",
+  "@walkthroughAlarmsBody": {
+    "description": "Walkthrough body describing how alarms are made."
+  },
+  "walkthroughDefaultsTitle": "Defaults for new alarms",
+  "@walkthroughDefaultsTitle": {
+    "description": "Walkthrough section title covering the Settings defaults."
+  },
+  "walkthroughDefaultsBody": "Sound and snooze length here are the starting point for every new alarm. Changing them leaves existing alarms alone.",
+  "@walkthroughDefaultsBody": {
+    "description": "Walkthrough body describing what the defaults do."
+  },
+  "walkthroughReliabilityTitle": "Whether alarms ring",
+  "@walkthroughReliabilityTitle": {
+    "description": "Walkthrough section title covering the reliability checklist. Never promises an alarm will ring."
+  },
+  "walkthroughReliabilityBody": "Some of this is up to your phone, not to CapyWake. The reliability checklist shows what you can change.",
+  "@walkthroughReliabilityBody": {
+    "description": "Walkthrough body pointing at the reliability checklist. Honest about the limits of the app."
+  },
+  "walkthroughNotBuiltYet": "Not set up here yet",
+  "@walkthroughNotBuiltYet": {
+    "description": "Label marking a walkthrough step that is described but not yet configurable in the app."
+  },
   "commonErrorTitle": "Couldn't load this",
   "@commonErrorTitle": {
     "description": "Calm heading shown when a screen's data fails to load. Plain and non-alarming — never a raw error or stack trace."

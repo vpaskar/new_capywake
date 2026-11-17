@@ -75,8 +75,8 @@ abstract final class NextAlarmService {
 
 /// A computed "what will fire next" snapshot. Pure value type — no
 /// schedule-engine state, no Drift rows. The Today card maps the fields
-/// here directly into its visible lines; History / Phase 06 read the
-/// timezone-aware [AlarmOccurrencePlan] instead.
+/// here directly into its visible lines; History and the engine read
+/// [AlarmOccurrencePlan] instead.
 @immutable
 class NextAlarmInfo {
   const NextAlarmInfo({

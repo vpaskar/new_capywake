@@ -73,7 +73,12 @@ void main() {
     ) async {
       await tester.pumpWidget(
         _host(
-          CapyToggle(value: true, onChanged: (_) {}, semanticLabel: 'alarm'),
+          CapyToggle(
+            value: true,
+            onChanged: (_) {},
+            semanticLabel: 'alarm',
+            trackSize: CapyToggle.homeTrack,
+          ),
         ),
       );
 
@@ -87,8 +92,8 @@ void main() {
             )
             .first,
       );
-      expect(painted.width, closeTo(CapyToggle.width, 0.1));
-      expect(painted.height, closeTo(CapyToggle.height, 0.1));
+      expect(painted.width, closeTo(CapyToggle.homeTrack.width, 0.1));
+      expect(painted.height, closeTo(CapyToggle.homeTrack.height, 0.1));
 
       final target = tester.getSize(find.byType(CapyToggle));
       expect(target.height, greaterThanOrEqualTo(44.0));
@@ -97,7 +102,12 @@ void main() {
     testWidgets('exposes toggled state to semantics when on', (tester) async {
       await tester.pumpWidget(
         _host(
-          CapyToggle(value: true, onChanged: (_) {}, semanticLabel: 'alarm'),
+          CapyToggle(
+            value: true,
+            onChanged: (_) {},
+            semanticLabel: 'alarm',
+            trackSize: CapyToggle.homeTrack,
+          ),
         ),
       );
       expect(
@@ -113,7 +123,12 @@ void main() {
     testWidgets('exposes toggled state to semantics when off', (tester) async {
       await tester.pumpWidget(
         _host(
-          CapyToggle(value: false, onChanged: (_) {}, semanticLabel: 'alarm'),
+          CapyToggle(
+            value: false,
+            onChanged: (_) {},
+            semanticLabel: 'alarm',
+            trackSize: CapyToggle.homeTrack,
+          ),
         ),
       );
       expect(
@@ -129,13 +144,25 @@ void main() {
       // minimum, so position must distinguish on from off.
       await tester.pumpWidget(
         _host(
-          CapyToggle(value: false, onChanged: (_) {}, semanticLabel: 'a'),
+          CapyToggle(
+            value: false,
+            onChanged: (_) {},
+            semanticLabel: 'a',
+            trackSize: CapyToggle.homeTrack,
+          ),
         ),
       );
       final offX = tester.getCenter(find.byType(Container).first).dx;
 
       await tester.pumpWidget(
-        _host(CapyToggle(value: true, onChanged: (_) {}, semanticLabel: 'a')),
+        _host(
+          CapyToggle(
+            value: true,
+            onChanged: (_) {},
+            semanticLabel: 'a',
+            trackSize: CapyToggle.homeTrack,
+          ),
+        ),
       );
       final onX = tester.getCenter(find.byType(Container).first).dx;
 
@@ -150,6 +177,7 @@ void main() {
             value: false,
             onChanged: (v) => got = v,
             semanticLabel: 'alarm',
+            trackSize: CapyToggle.homeTrack,
           ),
         ),
       );

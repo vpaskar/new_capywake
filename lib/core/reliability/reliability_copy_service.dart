@@ -28,7 +28,7 @@ import 'package:meta/meta.dart';
 /// - Imply the app bypasses silent mode / Do Not Disturb.
 /// - Use fear / shame language. Copy is calm, neutral, practical.
 ///
-/// The ARB keys it consumes (added in Phase 06):
+/// The ARB keys it consumes:
 ///
 /// - `reliabilitySummaryAndroid` — Android baseline summary.
 /// - `reliabilitySummaryIos` — iOS baseline summary.

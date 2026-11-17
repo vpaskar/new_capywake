@@ -8,6 +8,7 @@ import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/alarms/alarm_list_tile.dart';
+import 'package:capywake/features/alarms/alarm_permission_prompt.dart';
 import 'package:capywake/features/alarms/alarms_empty_state.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -101,7 +102,8 @@ class _Body extends ConsumerWidget {
           alarm: alarm,
           index: index,
           timeFormat: timeFormat,
-          onToggle: (enabled) => _setEnabled(ref, alarm, enabled: enabled),
+          onToggle: (enabled) =>
+              _setEnabled(context, ref, alarm, enabled: enabled),
           onTap: () => context.push(Routes.alarmEdit(alarm.id)),
         );
       },
@@ -109,18 +111,25 @@ class _Body extends ConsumerWidget {
   }
 
   Future<void> _setEnabled(
+    BuildContext context,
     WidgetRef ref,
     Alarm alarm, {
     required bool enabled,
-  }) {
-    return ref
-        .read(capywakeRepositoryProvider)
-        .upsertAlarm(
-          alarm.copyWith(
-            enabled: enabled,
-            updatedAt: ref.read(alarmsClockProvider)().toUtc(),
-          ),
-        );
+  }) async {
+    final updated = alarm.copyWith(
+      enabled: enabled,
+      updatedAt: ref.read(alarmsClockProvider)().toUtc(),
+    );
+    await ref.read(capywakeRepositoryProvider).upsertAlarm(updated);
+
+    if (!context.mounted) return;
+    await AlarmPermissionPrompt(ref).maybeRequest(
+      context: context,
+      before: alarms,
+      after: [
+        for (final a in alarms) a.id == updated.id ? updated : a,
+      ],
+    );
   }
 
   /// 272.5 - 252.5 on `02_ALARMS.png`: hero lower edge to the Add pill's top.

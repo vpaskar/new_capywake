@@ -47,6 +47,10 @@ abstract final class CapySpacing {
   /// edge. A second token, not a correction of [gutter].
   static const gutterWide = 15.0;
 
+  /// `04_SETTINGS.png`'s margin, 9.70 pt, agreed across three groups. A third
+  /// token: the mockups draw three different side margins.
+  static const gutterNarrow = 9.7;
+
   static const xs = 4.0;
   static const sm = 8.0;
   static const md = 12.0;

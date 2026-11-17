@@ -4,7 +4,7 @@ import 'package:capywake/l10n/generated/app_localizations.dart';
 /// The one plain-language name for how an alarm is stopped.
 ///
 /// Three surfaces say it — the alarm form's picker, the Alarms row, and the
-/// Today card — and before Phase 37 the mapping lived privately inside the
+/// Today card — and the mapping once lived privately inside the
 /// form. A row that wants the same words either imports a private enum or
 /// writes the `switch` again, and the second copy is where "Solve a puzzle"
 /// and "Wake puzzle" start being two names for one thing.

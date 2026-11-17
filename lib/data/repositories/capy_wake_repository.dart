@@ -46,8 +46,8 @@ class CapyWakeRepository {
     return row == null ? null : AlarmMapper.fromRow(row);
   }
 
-  /// Insert-or-update by primary key. Used by both "create alarm" (Phase 03)
-  /// and "edit alarm" without changing the API surface.
+  /// Insert-or-update by primary key. Used by both "create alarm" and
+  /// "edit alarm" without changing the API surface.
   Future<void> upsertAlarm(Alarm alarm) async {
     await _db
         .into(_db.alarms)

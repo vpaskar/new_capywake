@@ -93,6 +93,7 @@ Future<void> main() async {
     'alarms': Routes.alarms,
     'add_edit_alarm': Routes.alarmNew,
     'stats': Routes.stats,
+    'settings': Routes.settings,
   };
 
   var surfaceConverted = false;

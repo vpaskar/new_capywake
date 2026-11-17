@@ -162,9 +162,13 @@ why the previous attempt could not match the mockups.
 ## Content integrity — the three screens that will try to lie
 
 - **Stats:** the empty state is the **default**, not the fallback. No numeric
-  literal in a user-facing position in `lib/features/stats/`
-  (`tool/check_no_fake_stats.dart` enforces it). Demo data lives in tests and
-  goldens only. No fabricated sleep averages, goals or percentages.
+  literal in a user-facing position in `lib/features/stats/`. Demo data lives
+  in tests and goldens only. No fabricated sleep averages, goals or
+  percentages. **Phase 08 owes the gate:** this line claimed
+  `tool/check_no_fake_stats.dart` enforced the rule and **that file has never
+  existed** (Phase 07 full-project review — the same defect Phase 02 found in
+  the documented `tool/audit_art.dart`). Until it is written, the rule is
+  prose, not a gate.
 - **Settings:** show only implemented rows. Backup & Sync and Restore Purchases
   are dropped — there is no backend and nothing to restore.
 - **Home:** the game rail reads from a typed catalogue; a `comingSoon` card is

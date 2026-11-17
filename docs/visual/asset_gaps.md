@@ -649,3 +649,49 @@ Worth the entry because two phases now have lost time to it, and because the
 failure mode is deceptive: the app launches, navigates and paints correctly,
 and only the first write fails — with the exception on the device log, not on
 screen.
+
+---
+
+## G12 — the Settings theme tiles have no art (Phase 07)
+
+**Reported in session, per `CLAUDE.md`'s "always report, never paper over".**
+
+`04_SETTINGS.png` draws the Appearance group's Theme row as **three
+illustrated tiles**, measured at x 180.6–240.2 / 247.1–303.0 / 310.8–366.2,
+y 384.7–429.5 (saturation/dark column scan):
+
+| Tile | What the mockup draws |
+|---|---|
+| 1 | A sunrise over hills, with a green check badge (selected) |
+| 2 | A sunset: purple sky, orange sun at the horizon |
+| 3 | A night sky: navy, crescent moon, stars |
+
+**None of the three exists in the asset package.** `assets/art/` contains
+`scenes/` (4), `tiles/` (4 game tiles), `mascots/` and `wordmark.webp`. A
+search for theme / icon / sun / moon / night matches nothing.
+
+**What is shipped instead:** each tile is drawn from palette tokens — a cream
+rectangle (Light), a cream/dark split (System), a dark rectangle (Dark), with
+the selected one carrying a 2.4 pt `accentDeep` border and a check. No art is
+generated, per the Tier B rule.
+
+**A second, separate issue found while mapping them.** The mockup's middle
+tile reads as a **sunset**, and `ThemeModePreference` is **system / light /
+dark** — there is no sunset theme. Shipping a sunset tile would put a control
+on screen that changes nothing, so the middle tile is **System**. The mockup
+appears to show a theme the product does not have, rather than the app
+missing a tile.
+
+**To do this properly:** three tile illustrations at ≥ 171×135 px (57×45 pt at
+3×), cut to transparent PNG/WebP and passed through `tool/import_art.dart`.
+The third needs to read as "follows your phone", not as a third colour scheme
+— a split sun/moon rather than a sunset.
+
+### Also from Phase 07 — not a gap, a conflict
+
+**The mockup's settings row is 41.1 pt tall; the tap-target floor is 44 pt.**
+Derived from the group spans (`docs/visual/tier_a_blocks.md`). `CLAUDE.md`
+makes reachability binding — "a half-asleep user, no precision tapping" — so
+rows are 44.0 pt and group 1 is 117.2 against the mockup's 110.4. This is not
+fixable without breaking the accessibility rule, and is declared as a Tier A
+deviation in `docs/visual/settings/README.md` rather than papered over.

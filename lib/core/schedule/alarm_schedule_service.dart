@@ -86,8 +86,8 @@ abstract final class AlarmScheduleService {
   }
 
   /// Compute the next [count] [AlarmOccurrencePlan]s for [alarm], in
-  /// chronological order, starting strictly after [now]. The Phase 06
-  /// alarm engine arms the platform alarm + pre-alarm notifications from
+  /// chronological order, starting strictly after [now]. The alarm engine
+  /// arms the platform alarm + pre-alarm notifications from
   /// this list (the iOS 64-cap is enforced by the notification calculator,
   /// not here).
   ///
@@ -388,9 +388,9 @@ abstract final class AlarmScheduleService {
 
 /// Pure value-type description of a single planned alarm fire.
 ///
-/// The schedule engine emits these; the Phase 06 alarm engine /
+/// The schedule engine emits these; the alarm engine and the
 /// notification calculator consume them. The Today card maps the same
-/// fields onto its visible lines (via the Phase-04 `NextAlarmInfo`
+/// fields onto its visible lines (via the `NextAlarmInfo`
 /// adapter). Always-UTC instants are exposed via [scheduledUtc] etc. so
 /// downstream code can store them in Drift without re-deriving.
 @immutable
@@ -505,7 +505,7 @@ bool _instantEqual(tz.TZDateTime? a, tz.TZDateTime? b) {
 /// Pure value-type result of [AlarmScheduleService.computeNextLocal].
 ///
 /// The Today screen consumes this directly (rendered as the calm
-/// next-alarm card). Phase 06 / data-layer code uses the timezone-aware
+/// next-alarm card). The alarm engine and data layer use the timezone-aware
 /// [AlarmOccurrencePlan] instead so DST shifts are correct.
 @immutable
 class AlarmScheduleResult {

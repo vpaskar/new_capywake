@@ -1,13 +1,14 @@
 import 'package:capywake/design/tokens.dart';
 import 'package:flutter/material.dart';
 
-/// The switch from `01_HOME.png`, 59.6 x 34.6 pt. Constraint F1: `success`
-/// is under 3:1, so knob position and semantics carry state, not colour.
+/// The app's switch. `success` is under 3:1, so knob position and semantics
+/// carry state. [trackSize] is required: four mockups, four switches.
 class CapyToggle extends StatelessWidget {
   const CapyToggle({
     required this.value,
     required this.onChanged,
     required this.semanticLabel,
+    required this.trackSize,
     super.key,
   });
 
@@ -15,8 +16,27 @@ class CapyToggle extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
   final String semanticLabel;
 
-  static const width = 59.6;
-  static const height = 34.6;
+  /// The painted track. One of the measured sizes below, never a literal.
+  final Size trackSize;
+
+  /// `01_HOME.png`: x 303.0-363.0, y 325.0-360.5 by per-row green anchor.
+  static const homeTrack = Size(59.6, 34.6);
+
+  /// `02_ALARMS.png`: x 294.2-348.2, y 356.5-388.5 by the same method.
+  static const alarmsTrack = Size(54, 32);
+
+  /// `03_ADD_EDIT_ALARM.png` snooze row: x 319.6-367.6, y 666.9-695.1.
+  static const alarmEditTrack = Size(48, 28.2);
+
+  /// `04_SETTINGS.png`: x 321.9-366.2, y 520.5-545.5 by the same method.
+  static const settingsTrack = Size(44.3, 25);
+
+  /// Home's 34.6pt track carries a 28pt knob. Constant across sizes, so the
+  /// knob scales with the track and the breathing room does not.
+  static const double _knobInset = 3.3;
+
+  /// Minimum reachable tap target. The paint stays at the mockup's size.
+  static const double minTapTarget = 44;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +44,7 @@ class CapyToggle extends StatelessWidget {
     final track = value
         ? CapyColors.success
         : (dark ? CapyColors.darkSurfaceAlt : CapyColors.cocoaSoft);
-    const knobInset = (height - _knob) / 2;
+    final knob = trackSize.height - _knobInset * 2;
 
     return Semantics(
       toggled: value,
@@ -32,23 +52,23 @@ class CapyToggle extends StatelessWidget {
       child: ExcludeSemantics(
         child: GestureDetector(
           onTap: onChanged == null ? null : () => onChanged!(!value),
-          // Tier A binds the mockup's 34.6pt paint; the hit area still has to
+          // Tier A binds the mockup's painted track; the hit area still has to
           // be reachable half-asleep, so only it grows to 44pt.
           behavior: HitTestBehavior.opaque,
           child: SizedBox(
-            width: width,
+            width: trackSize.width,
             height: minTapTarget,
-            child: Center(child: _track(track, knobInset)),
+            child: Center(child: _track(track, knob)),
           ),
         ),
       ),
     );
   }
 
-  Widget _track(Color track, double knobInset) {
+  Widget _track(Color track, double knob) {
     return SizedBox(
-      width: width,
-      height: height,
+      width: trackSize.width,
+      height: trackSize.height,
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: track,
@@ -57,11 +77,11 @@ class CapyToggle extends StatelessWidget {
         child: Stack(
           children: [
             PositionedDirectional(
-              top: knobInset,
-              start: value ? width - _knob - knobInset : knobInset,
+              top: _knobInset,
+              start: value ? trackSize.width - knob - _knobInset : _knobInset,
               child: Container(
-                width: _knob,
-                height: _knob,
+                width: knob,
+                height: knob,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
@@ -73,9 +93,4 @@ class CapyToggle extends StatelessWidget {
       ),
     );
   }
-
-  static const _knob = 28.0;
-
-  /// Minimum reachable tap target. The paint stays at the mockup's size.
-  static const minTapTarget = 44.0;
 }

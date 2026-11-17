@@ -12,9 +12,8 @@ enum ChecklistItemState { unknown, ok, actionRequired }
 
 /// Stable identifier for a reliability-checklist item.
 ///
-/// Persisted as the [name] string. Items are listed here so the data model
-/// stays self-describing: a Phase 09 screen can iterate values without a
-/// hard-coded list.
+/// Persisted as the [name] string. Listed here so the checklist surface
+/// iterates them instead of keeping its own list.
 enum ReliabilityChecklistItem {
   /// OS notification permission (both platforms).
   notificationPermission,
@@ -36,9 +35,8 @@ enum ReliabilityChecklistItem {
 
 /// Snapshot of the reliability checklist's state.
 ///
-/// Stored in the user-settings singleton so the Today / reliability screens
-/// can render without re-querying every plugin synchronously. The Phase 09
-/// `ReliabilityChecklistService` writes here.
+/// Stored in the settings singleton so the Today / reliability screens render
+/// without re-querying every plugin. The checklist surface writes it back.
 @immutable
 class ReliabilityChecklistState {
   const ReliabilityChecklistState({required this.items});

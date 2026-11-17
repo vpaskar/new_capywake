@@ -45,7 +45,7 @@ class AlarmOccurrence {
   /// pressing Snooze at 07:04 is still the 07:00 alarm, and the instant it
   /// is due to ring again lives in [snoozedUntil].
   ///
-  /// Until Phase 34 this field carried the pending re-ring too, so it meant
+  /// In the legacy this field carried the pending re-ring too, so it meant
   /// the target on a `scheduled` row and the next snooze on a `snoozed` one.
   /// That ambiguity is why a dismissed occurrence could not be matched back
   /// to its own morning — and so why a wake window that had already been

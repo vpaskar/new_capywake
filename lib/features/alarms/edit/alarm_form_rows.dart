@@ -115,6 +115,7 @@ class AlarmFormToggleRow extends StatelessWidget {
         value: enabled,
         onChanged: onChanged,
         semanticLabel: semanticLabel,
+        trackSize: CapyToggle.alarmEditTrack,
       ),
     );
   }

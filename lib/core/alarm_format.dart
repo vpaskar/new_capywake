@@ -95,7 +95,7 @@ abstract final class AlarmFormat {
   /// weekday (Monday = 1 .. Sunday = 7) — "Mon" in English, "Mo" in German.
   ///
   /// Used wherever a weekday is read as a word: the plain-language repeat
-  /// summary ("Mon, Wed, Fri"). Until Phase 29 this was called
+  /// summary ("Mon, Wed, Fri"). This was once called
   /// `narrowWeekday`, which it never was — `DateFormat.E` is the abbreviated
   /// skeleton, and the name sent the seven repeat toggles looking for a
   /// single letter and getting three.

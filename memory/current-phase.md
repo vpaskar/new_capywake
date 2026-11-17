@@ -1,93 +1,119 @@
 # Current phase
 
-**Phase 06 — Ringing and emergency stop: done, 2026-11-16. `Current phase: 07`.**
+**Phase 07 — Settings, reliability checklist, walkthrough: done, 2026-11-17.
+`Current phase: 08`.**
 
-**1,372 tests**, analyze clean including infos, lib 97.63% / `lib/core` 99.49%
-/ `lib/data` 88.95% / `lib/features/ringing` 94.67%, **405 ARB keys × 10
-locales (zero new)**.
+**1,452 tests**, analyze clean including infos, lib 97.80% / `lib/core`
+99.61% / `lib/data` 88.95% / `lib/features/settings` 98.49%, **427 ARB keys ×
+10 locales** (22 new).
 
 ## What this phase actually found
 
-### 1. The legacy has no dismiss-exactly-once guard — the defect this row is named after
+### 1. The mockup drew a switch that would silence every alarm
 
-`../capywake/lib/features/ringing/ringing_controller.dart:339` (`dismiss`) and
-`:500` (`escape`) both open with `if (session == null) return;` and then await
-twice before `_emit(null)` clears `_current`. The screen holds no busy flag
-(grep finds only `_puzzleOpen`), and `test/features/ringing/` has no test for
-a double call. **The previous project shipped it.**
+`04_SETTINGS.png`'s **Alarm Notifications** toggle has two possible meanings
+and both are defects. Mapped to the OS permission, a switch cannot revoke one,
+so "off" must be a local flag suppressing scheduling — a control inside
+Settings that stops every alarm from ringing, with nothing on screen saying
+so. Mapped to nothing, it is a dead control, worse than a dead row because it
+moves.
 
-### 2. A third duplicate-row path, found by this phase's own test
+Shipped as a **status row that grants and never revokes**. Revoking stays in
+the OS, where the OS states the consequence. Same safety rule as the
+emergency escape, one step earlier.
 
-`AlarmScheduleService.targetForRing` returns the fire instant when a ring has
-"no window left to belong to" — its own doc names **a snooze** as such a case.
-Measured: a 07:00 Berlin alarm resolves `06:00Z` then `06:09Z`. So matching an
-occurrence on `scheduledAt` alone created **a second row on every snooze
-re-ring**, `snoozeCount` back at 0, silently defeating the cap and the
-final-alarm boundary. The final-alarm test is what surfaced it.
+### 2. The permanently-denied user got nothing at all
 
-### 3. The emergency escape threw instead of opening
+`shouldRequestNotification` is **false** for `permanentlyDenied` — correctly,
+there is no prompt left. The wiring then asked `shouldOpenSettings` *inside*
+that branch, so the route to the OS was unreachable: no dialog, no route, no
+explanation, for the one user a prompt cannot help.
 
-Self-review #1. `RingingHost` sits in `MaterialApp.builder`, **above** the
-router's Navigator, so `showModalBottomSheet` had no Navigator in context:
-*in the app as wired, the escape did not work.* Every standalone screen test
-passed, because they wrap `RingingScreen` in their own `MaterialApp`. Only the
-host test — which rings an alarm into the live app — could see it.
+### 3. Nine of ten gate tests passed with the gate deleted
 
-Also: `escapeStrictness` was resolved from `PuzzleSettings.defaults()`,
-discarding the user's app-wide settings, so *Confirm, then hold* was one tap.
+Phase 06's rule applied, and it bit. "Disabling the only alarm does not ask"
+seeded **one** alarm; with the gate gone, *a different rule* ("no alarm is
+enabled") suppressed the prompt, so the test passed without noticing. Seeded
+with two, mutation now fails **two** tests.
 
-### 4. The guard's test passed for the wrong reason — proven by mutation
+**Phase 06 found this shape with in-memory fakes hiding an async window. Here
+it was one rule covering for another.** Mutation was the only way to see
+either.
 
-Self-review #2. Disabling `_claim` left **all six "exactly once" tests green**
-and failed only the ring test: with in-memory fakes the async window the latch
-defends never opens. Fixed with an engine whose `cancel` blocks until the test
-releases it; disabling the latch now fails **three** tests.
+### 4. `compare.dart` invented a delta for a block it had not measured
 
-**Generalisable:** a guard whose test cannot fail when the guard is removed is
-a guard on trust. Mutate it and see.
+It printed **"group 1 card top −18.7 TIER A FAIL"** for a card sitting
+**−2.7** from its mark, on a screen whose hero matched to 0.1 pt.
 
-### 5. Twelve ported dartdoc references name the wrong phase
+`_hairlines` read **one column at x=360 pt** — text-free on Alarms, where
+Phase 04 chose it, **under the hero art** here. `_nearest` then searched
+±40 pt and claimed the hero's edge. Now three columns, paint rejected below
+L=150, search ±12, `absent` past it. Verified against all three prior
+captures: no new failures, false deltas collapsed (Home 36.2 → 1.4).
 
-Full-project review. Phase 02 ported 62 files with dartdoc verbatim, carrying
-the **legacy's** numbering: "settings UI (Phase 19)" where 19 is Release QA,
-"wake surface (Phase 18)" where 18 is Animation polish, "lifecycle layer
-(Phase 07)" where 07 is Settings. Five phases read past it. All now name the
-**layer**, which cannot go stale when phases renumber.
+**Phase 05's rule for the third consecutive phase, in the same tool Phase 04
+fixed for the same reason.**
 
-### 6. `tool/capture.sh`'s DEBUG-banner detector was wrong
+### 5. Three screens fail their own Tier A tables, and two phases wrote down only their passing blocks
 
-`r>140 and g<90 and b<90` called painted brown **(151, 92, 48)** a banner, so
-the first screen whose art reaches the top-right corner failed its capture.
-Flutter's ribbon is ~(244, 67, 54): **r−g ≈ 177 against the art's 63.**
-Tightened on saturation and verified it still fires on a synthetic banner.
+Home 6 failures, Alarms 5, Add/Edit 8, Settings 2 — nobody had run
+`compare.dart` across every screen since Phase 04.
 
-## Predictions, both restated
+**Home's failures are all `absent` and its worst measured delta is 1.4 pt** —
+the layout is good, the reporting was not. Phase 03's tracker row lists four
+deltas, all from passing rows, out of fourteen blocks; under its own tool and
+its own committed capture it reports **eight failures at 36.2 pt**. Phase 04's
+row lists six passing numbers out of eleven.
 
-- **Tests:** registered 55–80 new, measured **93**. The scope grew for stated
-  reasons after the band was set.
-- **`lib` coverage:** registered a **fall** to 95.5–97.3%, measured a **rise**
-  to 97.63%. The first measurement was 96.95% — inside the band. The two
-  self-reviews' 18 extra tests lifted it past its own starting point. *A
-  prediction made before the reviews cannot account for the reviews.*
+Both rows corrected in place. Alarms' and Add/Edit's real failures are
+**recorded, not fixed** — another phase's screen is not this phase's to change
+blind.
 
-## No Tier A claim for this screen
+### 6. Nineteen more stale ported dartdocs, after Phase 06 fixed twelve
 
-There is **no primary mockup** for ringing. The only reference is a board
-panel — a ~333×467 px crop of a 1448×1086 board. Declared non-Tier-A in the
-plan before measuring. Held instead to design tokens, the tap-target floor
-measured with `tester.getRect`, and board **order and presence**; 6 deviations
-named in `docs/visual/ringing/README.md`, including that **the board shows no
-escape at all** and we ship one anyway.
+Counted: `grep -rn "Phase [0-9]" lib/` returned **20** before, **1** after,
+and the survivor is correct. Several named phases that do not exist here at
+all (29, 31, 32, 34, 37); two named **Phase 09** for the reliability
+checklist, which is *this* phase. `reliability_copy_service.dart` claimed its
+ARB keys were "added in Phase 06" — a phase whose own row records **zero**.
 
-## Next session — Phase 07, Settings
+### 7. `CLAUDE.md` documents a gate that has never existed
 
-`04_SETTINGS.png` is a real Tier A mockup, so the fidelity contract applies in
-full again. **Phase 07 owes two things from earlier phases:**
+`tool/check_no_fake_stats.dart`, claimed to enforce the no-fake-numbers rule
+on the screen `CLAUDE.md` itself calls most likely to lie. **Phase 02 found
+exactly this with `tool/audit_art.dart`.** Now stated as prose, with Phase 08
+owing the gate.
 
-1. **`AlarmPermissionGate` is still called by nothing in `lib/`.** Phase 05
-   said "Phase 06 or 07"; Phase 06 declined it with a reason (it fires on the
-   alarm-enable path, not the ringing one). It is Phase 07's.
-2. **The sleep-boundary restoration** — when `package:health` and
-   `live_sleep_gateway.dart` land, `test/core/sleep/sleep_boundary_test.dart`
-   goes back to `exactly one` importer and re-asserts
-   `NSHealthShareUsageDescription` + `READ_SLEEP`.
+### 8. Four screens, four toggle sizes
+
+59.6 / 54.0 / 48.0 / 44.3 wide. `CapyToggle.trackSize` is now **required** —
+the move that made `bandHeight` required in Phase 04. And
+`tier_a_blocks.md`'s Alarms toggle was wrong: "30.5 pt tall" came from a row
+profile at **y=345**, but the pill starts at **356.5**, so it measured the
+rounded cap. *A row profile at a single y is a slice, not a bounding box.*
+
+## Tier A — one failure, and it is a rule conflict
+
+header **+0.1**, hero **+0.1**, group 1 top **−2.7**, group 2 top **−0.6**,
+group 1 bottom **+4.5 ❌**.
+
+**The mockup's settings row is 41.1 pt. The tap floor is 44.** `CLAUDE.md`
+makes reachability binding, so group 1 cannot be under 28.2 + 44×2 = **116.2**
+against the mockup's **110.4**. Shipped at 117.2 after cutting every removable
+pt. Declared with the arithmetic, not reported as a near-miss.
+
+## Predictions
+
+Tests **80** against 70–100 ✅. ARB **22** against 12–22 ✅. `lib` **97.80%**
+against 97.0–97.8 ✅. **`lib/core` restated**: registered *unchanged* at
+99.49%, measured **99.61%** — this phase is the first **caller** of the
+reliability services ported in Phase 02, now 100%. *A coverage prediction has
+to account for code elsewhere that starts calling a tree, not only for lines
+added to it.*
+
+## Next session — Phase 08, Stats
+
+`05_STATS.png`. The empty state is the **default**, not a fallback.
+**Phase 08 owes three things:** the sleep-boundary restoration (health did not
+land in 07), `tool/check_no_fake_stats.dart` (never existed), and Stats' own
+hero band — it still carries Home's 188.4.

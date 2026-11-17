@@ -190,6 +190,7 @@ class AlarmListTile extends StatelessWidget {
       value: alarm.enabled,
       onChanged: onToggle,
       semanticLabel: l10n.alarmEnabledLabel,
+      trackSize: CapyToggle.alarmsTrack,
     );
   }
 

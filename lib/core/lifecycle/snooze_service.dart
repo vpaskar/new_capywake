@@ -75,7 +75,7 @@ enum SnoozeDeniedReason {
 ///
 /// **This is the only "final alarm" CapyWake has.** It is the ring that
 /// takes the occurrence to `alarm.maxSnoozes`, and the ringing screen offers
-/// no Snooze button on it. Until Phase 32 a second, clock-anchored final
+/// no Snooze button on it. The legacy had a second, clock-anchored final
 /// alarm was configurable on the form and shown on the Today card; nothing
 /// ever armed a ring at it, so it was removed rather than built.
 ///

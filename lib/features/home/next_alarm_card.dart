@@ -136,6 +136,7 @@ class _Populated extends StatelessWidget {
           value: info.alarm.enabled,
           onChanged: onToggle,
           semanticLabel: '$time $repeat',
+          trackSize: CapyToggle.homeTrack,
         ),
       ],
     );
