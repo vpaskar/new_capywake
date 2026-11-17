@@ -115,6 +115,8 @@
   "ringingStillUpAction": "Ich bin wach",
   "settingsReliabilityEntryLabel": "Wecker-Zuverlässigkeit",
   "settingsReliabilityEntryDescription": "Sieh nach, was beeinflusst, ob Wecker auf diesem Telefon klingeln.",
+  "settingsPuzzleEntryLabel": "Weckrätsel",
+  "settingsPuzzleEntryDescription": "Lege fest, wie du deine Wecker ausschaltest.",
   "settingsHistoryEntryLabel": "Verlauf",
   "settingsHistoryEntryDescription": "Sieh nach, wie deine letzten Morgen gelaufen sind.",
   "settingsHistoryEntrySemanticLabel": "Öffnet eine Übersicht deiner letzten Weckvorgänge.",

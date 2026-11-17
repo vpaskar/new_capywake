@@ -115,6 +115,8 @@
   "ringingStillUpAction": "Je suis réveillé",
   "settingsReliabilityEntryLabel": "Fiabilité de l’alarme",
   "settingsReliabilityEntryDescription": "Vérifie ce qui influence le déclenchement de l’alarme sur ce téléphone.",
+  "settingsPuzzleEntryLabel": "Jeu du réveil",
+  "settingsPuzzleEntryDescription": "Choisis comment arrêter tes alarmes.",
   "settingsHistoryEntryLabel": "Historique",
   "settingsHistoryEntryDescription": "Regarde comment se sont passés tes derniers matins.",
   "settingsHistoryEntrySemanticLabel": "Ouvre un résumé de tes réveils récents.",

@@ -110,6 +110,19 @@ class _Body extends ConsumerWidget {
               ),
               const SizedBox(height: SettingsGroup.gap),
               SettingsGroup(
+                icon: Icons.tune_rounded,
+                title: l10n.settingsPreferencesHeading,
+                rows: [
+                  SettingsChevronRow(
+                    icon: Icons.extension_rounded,
+                    title: l10n.settingsPuzzleEntryLabel,
+                    subtitle: l10n.settingsPuzzleEntryDescription,
+                    onTap: () => context.push(Routes.settingsPuzzle),
+                  ),
+                ],
+              ),
+              const SizedBox(height: SettingsGroup.gap),
+              SettingsGroup(
                 icon: Icons.notifications_outlined,
                 title: l10n.settingsNotificationsHeading,
                 rows: [

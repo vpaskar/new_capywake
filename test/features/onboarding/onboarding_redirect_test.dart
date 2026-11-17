@@ -94,15 +94,22 @@ void main() {
     expect(find.byType(HomeScreen), findsOneWidget);
   });
 
-  testWidgets('the first-alarm CTA leads to the Add alarm screen', (
+  testWidgets('the stepped flow ends on the Add alarm screen, not Home', (
     tester,
   ) async {
+    // The whole flow, through the real app and router: this is where Phase 09's
+    // device bounce lived. Every Next is intra-flow; only the last CTA leaves.
     await _pump(tester);
 
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Next'));
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Set your first alarm'));
     await tester.pumpAndSettle();
 
     expect(find.byType(AlarmEditScreen), findsOneWidget);
+    expect(find.byType(HomeScreen), findsNothing);
     expect(find.byType(OnboardingScreen), findsNothing);
   });
 

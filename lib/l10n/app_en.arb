@@ -633,6 +633,14 @@
   "@settingsReliabilityEntryDescription": {
     "description": "One-line description of the reliability checklist entry. Honest — surfaces the platform-by-platform truth."
   },
+  "settingsPuzzleEntryLabel": "Wake puzzle",
+  "@settingsPuzzleEntryLabel": {
+    "description": "Settings entry that opens the wake-puzzle chooser. Names the feature, makes no promise about waking."
+  },
+  "settingsPuzzleEntryDescription": "Choose how to stop your alarms.",
+  "@settingsPuzzleEntryDescription": {
+    "description": "One-line description of the wake-puzzle chooser entry. Plain and practical."
+  },
   "settingsHistoryEntryLabel": "History",
   "@settingsHistoryEntryLabel": {
     "description": "Settings entry that opens the History screen. History is no longer a tab."

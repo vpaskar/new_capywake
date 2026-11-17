@@ -115,6 +115,8 @@
   "ringingStillUpAction": "Estou acordado",
   "settingsReliabilityEntryLabel": "Fiabilidade do alarme",
   "settingsReliabilityEntryDescription": "Verifica o que influencia se o alarme toca neste telemóvel.",
+  "settingsPuzzleEntryLabel": "Desafio para acordar",
+  "settingsPuzzleEntryDescription": "Escolhe como parar os teus alarmes.",
   "settingsHistoryEntryLabel": "Histórico",
   "settingsHistoryEntryDescription": "Vê como correram as tuas últimas manhãs.",
   "settingsHistoryEntrySemanticLabel": "Abre um resumo dos teus despertares recentes.",

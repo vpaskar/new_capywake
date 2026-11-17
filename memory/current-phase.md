@@ -1,87 +1,85 @@
 # Current phase
 
-**Phase 09 — Onboarding: done, 2026-11-17. `Current phase: 10`.**
+**Phase 10 — Puzzle chooser + onboarding steps + per-alarm dismiss: done,
+2026-11-17. `Current phase: 11`.**
 
-**1,513 tests**, analyze clean including infos, lib 97.84% / `lib/core`
-99.61% / `lib/data` 88.95% / **`lib/features/onboarding` 100.00%**, **438 ARB
-keys × 10 locales** (+1).
+**1,547 tests**, analyze clean including infos, lib 97.93% / `lib/core` 99.61% /
+`lib/data` 88.95% / **`lib/features/puzzle` 99.30%** / **`lib/features/onboarding`
+100.00%**, **440 ARB keys × 10 locales** (+2). Comment baseline +0 (113).
 
 ## What this phase actually found
 
-### 1. The phase name promised a permission flow that was already built
+### 1. The puzzle settings were persisted but written by no UI
 
-"Onboarding — just-in-time permissions" — but Phase 07 already ships the
-just-in-time permission request: `AlarmPermissionGate`, `AlarmPermissionPrompt`,
-`permissionStateProvider`, the prompt firing at first alarm enable (confirmed on
-device this phase, Save → the prompt). The legacy onboarding (`../capywake`,
-read-only) asks for **no** permission — it is a three-step preferences flow
-(welcome → puzzle → strictness) writing `hasCompletedOnboarding`.
+`savePuzzleSettings`, the `puzzle_settings` singleton and
+`puzzleSettingsStreamProvider` existed and were *read* by the ringing surface
+(Phase 06) — but nothing let the user change them. Every alarm woke someone with
+`PuzzleSettings.defaults()` forever. Phase 10 closes that across the chooser
+(pushed from Settings → Preferences), the onboarding strictness step, and the
+per-alarm override. The core gap, now closed.
 
-What was actually missing: **`OnboardingStatus.needsOnboarding` was ported and
-tested but wired to nothing, and `hasCompletedOnboarding` had no writer in
-`lib/`.** A fresh install opened on an empty Home with no greeting. This phase
-added the `/onboarding` route (outside the shell), a push-only redirect, the
-welcome, and `completeOnboarding()`. Reporting "already done" was the output,
-not a reason to pad.
+### 2. The owner supplied mockups, but they do not bind Tier A
 
-### 2. A screen every test passed was broken on device (SR1 H1)
+`CapyWake_Puzzle_Chooser_Onboarding_Handoff` gave three references. They are
+378×1161-class crops from one combined storyboard, **not** the 851×1847 native
+geometry Tier A requires — the handoff's own README says so. **Tier A binds
+nothing**, as Phases 06 and 09 declared for their mockup-less surfaces. Held to
+tokens, the tap floor, RTL, safety rules; deviations named in
+`docs/visual/puzzle_chooser/`.
 
-The CTA "Set your first alarm" bounced to **Home** on the iPhone 18 Pro while
-the identical flow passed in the suite. The redirect had a *pull* branch
-(`atOnboarding && !needed → Home`); `completeOnboarding()` fired the
-`refreshListenable` mid-tap, re-ran the redirect while still on `/onboarding`,
-and the pull-to-Home beat the CTA's `go(/alarms/new)`. **The fake async clock in
-widget tests ordered `go` and the refresh the other way, so the buggy redirect
-passed everything.** Fixed to push-only; pinned by a new test that **fails
-against the buggy version** (verified). Phase 05's rule (the test was wrong
-about the code) and Phase 06's (a guard whose test can't fail is on trust),
-together. The device check is not optional.
+### 3. Three domain conflicts the mockups carried — the domain won each
 
-### 3. There is no onboarding mockup
+- **Escape strictness is 2-value** (`confirm` / `confirmAndHold`, no "off"); the
+  mockup draws three with a "Never" that reads "can only be dismissed by
+  solving" — a lockout the safety rule forbids, and the handoff's own prompt
+  admits "Never" does not remove the escape. Owner chose keep-domain, honest
+  labels. **Verified on device: exactly two options, no "Never".**
+- **"After 1 min" split** back into the escape control and the separate
+  `toleratedWrongAnswers` stepper — two real, separately-persisted fields.
+- **Ten real types, Material icons, no Shake.** The mockup's six illustrative
+  cards and "Shake" method are not in the domain (`DismissMethod` = Tap / Puzzle
+  / Hold). Logged `asset_gaps.md` G21, G22.
 
-The five primary screens contain none. The `screens/alternative/onboarding_*`
-files are **two** distinct boards re-handed under five names, at **887×1774 /
-852×1846 device-bezel geometry, drawing the rejected 4-tab/Games nav** —
-superseded by the primary mockups. **Tier A binds nothing.** Held to tokens, the
-44 pt tap floor, RTL, large-text reflow, no-overpromise. Evidence:
-`docs/visual/_evidence/onboarding_boards.md`. **Not added to the capture set** —
-`compare.dart` would `exit(2)` on a screen with no block table.
+### 4. The ARB count round-tripped the restate discipline (+2, not +10–14)
 
-### 4. SR2 — an error-state crash on the redirect hot path
+The plan said "possibly zero"; the pre-review H1 corrected to +10–14;
+measurement settled at **+2** (`settingsPuzzleEntryLabel`/`Description`). Nearly
+the whole chooser, onboarding and **per-alarm** vocabulary was already ported in
+10 locales — including `alarmPuzzle*`, the dismiss-method labels, and the
+onboarding step content. Restated, not quietly passed.
 
-The folded provider called `alarms.requireValue` after only an `isLoading`
-check; an **errored** alarms stream would throw, on a provider read on every
-navigation. Now yields a value only when both streams have data — loading and
-error both resolve to "do not redirect".
+### 5. SR1 H1 — the dismiss segment misrepresented a `holdToDismiss` alarm
 
-### 5. Ported dartdoc describes a path that cannot occur here
+The two-segment Tap/Puzzle control fell back to showing **Tap selected** for a
+`holdToDismiss` alarm while the draft still held Hold. No UI creates Hold today,
+but the enum, mapper, `AlarmDismissSummary` and `Alarm`/`AlarmDraft` all carry
+it, so a seeded row or a later phase would hit it. Now the section names an
+unrepresentable method read-only; pinned by a seeded test.
 
-`OnboardingStatus`'s ported dartdoc explains a grandfathering path for
-"installed before onboarding existed". In this no-users rebuild at
-`schemaVersion = 1` the `?? true` mapper branch is **unreachable** (`toJson`
-always writes the key). Code correct; prose is the legacy's world. Recorded, not
-rewritten (Phase 02 judged `lib/core/` prose justified). The real fresh-install
-path: no row → `UserSettings.initial` → flag `false` → onboarding.
+### 6. SR2 H1 — the onboarding completion path swallowed a write failure
 
-### 6. The `grep "Phase [0-9]" lib/ = 0` baseline is Dart-scoped
+`_finish()`/`_skip()` awaited the writes with no catch; a Drift failure stranded
+the user on a dead-looking button, and the ported `onboardingSaveError` string
+was unused — Phase 09's SR2 one layer over (the write side). Now wrapped: on
+failure it holds position and shows the error; pinned by a throwing-repository
+test.
 
-Run bare it returns **2** — an ARB description (`app_en.arb:17`, "the Phase 00
-launch surface …") and its generated mirror, pre-existing accurate history. The
-rule is about doc comments; `--include="*.dart"` excl. generated is **0**, and
-Phase 09 added none.
+### 7. Device verification is not optional (Phase 09's rule)
 
-## Predictions — all held
+The whole flow was run on the iPhone 18 Pro: welcome → Next → puzzle preview →
+Next → strictness → **"Set your first alarm" lands on Add Alarm, not Home.** The
+Phase 09 redirect race does **not** recur under the new multi-step flow
+(completion fires only on the last step; the redirect stays push-only and
+stepping is local state, not a router redirect).
 
-Tests **+20** against +18–28 ✅. ARB **+1** against +1–2 ✅. lib **97.84%**
-against ≥97.8 ✅. core/data unchanged ✅. onboarding **100%**. Comment baseline
-**+0** (113) ✅.
+## Next session — Phase 11, Game foundation
 
-## Next session — Phase 10, Puzzle chooser and the ten existing puzzle types
-
-**Still owed:** the sleep-boundary restoration — `package:health` and
-`live_sleep_gateway.dart` did **not** land in 07, 08 or 09, each said so.
-`sleep_boundary_test.dart` stays at `at most one`. **Owed by nobody:** the
-nav-bar/meadow fact, `MeadowFooter` 2× grass (G19), `SceneHeader` flat top
-(G18), Alarms' 3 / Add/Edit's 8 Tier A failures. The 9 ported puzzle/strictness
-onboarding strings are **unused on purpose** (Phase 10's domain) — a widget test
-asserts the welcome does not render them.
+**"What a 'game' is in this codebase."** Phase 10 built the CHOOSER and wired the
+ten existing puzzle TYPES; Phases 11–17 build the games themselves. **Three
+ported onboarding strings stay unused on purpose** (`onboardingTryGame`,
+`onboardingPracticeNote`, `onboardingPracticeRetry`) — they were for a *playable*
+practice demo, which is a games-phase concern, not the chooser's. **Still owed by
+nobody** (carried forward): the sleep-boundary/`package:health` restoration
+(unbuilt across 07/08/09/10); `CapyNavBar` 98.7pt vs 79.9 pushing 3 meadows;
+`MeadowFooter` 2× grass (G19); `SceneHeader` flat top (G18); Alarms' 3 /
+Add-Edit's 8 Tier A failures. Android untested, no emulator.

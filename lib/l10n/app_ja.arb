@@ -115,6 +115,8 @@
   "ringingStillUpAction": "起きています",
   "settingsReliabilityEntryLabel": "アラームの信頼性",
   "settingsReliabilityEntryDescription": "この端末でアラームが鳴るかどうかに影響する項目を確認します。",
+  "settingsPuzzleEntryLabel": "起床時の問題",
+  "settingsPuzzleEntryDescription": "アラームの止め方を選びます。",
   "settingsHistoryEntryLabel": "履歴",
   "settingsHistoryEntryDescription": "最近の朝の様子を振り返ります。",
   "settingsHistoryEntrySemanticLabel": "最近の起床の概要を開きます。",

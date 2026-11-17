@@ -4,6 +4,7 @@ import 'package:capywake/features/alarms/edit/alarm_edit_screen.dart';
 import 'package:capywake/features/home/home_screen.dart';
 import 'package:capywake/features/onboarding/onboarding_providers.dart';
 import 'package:capywake/features/onboarding/onboarding_screen.dart';
+import 'package:capywake/features/puzzle/puzzle_chooser_screen.dart';
 import 'package:capywake/features/settings/reliability_checklist_screen.dart';
 import 'package:capywake/features/settings/settings_screen.dart';
 import 'package:capywake/features/settings/walkthrough_screen.dart';
@@ -19,6 +20,7 @@ abstract final class Routes {
   static const settings = '/settings';
   static const settingsReliability = '/settings/reliability';
   static const settingsWalkthrough = '/settings/walkthrough';
+  static const settingsPuzzle = '/settings/puzzle';
   static const onboarding = '/onboarding';
 
   static const alarmNew = '/alarms/new';
@@ -112,6 +114,11 @@ GoRouter createRouter({String initialLocation = Routes.home, Ref? ref}) {
             path: 'walkthrough',
             parentNavigatorKey: _rootKey,
             builder: (context, state) => const WalkthroughScreen(),
+          ),
+          GoRoute(
+            path: 'puzzle',
+            parentNavigatorKey: _rootKey,
+            builder: (context, state) => const PuzzleChooserScreen(),
           ),
         ],
       ),

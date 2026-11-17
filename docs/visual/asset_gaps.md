@@ -769,3 +769,22 @@ register, already in the bundle and already audited. The wordmark
 
 Logged as a Tier B substitution by name, per `CLAUDE.md`. No new art generated,
 no fidelity claim made — there is no mockup to match.
+
+## G21 — Puzzle type cards use Material icons, not the mockup's painted tiles (Phase 10, Tier B)
+
+`10_PUZZLE_CHOOSER.png` draws each puzzle type as a small painted tile (a stack
+of memory cards, coloured blocks, an apple). The asset package has no per-type
+cutouts, and the ten real types do not map onto the mockup's six illustrative
+categories anyway. **Material glyphs are used** (`puzzleTypeIcon` in
+`lib/features/puzzle/puzzle_labels.dart`): `calculate`, `grid_view`,
+`rotate_right`, etc. — decorative, excluded from semantics, and localizing
+cleanly where a baked tile could not. No new art generated; the label always
+carries the meaning. No Tier A claim (the chooser has no native mockup).
+
+## G22 — Chooser and onboarding heroes reuse existing scenes (Phase 10, Tier B)
+
+The chooser and the onboarding puzzle/strictness steps draw a
+capybara-with-puzzle-piece hero the package has no exact cutout for. The chooser
+reuses `SceneCrop.settings`; onboarding reuses `SceneCrop.home` (as Phase 09's
+welcome did, G20). Nearest supplied scenes, already audited and bundled. No new
+art, no fidelity claim — these surfaces bind nothing in Tier A.

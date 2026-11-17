@@ -115,6 +115,8 @@
   "ringingStillUpAction": "أنا مستيقظ",
   "settingsReliabilityEntryLabel": "موثوقية المنبّه",
   "settingsReliabilityEntryDescription": "تحقّق ممّا يؤثّر في رنين المنبّه على هذا الهاتف.",
+  "settingsPuzzleEntryLabel": "لعبة الاستيقاظ",
+  "settingsPuzzleEntryDescription": "اختر كيفية إيقاف المنبّهات.",
   "settingsHistoryEntryLabel": "السجل",
   "settingsHistoryEntryDescription": "اطّلع على كيف مضت صباحاتك الأخيرة.",
   "settingsHistoryEntrySemanticLabel": "يفتح ملخّصًا لمرات استيقاظك الأخيرة.",

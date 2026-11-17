@@ -115,6 +115,8 @@
   "ringingStillUpAction": "Sono sveglio",
   "settingsReliabilityEntryLabel": "Affidabilità della sveglia",
   "settingsReliabilityEntryDescription": "Controlla cosa influenza il fatto che la sveglia suoni su questo telefono.",
+  "settingsPuzzleEntryLabel": "Gioco della sveglia",
+  "settingsPuzzleEntryDescription": "Scegli come fermare le sveglie.",
   "settingsHistoryEntryLabel": "Cronologia",
   "settingsHistoryEntryDescription": "Guarda com'è andata nelle ultime mattine.",
   "settingsHistoryEntrySemanticLabel": "Apre un riepilogo dei tuoi risvegli recenti.",

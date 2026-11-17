@@ -115,6 +115,8 @@
   "ringingStillUpAction": "Uyandım",
   "settingsReliabilityEntryLabel": "Alarm güvenilirliği",
   "settingsReliabilityEntryDescription": "Bu telefonda alarmın çalmasını neyin etkilediğini kontrol et.",
+  "settingsPuzzleEntryLabel": "Uyanma bulmacası",
+  "settingsPuzzleEntryDescription": "Alarmlarını nasıl durduracağını seç.",
   "settingsHistoryEntryLabel": "Geçmiş",
   "settingsHistoryEntryDescription": "Son sabahlarının nasıl geçtiğine bak.",
   "settingsHistoryEntrySemanticLabel": "Son uyanışlarının özetini açar.",

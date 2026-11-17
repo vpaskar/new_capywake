@@ -115,6 +115,8 @@
   "ringingStillUpAction": "Estoy despierto",
   "settingsReliabilityEntryLabel": "Fiabilidad de la alarma",
   "settingsReliabilityEntryDescription": "Comprueba qué afecta a que la alarma suene en este teléfono.",
+  "settingsPuzzleEntryLabel": "Juego para despertar",
+  "settingsPuzzleEntryDescription": "Elige cómo detener tus alarmas.",
   "settingsHistoryEntryLabel": "Historial",
   "settingsHistoryEntryDescription": "Mira cómo fueron tus últimas mañanas.",
   "settingsHistoryEntrySemanticLabel": "Abre un resumen de tus despertares recientes.",

@@ -2,6 +2,7 @@ import 'package:capywake/core/alarm_draft.dart';
 import 'package:capywake/core/alarm_repeat.dart';
 import 'package:capywake/core/alarm_sound.dart' show AlarmSoundCatalog;
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/capy_card.dart';
@@ -12,8 +13,10 @@ import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/alarms/alarm_permission_prompt.dart';
 import 'package:capywake/features/alarms/edit/alarm_edit_header.dart';
 import 'package:capywake/features/alarms/edit/alarm_form_rows.dart';
+import 'package:capywake/features/alarms/edit/dismiss_method_section.dart';
 import 'package:capywake/features/alarms/edit/time_stepper_field.dart';
 import 'package:capywake/features/alarms/edit/weekday_chip_row.dart';
+import 'package:capywake/features/puzzle/puzzle_labels.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -147,6 +150,8 @@ class _FormState extends ConsumerState<_Form> {
                     _soundCard(l10n),
                     const SizedBox(height: _cardGap),
                     _snoozeCard(l10n),
+                    const SizedBox(height: _cardGap),
+                    _dismissCard(l10n),
                     const SizedBox(height: CapySpacing.lg),
                     CapyButton(
                       label: l10n.alarmSaveAction,
@@ -263,6 +268,30 @@ class _FormState extends ConsumerState<_Form> {
         semanticLabel: l10n.alarmSnoozeLabel,
         onChanged: (enabled) =>
             setState(() => _draft = _draft.copyWith(snoozeEnabled: enabled)),
+      ),
+    );
+  }
+
+  Widget _dismissCard(AppLocalizations l10n) {
+    final defaults =
+        ref.watch(puzzleSettingsStreamProvider).value ??
+        PuzzleSettings.defaults();
+    final resolved = _draft.resolvePuzzleSettings(defaults);
+    final summary =
+        '${puzzleDifficultyLabel(resolved.difficulty, l10n)} · '
+        '${l10n.puzzleSettingsTaskCountValue(resolved.taskCount)}';
+
+    return DismissMethodSection(
+      method: _draft.dismissMethod,
+      hasOverride: !_draft.followsDefaultPuzzleSettings,
+      summary: summary,
+      onMethodChanged: (method) =>
+          setState(() => _draft = _draft.withDismissMethod(method)),
+      onFollowDefaultsChanged: ({required follow}) => setState(
+        () => _draft = _draft.withPuzzleCustomisation(
+          enabled: !follow,
+          defaults: defaults,
+        ),
       ),
     );
   }

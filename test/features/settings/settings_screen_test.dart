@@ -71,7 +71,7 @@ void main() {
   group('every chevron opens something', () {
     // Counted after scrolling: the list builds lazily, so an unscrolled
     // count measures the viewport rather than the screen.
-    testWidgets('there are exactly six chevron rows', (tester) async {
+    testWidgets('there are exactly seven chevron rows', (tester) async {
       await pumpSettings(tester);
       final seen = <String>{};
       for (var i = 0; i < 12; i++) {
@@ -83,7 +83,7 @@ void main() {
         await tester.drag(find.byType(ListView), const Offset(0, -200));
         await tester.pumpAndSettle();
       }
-      expect(seen.length, 6, reason: 'saw: $seen');
+      expect(seen.length, 7, reason: 'saw: $seen');
     });
 
     // Targeted by their own label, not by index: the list builds lazily, so
@@ -91,6 +91,7 @@ void main() {
     for (final label in const [
       'sound',
       'snooze',
+      'puzzle',
       'reliability',
       'walkthrough',
       'about',
@@ -101,6 +102,7 @@ void main() {
         final target = switch (label) {
           'sound' => find.text(l10n.settingsDefaultSoundLabel),
           'snooze' => find.text(l10n.settingsDefaultSnoozeLabel),
+          'puzzle' => find.text(l10n.settingsPuzzleEntryLabel),
           'reliability' => find.text(l10n.settingsReliabilityEntryLabel),
           'walkthrough' => find.text(l10n.settingsOnboardingEntryLabel),
           _ => find.text(l10n.settingsAboutVersion(AppVersion.value)),

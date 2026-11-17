@@ -115,6 +115,8 @@
   "ringingStillUpAction": "Я проснулся",
   "settingsReliabilityEntryLabel": "Надёжность будильника",
   "settingsReliabilityEntryDescription": "Проверь, что влияет на то, прозвенит ли будильник на этом телефоне.",
+  "settingsPuzzleEntryLabel": "Утренняя задача",
+  "settingsPuzzleEntryDescription": "Выбери, как останавливать будильники.",
   "settingsHistoryEntryLabel": "История",
   "settingsHistoryEntryDescription": "Посмотри, как прошли твои последние утра.",
   "settingsHistoryEntrySemanticLabel": "Открывает сводку последних пробуждений.",

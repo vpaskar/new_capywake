@@ -293,3 +293,57 @@ lib 97.84% / core 99.61% / data 88.95% / **`lib/features/onboarding` 100.00%**,
 **438 ARB keys** (+1). Comment baseline **+0** (113). 21 findings across four
 passes (12 pre-review, 4 SR1, 2 SR2, 3 full-project), all applied, none
 deferred.
+
+---
+
+## Phase 10 — Puzzle chooser + onboarding steps + per-alarm dismiss (2026-11-17)
+
+**Wired the puzzle settings that had been persisted since Phase 02 but written
+by no UI** — `savePuzzleSettings`, the singleton and `puzzleSettingsStreamProvider`
+existed and were read by the ringing surface, but nothing let the user change
+them, so every alarm used `PuzzleSettings.defaults()` forever. Three surfaces,
+owner-confirmed: the chooser (pushed from Settings → Preferences), the onboarding
+strictness step (welcome became a 3-step flow), the per-alarm Tap/Puzzle dismiss
+section.
+
+**The owner supplied mockups mid-phase** (`CapyWake_Puzzle_Chooser_Onboarding_Handoff`)
+— but they are 378×1161-class storyboard crops, not 851×1847 native geometry, so
+**Tier A binds nothing** (the handoff README says so), as Phases 06/09.
+
+**Three domain conflicts the art carried, the domain won each:**
+1. Escape strictness is 2-value (`confirm`/`confirmAndHold`, no "off"); the
+   mockup's "Never" reads "can only be dismissed by solving" — a lockout the
+   safety rule forbids. Owner: keep domain, honest labels.
+2. "After 1 min" split back into escape + the separate tolerance field.
+3. Six sample cards → ten real types; "Shake" dropped (not a `DismissMethod`).
+
+**The ARB count round-tripped the restate discipline both ways:** plan said
+"possibly zero", pre-review H1 corrected to +10–14, measurement settled at **+2**
+— nearly the whole chooser/onboarding/per-alarm vocabulary was already ported in
+10 locales.
+
+**SR1 H1: the dismiss segment misrepresented a `holdToDismiss` alarm** (showed
+Tap selected while storing Hold) — latent (no UI creates Hold), but the enum,
+mapper and summary all carry it; now names an unrepresentable method read-only,
+pinned by a seeded test.
+
+**SR2 H1: the onboarding completion path swallowed a write failure**, stranding
+the user on a dead button with the ported `onboardingSaveError` unused — Phase
+09's SR2 one layer over (write side); now wrapped, holds position, shows the
+error, pinned by a throwing-repo test.
+
+**Full-project: three playable-practice onboarding strings stay unused on
+purpose** (a playable demo is a games-phase concern) — stated outright, Phase
+09's ambiguity lesson applied.
+
+**Device-verified on the iPhone 18 Pro:** welcome → Next → puzzle → Next →
+strictness → "Set your first alarm" lands on **Add Alarm, not Home** — the Phase
+09 redirect race does NOT recur under the stepped flow. The chooser, dismiss
+section and two-value escape control all verified on device.
+
+**1,547 tests** (+34 against a registered +45–75 — restated: the puzzle domain
+was already fully tested), analyze clean incl. infos, lib 97.93% / core 99.61% /
+data 88.95% / **`lib/features/puzzle` 99.30%** / **`lib/features/onboarding`
+100.00%**, **440 ARB keys** (+2). Comment baseline **+0** (113); 9 new files, all
+trimmed by hand. 15 findings across four passes (14 pre-review, 4 SR1, 3 SR2, 4
+full-project), all applied, none deferred.
