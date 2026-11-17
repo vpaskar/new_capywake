@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
 /// Whether a wake-up game can be played yet. A game arrives by flipping this,
-/// not by editing the view. Zero entries are `playable` until phase 11.
+/// not by editing the view. Zero entries are `playable` until its phase.
 enum GameAvailability {
   /// Built and reachable.
   playable,
@@ -49,35 +49,100 @@ enum GameBlockedReason {
   camera,
 }
 
-/// The wake-up games, in `01_HOME.png`'s order. Step Quest is first and
-/// blocked, so that state shows on a primary screen — intended, not a defect.
+/// The ten wake-up games, in the owner's poster order. [homeRail] is the four
+/// `01_HOME.png` draws; [entries] is the full list a See-All would show.
 abstract final class GameCatalogue {
+  static const _stepQuest = GameEntry(
+    id: 'step_quest',
+    nameKey: 'gameStepQuest',
+    tileAssetId: 'tile.stepQuest',
+    availability: GameAvailability.blocked,
+    blockedReason: GameBlockedReason.stepCount,
+  );
+
+  static const _qrTreasureHunt = GameEntry(
+    id: 'qr_treasure_hunt',
+    nameKey: 'gameQrTreasureHunt',
+    tileAssetId: 'tile.qrTreasureHunt',
+    availability: GameAvailability.blocked,
+    blockedReason: GameBlockedReason.camera,
+  );
+
+  static const _shakeDj = GameEntry(
+    id: 'shake_dj',
+    nameKey: 'gameShakeDj',
+    tileAssetId: 'tile.shakeDj',
+    availability: GameAvailability.comingSoon,
+  );
+
+  static const _catchTheCapy = GameEntry(
+    id: 'catch_the_capy',
+    nameKey: 'gameCatchTheCapy',
+    tileAssetId: 'tile.catchTheCapy',
+    availability: GameAvailability.comingSoon,
+  );
+
+  static const _findTheImpostor = GameEntry(
+    id: 'find_the_impostor',
+    nameKey: 'gameFindTheImpostor',
+    tileAssetId: 'tile.findTheImpostor',
+    availability: GameAvailability.comingSoon,
+  );
+
+  static const _memoryHideout = GameEntry(
+    id: 'memory_hideout',
+    nameKey: 'gameMemoryHideout',
+    tileAssetId: 'tile.memoryHideout',
+    availability: GameAvailability.comingSoon,
+  );
+
+  static const _tiltMaze = GameEntry(
+    id: 'tilt_maze',
+    nameKey: 'gameTiltMaze',
+    tileAssetId: 'tile.tiltMaze',
+    availability: GameAvailability.comingSoon,
+  );
+
+  static const _morningSort = GameEntry(
+    id: 'morning_sort',
+    nameKey: 'gameMorningSort',
+    tileAssetId: 'tile.morningSort',
+    availability: GameAvailability.comingSoon,
+  );
+
+  static const _rhythmRescue = GameEntry(
+    id: 'rhythm_rescue',
+    nameKey: 'gameRhythmRescue',
+    tileAssetId: 'tile.rhythmRescue',
+    availability: GameAvailability.comingSoon,
+  );
+
+  static const _capyRocket = GameEntry(
+    id: 'capy_rocket',
+    nameKey: 'gameCapyRocket',
+    tileAssetId: 'tile.capyRocket',
+    availability: GameAvailability.comingSoon,
+  );
+
   static const entries = <GameEntry>[
-    GameEntry(
-      id: 'step_quest',
-      nameKey: 'gameStepQuest',
-      tileAssetId: 'tile.stepQuest',
-      availability: GameAvailability.blocked,
-      blockedReason: GameBlockedReason.stepCount,
-    ),
-    GameEntry(
-      id: 'shake_dj',
-      nameKey: 'gameShakeDj',
-      tileAssetId: 'tile.shakeDj',
-      availability: GameAvailability.comingSoon,
-    ),
-    GameEntry(
-      id: 'catch_the_capy',
-      nameKey: 'gameCatchTheCapy',
-      tileAssetId: 'tile.catchTheCapy',
-      availability: GameAvailability.comingSoon,
-    ),
-    GameEntry(
-      id: 'find_the_impostor',
-      nameKey: 'gameFindTheImpostor',
-      tileAssetId: 'tile.findTheImpostor',
-      availability: GameAvailability.comingSoon,
-    ),
+    _stepQuest,
+    _qrTreasureHunt,
+    _shakeDj,
+    _catchTheCapy,
+    _findTheImpostor,
+    _memoryHideout,
+    _tiltMaze,
+    _morningSort,
+    _rhythmRescue,
+    _capyRocket,
+  ];
+
+  /// Step Quest is first and blocked, so that state shows on a primary screen.
+  static const homeRail = <GameEntry>[
+    _stepQuest,
+    _shakeDj,
+    _catchTheCapy,
+    _findTheImpostor,
   ];
 
   static Iterable<GameEntry> get playable => entries.where((e) => e.isPlayable);

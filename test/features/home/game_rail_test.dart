@@ -30,11 +30,13 @@ Future<void> _pumpRail(
 
 void main() {
   group('GameRail', () {
-    testWidgets('renders one tile per catalogue entry', (tester) async {
+    testWidgets('renders one tile per Home-rail entry, not the full ten', (
+      tester,
+    ) async {
       await _pumpRail(tester);
       expect(
         find.byType(Image),
-        findsNWidgets(GameCatalogue.entries.length),
+        findsNWidgets(GameCatalogue.homeRail.length),
       );
     });
 
@@ -49,12 +51,49 @@ void main() {
       expect(find.text('Find the Impostor'), findsOneWidget);
     });
 
-    testWidgets('every tile asset is in the art catalogue', (tester) async {
-      for (final entry in GameCatalogue.entries) {
+    testWidgets('every Home-rail tile asset is in the art catalogue', (
+      tester,
+    ) async {
+      for (final entry in GameCatalogue.homeRail) {
         expect(
           () => CapyArt.byId(entry.tileAssetId),
           returnsNormally,
           reason: '${entry.id} points at an uncatalogued asset',
+        );
+      }
+    });
+
+    testWidgets('all ten game names resolve across the locale set', (
+      tester,
+    ) async {
+      for (final locale in AppLocalizations.supportedLocales) {
+        final l10n = await AppLocalizations.delegate.load(locale);
+        for (final entry in GameCatalogue.entries) {
+          expect(
+            () => gameName(l10n, entry),
+            returnsNormally,
+            reason: '${entry.id} has no name in ${locale.languageCode}',
+          );
+          expect(gameName(l10n, entry), isNotEmpty, reason: entry.id);
+        }
+      }
+    });
+
+    testWidgets('the six games without art are a logged gap, not rendered', (
+      tester,
+    ) async {
+      final homeIds = GameCatalogue.homeRail.map((e) => e.id).toSet();
+      final gapOnly = GameCatalogue.entries.where(
+        (e) => !homeIds.contains(e.id),
+      );
+
+      for (final entry in gapOnly) {
+        expect(
+          () => CapyArt.byId(entry.tileAssetId),
+          throwsArgumentError,
+          reason:
+              '${entry.id} must have no art until its phase; a resolvable '
+              'tile here means art was added without updating asset_gaps.md',
         );
       }
     });
@@ -87,7 +126,7 @@ void main() {
     testWidgets('no tile is a dead tap', (tester) async {
       final l10n = await AppLocalizations.delegate.load(const Locale('en'));
 
-      for (final entry in GameCatalogue.entries) {
+      for (final entry in GameCatalogue.homeRail) {
         await _pumpRail(tester);
 
         // The fourth tile sits past the right edge at 393pt, so reach it the
@@ -149,7 +188,7 @@ void main() {
         await _pumpRail(tester, locale: locale);
 
         expect(tester.takeException(), isNull);
-        for (final entry in GameCatalogue.entries) {
+        for (final entry in GameCatalogue.homeRail) {
           final l10n = await AppLocalizations.delegate.load(locale);
           final name = gameName(l10n, entry);
           final text = tester.widget<Text>(find.text(name));
@@ -185,7 +224,9 @@ void main() {
 
       expect(
         find.text('Soon'),
-        findsNWidgets(GameCatalogue.entries.where((e) => !e.isPlayable).length),
+        findsNWidgets(
+          GameCatalogue.homeRail.where((e) => !e.isPlayable).length,
+        ),
       );
     });
 

@@ -347,3 +347,74 @@ data 88.95% / **`lib/features/puzzle` 99.30%** / **`lib/features/onboarding`
 100.00%**, **440 ARB keys** (+2). Comment baseline **+0** (113); 9 new files, all
 trimmed by hand. 15 findings across four passes (14 pre-review, 4 SR1, 3 SR2, 4
 full-project), all applied, none deferred.
+
+## Phase 11 — Game foundation (2026-11-17)
+
+**The shared contract the ten wake-up games (Phases 12-17) slot into — built with
+NO specific game and NO new visible surface.** The games are ten NEW products,
+disjoint from the ten already-ported puzzle *types* (zero overlap).
+
+**The architectural call, settled in the plan and stress-tested in the
+pre-review: a game is NOT a fourth `DismissMethod`.** Adding one would bump the
+Drift `schemaVersion` and ripple through the mapper, `AlarmDismissSummary`, the
+chooser and 1,547 tests — for a Phase 12 product that does not exist. A game is a
+puzzle-parallel challenge surface launched into the same
+`RingingScreen.puzzleSlot` `PuzzleView` uses.
+
+**Pre-review H1: the plan's reuse of `PuzzleEasingState` for a game's escape-raise
+was wrong.** The puzzle raises the escape on `wrongThisRound > toleratedWrongAnswers`
+— a wrong-*answer* count a game does not have (a game has missed taps). The game
+contract reuses the **enum** `PuzzleEscapeVisibility` but signals struggle in its
+own terms (`struggleCount`), mapped to the user's tolerance at the boundary.
+
+**Pre-review H2: the escape stays owned by `RingingScreen`.** A game can only
+*signal* prominence; it has no seam to render, hide or gate the escape — proven by
+a test-only conformer mounted in the real screen whose escape is reachable
+regardless of game state. Mirrors Phase 06's reachability discipline.
+
+**Pre-review H3: the foundation stayed headless.** No onboarding demo, no route —
+"Do not implement future phases". The three unused onboarding strings
+(`onboardingTryGame`, …) stay unused for a games phase that wants a live demo.
+
+**Pre-review H4 + SR1 H1: the motion-fallback invariant was holed.** H4 made a
+non-motion fallback call-site-required; SR1 found a "fallback" that *itself*
+required motion still compiled — now asserted `!fallback.requiresMotion`, so a
+motion game with no usable non-motion path cannot be built (Phase 15's two motion
+games inherit this). `.motion` is no longer `const` (the assert reads a field).
+
+**SR1 M1: the goal was unbounded** — `GameChallenge.touch(target: 0)` was
+immediately `isComplete`, dismissing the alarm with zero play. Both constructors
+now assert `target > 0`, `completed >= 0`, `struggleCount >= 0`.
+
+**SR2 M1: the escape policy source was implicit.** A test now proves a game and a
+puzzle offer the escape identically against the user's `toleratedWrongAnswers`, so
+a Phase 12 game that diverges fails. The source (passing the setting in) is Phase
+12's wiring job; the guard stands watch. A mutation check (suppress completion →
+dismiss test fails) confirmed the widget test is not a guard on trust.
+
+**`GameCatalogue` grew 4 → 10** (zero `playable`) with a `homeRail` subset of four
+so the Home rail does not regress to ten tiles. **ARB +6** game name keys
+(restated in the pre-review from the plan's +0 — the catalogue needs them, the
+demo surface does not), six tile gaps **G23-G28** (nothing renders them; the Home
+rail reads the four with art).
+
+**Full-project: the pre-review's own L1 was wrong.** It called Home's "See All"
+games action a dangling control with "no destination"; `PHASE_03_PLAN.md:202`
+records it as deliberate (See All → the Stats Games segment, both tabs). Corrected,
+no change — a review's earlier finding is still subject to the later review.
+
+**Tier A binds nothing** — the game posters are bezel-wrapped storyboard crops
+with marketing annotations, not 851×1847 native geometry (as 06/09/10).
+
+**Device-verified on the iPhone 18 Pro:** Home draws exactly the **four** tiles
+(not the ten the catalogue holds), each "Soon", with "See All ›"; tapping Step
+Quest opens the "Not built yet" sheet reading "Step Quest needs a permission
+CapyWake does not ask for yet" — the blocked/step-count reason rendering from the
+grown catalogue. The rail did not regress; the game interaction is intact.
+
+**1,572 tests** (+25 against a registered +18-30), analyze clean incl. infos, lib
+97.95% / core 99.61% / **`lib/core/games` 100.00%** / data 88.95% /
+`lib/features/ringing` 98.53%, **446 ARB keys × 10 locales** (+6). Comment baseline
+**+0** (113); 3 new files, all trimmed by hand. 18 findings across four passes (13
+pre-review, 3 SR1, 2 SR2, 0 full-project — one candidate examined and found valid),
+all applied, none deferred.

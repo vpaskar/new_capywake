@@ -6,8 +6,8 @@ import 'package:capywake/features/home/game_unavailable_sheet.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// The four tiles from `01_HOME.png`, from [GameCatalogue]. No tile is a
-/// dead tap: an unavailable one opens a sheet saying so.
+/// The four tiles from `01_HOME.png`, from [GameCatalogue.homeRail]. No tile
+/// is a dead tap: an unavailable one opens a sheet saying so.
 class GameRail extends StatelessWidget {
   const GameRail({super.key});
 
@@ -27,9 +27,9 @@ class GameRail extends StatelessWidget {
         padding: const EdgeInsetsDirectional.symmetric(
           horizontal: CapySpacing.gutter,
         ),
-        itemCount: GameCatalogue.entries.length,
+        itemCount: GameCatalogue.homeRail.length,
         separatorBuilder: (_, _) => const SizedBox(width: CapySpacing.md),
-        itemBuilder: (context, i) => _Tile(entry: GameCatalogue.entries[i]),
+        itemBuilder: (context, i) => _Tile(entry: GameCatalogue.homeRail[i]),
       ),
     );
   }
@@ -165,9 +165,15 @@ const featuredGameId = 'step_quest';
 String gameName(AppLocalizations l10n, GameEntry entry) {
   return switch (entry.nameKey) {
     'gameStepQuest' => l10n.gameStepQuest,
+    'gameQrTreasureHunt' => l10n.gameQrTreasureHunt,
     'gameShakeDj' => l10n.gameShakeDj,
     'gameCatchTheCapy' => l10n.gameCatchTheCapy,
     'gameFindTheImpostor' => l10n.gameFindTheImpostor,
+    'gameMemoryHideout' => l10n.gameMemoryHideout,
+    'gameTiltMaze' => l10n.gameTiltMaze,
+    'gameMorningSort' => l10n.gameMorningSort,
+    'gameRhythmRescue' => l10n.gameRhythmRescue,
+    'gameCapyRocket' => l10n.gameCapyRocket,
     _ => throw ArgumentError('Unmapped game name key: ${entry.nameKey}'),
   };
 }

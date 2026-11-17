@@ -8,16 +8,39 @@ void main() {
         GameCatalogue.playable,
         isEmpty,
         reason:
-            'The rail ships with no playable game until phase 11. A playable '
-            'entry here means a game was marked available before it exists.',
+            'No game is built until its phase (12-17). A playable entry here '
+            'means a game was marked available before it exists.',
       );
     });
 
-    test('has the four entries 01_HOME.png shows, in that order', () {
-      expect(
-        GameCatalogue.entries.map((e) => e.id),
-        ['step_quest', 'shake_dj', 'catch_the_capy', 'find_the_impostor'],
-      );
+    test('lists all ten games', () {
+      expect(GameCatalogue.entries.map((e) => e.id), [
+        'step_quest',
+        'qr_treasure_hunt',
+        'shake_dj',
+        'catch_the_capy',
+        'find_the_impostor',
+        'memory_hideout',
+        'tilt_maze',
+        'morning_sort',
+        'rhythm_rescue',
+        'capy_rocket',
+      ]);
+    });
+
+    test('the Home rail is the four 01_HOME.png draws, in that order', () {
+      expect(GameCatalogue.homeRail.map((e) => e.id), [
+        'step_quest',
+        'shake_dj',
+        'catch_the_capy',
+        'find_the_impostor',
+      ]);
+    });
+
+    test('every Home-rail entry is in the full catalogue', () {
+      for (final entry in GameCatalogue.homeRail) {
+        expect(GameCatalogue.entries, contains(entry), reason: entry.id);
+      }
     });
 
     test('ids are unique', () {
@@ -38,6 +61,21 @@ void main() {
       );
       expect(entry.availability, GameAvailability.blocked);
       expect(entry.blockedReason, GameBlockedReason.stepCount);
+    });
+
+    test('QR Treasure Hunt is blocked on the camera', () {
+      final entry = GameCatalogue.entries.firstWhere(
+        (e) => e.id == 'qr_treasure_hunt',
+      );
+      expect(entry.availability, GameAvailability.blocked);
+      expect(entry.blockedReason, GameBlockedReason.camera);
+    });
+
+    test('only Step Quest and QR Treasure Hunt are blocked', () {
+      final blocked = GameCatalogue.entries
+          .where((e) => e.availability == GameAvailability.blocked)
+          .map((e) => e.id);
+      expect(blocked, unorderedEquals(['step_quest', 'qr_treasure_hunt']));
     });
 
     test('a blocked entry carries a reason and others do not', () {

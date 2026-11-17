@@ -1,85 +1,88 @@
 # Current phase
 
-**Phase 10 — Puzzle chooser + onboarding steps + per-alarm dismiss: done,
-2026-11-17. `Current phase: 11`.**
+**Phase 11 — Game foundation: done, 2026-11-17. `Current phase: 12`.**
 
-**1,547 tests**, analyze clean including infos, lib 97.93% / `lib/core` 99.61% /
-`lib/data` 88.95% / **`lib/features/puzzle` 99.30%** / **`lib/features/onboarding`
-100.00%**, **440 ARB keys × 10 locales** (+2). Comment baseline +0 (113).
+**1,572 tests**, analyze clean including infos, lib 97.95% / `lib/core` 99.61% /
+**`lib/core/games` 100.00%** / `lib/data` 88.95% / `lib/features/ringing` 98.53%,
+**446 ARB keys × 10 locales** (+6). Comment baseline +0 (113).
 
-## What this phase actually found
+## What this phase is, and the one decision it settled
 
-### 1. The puzzle settings were persisted but written by no UI
+**The shared contract the ten wake-up games (Phases 12-17) slot into — built with
+NO specific game and NO new visible surface.** The games are ten NEW products,
+disjoint from the ten already-ported puzzle *types* (zero overlap).
 
-`savePuzzleSettings`, the `puzzle_settings` singleton and
-`puzzleSettingsStreamProvider` existed and were *read* by the ringing surface
-(Phase 06) — but nothing let the user change them. Every alarm woke someone with
-`PuzzleSettings.defaults()` forever. Phase 10 closes that across the chooser
-(pushed from Settings → Preferences), the onboarding strictness step, and the
-per-alarm override. The core gap, now closed.
+The architectural call, settled in the plan and stress-tested in the pre-review:
+**a game is not a fourth `DismissMethod`.** Adding one would bump the Drift
+`schemaVersion` and ripple through the mapper, `AlarmDismissSummary`, the Phase 10
+chooser and 1,547 tests — for a Phase 12 product that does not exist. A game is a
+**puzzle-parallel challenge surface**, launched into the same
+`RingingScreen.puzzleSlot` that `PuzzleView` uses.
 
-### 2. The owner supplied mockups, but they do not bind Tier A
+## What shipped
 
-`CapyWake_Puzzle_Chooser_Onboarding_Handoff` gave three references. They are
-378×1161-class crops from one combined storyboard, **not** the 851×1847 native
-geometry Tier A requires — the handoff's own README says so. **Tier A binds
-nothing**, as Phases 06 and 09 declared for their mockup-less surfaces. Held to
-tokens, the tap floor, RTL, safety rules; deviations named in
-`docs/visual/puzzle_chooser/`.
+- **`lib/core/games/game_challenge.dart`** (pure Dart): goal in steps
+  (`target`/`completed`/`isComplete`), `struggleCount` the game defines,
+  `escapeVisibilityFor({toleratedStruggles})`. Reuses the **enum**
+  `PuzzleEscapeVisibility`, **not** `PuzzleEasingState`'s `wrongThisRound`
+  arithmetic — a game has no wrong answer (pre-review H1). Six public members, no
+  score/streak/best (M4). Motion variant requires a non-motion fallback at the
+  call site, asserted to not itself need motion (H4 + SR1).
+- **`lib/features/ringing/game_ringing_view.dart`**: `GameRingingView` (two
+  callbacks + `reduceMotion`) and `GameRingingSlot` (reads
+  `MediaQuery.disableAnimations`). **The escape is owned by `RingingScreen`; a
+  game has no seam to hide or gate it** (H2).
+- **`GameCatalogue` 4 → 10** (zero `playable`) + a **`homeRail` subset of four** so
+  Home does not regress (M2/M3). Six name keys (ARB +6), six tile gaps G23-G28.
 
-### 3. Three domain conflicts the mockups carried — the domain won each
+## Findings that matter for Phase 12 and later
 
-- **Escape strictness is 2-value** (`confirm` / `confirmAndHold`, no "off"); the
-  mockup draws three with a "Never" that reads "can only be dismissed by
-  solving" — a lockout the safety rule forbids, and the handoff's own prompt
-  admits "Never" does not remove the escape. Owner chose keep-domain, honest
-  labels. **Verified on device: exactly two options, no "Never".**
-- **"After 1 min" split** back into the escape control and the separate
-  `toleratedWrongAnswers` stepper — two real, separately-persisted fields.
-- **Ten real types, Material icons, no Shake.** The mockup's six illustrative
-  cards and "Shake" method are not in the domain (`DismissMethod` = Tap / Puzzle
-  / Hold). Logged `asset_gaps.md` G21, G22.
+### 1. The escape policy stays the user's — pass `toleratedWrongAnswers` in (SR2 M1)
 
-### 4. The ARB count round-tripped the restate discipline (+2, not +10–14)
+A game-launch path must call
+`GameChallenge.escapeVisibilityFor(toleratedStruggles: settings.toleratedWrongAnswers)`.
+A test proves a game and a puzzle offer the escape identically against that
+setting; a Phase 12 game that reads anything else, or maps it differently, fails
+the test. The `core` layer cannot read settings (headless), so wiring the source
+is Phase 12's job — the guard stands watch.
 
-The plan said "possibly zero"; the pre-review H1 corrected to +10–14;
-measurement settled at **+2** (`settingsPuzzleEntryLabel`/`Description`). Nearly
-the whole chooser, onboarding and **per-alarm** vocabulary was already ported in
-10 locales — including `alarmPuzzle*`, the dismiss-method labels, and the
-onboarding step content. Restated, not quietly passed.
+### 2. A motion game's fallback must be usable without motion (SR1 H1)
 
-### 5. SR1 H1 — the dismiss segment misrepresented a `holdToDismiss` alarm
+`GameChallenge.motion` requires a `fallback` AND asserts `!fallback.requiresMotion`
+— a "fallback" that also needs motion used to compile and defeated the a11y rule.
+Phase 15's Shake DJ and Tilt Maze inherit this; the fallback cannot be skipped or
+faked.
 
-The two-segment Tap/Puzzle control fell back to showing **Tap selected** for a
-`holdToDismiss` alarm while the draft still held Hold. No UI creates Hold today,
-but the enum, mapper, `AlarmDismissSummary` and `Alarm`/`AlarmDraft` all carry
-it, so a seeded row or a later phase would hit it. Now the section names an
-unrepresentable method read-only; pinned by a seeded test.
+### 3. The foundation stayed headless on purpose (pre-review H3)
 
-### 6. SR2 H1 — the onboarding completion path swallowed a write failure
+No onboarding demo shipped. The three unused onboarding strings
+(`onboardingTryGame`, `onboardingPracticeNote`, `onboardingPracticeRetry`) stay
+unused — a playable demo is a future-phase surface ("Do not implement future
+phases"). A games phase that wants a live demo may spend them; the foundation did
+not.
 
-`_finish()`/`_skip()` awaited the writes with no catch; a Drift failure stranded
-the user on a dead-looking button, and the ported `onboardingSaveError` string
-was unused — Phase 09's SR2 one layer over (the write side). Now wrapped: on
-failure it holds position and shows the error; pinned by a throwing-repository
-test.
+### 4. The pre-review's own L1 was wrong, and the full-project review caught it
 
-### 7. Device verification is not optional (Phase 09's rule)
+The pre-review called Home's "See All" games action dangling with "no
+destination". It is not — `PHASE_03_PLAN.md:202` routes it to the Stats Games
+segment deliberately (both tabs, `go` not `push`). Corrected in the post-review.
+A review's own earlier finding is still subject to the later review.
 
-The whole flow was run on the iPhone 18 Pro: welcome → Next → puzzle preview →
-Next → strictness → **"Set your first alarm" lands on Add Alarm, not Home.** The
-Phase 09 redirect race does **not** recur under the new multi-step flow
-(completion fires only on the last step; the redirect stays push-only and
-stepping is local state, not a router redirect).
+### 5. Device verification is a regression check when nothing new ships
 
-## Next session — Phase 11, Game foundation
+No new interactive surface → the device run confirmed the ringing surface and the
+Home rail are **unchanged**: Home draws exactly the four tiles (not the ten),
+Step Quest opens the blocked/step-count sheet. The catalogue grew to ten in data
+while the rail stayed at four in render — proven on the iPhone 18 Pro, not just in
+a synthetic-viewport widget test.
 
-**"What a 'game' is in this codebase."** Phase 10 built the CHOOSER and wired the
-ten existing puzzle TYPES; Phases 11–17 build the games themselves. **Three
-ported onboarding strings stay unused on purpose** (`onboardingTryGame`,
-`onboardingPracticeNote`, `onboardingPracticeRetry`) — they were for a *playable*
-practice demo, which is a games-phase concern, not the chooser's. **Still owed by
-nobody** (carried forward): the sleep-boundary/`package:health` restoration
-(unbuilt across 07/08/09/10); `CapyNavBar` 98.7pt vs 79.9 pushing 3 meadows;
-`MeadowFooter` 2× grass (G19); `SceneHeader` flat top (G18); Alarms' 3 /
-Add-Edit's 8 Tier A failures. Android untested, no emulator.
+## Next session — Phase 12, Touch games I (Catch the Capy, Memory Hideout)
+
+**The first two REAL games**, built on Phase 11's contract. No new permissions.
+Each is a `GameRingingView` subclass driving a `GameChallenge`; each must pass
+`settings.toleratedWrongAnswers` into the escape mapping and honor `reduceMotion`.
+Flip the catalogue entry `comingSoon → playable` and add its tile art (close the
+G23/… gap). **Still owed by nobody** (carried): the sleep-boundary /
+`package:health` restoration (unbuilt across 07-11); `CapyNavBar` 98.7 vs 79.9;
+`MeadowFooter` 2× grass (G19); `SceneHeader` flat top (G18); Alarms 3 / Add-Edit 8
+Tier A failures. Android untested, no emulator.

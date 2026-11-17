@@ -2012,6 +2012,30 @@
   "@gameFindTheImpostor": {
     "description": "Product name of the Find the Impostor wake-up game."
   },
+  "gameMemoryHideout": "Memory Hideout",
+  "@gameMemoryHideout": {
+    "description": "Product name of the Memory Hideout wake-up game."
+  },
+  "gameTiltMaze": "Tilt Maze",
+  "@gameTiltMaze": {
+    "description": "Product name of the Tilt Maze wake-up game."
+  },
+  "gameMorningSort": "Morning Sort",
+  "@gameMorningSort": {
+    "description": "Product name of the Morning Sort wake-up game."
+  },
+  "gameRhythmRescue": "Rhythm Rescue",
+  "@gameRhythmRescue": {
+    "description": "Product name of the Rhythm Rescue wake-up game."
+  },
+  "gameCapyRocket": "Capy Rocket",
+  "@gameCapyRocket": {
+    "description": "Product name of the Capy Rocket wake-up game."
+  },
+  "gameQrTreasureHunt": "QR Treasure Hunt",
+  "@gameQrTreasureHunt": {
+    "description": "Product name of the QR Treasure Hunt wake-up game."
+  },
   "alarmAddAction": "Add Alarm",
   "@alarmAddAction": {
     "description": "Visible label on the Add Alarm button in the alarm list header."

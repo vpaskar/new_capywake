@@ -788,3 +788,26 @@ capybara-with-puzzle-piece hero the package has no exact cutout for. The chooser
 reuses `SceneCrop.settings`; onboarding reuses `SceneCrop.home` (as Phase 09's
 welcome did, G20). Nearest supplied scenes, already audited and bundled. No new
 art, no fidelity claim — these surfaces bind nothing in Tier A.
+
+## G23–G28 — Six games have no tile art (Phase 11, Tier B)
+
+`GameCatalogue` now lists all ten games (Phase 11 completes the four it carried).
+Four have tile art in the package (`tile.stepQuest`, `tile.shakeDj`,
+`tile.catchTheCapy`, `tile.findTheImpostor`) and stay the Home rail. The other
+six carry a tile id the package does not supply:
+
+- **G23** `tile.memoryHideout` (Memory Hideout)
+- **G24** `tile.tiltMaze` (Tilt Maze)
+- **G25** `tile.morningSort` (Morning Sort)
+- **G26** `tile.rhythmRescue` (Rhythm Rescue)
+- **G27** `tile.capyRocket` (Capy Rocket)
+- **G28** `tile.qrTreasureHunt` (QR Treasure Hunt)
+
+**Nothing in Phase 11 renders these six.** The Home rail reads
+`GameCatalogue.homeRail` (the four with art); no See-All screen is built. The id
+is reserved so each game's phase (12–17) adds its tile. The gap is a known
+absence, not a shipped broken image: `CapyArt.byId` throws on these ids
+(`art.dart:130`), and a test (`game_rail_test.dart`) asserts they throw — so a
+later phase that adds art without updating this entry is caught. No art
+generated; no fidelity claim (the posters are bezel-wrapped storyboards, not
+native geometry — Tier A binds nothing for games).
