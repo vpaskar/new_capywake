@@ -1,3 +1,4 @@
+import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
 import 'package:meta/meta.dart';
@@ -60,12 +61,17 @@ class PuzzleSettings {
     this.difficulty = PuzzleDifficulty.medium,
     this.toleratedWrongAnswers = 3,
     this.escapeStrictness = PuzzleEscapeStrictness.confirm,
-  }) : enabledTypes = Set.unmodifiable(enabledTypes) {
+    Set<String> enabledGames = const {},
+    this.includePuzzles = true,
+  }) : enabledTypes = Set.unmodifiable(enabledTypes),
+       enabledGames = Set.unmodifiable(enabledGames) {
     checkInvariants(
       enabledTypes: this.enabledTypes,
       taskCount: taskCount,
       toleratedWrongAnswers: toleratedWrongAnswers,
+      enabledGames: this.enabledGames,
     );
+    checkPool(includePuzzles: includePuzzles, enabledGames: this.enabledGames);
   }
 
   /// A short reasoning challenge with a screen-reader-solvable prompt.
@@ -98,7 +104,18 @@ class PuzzleSettings {
     Set<PuzzleType>? enabledTypes,
     int? taskCount,
     int? toleratedWrongAnswers,
+    Set<String>? enabledGames,
   }) {
+    final unknownGames = enabledGames?.where(
+      (id) => GameCatalogue.byId(id) == null,
+    );
+    if (unknownGames != null && unknownGames.isNotEmpty) {
+      throw ArgumentError.value(
+        unknownGames.toList(),
+        'enabledGames',
+        'Not a game this build knows',
+      );
+    }
     if (enabledTypes != null && enabledTypes.isEmpty) {
       throw ArgumentError.value(
         enabledTypes,
@@ -126,6 +143,20 @@ class PuzzleSettings {
     }
   }
 
+  /// The wake pool is never empty: puzzles, or at least one game.
+  static void checkPool({
+    required bool includePuzzles,
+    required Set<String> enabledGames,
+  }) {
+    if (!includePuzzles && enabledGames.isEmpty) {
+      throw ArgumentError.value(
+        enabledGames,
+        'enabledGames',
+        'With puzzles excluded, at least one game must be enabled',
+      );
+    }
+  }
+
   /// The types the selector may draw from. Never empty; unmodifiable.
   final Set<PuzzleType> enabledTypes;
 
@@ -145,6 +176,13 @@ class PuzzleSettings {
 
   /// How deliberate reaching the escape has to be.
   final PuzzleEscapeStrictness escapeStrictness;
+
+  /// Catalogue ids of the games in the wake pool; unmodifiable.
+  final Set<String> enabledGames;
+
+  /// Whether the generated puzzles are in the wake pool. The types stay
+  /// configured either way, so [enabledTypes] is never empty.
+  final bool includePuzzles;
 
   /// How prominently the emergency escape should be offered right now.
   ///
@@ -168,11 +206,18 @@ class PuzzleSettings {
       ? PuzzleEscapeVisibility.prominent
       : PuzzleEscapeVisibility.available;
 
-  /// Whether every enabled type needs sight.
+  /// Whether every pool member needs sight.
   ///
   /// The settings UI uses this to warn a screen-reader user before they
   /// leave themselves an unsolvable morning.
-  bool get isVisualOnly => enabledTypes.every((t) => !t.isScreenReaderSolvable);
+  bool get isVisualOnly {
+    final puzzlesSolvable =
+        includePuzzles && enabledTypes.any((t) => t.isScreenReaderSolvable);
+    final gamesSolvable = enabledGames.any(
+      (id) => GameCatalogue.byId(id)?.screenReaderSolvable ?? false,
+    );
+    return !puzzlesSolvable && !gamesSolvable;
+  }
 
   PuzzleSettings copyWith({
     Set<PuzzleType>? enabledTypes,
@@ -180,12 +225,16 @@ class PuzzleSettings {
     PuzzleDifficulty? difficulty,
     int? toleratedWrongAnswers,
     PuzzleEscapeStrictness? escapeStrictness,
+    Set<String>? enabledGames,
+    bool? includePuzzles,
   }) => PuzzleSettings(
     enabledTypes: enabledTypes ?? this.enabledTypes,
     taskCount: taskCount ?? this.taskCount,
     difficulty: difficulty ?? this.difficulty,
     toleratedWrongAnswers: toleratedWrongAnswers ?? this.toleratedWrongAnswers,
     escapeStrictness: escapeStrictness ?? this.escapeStrictness,
+    enabledGames: enabledGames ?? this.enabledGames,
+    includePuzzles: includePuzzles ?? this.includePuzzles,
   );
 
   @override
@@ -196,7 +245,9 @@ class PuzzleSettings {
         other.taskCount == taskCount &&
         other.difficulty == difficulty &&
         other.toleratedWrongAnswers == toleratedWrongAnswers &&
-        other.escapeStrictness == escapeStrictness;
+        other.escapeStrictness == escapeStrictness &&
+        _setEquals(other.enabledGames, enabledGames) &&
+        other.includePuzzles == includePuzzles;
   }
 
   @override
@@ -206,6 +257,8 @@ class PuzzleSettings {
     difficulty,
     toleratedWrongAnswers,
     escapeStrictness,
+    Object.hashAllUnordered(enabledGames),
+    includePuzzles,
   );
 
   @override
@@ -213,7 +266,8 @@ class PuzzleSettings {
       'PuzzleSettings(types: ${enabledTypes.length}, tasks: $taskCount, '
       'difficulty: ${difficulty.name}, '
       'tolerated: $toleratedWrongAnswers, '
-      'escape: ${escapeStrictness.name})';
+      'escape: ${escapeStrictness.name}, '
+      'games: ${enabledGames.length}, puzzles: $includePuzzles)';
 
   static bool _setEquals<T>(Set<T> a, Set<T> b) =>
       a.length == b.length && a.containsAll(b);

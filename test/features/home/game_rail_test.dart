@@ -1,11 +1,14 @@
+import 'package:capywake/app/router.dart';
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
+import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/home/game_rail.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 
 Future<void> _pumpRail(
   WidgetTester tester, {
@@ -16,13 +19,26 @@ Future<void> _pumpRail(
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
 
+  final router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (_, _) => const Scaffold(body: Center(child: GameRail())),
+      ),
+      GoRoute(
+        path: '${Routes.games}/:id',
+        builder: (_, state) =>
+            Scaffold(body: Text('practice:${state.pathParameters['id']}')),
+      ),
+    ],
+  );
   await tester.pumpWidget(
-    MaterialApp(
+    MaterialApp.router(
+      routerConfig: router,
       locale: locale,
       theme: capyTheme(),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: const Scaffold(body: Center(child: GameRail())),
     ),
   );
   await tester.pumpAndSettle();
@@ -79,13 +95,14 @@ void main() {
       }
     });
 
-    testWidgets('the six games without art are a logged gap, not rendered', (
+    testWidgets('the five unbuilt games without art are a logged gap', (
       tester,
     ) async {
       final homeIds = GameCatalogue.homeRail.map((e) => e.id).toSet();
       final gapOnly = GameCatalogue.entries.where(
-        (e) => !homeIds.contains(e.id),
+        (e) => !homeIds.contains(e.id) && !e.isPlayable,
       );
+      expect(gapOnly, hasLength(5));
 
       for (final entry in gapOnly) {
         expect(
@@ -96,6 +113,26 @@ void main() {
               'tile here means art was added without updating asset_gaps.md',
         );
       }
+    });
+
+    testWidgets('Memory Hideout borrows its game art as a tile (G23)', (
+      tester,
+    ) async {
+      final entry = GameCatalogue.byId('memory_hideout')!;
+      expect(entry.tileAssetId, 'game.memoryCapy');
+      expect(CapyArt.byId(entry.tileAssetId).path, contains('moments_14'));
+    });
+
+    testWidgets('a playable tile opens practice, not the sheet', (
+      tester,
+    ) async {
+      await _pumpRail(tester);
+
+      await tester.tap(find.text('Catch the Capy'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('practice:catch_the_capy'), findsOneWidget);
+      expect(find.text('Not built yet'), findsNothing);
     });
 
     testWidgets('a comingSoon tap opens the sheet, never a dead tap', (
@@ -141,17 +178,14 @@ void main() {
         await tester.tap(tile);
         await tester.pumpAndSettle();
 
-        expect(
-          find.text('Not built yet'),
-          findsOneWidget,
-          reason: '${entry.id} did not open a sheet',
-        );
+        final opened = entry.isPlayable
+            ? find.text('practice:${entry.id}')
+            : find.text('Not built yet');
+        expect(opened, findsOneWidget, reason: '${entry.id} opened nothing');
 
         // Dismiss before the next iteration: a sheet left open belongs to the
         // old tree and the next pump would assert against it.
-        Navigator.of(
-          tester.element(find.text('Not built yet')),
-        ).pop();
+        Navigator.of(tester.element(opened)).pop();
         await tester.pumpAndSettle();
       }
     });

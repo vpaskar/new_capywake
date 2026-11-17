@@ -1,7 +1,7 @@
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
-import 'package:capywake/features/home/game_rail.dart';
+import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 

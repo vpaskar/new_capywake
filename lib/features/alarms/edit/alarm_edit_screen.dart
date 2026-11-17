@@ -1,6 +1,7 @@
 import 'package:capywake/core/alarm_draft.dart';
 import 'package:capywake/core/alarm_repeat.dart';
 import 'package:capywake/core/alarm_sound.dart' show AlarmSoundCatalog;
+import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/data/providers.dart';
@@ -16,6 +17,7 @@ import 'package:capywake/features/alarms/edit/alarm_form_rows.dart';
 import 'package:capywake/features/alarms/edit/dismiss_method_section.dart';
 import 'package:capywake/features/alarms/edit/time_stepper_field.dart';
 import 'package:capywake/features/alarms/edit/weekday_chip_row.dart';
+import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/puzzle/puzzle_labels.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -277,9 +279,13 @@ class _FormState extends ConsumerState<_Form> {
         ref.watch(puzzleSettingsStreamProvider).value ??
         PuzzleSettings.defaults();
     final resolved = _draft.resolvePuzzleSettings(defaults);
-    final summary =
-        '${puzzleDifficultyLabel(resolved.difficulty, l10n)} · '
-        '${l10n.puzzleSettingsTaskCountValue(resolved.taskCount)}';
+    final summary = [
+      puzzleDifficultyLabel(resolved.difficulty, l10n),
+      if (resolved.includePuzzles)
+        l10n.puzzleSettingsTaskCountValue(resolved.taskCount),
+      for (final game in GameCatalogue.entries)
+        if (resolved.enabledGames.contains(game.id)) gameName(l10n, game),
+    ].join(' · ');
 
     return DismissMethodSection(
       method: _draft.dismissMethod,
@@ -287,6 +293,14 @@ class _FormState extends ConsumerState<_Form> {
       summary: summary,
       onMethodChanged: (method) =>
           setState(() => _draft = _draft.withDismissMethod(method)),
+      includePuzzles: resolved.includePuzzles,
+      enabledGames: resolved.enabledGames,
+      onPuzzlesChanged: (on) => setState(
+        () => _draft = _draft.withPuzzlesInPool(included: on),
+      ),
+      onGameChanged: (id, {required enabled}) => setState(
+        () => _draft = _draft.withGameInPool(id, enabled: enabled),
+      ),
       onFollowDefaultsChanged: ({required follow}) => setState(
         () => _draft = _draft.withPuzzleCustomisation(
           enabled: !follow,

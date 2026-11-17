@@ -1,13 +1,17 @@
+import 'package:capywake/app/router.dart';
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
+import 'package:capywake/features/games/game_names.dart';
+import 'package:capywake/features/games/game_registry.dart';
 import 'package:capywake/features/home/game_unavailable_sheet.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
-/// The four tiles from `01_HOME.png`, from [GameCatalogue.homeRail]. No tile
-/// is a dead tap: an unavailable one opens a sheet saying so.
+/// The four tiles from `01_HOME.png`. A playable tile opens practice, which
+/// never touches an alarm; an unavailable one opens a sheet saying so.
 class GameRail extends StatelessWidget {
   const GameRail({super.key});
 
@@ -58,7 +62,9 @@ class _Tile extends StatelessWidget {
       label: label,
       child: ExcludeSemantics(
         child: InkWell(
-          onTap: () => showGameUnavailableSheet(context, entry),
+          onTap: () => GameRegistry.isLaunchable(entry.id)
+              ? context.push(Routes.gamePractice(entry.id))
+              : showGameUnavailableSheet(context, entry),
           borderRadius: BorderRadius.circular(CapyRadius.lg),
           child: SizedBox(
             width: GameRail.tileSize,
@@ -159,21 +165,3 @@ class _SoonBadge extends StatelessWidget {
 /// The tile `01_HOME.png` rings. Drawn in `cocoa`, not its green: `success`
 /// is 2.68:1 on cream and F1 forbids a lone boundary channel.
 const featuredGameId = 'step_quest';
-
-/// Resolve a catalogue entry's l10n key to its display name. Product names,
-/// but ARB keys rather than Dart literals: no hardcoded user-facing string.
-String gameName(AppLocalizations l10n, GameEntry entry) {
-  return switch (entry.nameKey) {
-    'gameStepQuest' => l10n.gameStepQuest,
-    'gameQrTreasureHunt' => l10n.gameQrTreasureHunt,
-    'gameShakeDj' => l10n.gameShakeDj,
-    'gameCatchTheCapy' => l10n.gameCatchTheCapy,
-    'gameFindTheImpostor' => l10n.gameFindTheImpostor,
-    'gameMemoryHideout' => l10n.gameMemoryHideout,
-    'gameTiltMaze' => l10n.gameTiltMaze,
-    'gameMorningSort' => l10n.gameMorningSort,
-    'gameRhythmRescue' => l10n.gameRhythmRescue,
-    'gameCapyRocket' => l10n.gameCapyRocket,
-    _ => throw ArgumentError('Unmapped game name key: ${entry.nameKey}'),
-  };
-}

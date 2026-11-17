@@ -5,6 +5,7 @@ import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/design/capy_toggle.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/alarms/edit/alarm_form_rows.dart';
+import 'package:capywake/features/games/challenge_pool_picker.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -18,6 +19,10 @@ class DismissMethodSection extends StatelessWidget {
     required this.summary,
     required this.onMethodChanged,
     required this.onFollowDefaultsChanged,
+    required this.includePuzzles,
+    required this.enabledGames,
+    required this.onPuzzlesChanged,
+    required this.onGameChanged,
     super.key,
   });
 
@@ -32,6 +37,12 @@ class DismissMethodSection extends StatelessWidget {
 
   final ValueChanged<DismissMethod> onMethodChanged;
   final void Function({required bool follow}) onFollowDefaultsChanged;
+
+  /// This alarm's resolved wake pool, editable only while it has an override.
+  final bool includePuzzles;
+  final Set<String> enabledGames;
+  final ValueChanged<bool> onPuzzlesChanged;
+  final void Function(String gameId, {required bool enabled}) onGameChanged;
 
   /// Whether the two-segment Tap/Puzzle control can show this method.
   static bool _representable(DismissMethod method) =>
@@ -74,6 +85,20 @@ class DismissMethodSection extends StatelessWidget {
             ),
             const SizedBox(height: CapySpacing.sm),
             _SummaryRow(summary: summary),
+            if (hasOverride) ...[
+              const SizedBox(height: CapySpacing.md),
+              Text(
+                l10n.alarmChallengePoolLabel,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              const SizedBox(height: CapySpacing.xs),
+              ChallengePoolPicker(
+                includePuzzles: includePuzzles,
+                enabledGames: enabledGames,
+                onPuzzlesChanged: onPuzzlesChanged,
+                onGameChanged: onGameChanged,
+              ),
+            ],
           ],
         ],
       ),

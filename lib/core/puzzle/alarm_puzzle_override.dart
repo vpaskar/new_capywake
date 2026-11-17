@@ -30,14 +30,26 @@ class AlarmPuzzleOverride {
     this.taskCount,
     this.toleratedWrongAnswers,
     this.escapeStrictness,
+    Set<String>? enabledGames,
+    this.includePuzzles,
   }) : enabledTypes = enabledTypes == null
            ? null
-           : Set.unmodifiable(enabledTypes) {
+           : Set.unmodifiable(enabledTypes),
+       enabledGames = enabledGames == null
+           ? null
+           : Set.unmodifiable(enabledGames) {
     PuzzleSettings.checkInvariants(
       enabledTypes: this.enabledTypes,
       taskCount: taskCount,
       toleratedWrongAnswers: toleratedWrongAnswers,
+      enabledGames: this.enabledGames,
     );
+    if (includePuzzles == false) {
+      PuzzleSettings.checkPool(
+        includePuzzles: false,
+        enabledGames: this.enabledGames ?? const {},
+      );
+    }
   }
 
   /// Pin every field to the given settings.
@@ -51,6 +63,8 @@ class AlarmPuzzleOverride {
         taskCount: settings.taskCount,
         toleratedWrongAnswers: settings.toleratedWrongAnswers,
         escapeStrictness: settings.escapeStrictness,
+        enabledGames: settings.enabledGames,
+        includePuzzles: settings.includePuzzles,
       );
 
   /// An override that changes nothing — every field follows the default.
@@ -80,12 +94,21 @@ class AlarmPuzzleOverride {
   /// remove it.
   final PuzzleEscapeStrictness? escapeStrictness;
 
+  /// Games this alarm draws from, or `null` to follow the default.
+  final Set<String>? enabledGames;
+
+  /// Whether this alarm's pool holds puzzles, or `null` to follow the
+  /// default. `false` requires this override's own non-empty [enabledGames].
+  final bool? includePuzzles;
+
   /// Whether this override changes nothing (every field follows the default).
   bool get isEmpty =>
       enabledTypes == null &&
       taskCount == null &&
       toleratedWrongAnswers == null &&
-      escapeStrictness == null;
+      escapeStrictness == null &&
+      enabledGames == null &&
+      includePuzzles == null;
 
   /// Compose the settings one alarm should actually wake someone with.
   ///
@@ -98,6 +121,7 @@ class AlarmPuzzleOverride {
     DismissChallengeDifficulty? difficulty,
   }) {
     final o = override ?? none;
+    final games = o.enabledGames ?? defaults.enabledGames;
     return PuzzleSettings(
       enabledTypes: o.enabledTypes ?? defaults.enabledTypes,
       taskCount: o.taskCount ?? defaults.taskCount,
@@ -105,6 +129,10 @@ class AlarmPuzzleOverride {
       toleratedWrongAnswers:
           o.toleratedWrongAnswers ?? defaults.toleratedWrongAnswers,
       escapeStrictness: o.escapeStrictness ?? defaults.escapeStrictness,
+      enabledGames: games,
+      // An empty pool would leave a ringing alarm nothing to solve.
+      includePuzzles:
+          games.isEmpty || (o.includePuzzles ?? defaults.includePuzzles),
     );
   }
 
@@ -113,11 +141,15 @@ class AlarmPuzzleOverride {
     int? taskCount,
     int? toleratedWrongAnswers,
     PuzzleEscapeStrictness? escapeStrictness,
+    Set<String>? enabledGames,
+    bool? includePuzzles,
   }) => AlarmPuzzleOverride(
     enabledTypes: enabledTypes ?? this.enabledTypes,
     taskCount: taskCount ?? this.taskCount,
     toleratedWrongAnswers: toleratedWrongAnswers ?? this.toleratedWrongAnswers,
     escapeStrictness: escapeStrictness ?? this.escapeStrictness,
+    enabledGames: enabledGames ?? this.enabledGames,
+    includePuzzles: includePuzzles ?? this.includePuzzles,
   );
 
   @override
@@ -127,7 +159,9 @@ class AlarmPuzzleOverride {
         _setEquals(other.enabledTypes, enabledTypes) &&
         other.taskCount == taskCount &&
         other.toleratedWrongAnswers == toleratedWrongAnswers &&
-        other.escapeStrictness == escapeStrictness;
+        other.escapeStrictness == escapeStrictness &&
+        _setEquals(other.enabledGames, enabledGames) &&
+        other.includePuzzles == includePuzzles;
   }
 
   @override
@@ -136,13 +170,16 @@ class AlarmPuzzleOverride {
     taskCount,
     toleratedWrongAnswers,
     escapeStrictness,
+    enabledGames == null ? null : Object.hashAllUnordered(enabledGames!),
+    includePuzzles,
   );
 
   @override
   String toString() =>
       'AlarmPuzzleOverride(types: ${enabledTypes?.length}, '
       'tasks: $taskCount, tolerated: $toleratedWrongAnswers, '
-      'escape: ${escapeStrictness?.name})';
+      'escape: ${escapeStrictness?.name}, games: ${enabledGames?.length}, '
+      'puzzles: $includePuzzles)';
 
   static bool _setEquals<T>(Set<T>? a, Set<T>? b) {
     if (a == null || b == null) return a == null && b == null;

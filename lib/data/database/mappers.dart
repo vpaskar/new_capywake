@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
@@ -303,6 +304,8 @@ abstract final class PuzzleSettingsMapper {
       'difficulty': s.difficulty.name,
       'toleratedWrongAnswers': s.toleratedWrongAnswers,
       'escapeStrictness': s.escapeStrictness.name,
+      'enabledGames': s.enabledGames.toList(),
+      'includePuzzles': s.includePuzzles,
     });
   }
 
@@ -310,6 +313,7 @@ abstract final class PuzzleSettingsMapper {
     final defaults = PuzzleSettings.defaults();
     final map = jsonDecode(raw) as Map<String, dynamic>;
     final types = _parsePuzzleTypes(map['enabledTypes']);
+    final games = _parseGameIds(map['enabledGames']) ?? const <String>{};
     return PuzzleSettings(
       enabledTypes: types ?? defaults.enabledTypes,
       taskCount:
@@ -336,6 +340,8 @@ abstract final class PuzzleSettingsMapper {
         map['escapeStrictness'],
         defaults.escapeStrictness,
       ),
+      enabledGames: games,
+      includePuzzles: games.isEmpty || map['includePuzzles'] != false,
     );
   }
 }
@@ -355,11 +361,15 @@ abstract final class AlarmPuzzleOverrideMapper {
         'toleratedWrongAnswers': o.toleratedWrongAnswers,
       if (o.escapeStrictness != null)
         'escapeStrictness': o.escapeStrictness!.name,
+      if (o.enabledGames != null) 'enabledGames': o.enabledGames!.toList(),
+      if (o.includePuzzles != null) 'includePuzzles': o.includePuzzles,
     });
   }
 
   static AlarmPuzzleOverride fromJson(String raw) {
     final map = jsonDecode(raw) as Map<String, dynamic>;
+    final games = _parseGameIds(map['enabledGames']);
+    final includePuzzles = map['includePuzzles'];
     return AlarmPuzzleOverride(
       enabledTypes: _parsePuzzleTypes(map['enabledTypes']),
       taskCount: _parseBoundedIntOrNull(
@@ -376,6 +386,12 @@ abstract final class AlarmPuzzleOverrideMapper {
         PuzzleEscapeStrictness.values,
         map['escapeStrictness'],
       ),
+      enabledGames: games,
+      includePuzzles:
+          includePuzzles is! bool ||
+              (!includePuzzles && (games?.isEmpty ?? true))
+          ? null
+          : includePuzzles,
     );
   }
 }
@@ -394,6 +410,16 @@ Set<PuzzleType>? _parsePuzzleTypes(Object? raw) {
     if (type != null) out.add(type);
   }
   return out.isEmpty ? null : out;
+}
+
+/// Reads stored game ids, dropping ids this build does not know. Unlike puzzle
+/// types an empty list is a real choice ("no games"); `null` means absent.
+Set<String>? _parseGameIds(Object? raw) {
+  if (raw is! List) return null;
+  return {
+    for (final id in raw)
+      if (id is String && GameCatalogue.byId(id) != null) id,
+  };
 }
 
 /// Reads a stored integer, or `null` when it is missing or out of range.

@@ -1438,7 +1438,6 @@
   "puzzleExampleRotation": "Pick the shape turned a quarter turn clockwise. An up arrow would point right.",
   "puzzlePreviewAction": "Try {game}",
   "puzzlePreviewReplay": "Show again",
-  "puzzleRotationHelp": "Turn on the games you want in your rotation. Tap play to try one.",
   "@puzzlePreviewAction": {
     "description": "Accessible label for the playable example button beside a puzzle type.",
     "placeholders": {
@@ -2080,5 +2079,137 @@
   "permissionNotNowAction": "Not now",
   "@permissionNotNowAction": {
     "description": "Dismiss action on a just-in-time permission rationale."
+  },
+  "gameCatchTheCapyInstruction": "{count, plural, =1{Catch the capybara once.} other{Catch the capybara {count} times.}}",
+  "@gameCatchTheCapyInstruction": {
+    "description": "Catch the Capy instruction; count is the catches needed.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "gameCatchTheCapyTargetLabel": "Catch the capybara",
+  "@gameCatchTheCapyTargetLabel": {
+    "description": "Screen-reader label of the capybara the user taps."
+  },
+  "gameProgressValue": "{done} / {total}",
+  "@gameProgressValue": {
+    "description": "Game progress shown beside the pips, e.g. 3 / 5.",
+    "placeholders": {
+      "done": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "gameProgressSemantics": "{done} of {total} done",
+  "@gameProgressSemantics": {
+    "description": "Screen-reader reading of game progress.",
+    "placeholders": {
+      "done": {
+        "type": "int",
+        "example": "3"
+      },
+      "total": {
+        "type": "int",
+        "example": "5"
+      }
+    }
+  },
+  "gameMemoryHideoutRevealInstruction": "Remember where Capy hid.",
+  "@gameMemoryHideoutRevealInstruction": {
+    "description": "Memory Hideout, while Capy is shown."
+  },
+  "gameMemoryHideoutGuessInstruction": "Where is Capy hiding?",
+  "@gameMemoryHideoutGuessInstruction": {
+    "description": "Memory Hideout, while Capy is hidden."
+  },
+  "gameMemoryHideoutReadyAction": "Ready",
+  "@gameMemoryHideoutReadyAction": {
+    "description": "Button that hides Capy so the user can guess."
+  },
+  "gameMemoryHideoutBushLabel": "Bush {index} of {count}",
+  "@gameMemoryHideoutBushLabel": {
+    "description": "Screen-reader label of one bush.",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "2"
+      },
+      "count": {
+        "type": "int",
+        "example": "3"
+      }
+    }
+  },
+  "gameMemoryHideoutCapyHere": "Capy is behind bush {index}.",
+  "@gameMemoryHideoutCapyHere": {
+    "description": "Announced while Capy is shown behind a bush.",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gameMemoryHideoutFound": "Found Capy.",
+  "@gameMemoryHideoutFound": {
+    "description": "Neutral result after a correct pick."
+  },
+  "gameMemoryHideoutMissed": "Not there. Capy is behind bush {index}.",
+  "@gameMemoryHideoutMissed": {
+    "description": "Neutral result after a wrong pick; Capy is shown again.",
+    "placeholders": {
+      "index": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gamePracticeNote": "Practice here. Nothing you do changes an alarm.",
+  "@gamePracticeNote": {
+    "description": "Caption on the practice screen."
+  },
+  "gamePracticeDoneTitle": "Practice done",
+  "@gamePracticeDoneTitle": {
+    "description": "Shown when a practice game is finished."
+  },
+  "gamePracticeAgainAction": "Play again",
+  "@gamePracticeAgainAction": {
+    "description": "Restarts a finished practice game."
+  },
+  "gameTryAction": "Try it",
+  "@gameTryAction": {
+    "description": "Opens practice for a game from the chooser."
+  },
+  "challengePoolLabel": "Wake challenges",
+  "@challengePoolLabel": {
+    "description": "Chooser section: what a puzzle alarm can ask for."
+  },
+  "challengePoolHelp": "Each alarm draws one of these at random. At least one stays on.",
+  "@challengePoolHelp": {
+    "description": "Explains how the pool is used."
+  },
+  "challengePuzzlesLabel": "Puzzles",
+  "@challengePuzzlesLabel": {
+    "description": "The generated puzzles, as one member of the pool."
+  },
+  "puzzleSettingsTaskCountPuzzlesOnly": "Applies to puzzles only.",
+  "@puzzleSettingsTaskCountPuzzlesOnly": {
+    "description": "Caption: the task count does not apply to games."
+  },
+  "alarmChallengePoolLabel": "Challenges for this alarm",
+  "@alarmChallengePoolLabel": {
+    "description": "Add/Edit: the pool this alarm draws from."
+  },
+  "gameMemoryHideoutShuffleInstruction": "Watch the bushes.",
+  "@gameMemoryHideoutShuffleInstruction": {
+    "description": "Memory Hideout, while the bushes swap places."
   }
 }

@@ -1,7 +1,7 @@
 import 'package:meta/meta.dart';
 
-/// Whether a wake-up game can be played yet. A game arrives by flipping this,
-/// not by editing the view. Zero entries are `playable` until its phase.
+/// Whether a wake-up game can be played yet. A game arrives by flipping this
+/// and registering its view, never by editing the alarm flow.
 enum GameAvailability {
   /// Built and reachable.
   playable,
@@ -23,6 +23,7 @@ class GameEntry {
     required this.nameKey,
     required this.tileAssetId,
     required this.availability,
+    required this.screenReaderSolvable,
     this.blockedReason,
   }) : assert(
          (availability == GameAvailability.blocked) == (blockedReason != null),
@@ -33,6 +34,9 @@ class GameEntry {
   final String nameKey;
   final String tileAssetId;
   final GameAvailability availability;
+
+  /// Whether a screen-reader user can finish the game without sight.
+  final bool screenReaderSolvable;
 
   /// Why the game is unavailable, for [GameAvailability.blocked] only.
   final GameBlockedReason? blockedReason;
@@ -57,6 +61,7 @@ abstract final class GameCatalogue {
     nameKey: 'gameStepQuest',
     tileAssetId: 'tile.stepQuest',
     availability: GameAvailability.blocked,
+    screenReaderSolvable: false,
     blockedReason: GameBlockedReason.stepCount,
   );
 
@@ -65,6 +70,7 @@ abstract final class GameCatalogue {
     nameKey: 'gameQrTreasureHunt',
     tileAssetId: 'tile.qrTreasureHunt',
     availability: GameAvailability.blocked,
+    screenReaderSolvable: false,
     blockedReason: GameBlockedReason.camera,
   );
 
@@ -73,13 +79,15 @@ abstract final class GameCatalogue {
     nameKey: 'gameShakeDj',
     tileAssetId: 'tile.shakeDj',
     availability: GameAvailability.comingSoon,
+    screenReaderSolvable: false,
   );
 
   static const _catchTheCapy = GameEntry(
     id: 'catch_the_capy',
     nameKey: 'gameCatchTheCapy',
     tileAssetId: 'tile.catchTheCapy',
-    availability: GameAvailability.comingSoon,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const _findTheImpostor = GameEntry(
@@ -87,13 +95,16 @@ abstract final class GameCatalogue {
     nameKey: 'gameFindTheImpostor',
     tileAssetId: 'tile.findTheImpostor',
     availability: GameAvailability.comingSoon,
+    screenReaderSolvable: false,
   );
 
   static const _memoryHideout = GameEntry(
     id: 'memory_hideout',
     nameKey: 'gameMemoryHideout',
-    tileAssetId: 'tile.memoryHideout',
-    availability: GameAvailability.comingSoon,
+    // No painted tile in the package (gap G23): the game's own art stands in.
+    tileAssetId: 'game.memoryCapy',
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const _tiltMaze = GameEntry(
@@ -101,6 +112,7 @@ abstract final class GameCatalogue {
     nameKey: 'gameTiltMaze',
     tileAssetId: 'tile.tiltMaze',
     availability: GameAvailability.comingSoon,
+    screenReaderSolvable: false,
   );
 
   static const _morningSort = GameEntry(
@@ -108,6 +120,7 @@ abstract final class GameCatalogue {
     nameKey: 'gameMorningSort',
     tileAssetId: 'tile.morningSort',
     availability: GameAvailability.comingSoon,
+    screenReaderSolvable: false,
   );
 
   static const _rhythmRescue = GameEntry(
@@ -115,6 +128,7 @@ abstract final class GameCatalogue {
     nameKey: 'gameRhythmRescue',
     tileAssetId: 'tile.rhythmRescue',
     availability: GameAvailability.comingSoon,
+    screenReaderSolvable: false,
   );
 
   static const _capyRocket = GameEntry(
@@ -122,6 +136,7 @@ abstract final class GameCatalogue {
     nameKey: 'gameCapyRocket',
     tileAssetId: 'tile.capyRocket',
     availability: GameAvailability.comingSoon,
+    screenReaderSolvable: false,
   );
 
   static const entries = <GameEntry>[
@@ -146,4 +161,14 @@ abstract final class GameCatalogue {
   ];
 
   static Iterable<GameEntry> get playable => entries.where((e) => e.isPlayable);
+
+  static Iterable<String> get ids => entries.map((e) => e.id);
+
+  /// The entry for [id], or `null` when this build does not know it.
+  static GameEntry? byId(String id) {
+    for (final e in entries) {
+      if (e.id == id) return e;
+    }
+    return null;
+  }
 }

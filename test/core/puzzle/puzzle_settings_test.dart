@@ -309,7 +309,7 @@ void main() {
       expect(
         settings.toString(),
         'PuzzleSettings(types: 2, tasks: 2, difficulty: medium, '
-        'tolerated: 3, escape: confirm)',
+        'tolerated: 3, escape: confirm, games: 0, puzzles: true)',
       );
     });
   });

@@ -39,15 +39,9 @@ class _RowBody extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              // A title is never truncated: it is what the row is. It holds
-              // one line at the default scale and wraps at larger ones.
+              // A title is never truncated and never overflows: it wraps.
               Text(
                 title,
-                maxLines: MediaQuery.textScalerOf(context).scale(1) > 1.3
-                    ? null
-                    : 1,
-                overflow: TextOverflow.visible,
-                softWrap: MediaQuery.textScalerOf(context).scale(1) > 1.3,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: ink,
                   fontWeight: FontWeight.w600,
@@ -84,6 +78,9 @@ class SettingsChevronRow extends StatelessWidget {
   final String? subtitle;
   final VoidCallback onTap;
 
+  /// The most of the row a value may take before it ellipsizes.
+  static const maxValueFraction = 0.4;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -105,40 +102,43 @@ class SettingsChevronRow extends StatelessWidget {
                 horizontal: SettingsRowMetrics.horizontalPadding,
                 vertical: SettingsRowMetrics.verticalPadding,
               ),
-              child: Row(
-                children: [
-                  // Flexible, not Expanded: the body takes what it needs and
-                  // the value takes the rest, so a title is never truncated.
-                  Flexible(
-                    child: _RowBody(
-                      icon: icon,
-                      title: title,
-                      subtitle: subtitle,
-                    ),
-                  ),
-                  if (value != null) ...[
-                    const SizedBox(width: CapySpacing.sm),
-                    // The value yields first: it truncates so the title,
-                    // which names the row, never has to.
-                    Flexible(
-                      child: Text(
-                        value!,
-                        textAlign: TextAlign.end,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: inkSoft,
-                        ),
+              child: LayoutBuilder(
+                builder: (context, constraints) => Row(
+                  children: [
+                    Expanded(
+                      child: _RowBody(
+                        icon: icon,
+                        title: title,
+                        subtitle: subtitle,
                       ),
                     ),
+                    if (value != null) ...[
+                      const SizedBox(width: CapySpacing.sm),
+                      // Capped and laid out before the title, so the value
+                      // yields (ellipsis) and can never be painted over.
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: constraints.maxWidth * maxValueFraction,
+                        ),
+                        child: Text(
+                          value!,
+                          textAlign: TextAlign.end,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: inkSoft,
+                          ),
+                        ),
+                      ),
+                    ],
+                    const SizedBox(width: CapySpacing.xs),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      size: CapyIconSize.md,
+                      color: inkSoft,
+                    ),
                   ],
-                  const SizedBox(width: CapySpacing.xs),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    size: CapyIconSize.md,
-                    color: inkSoft,
-                  ),
-                ],
+                ),
               ),
             ),
           ),

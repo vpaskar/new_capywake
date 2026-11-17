@@ -26,6 +26,27 @@ class PuzzleSettingsController {
     });
   }
 
+  /// Add or drop the puzzles from the wake pool; never empties it.
+  Future<void> setPuzzlesIncluded({required bool included}) => _update(
+    (s) => !included && s.enabledGames.isEmpty
+        ? s
+        : s.copyWith(includePuzzles: included),
+  );
+
+  /// Add or drop one game from the wake pool; never empties it.
+  Future<void> setGameEnabled(String gameId, {required bool enabled}) {
+    return _update((s) {
+      final next = {...s.enabledGames};
+      if (enabled) {
+        next.add(gameId);
+      } else {
+        next.remove(gameId);
+      }
+      if (next.isEmpty && !s.includePuzzles) return s;
+      return s.copyWith(enabledGames: next);
+    });
+  }
+
   Future<void> setTaskCount(int count) =>
       _update((s) => s.copyWith(taskCount: count));
 

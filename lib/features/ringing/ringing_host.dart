@@ -1,8 +1,13 @@
+import 'package:capywake/core/games/game_challenge.dart';
+import 'package:capywake/core/games/wake_challenge.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_round.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
 import 'package:capywake/data/providers.dart';
+import 'package:capywake/features/games/game_launch.dart';
+import 'package:capywake/features/games/game_registry.dart';
+import 'package:capywake/features/ringing/game_ringing_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
@@ -33,6 +38,8 @@ class _RingingHostState extends ConsumerState<RingingHost> {
   PuzzleRound? _round;
   String? _roundOccurrenceId;
   int _roundSnoozeCount = -1;
+  WakeChallenge? _challenge;
+  GameChallenge? _gameProgress;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +47,8 @@ class _RingingHostState extends ConsumerState<RingingHost> {
     if (session == null) {
       _round = null;
       _roundOccurrenceId = null;
+      _challenge = null;
+      _gameProgress = null;
       return widget.child;
     }
 
@@ -66,43 +75,97 @@ class _RingingHostState extends ConsumerState<RingingHost> {
     final session = ref.watch(ringingSessionProvider).value;
     if (session == null) return const SizedBox.shrink();
     final controller = ref.read(ringingControllerProvider);
-    final round = _roundFor(session);
+    final settings = _renderableSettings(session.alarm);
+    final challenge = _challengeFor(session, settings);
+    final round = challenge is PuzzleWakeChallenge ? _round : null;
 
     return RingingScreen(
-      session: _withRoundVisibility(session, round),
-      escapeStrictness: _renderableSettings(session.alarm).escapeStrictness,
+      session: _withGameVisibility(
+        _withRoundVisibility(session, round),
+        settings,
+      ),
+      escapeStrictness: settings.escapeStrictness,
       onDismiss: controller.dismiss,
       onSnooze: controller.snooze,
       onEscape: controller.escape,
-      puzzleSlot: round == null
-          ? null
-          : PuzzleView(
-              round: round,
-              onRoundChanged: (next) => _onRoundChanged(next, session),
-              onSolved: controller.dismiss,
+      puzzleSlot: switch (challenge) {
+        null => null,
+        PuzzleWakeChallenge() => PuzzleView(
+          round: round!,
+          onRoundChanged: (next) => _onRoundChanged(next, session),
+          onSolved: controller.dismiss,
+        ),
+        GameWakeChallenge(:final gameId) => GameRingingSlot(
+          builder: ({required reduceMotion}) => GameRegistry.build(
+            gameId,
+            GameLaunch(
+              seed: PuzzleRound.advanceSeed(_ringSeed(session)),
+              difficulty: settings.difficulty,
+              onProgress: (progress) => _onGameProgress(progress, settings),
+              onCompleted: controller.dismiss,
+              reduceMotion: reduceMotion,
             ),
+            key: ValueKey(_ringSeed(session)),
+          )!,
+        ),
+      },
     );
   }
 
-  /// The live round, or `null` when this alarm is not puzzle-backed. Seeded
-  /// from the occurrence and snooze count: reproducible, never repeated.
-  PuzzleRound? _roundFor(RingingSession session) {
+  int _ringSeed(RingingSession session) =>
+      Object.hash(session.occurrence.id, session.occurrence.snoozeCount);
+
+  /// This ring's challenge, or `null` when the alarm is not puzzle-backed.
+  /// Picked once per ring from the alarm's resolved pool, seeded as before.
+  WakeChallenge? _challengeFor(
+    RingingSession session,
+    PuzzleSettings settings,
+  ) {
     if (session.alarm.dismissMethod != DismissMethod.puzzle) return null;
 
     final sameRing =
         _roundOccurrenceId == session.occurrence.id &&
         _roundSnoozeCount == session.occurrence.snoozeCount;
-    if (sameRing && _round != null) return _round;
+    if (sameRing && _challenge != null) return _challenge;
 
-    final settings = _renderableSettings(session.alarm);
-    final round = PuzzleRound.start(
+    final seed = _ringSeed(session);
+    final challenge = WakeChallengeSelector.pick(
       settings: settings,
-      seed: Object.hash(session.occurrence.id, session.occurrence.snoozeCount),
+      seed: seed,
+      isLaunchable: GameRegistry.isLaunchable,
     );
-    _round = round;
+    _challenge = challenge;
+    _gameProgress = null;
+    _round = challenge is PuzzleWakeChallenge
+        ? PuzzleRound.start(settings: settings, seed: seed)
+        : null;
     _roundOccurrenceId = session.occurrence.id;
     _roundSnoozeCount = session.occurrence.snoozeCount;
-    return round;
+    return challenge;
+  }
+
+  /// Same rule as a puzzle, against the alarm's resolved tolerance.
+  RingingSession _withGameVisibility(
+    RingingSession session,
+    PuzzleSettings settings,
+  ) {
+    final progress = _gameProgress;
+    if (progress == null) return session;
+    final visibility = progress.escapeVisibilityFor(
+      toleratedStruggles: settings.toleratedWrongAnswers,
+    );
+    if (visibility != PuzzleEscapeVisibility.prominent) return session;
+    return session.copyWith(escapeVisibility: visibility);
+  }
+
+  void _onGameProgress(GameChallenge progress, PuzzleSettings settings) {
+    setState(() => _gameProgress = progress);
+    if (progress.escapeVisibilityFor(
+          toleratedStruggles: settings.toleratedWrongAnswers,
+        ) ==
+        PuzzleEscapeVisibility.prominent) {
+      ref.read(ringingControllerProvider).raiseEscapeVisibility();
+    }
   }
 
   PuzzleSettings _renderableSettings(Alarm alarm) {

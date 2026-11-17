@@ -2,79 +2,46 @@
 
 ## State
 
-Phases 00–11 are **done** and committed.
+Phases 00–12 are **done** and committed.
 
-**Current phase: `12` — Touch games I (Catch the Capy, Memory Hideout).**
+**Current phase: `13` — Touch games II (Rhythm Rescue, Capy Rocket).**
 
-**1,572 tests** pass. `lib` 97.95%, `lib/core` 99.61%, `lib/core/games`
-**100.00%**, `lib/data` 88.95%, `lib/features/ringing` **98.53%**. **446 ARB keys
-× 10 locales.** Comment baseline **113** (+0).
+**1,751 tests** pass. `lib` 98.20%, `lib/core` 99.67%, `lib/core/games` and
+`lib/features/games` **100%**, `lib/data` 89.17%, `lib/features/ringing` 98.62%.
+**466 ARB keys × 10 locales.** Comment baseline **113**.
 
-All five primary screens are built and captured. A saved alarm reaches the
-platform, a ringing alarm reaches a surface the user can stop, permissions are
-asked for just-in-time, Stats renders nothing it cannot measure, onboarding is a
-three-step flow, the user can configure the wake puzzle, and — new in Phase 11 —
-**the game foundation exists**: `GameChallenge` (headless), the `GameRingingView`
-widget contract, and a `GameCatalogue` of all ten games (zero playable). **No game
-is built yet** — Phase 11 is the contract, Phases 12–17 are the ten products.
+Two games are playable — Catch the Capy and Memory Hideout — on a ringing alarm
+(via the wake pool) and in practice (Home tile, chooser "Try it").
 
 ## Read in this order
 
-1. `CLAUDE.md` — the project's rules.
-2. `ai-orchestration/PHASE_TRACKER.md` — pointer, protocol, 20 phases.
-3. `memory/current-phase.md` — what Phase 11 built and found.
-4. `docs/phases/PHASE_11_SELF_REVIEW_1.md` — **read this one.** A motion game's
-   "fallback" could itself require motion and compile, defeating the a11y rule.
-   Now asserted against. The foundation is where the ten games inherit their
-   invariants, so a hole there is a hole in six phases.
-5. `docs/phases/PHASE_11_SELF_REVIEW_2.md` — a game and a puzzle must offer the
-   escape identically against the user's tolerance; a test pins it, Phase 12
-   passes the setting in.
-6. `docs/visual/tier_a_blocks.md` and `docs/visual/asset_gaps.md` — append.
+1. `CLAUDE.md` — note the **"Games are dynamic"** rule (owner, Phase 12) and the
+   narrowed animation rule (ringing chrome only).
+2. `ai-orchestration/PHASE_TRACKER.md` — pointer, protocol.
+3. `memory/current-phase.md` — the selection model and what Phase 12 found.
+4. `docs/phases/PHASE_12_PLAN.md` §12 — the owner's mid-phase directions.
+5. `docs/phases/PHASE_12_FULL_PROJECT_REVIEW.md` — the two cross-app defects.
+6. `docs/visual/asset_gaps.md` G29–G32 — open art asks, including the run cycle.
 
-## What Phase 12 is
+## How a game plugs in now (Phase 11 contract + Phase 12 model)
 
-**Touch games I — Catch the Capy, Memory Hideout. No new permissions.** The first
-two REAL games, built on Phase 11's contract. Each is a `GameRingingView` subclass
-driving a `GameChallenge`. Read `reference/01_REFERENCES/games/posters/` (04 Catch
-the Capy, 06 Memory Hideout) and the four tiles in `reference/02_ASSETS/game_tiles/`.
+- Headless round in `lib/core/games/` (pure Dart, 100%): goal, struggle, seeded.
+- View: a `GameRingingView` subclass with `seed` + `difficulty`, built only via
+  `GameRegistry.builders` from a `GameLaunch`. Wrap it in a `CapyCard`; give it a
+  **fixed height** (the ringing slot scrolls). Report completion once.
+- Flip the catalogue entry to `playable`, set `screenReaderSolvable` honestly,
+  add the registry line — `game_registry_test` pins the two equal.
+- Motion: required (owner). Stop it under `widget.reduceMotion` **and**
+  `MediaQuery.accessibleNavigationOf`, and keep the game finishable there.
+  Scale speed with difficulty, catchable half-asleep. A continuously animating
+  game needs a short idle beat or tests must `pump(duration)` explicitly.
+- Escape: never yours. Struggle → `onProgress`; the host compares against the
+  **alarm's resolved** tolerance.
+- Copy: keep the puzzle and game vocabularies apart in all ten locales — the
+  vocabulary guard fails otherwise.
+- Art: never generated. Report every gap in session, then log it.
 
-## How a game plugs into the foundation (Phase 11's contract)
-
-- **`GameChallenge`** (`lib/core/games/game_challenge.dart`) is the headless
-  state: `target`/`completed`/`isComplete`, `struggleCount`, and
-  `escapeVisibilityFor({toleratedStruggles})`. A game updates it each interaction.
-- **`GameRingingView`** (`lib/features/ringing/game_ringing_view.dart`) is the
-  widget contract: `onProgress(challenge)` (the host raises the escape when
-  struggle crosses tolerance) and `onCompleted()` (the host dismisses). It also
-  takes `reduceMotion`, supplied by **`GameRingingSlot`** from
-  `MediaQuery.disableAnimations` — honor it.
-- **The escape is NOT yours.** `RingingScreen` owns and renders it; a game never
-  hides, gates, or draws the escape. Just signal via `onProgress`.
-- **Pass the user's setting in.** The escape policy is the user's: a game-launch
-  path must call `escapeVisibilityFor(toleratedStruggles: settings.toleratedWrongAnswers)`,
-  not a hard-coded tolerance (SR2 M1 — a test proves games and puzzles agree; it
-  fails if you diverge).
-- **Flip the catalogue + add art.** Set the entry `comingSoon → playable` and add
-  its tile art (closing the G23/… gap). The `homeRail` subset stays four unless
-  `01_HOME.png` changes.
-- **A motion game (Phase 15, not 12)** must use `GameChallenge.motion(fallback:)`
-  with a non-motion fallback. Touch games (12) are `.touch`, no fallback.
-
-## What Phase 11 leaves you
-
-1. **No game is wired to a live alarm.** Phase 11 is the contract; the ringing
-   host still launches only `PuzzleView` for `DismissMethod.puzzle`. Phase 12
-   adds the first real game-launch path.
-2. **The three onboarding strings stay unused** (`onboardingTryGame`, …) — a
-   playable onboarding demo was deferred from the foundation (pre-review H3). A
-   games phase may spend them on a live demo, deliberately.
-3. **Device verification is not optional.** Phase 11 confirmed on the iPhone 18
-   Pro that Home draws four tiles (not ten) and the blocked sheet renders. A
-   games phase ships real interaction — RUN THE GAME on the device before claiming
-   it works. A green suite is not proof (Phase 09's central finding).
-
-## The measurement rule, now with an eighth entry
+## The measurement rule, now with a ninth entry
 
 Phase 03: a row-mean detector cannot tell text from a layout edge.
 Phase 04: a method named beside a number is not enough if it ran against the
@@ -98,6 +65,11 @@ foundation is the one place the ten games inherit their invariants, so a hole
 there is a hole in six phases. And a review's own earlier finding is still subject
 to the later review: the pre-review's L1 ("See All" is dangling) was wrong, and
 the full-project pass caught it against `PHASE_03_PLAN.md`.**
+
+**Phase 12: a layout box is not what is painted.** Settings' title painted over
+its value for five phases while every rect-overlap check would have passed —
+measure glyphs, not boxes. And a capture can race image decoding: an empty card
+in a screenshot was the harness, not the app (pre-cache before capturing).
 
 ## Owed by nobody — carried forward
 

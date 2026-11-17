@@ -811,3 +811,64 @@ absence, not a shipped broken image: `CapyArt.byId` throws on these ids
 later phase that adds art without updating this entry is caught. No art
 generated; no fidelity claim (the posters are bezel-wrapped storyboards, not
 native geometry — Tier A binds nothing for games).
+
+### G23 update — Phase 12: Memory Hideout borrows its game art as a tile (Tier B)
+
+Memory Hideout is playable, so its tile now renders (chooser Games section,
+40 pt). There is still **no painted tile** in the package: `tileAssetId` points at
+`game.memoryCapy` (`mascots/moments_14.webp`, the capybara peeking over a bush).
+Asserted by `game_rail_test.dart`. **Owner ask:** a painted 360 px tile matching
+the other four. G24–G28 unchanged (five unbuilt games, ids still throw).
+
+## G29 — No usable plain bush for Memory Hideout (Phase 12, Tier B, reported)
+
+The only plain bushes are `asset_library/decor/bush_round.png` (107 px, **97 px
+trimmed to ink**) and `asset_library/icons/bush.png` (98 px); `source_png/sheet_*`
+bushes sit on blurred, unmasked backgrounds. Imported at **32 pt**
+(`ArtUse.gameBush`, the largest it stays sharp at 3×) inside ≥ 96 pt tap cards —
+the import guard was not relaxed. On screen the hidden bushes are visibly tiny
+beside the 84 pt reveal art (`docs/visual/ringing_memory_hideout/`).
+**Owner ask:** a transparent plain bush, ≥ 288 px wide, matching the bush in
+`moments_14`. Reported in session.
+
+## G30 — Catch the Capy: no running capybara in a nightcap (Phase 12, Tier B, reported)
+
+`04_CATCH_THE_CAPY.png` draws a running capybara in an orange nightcap. The
+package's nearest is `mascots/collection_10.webp` (running, headband, 267 px),
+used as `game.catchCapy` at 88 pt. **Owner ask:** the poster's pose as a cutout,
+≥ 300 px. Reported in session.
+
+## G31 — Catch the Capy: no meadow backdrop (Phase 12, Tier B, reported)
+
+The poster's field is a painted meadow with bushes and flowers. The package's
+outdoor scenes (`asset_library/scenes/*`) are 276–312 px wide — under a third of
+the ≥ 1050 × 840 px a 350 × 280 pt field needs. The field is a flat
+`CapyColors.meadow` fill. **Owner ask:** a meadow scene, ≥ 1050 × 840 px, no
+baked text. Reported in session.
+
+### G31 update — the meadow now carries the package's decor
+
+After owner feedback ("not only green field") the Catch the Capy field draws the
+package's own decor behind the capybara: `leafy_shrub` (46 pt), `bush_round`
+(32 pt), `sprout` (32 pt), `grass_tuft` (28 pt) — each at the largest size its
+source stays sharp. Still Tier B: these are small icons on a flat fill, not a
+painted meadow. **Owner ask unchanged:** a meadow scene ≥ 1050 × 840 px.
+
+## G32 — Catch the Capy has no run cycle, dust or footsteps (Phase 12, reported)
+
+Owner asked for moving legs, a dust animation and footsteps. **None exists as
+art.** `collection_10` is one still pose; `animations/03_walk_cycle` is a
+backpack *walk* tweened programmatically from a single still (its own README
+says so) — its legs do not move either. Drawing limbs, dust or prints in code
+would be generating art (and the legacy's `CustomPaint` failure), so the game
+ships a flip-to-face-direction plus a three-bounce stride on the still pose.
+
+**Owner ask** (transparent PNG, one character, facing **right**, shared canvas
+so frames do not jitter, no baked dust):
+
+1. **Run cycle** — 6–8 frames, legs alternating, ≥ 300 × 300 px each, ideally in
+   the poster's orange nightcap (closes G30 too).
+2. **Dust puff** — 3–4 frames (appear, grow, fade), ≥ 150 px, separate from the
+   capybara so it can trail behind.
+3. **Footprint** — one paw print (or a left/right pair), ≥ 90 px, to stamp and
+   fade along the path.

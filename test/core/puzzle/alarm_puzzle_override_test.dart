@@ -338,12 +338,12 @@ void main() {
       expect(
         override.toString(),
         'AlarmPuzzleOverride(types: 2, tasks: 2, tolerated: 1, '
-        'escape: confirmAndHold)',
+        'escape: confirmAndHold, games: null, puzzles: null)',
       );
       expect(
         AlarmPuzzleOverride().toString(),
         'AlarmPuzzleOverride(types: null, tasks: null, tolerated: null, '
-        'escape: null)',
+        'escape: null, games: null, puzzles: null)',
       );
     });
 

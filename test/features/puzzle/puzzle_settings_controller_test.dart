@@ -127,4 +127,44 @@ void main() {
     expect(saved.difficulty, PuzzleDifficulty.hard);
     expect(saved.taskCount, 5);
   });
+
+  group('wake pool floor', () {
+    test('dropping the puzzles with no game is refused', () async {
+      final c = _container();
+      await c
+          .read(puzzleSettingsControllerProvider)
+          .setPuzzlesIncluded(included: false);
+      final saved = await c
+          .read(capywakeRepositoryProvider)
+          .getPuzzleSettings();
+      expect(saved.includePuzzles, isTrue);
+    });
+
+    test('dropping the last game with puzzles excluded is refused', () async {
+      final c = _container();
+      final repo = c.read(capywakeRepositoryProvider);
+      await repo.savePuzzleSettings(
+        PuzzleSettings(
+          enabledTypes: const {PuzzleType.arithmetic},
+          enabledGames: const {'catch_the_capy'},
+          includePuzzles: false,
+        ),
+      );
+      await c
+          .read(puzzleSettingsControllerProvider)
+          .setGameEnabled('catch_the_capy', enabled: false);
+      expect((await repo.getPuzzleSettings()).enabledGames, {'catch_the_capy'});
+    });
+
+    test('games add and drop while the puzzles stay in', () async {
+      final c = _container();
+      final controller = c.read(puzzleSettingsControllerProvider);
+      await controller.setGameEnabled('memory_hideout', enabled: true);
+      await controller.setGameEnabled('memory_hideout', enabled: false);
+      final saved = await c
+          .read(capywakeRepositoryProvider)
+          .getPuzzleSettings();
+      expect(saved.enabledGames, isEmpty);
+    });
+  });
 }

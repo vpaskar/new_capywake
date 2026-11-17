@@ -3,6 +3,7 @@ import 'package:capywake/features/settings/settings_group.dart';
 import 'package:capywake/features/settings/settings_rows.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Widget _host(Widget child, {TextScaler scaler = TextScaler.noScaling}) {
@@ -282,5 +283,69 @@ void main() {
         findsWidgets,
       );
     });
+  });
+
+  group('SettingsChevronRow never paints its title over its value', () {
+    for (final locale in AppLocalizations.supportedLocales) {
+      testWidgets('snooze row in ${locale.languageCode}', (tester) async {
+        final l10n = await AppLocalizations.delegate.load(locale);
+        await tester.pumpWidget(
+          MaterialApp(
+            locale: locale,
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(
+              body: Center(
+                child: SizedBox(
+                  width: 373.6,
+                  child: SettingsChevronRow(
+                    icon: Icons.snooze,
+                    title: l10n.settingsDefaultSnoozeLabel,
+                    value: l10n.alarmSnoozeDurationValue(9),
+                    onTap: () {},
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        final title = tester.getRect(
+          find.text(l10n.settingsDefaultSnoozeLabel),
+        );
+        final value = tester.getRect(
+          find.text(l10n.alarmSnoozeDurationValue(9)),
+        );
+        expect(tester.takeException(), isNull);
+        expect(
+          title.overlaps(value),
+          isFalse,
+          reason: 'Phase 07 shipped "Default snooze leng9 minutes"',
+        );
+        expect(value.width, greaterThan(0));
+        final paragraph = tester.renderObject<RenderParagraph>(
+          find.descendant(
+            of: find.text(l10n.settingsDefaultSnoozeLabel),
+            matching: find.byType(RichText),
+          ),
+        );
+        final plain = paragraph.text.toPlainText();
+        final glyphs = [
+          for (var i = 0; i < plain.length; i++)
+            if (plain[i].trim().isNotEmpty)
+              ...paragraph.getBoxesForSelection(
+                TextSelection(baseOffset: i, extentOffset: i + 1),
+              ),
+        ];
+        for (final box in glyphs) {
+          expect(
+            box.right,
+            lessThanOrEqualTo(paragraph.size.width + 0.5),
+            reason: 'the title paints past its own box',
+          );
+        }
+      });
+    }
   });
 }

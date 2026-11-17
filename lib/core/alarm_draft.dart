@@ -280,6 +280,36 @@ class AlarmDraft {
     );
   }
 
+  /// Add or drop the puzzles from this alarm's own pool. A no-op without an
+  /// override, or when it would leave the pool empty.
+  AlarmDraft withPuzzlesInPool({required bool included}) {
+    final o = puzzleOverride;
+    if (o == null) return this;
+    final games = o.enabledGames ?? const <String>{};
+    if (!included && games.isEmpty) return this;
+    return copyWith(
+      puzzleOverride: o.copyWith(includePuzzles: included, enabledGames: games),
+    );
+  }
+
+  /// Add or drop one game from this alarm's own pool. A no-op without an
+  /// override, or when it would leave the pool empty.
+  AlarmDraft withGameInPool(String gameId, {required bool enabled}) {
+    final o = puzzleOverride;
+    if (o == null) return this;
+    final games = {...?o.enabledGames};
+    if (enabled) {
+      games.add(gameId);
+    } else {
+      games.remove(gameId);
+    }
+    final puzzles = o.includePuzzles ?? true;
+    if (games.isEmpty && !puzzles) return this;
+    return copyWith(
+      puzzleOverride: o.copyWith(enabledGames: games, includePuzzles: puzzles),
+    );
+  }
+
   /// Toggle the given ISO weekday (1=Mon..7=Sun) in [repeatWeekdays] —
   /// removes it if present, adds it otherwise. Out-of-range values throw
   /// (callers should never attempt this — guarded by the UI's fixed

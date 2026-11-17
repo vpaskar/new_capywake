@@ -157,7 +157,13 @@ why the previous attempt could not match the mockups.
   intrinsic size): `lib/design/art_audit.dart` is the audit, `tool/import_art.dart`
   is the pipeline that applies it, and `test/design/art_audit_test.dart` +
   `art_manifest_test.dart` are the gate, so it runs inside `flutter test`.
-- No animation on the ringing surface. Honor `disableAnimations` everywhere.
+- No animation on the ringing **chrome** (clock, Snooze, the escape). Honor
+  `disableAnimations` everywhere.
+- **Games are dynamic (owner, 2026-11-17).** A game's own play may move — Catch
+  the Capy runs non-stop, Memory Hideout shuffles. Every motion stops under
+  `disableAnimations` **or** a screen reader (`accessibleNavigation`), where the
+  game must still be finishable. Speed scales with difficulty and stays
+  catchable half-asleep. Future games (13–17) follow this direction.
 
 ## Content integrity — the three screens that will try to lie
 
@@ -177,7 +183,8 @@ why the previous attempt could not match the mockups.
 - **Settings:** show only implemented rows. Backup & Sync and Restore Purchases
   are dropped — there is no backend and nothing to restore.
 - **Home:** the game rail reads from a typed catalogue; a `comingSoon` card is
-  marked and opens a "not built yet" sheet, never a dead tap.
+  marked and opens a "not built yet" sheet, never a dead tap; a playable card
+  opens practice, which never touches an alarm.
 
 ## Safety rules — inherited from the legacy, unchanged
 

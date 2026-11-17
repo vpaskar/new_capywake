@@ -3,14 +3,33 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('GameCatalogue', () {
-    test('ships with zero playable games', () {
+    test('exactly the two touch games built so far are playable', () {
       expect(
-        GameCatalogue.playable,
-        isEmpty,
+        GameCatalogue.playable.map((e) => e.id),
+        ['catch_the_capy', 'memory_hideout'],
         reason:
-            'No game is built until its phase (12-17). A playable entry here '
-            'means a game was marked available before it exists.',
+            'A game is playable only once its view is registered. Another '
+            'playable entry means a game was marked available before it '
+            'exists.',
       );
+    });
+
+    test('every playable game is screen-reader solvable', () {
+      for (final entry in GameCatalogue.playable) {
+        expect(entry.screenReaderSolvable, isTrue, reason: entry.id);
+      }
+    });
+
+    test('byId finds an entry and returns null for an unknown id', () {
+      expect(
+        GameCatalogue.byId('memory_hideout')?.nameKey,
+        'gameMemoryHideout',
+      );
+      expect(GameCatalogue.byId('not_a_game'), isNull);
+    });
+
+    test('ids lists every entry in catalogue order', () {
+      expect(GameCatalogue.ids, GameCatalogue.entries.map((e) => e.id));
     });
 
     test('lists all ten games', () {
@@ -95,6 +114,7 @@ void main() {
           nameKey: 'x',
           tileAssetId: 'x',
           availability: GameAvailability.blocked,
+          screenReaderSolvable: false,
         ),
         throwsA(isA<AssertionError>()),
       );
@@ -107,6 +127,7 @@ void main() {
           nameKey: 'x',
           tileAssetId: 'x',
           availability: GameAvailability.comingSoon,
+          screenReaderSolvable: false,
           blockedReason: GameBlockedReason.camera,
         ),
         throwsA(isA<AssertionError>()),

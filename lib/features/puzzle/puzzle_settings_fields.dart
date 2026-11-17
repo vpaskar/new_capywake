@@ -8,8 +8,8 @@ import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-/// The five wake-puzzle controls, shared by the chooser and the per-alarm
-/// override. Per-field callbacks; the escape control has no "off" value.
+/// The five wake-puzzle controls on the chooser. Per-field callbacks; the
+/// escape control has no "off" value.
 class PuzzleSettingsFields extends StatelessWidget {
   const PuzzleSettingsFields({
     required this.settings,
@@ -36,8 +36,6 @@ class PuzzleSettingsFields extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         _FieldLabel(text: l10n.puzzleSettingsTypesLabel),
-        const SizedBox(height: CapySpacing.xs),
-        _Caption(text: l10n.puzzleRotationHelp),
         const SizedBox(height: CapySpacing.sm),
         if (settings.isVisualOnly)
           _VisualOnlyNotice(
@@ -62,6 +60,8 @@ class PuzzleSettingsFields extends StatelessWidget {
           count: settings.taskCount,
           onChanged: onTaskCountChanged,
         ),
+        const SizedBox(height: CapySpacing.xs),
+        _Caption(text: l10n.puzzleSettingsTaskCountPuzzlesOnly),
         const _FieldDivider(),
         _FieldLabel(text: l10n.puzzleSettingsEscapeLabel),
         const SizedBox(height: CapySpacing.sm),

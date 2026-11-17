@@ -27,7 +27,18 @@ enum ArtUse {
   wordmark(renderBoxPt: 175),
 
   /// An animated loop.
-  animation(renderBoxPt: 120);
+  animation(renderBoxPt: 120),
+
+  /// The capybara a game asks you to tap.
+  gameTarget(renderBoxPt: 88),
+
+  /// A hiding bush, at the size the only bush in the package supports (G29).
+  gameBush(renderBoxPt: 32),
+
+  /// Meadow decor, each at the size its small source supports (G31).
+  gameShrub(renderBoxPt: 46),
+  gameSprout(renderBoxPt: 32),
+  gameTuft(renderBoxPt: 28);
 
   const ArtUse({required this.renderBoxPt});
 
@@ -70,6 +81,28 @@ abstract final class CapyArt {
       'assets/art/tiles/find_the_impostor.webp',
       ArtUse.tile,
     ),
+  ];
+
+  /// Game-surface art. Substitutions are logged in `asset_gaps.md` G29-G31.
+  static const games = <ArtAsset>[
+    ArtAsset(
+      'game.catchCapy',
+      'assets/art/mascots/collection_10.webp',
+      ArtUse.gameTarget,
+    ),
+    ArtAsset(
+      'game.memoryCapy',
+      'assets/art/mascots/moments_14.webp',
+      ArtUse.mascotLarge,
+    ),
+    ArtAsset('game.bush', 'assets/art/decor/bush_round.webp', ArtUse.gameBush),
+    ArtAsset(
+      'game.shrub',
+      'assets/art/decor/leafy_shrub.webp',
+      ArtUse.gameShrub,
+    ),
+    ArtAsset('game.sprout', 'assets/art/decor/sprout.webp', ArtUse.gameSprout),
+    ArtAsset('game.tuft', 'assets/art/decor/grass_tuft.webp', ArtUse.gameTuft),
   ];
 
   /// The sleeping capybara beside the wordmark on `01_HOME.png`. The choice
@@ -121,6 +154,7 @@ abstract final class CapyArt {
   static List<ArtAsset> get all => [
     ...scenes,
     ...tiles,
+    ...games,
     ...mascots,
     ...thumbnails,
     wordmark,

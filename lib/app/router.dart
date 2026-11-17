@@ -1,6 +1,7 @@
 import 'package:capywake/app/shell.dart';
 import 'package:capywake/features/alarms/alarms_screen.dart';
 import 'package:capywake/features/alarms/edit/alarm_edit_screen.dart';
+import 'package:capywake/features/games/game_practice_screen.dart';
 import 'package:capywake/features/home/home_screen.dart';
 import 'package:capywake/features/onboarding/onboarding_providers.dart';
 import 'package:capywake/features/onboarding/onboarding_screen.dart';
@@ -24,6 +25,9 @@ abstract final class Routes {
   static const onboarding = '/onboarding';
 
   static const alarmNew = '/alarms/new';
+  static const games = '/games';
+
+  static String gamePractice(String gameId) => '$games/$gameId';
 
   /// The edit route for one alarm. `new` is a sibling literal, so an alarm
   /// whose id were the string "new" would collide; ids are UUIDs.
@@ -121,6 +125,12 @@ GoRouter createRouter({String initialLocation = Routes.home, Ref? ref}) {
             builder: (context, state) => const PuzzleChooserScreen(),
           ),
         ],
+      ),
+      GoRoute(
+        path: '${Routes.games}/:id',
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) =>
+            GamePracticeScreen(gameId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: Routes.onboarding,

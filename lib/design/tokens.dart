@@ -16,6 +16,9 @@ abstract final class CapyColors {
   static const success = Color(0xFF57AA3A);
   static const grass = Color(0xFF85B83B);
 
+  /// A game field's ground, standing in for a meadow backdrop (gap G31).
+  static const meadow = Color(0xFFD5E8B5);
+
   /// Dark mode swaps surfaces and lays a scrim over the art, which is raster
   /// and cannot re-tint.
   static const darkSurface = Color(0xFF241A14);

@@ -74,6 +74,10 @@ const _jobs = <_Job>[
     cutout: false,
   ),
   _Job('wordmark.png', 'wordmark.webp', 175),
+  _Job('asset_library/decor/bush_round.png', 'decor/bush_round.webp', 32),
+  _Job('asset_library/decor/leafy_shrub.png', 'decor/leafy_shrub.webp', 46),
+  _Job('asset_library/decor/sprout.png', 'decor/sprout.webp', 32),
+  _Job('asset_library/decor/grass_tuft.png', 'decor/grass_tuft.webp', 28),
 ];
 
 int _bytes = 0;

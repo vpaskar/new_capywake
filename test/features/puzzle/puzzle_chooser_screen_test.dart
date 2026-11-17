@@ -75,9 +75,10 @@ void main() {
     );
     final l10n = _l10n(tester);
 
-    await tester.tap(
-      find.text(puzzleTypeLabel(PuzzleType.shapeRotation, l10n)),
-    );
+    final tile = find.text(puzzleTypeLabel(PuzzleType.shapeRotation, l10n));
+    await tester.ensureVisible(tile);
+    await tester.pumpAndSettle();
+    await tester.tap(tile);
     await tester.pumpAndSettle();
 
     final saved = await container

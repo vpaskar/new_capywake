@@ -418,3 +418,17 @@ grown catalogue. The rail did not regress; the game interaction is intact.
 **+0** (113); 3 new files, all trimmed by hand. 18 findings across four passes (13
 pre-review, 3 SR1, 2 SR2, 0 full-project — one candidate examined and found valid),
 all applied, none deferred.
+
+---
+
+## Phase 12 — Touch games I: Catch the Capy, Memory Hideout
+
+**Done 2026-11-17.** The selection model Phase 11 left open, settled by the owner
+in session (games join the Puzzle dismissal; app-wide rotation; per-alarm pool;
+Home tiles → practice), then two real games — made **dynamic** on the owner's
+direction mid-phase (non-stop running, facing, fleeing, speed by difficulty,
+meadow decor; shell-game shuffle). Motion stops under reduce-motion or a screen
+reader. Full-project review fixed a Phase 07 Settings overlap and puzzle/game
+vocabulary collisions in four locales, both guarded. Asset gaps G29–G32 reported
+in session; leg animation needs run-cycle frames. 1,751 tests, lib 98.20%, games
+100%, 466 ARB keys. 33 findings across four passes, 31 applied, 2 invalid.
