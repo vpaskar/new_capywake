@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "Rompicapi",
   "puzzleSettingsTaskCountPuzzlesOnly": "Vale solo per i rompicapi.",
   "alarmChallengePoolLabel": "Sfide di questa sveglia",
-  "gameMemoryHideoutShuffleInstruction": "Guarda i cespugli."
+  "gameMemoryHideoutShuffleInstruction": "Guarda i cespugli.",
+  "gameWinImageLabel": "Capy esulta tra i coriandoli",
+  "ringingGameWonTitle": "Sveglia fermata",
+  "gameWinCloseAction": "Chiudi",
+  "gameWinHeadline": "Ce l'hai fatta!",
+  "gameWinHeadlineCatchTheCapy": "Bella presa!",
+  "gameWinHeadlineMemoryHideout": "Capy trovato!",
+  "gameWinHeadlineRhythmRescue": "A tempo di musica!",
+  "gameWinHeadlineCapyRocket": "Decollo!",
+  "gameWinHeadlineMorningSort": "Tutto in ordine!",
+  "gameWinHeadlineFindTheImpostor": "Trovato!",
+  "gameWinHeadlineShakeDj": "Che mix!",
+  "gameWinHeadlineTiltMaze": "Fuori dal labirinto!",
+  "gameWinHeadlineStepQuest": "Passi completati!",
+  "gameWinHeadlineQrTreasureHunt": "Tesoro trovato!"
 }

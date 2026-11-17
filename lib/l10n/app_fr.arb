@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "Énigmes",
   "puzzleSettingsTaskCountPuzzlesOnly": "Pour les énigmes uniquement.",
   "alarmChallengePoolLabel": "Défis de cette alarme",
-  "gameMemoryHideoutShuffleInstruction": "Regarde les buissons."
+  "gameMemoryHideoutShuffleInstruction": "Regarde les buissons.",
+  "gameWinImageLabel": "Capy fait la fête avec des confettis",
+  "ringingGameWonTitle": "Alarme arrêtée",
+  "gameWinCloseAction": "Fermer",
+  "gameWinHeadline": "C'est fait !",
+  "gameWinHeadlineCatchTheCapy": "Belle prise !",
+  "gameWinHeadlineMemoryHideout": "Capy trouvé !",
+  "gameWinHeadlineRhythmRescue": "Pile dans le rythme !",
+  "gameWinHeadlineCapyRocket": "Décollage !",
+  "gameWinHeadlineMorningSort": "Tout est trié !",
+  "gameWinHeadlineFindTheImpostor": "Repéré !",
+  "gameWinHeadlineShakeDj": "Quel mix !",
+  "gameWinHeadlineTiltMaze": "Sorti du labyrinthe !",
+  "gameWinHeadlineStepQuest": "Pas accomplis !",
+  "gameWinHeadlineQrTreasureHunt": "Trésor trouvé !"
 }

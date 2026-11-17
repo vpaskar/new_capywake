@@ -1,3 +1,4 @@
+import 'package:capywake/design/art.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class OnboardingTryStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        Center(child: _PuzzleHero(dark: dark)),
+        const SizedBox(height: CapySpacing.lg),
         Semantics(
           header: true,
           child: Text(
@@ -44,6 +47,29 @@ class OnboardingTryStep extends StatelessWidget {
           style: theme.textTheme.bodySmall?.copyWith(color: inkSoft),
         ),
       ],
+    );
+  }
+}
+
+class _PuzzleHero extends StatelessWidget {
+  const _PuzzleHero({required this.dark});
+
+  final bool dark;
+
+  static const height = 150.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(CapyRadius.lg),
+        child: ColorFiltered(
+          colorFilter: dark
+              ? const ColorFilter.mode(CapyColors.artScrim, BlendMode.srcOver)
+              : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
+          child: Image.asset(CapyArt.puzzleHero.path, height: height),
+        ),
+      ),
     );
   }
 }

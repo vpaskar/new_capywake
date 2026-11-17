@@ -25,6 +25,7 @@ class GameEntry {
     required this.availability,
     required this.screenReaderSolvable,
     this.blockedReason,
+    this.winPoseAssetId,
   }) : assert(
          (availability == GameAvailability.blocked) == (blockedReason != null),
          'A blocked game carries a reason; a non-blocked game carries none.',
@@ -40,6 +41,9 @@ class GameEntry {
 
   /// Why the game is unavailable, for [GameAvailability.blocked] only.
   final GameBlockedReason? blockedReason;
+
+  /// The game's own win pose; `null` shows the shared win animation.
+  final String? winPoseAssetId;
 
   bool get isPlayable => availability == GameAvailability.playable;
 }
@@ -69,6 +73,7 @@ abstract final class GameCatalogue {
     id: 'qr_treasure_hunt',
     nameKey: 'gameQrTreasureHunt',
     tileAssetId: 'tile.qrTreasureHunt',
+    winPoseAssetId: 'pose.qrTreasureHunt',
     availability: GameAvailability.blocked,
     screenReaderSolvable: false,
     blockedReason: GameBlockedReason.camera,
@@ -78,6 +83,7 @@ abstract final class GameCatalogue {
     id: 'shake_dj',
     nameKey: 'gameShakeDj',
     tileAssetId: 'tile.shakeDj',
+    winPoseAssetId: 'pose.shakeDj',
     availability: GameAvailability.comingSoon,
     screenReaderSolvable: false,
   );
@@ -86,6 +92,7 @@ abstract final class GameCatalogue {
     id: 'catch_the_capy',
     nameKey: 'gameCatchTheCapy',
     tileAssetId: 'tile.catchTheCapy',
+    winPoseAssetId: 'pose.catchTheCapy',
     availability: GameAvailability.playable,
     screenReaderSolvable: true,
   );
@@ -94,6 +101,7 @@ abstract final class GameCatalogue {
     id: 'find_the_impostor',
     nameKey: 'gameFindTheImpostor',
     tileAssetId: 'tile.findTheImpostor',
+    winPoseAssetId: 'pose.findTheImpostor',
     availability: GameAvailability.comingSoon,
     screenReaderSolvable: false,
   );
@@ -102,6 +110,7 @@ abstract final class GameCatalogue {
     id: 'memory_hideout',
     nameKey: 'gameMemoryHideout',
     tileAssetId: 'tile.memoryHideout',
+    winPoseAssetId: 'pose.memoryHideout',
     availability: GameAvailability.playable,
     screenReaderSolvable: true,
   );
@@ -110,6 +119,7 @@ abstract final class GameCatalogue {
     id: 'tilt_maze',
     nameKey: 'gameTiltMaze',
     tileAssetId: 'tile.tiltMaze',
+    winPoseAssetId: 'pose.tiltMaze',
     availability: GameAvailability.comingSoon,
     screenReaderSolvable: false,
   );
@@ -118,6 +128,7 @@ abstract final class GameCatalogue {
     id: 'morning_sort',
     nameKey: 'gameMorningSort',
     tileAssetId: 'tile.morningSort',
+    winPoseAssetId: 'pose.morningSort',
     availability: GameAvailability.comingSoon,
     screenReaderSolvable: false,
   );
@@ -126,6 +137,7 @@ abstract final class GameCatalogue {
     id: 'rhythm_rescue',
     nameKey: 'gameRhythmRescue',
     tileAssetId: 'tile.rhythmRescue',
+    winPoseAssetId: 'pose.rhythmRescue',
     availability: GameAvailability.comingSoon,
     screenReaderSolvable: false,
   );
@@ -134,6 +146,7 @@ abstract final class GameCatalogue {
     id: 'capy_rocket',
     nameKey: 'gameCapyRocket',
     tileAssetId: 'tile.capyRocket',
+    winPoseAssetId: 'pose.capyRocket',
     availability: GameAvailability.comingSoon,
     screenReaderSolvable: false,
   );

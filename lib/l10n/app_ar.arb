@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "ألغاز",
   "puzzleSettingsTaskCountPuzzlesOnly": "للألغاز فقط.",
   "alarmChallengePoolLabel": "تحديات هذا المنبّه",
-  "gameMemoryHideoutShuffleInstruction": "راقب الشجيرات."
+  "gameMemoryHideoutShuffleInstruction": "راقب الشجيرات.",
+  "gameWinImageLabel": "كابي يحتفل وسط قصاصات ملونة",
+  "ringingGameWonTitle": "تم إيقاف المنبّه",
+  "gameWinCloseAction": "إغلاق",
+  "gameWinHeadline": "أحسنت!",
+  "gameWinHeadlineCatchTheCapy": "التقاطة رائعة!",
+  "gameWinHeadlineMemoryHideout": "وجدت كابي!",
+  "gameWinHeadlineRhythmRescue": "على الإيقاع تمامًا!",
+  "gameWinHeadlineCapyRocket": "انطلاق!",
+  "gameWinHeadlineMorningSort": "كل شيء مرتّب!",
+  "gameWinHeadlineFindTheImpostor": "وجدته!",
+  "gameWinHeadlineShakeDj": "مزيج رائع!",
+  "gameWinHeadlineTiltMaze": "خرجت من المتاهة!",
+  "gameWinHeadlineStepQuest": "اكتملت الخطوات!",
+  "gameWinHeadlineQrTreasureHunt": "وجدت الكنز!"
 }

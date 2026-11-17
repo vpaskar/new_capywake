@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "Desafios",
   "puzzleSettingsTaskCountPuzzlesOnly": "Só para desafios.",
   "alarmChallengePoolLabel": "Atividades deste alarme",
-  "gameMemoryHideoutShuffleInstruction": "Observe os arbustos."
+  "gameMemoryHideoutShuffleInstruction": "Observe os arbustos.",
+  "gameWinImageLabel": "Capy comemora com confetes",
+  "ringingGameWonTitle": "Alarme parado",
+  "gameWinCloseAction": "Fechar",
+  "gameWinHeadline": "Você conseguiu!",
+  "gameWinHeadlineCatchTheCapy": "Bela pegada!",
+  "gameWinHeadlineMemoryHideout": "Achou o Capy!",
+  "gameWinHeadlineRhythmRescue": "No ritmo certo!",
+  "gameWinHeadlineCapyRocket": "Decolagem!",
+  "gameWinHeadlineMorningSort": "Tudo organizado!",
+  "gameWinHeadlineFindTheImpostor": "Achou!",
+  "gameWinHeadlineShakeDj": "Que mix!",
+  "gameWinHeadlineTiltMaze": "Saiu do labirinto!",
+  "gameWinHeadlineStepQuest": "Passos concluídos!",
+  "gameWinHeadlineQrTreasureHunt": "Tesouro encontrado!"
 }

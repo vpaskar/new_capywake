@@ -208,6 +208,6 @@ void main() {
 
     final image = tester.widget<Image>(find.byType(Image).first);
     final provider = image.image as AssetImage;
-    expect(provider.assetName, contains('moments_03'));
+    expect(provider.assetName, contains('thumbnails/workout'));
   });
 }

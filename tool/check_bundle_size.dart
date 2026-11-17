@@ -18,7 +18,7 @@
 //
 //   4 scenes   1179x786 lossy q82   ~80 KB each   ~320 KB
 //   4 tiles     360x360 lossy q82   ~18 KB each    ~72 KB
-//   31 mascots  ~288px  lossless    ~45 KB each  ~1395 KB
+//   31 mascots  ~288px  lossy+alpha ~15 KB each   ~473 KB (was lossless)
 //   1 wordmark  525px   lossless    ~25 KB         ~25 KB
 //                                        predicted ~1812 KB
 //

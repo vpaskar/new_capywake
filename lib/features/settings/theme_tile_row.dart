@@ -1,11 +1,12 @@
 import 'package:capywake/core/models/theme_mode_preference.dart';
+import 'package:capywake/design/art.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/settings/settings_rows.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// The three-tile theme selector, x 180.6-366.2, y 384.7-429.5. No art ships
-/// for it; the mockup's sunset tile is System, there being no sunset theme.
+/// The three-tile theme selector, x 180.6-366.2, y 384.7-429.5. The mockup's
+/// sunset tile is System, there being no sunset theme (G12).
 class ThemeTileRow extends StatelessWidget {
   const ThemeTileRow({
     required this.value,
@@ -162,18 +163,11 @@ class _Swatch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    switch (mode) {
-      case ThemeModePreference.light:
-        return const ColoredBox(color: CapyColors.cream);
-      case ThemeModePreference.dark:
-        return const ColoredBox(color: CapyColors.darkCream);
-      case ThemeModePreference.system:
-        return const Row(
-          children: [
-            Expanded(child: ColoredBox(color: CapyColors.cream)),
-            Expanded(child: ColoredBox(color: CapyColors.darkCream)),
-          ],
-        );
-    }
+    final art = switch (mode) {
+      ThemeModePreference.system => CapyArt.themeSystem,
+      ThemeModePreference.light => CapyArt.themeLight,
+      ThemeModePreference.dark => CapyArt.themeDark,
+    };
+    return Image.asset(art.path, fit: BoxFit.cover);
   }
 }

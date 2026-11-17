@@ -6,6 +6,7 @@ import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/data/repositories/capy_wake_repository.dart';
+import 'package:capywake/design/art.dart';
 import 'package:capywake/features/onboarding/onboarding_screen.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
@@ -120,6 +121,15 @@ void main() {
     expect(find.text(l10n.onboardingWelcomeBody), findsOneWidget);
     expect(find.text(l10n.onboardingNext), findsOneWidget);
     expect(find.text(l10n.onboardingSkip), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) =>
+            w is Image &&
+            (w.image as AssetImage).assetName == CapyArt.welcomeScene.path,
+      ),
+      findsOneWidget,
+      reason: 'G20: the sleeping-Capy bedroom, not the Home scene',
+    );
   });
 
   testWidgets('the welcome step renders no puzzle or strictness title', (

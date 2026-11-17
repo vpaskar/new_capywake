@@ -36,3 +36,11 @@ review P1 has the detail; the fix is in `lib/design/scene_header.dart`.
 **A measurement with a plausible explanation attached is still a measurement.**
 Phase 01 was right to record the numbers and wrong about their cause, and
 recording them is what let Phase 03 find it.
+
+## 2026-11-18 — owner art package
+
+Re-captured. `MeadowFooter` now draws the owner's meadow band
+(`decor/meadow_footer.webp`): `meadow footer top` is found for the first time,
+669.7 vs 672.4 (−2.7, inside tolerance); 6 → 5 blocks outside tolerance, worst
+delta 1.4 → 2.7 pt, all others unchanged. Home keeps its rounded card — the
+mockup draws no cloud here. Catch the Capy's tile now wears the nightcap (G33).

@@ -42,6 +42,7 @@ class HomeScreen extends ConsumerWidget {
 
     return SceneHeader(
       scene: SceneCrop.home,
+      cloudEdge: false,
       bandHeight: _heroBandHeight,
       header: const CapyHeader(),
       child: _Body(next: next, settings: settings ?? UserSettings.initial),

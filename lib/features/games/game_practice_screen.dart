@@ -8,6 +8,7 @@ import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/games/game_registry.dart';
+import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/ringing/game_ringing_view.dart';
 import 'package:capywake/features/settings/settings_header.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
@@ -70,7 +71,6 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen> {
 
   Widget _body(AppLocalizations l10n, GameEntry? entry) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final ink = dark ? CapyColors.darkInk : CapyColors.cocoa;
     final inkSoft = dark ? CapyColors.darkInkSoft : CapyColors.cocoaSoft;
 
     if (entry == null || !GameRegistry.isLaunchable(entry.id)) {
@@ -86,13 +86,9 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen> {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Semantics(
-            liveRegion: true,
-            child: Text(
-              l10n.gamePracticeDoneTitle,
-              textAlign: TextAlign.center,
-              style: CapyType.title.copyWith(color: ink),
-            ),
+          GameWinPanel(
+            gameId: entry.id,
+            subline: l10n.gamePracticeDoneTitle,
           ),
           const SizedBox(height: CapySpacing.lg),
           CapyButton(label: l10n.gamePracticeAgainAction, onPressed: _again),

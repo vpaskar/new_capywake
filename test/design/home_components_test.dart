@@ -1,6 +1,8 @@
+import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/design/capy_toggle.dart';
 import 'package:capywake/design/meadow_footer.dart';
+import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/section_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
@@ -245,11 +247,102 @@ void main() {
       );
     });
 
-    testWidgets('renders in dark mode without throwing', (tester) async {
+    testWidgets('draws the painted band, grass on the baseline', (
+      tester,
+    ) async {
+      await tester.pumpWidget(_host(const MeadowFooter()));
+      final image = tester.widget<Image>(find.byType(Image));
+      expect(
+        (image.image as AssetImage).assetName,
+        CapyArt.meadowFooter.path,
+      );
+      expect(image.fit, BoxFit.fitWidth);
+      expect(image.alignment, Alignment.bottomCenter);
+    });
+
+    testWidgets('dims under the scrim in dark mode', (tester) async {
       await tester.pumpWidget(
         _host(const MeadowFooter(), brightness: Brightness.dark),
       );
       expect(tester.takeException(), isNull);
+      final filter = tester.widget<ColorFiltered>(find.byType(ColorFiltered));
+      expect(
+        filter.colorFilter,
+        const ColorFilter.mode(CapyColors.artScrim, BlendMode.srcATop),
+      );
+    });
+  });
+
+  group('SceneHeader', () {
+    Widget header({Brightness brightness = Brightness.light}) => _host(
+      const SizedBox(
+        height: 600,
+        child: SceneHeader(
+          scene: SceneCrop.stats,
+          bandHeight: 150,
+          child: Text('content'),
+        ),
+      ),
+      brightness: brightness,
+    );
+
+    Finder cloud() => find.byWidgetPredicate(
+      (w) =>
+          w is Image &&
+          (w.image as AssetImage).assetName == CapyArt.cloudEdge.path,
+    );
+
+    testWidgets('the cloud edge rises into the art, flat top on the sheet', (
+      tester,
+    ) async {
+      await tester.pumpWidget(header());
+      final art = tester.getRect(find.byType(Image).first);
+      final edge = tester.getRect(cloud());
+      final lobes = edge.height * SceneHeader.cloudLobeShare;
+
+      expect(edge.width, art.width);
+      expect(edge.top, closeTo(art.bottom - lobes, 0.5));
+      expect(edge.top, lessThan(art.bottom));
+    });
+
+    testWidgets('Home keeps its rounded card, no cloud', (tester) async {
+      await tester.pumpWidget(
+        _host(
+          const SizedBox(
+            height: 600,
+            child: SceneHeader(
+              scene: SceneCrop.home,
+              bandHeight: 150,
+              cloudEdge: false,
+              child: Text('content'),
+            ),
+          ),
+        ),
+      );
+      expect(cloud(), findsNothing);
+    });
+
+    testWidgets('content paints above the cloud edge', (tester) async {
+      await tester.pumpWidget(header());
+      final stack = tester.widget<Stack>(
+        find.ancestor(of: cloud(), matching: find.byType(Stack)).first,
+      );
+      final last = stack.children.last as Positioned;
+      expect(last.child, isA<Text>());
+    });
+
+    testWidgets('the cloud takes the dark sheet colour', (tester) async {
+      await tester.pumpWidget(header(brightness: Brightness.dark));
+      final filter = tester.widget<ColorFiltered>(
+        find.ancestor(of: cloud(), matching: find.byType(ColorFiltered)),
+      );
+      expect(
+        filter.colorFilter,
+        ColorFilter.mode(
+          capyTheme(brightness: Brightness.dark).scaffoldBackgroundColor,
+          BlendMode.srcIn,
+        ),
+      );
     });
   });
 }

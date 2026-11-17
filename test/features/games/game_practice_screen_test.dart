@@ -4,6 +4,7 @@ import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
 import 'package:capywake/features/games/game_practice_screen.dart';
+import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
@@ -68,6 +69,7 @@ void main() {
     await _catchAll(tester);
 
     expect(find.text('Practice done'), findsOneWidget);
+    expect(find.byType(GameWinCelebration), findsOneWidget);
     await tester.tap(find.text('Play again'));
     await tester.pumpAndSettle();
     expect(find.text('0 / 5'), findsOneWidget);

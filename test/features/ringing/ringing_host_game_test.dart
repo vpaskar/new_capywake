@@ -12,12 +12,15 @@ import 'package:capywake/data/repositories/capy_wake_repository.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
+import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
+import 'package:capywake/features/ringing/ringing_win_overlay.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -176,6 +179,85 @@ void main() {
     expect(find.byType(RingingScreen), findsNothing);
     final rows = await app.repository.listOccurrencesForAlarm('a1');
     expect(rows.where((o) => o.status == AlarmStatus.dismissed), hasLength(1));
+  });
+
+  Future<void> win(WidgetTester tester) async {
+    for (var i = 0; i < 5; i++) {
+      await tester.tap(find.byKey(const ValueKey('catch-the-capy-target')));
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    await tester.pump();
+  }
+
+  testWidgets('a win stops the alarm first, then celebrates briefly', (
+    tester,
+  ) async {
+    final app = await ring(tester, gamesOnly('catch_the_capy'));
+    await win(tester);
+
+    final rows = await app.repository.listOccurrencesForAlarm('a1');
+    expect(rows.where((o) => o.status == AlarmStatus.dismissed), hasLength(1));
+    expect(find.byType(RingingScreen), findsNothing);
+    expect(find.byType(RingingWinOverlay), findsOneWidget);
+    expect(find.byType(GameWinCelebration), findsOneWidget);
+    expect(find.text('Alarm stopped'), findsOneWidget);
+    expect(find.text('Nice catch!'), findsOneWidget);
+    final paragraph = tester.renderObject<RenderParagraph>(
+      find.descendant(
+        of: find.text('Alarm stopped'),
+        matching: find.byType(RichText),
+      ),
+    );
+    expect(
+      paragraph.text.style?.decoration,
+      isNot(TextDecoration.underline),
+      reason: 'no Material above the overlay draws the yellow fallback text',
+    );
+
+    await tester.pump(RingingWinOverlay.visibleFor);
+    await tester.pumpAndSettle();
+    expect(find.byType(RingingWinOverlay), findsNothing);
+  });
+
+  testWidgets('Close ends the celebration early', (tester) async {
+    await ring(tester, gamesOnly('catch_the_capy'));
+    await win(tester);
+
+    await tester.tap(find.text('Close'));
+    await tester.pumpAndSettle();
+    expect(find.byType(RingingWinOverlay), findsNothing);
+  });
+
+  testWidgets('a new ring replaces the celebration', (tester) async {
+    final app = await ring(tester, gamesOnly('catch_the_capy'));
+    await win(tester);
+    expect(find.byType(RingingWinOverlay), findsOneWidget);
+
+    await app.repository.upsertAlarm(
+      _alarm().copyWith(id: 'a2', label: 'Second'),
+    );
+    await tester.pump();
+    app.engine.fire('a2', firedAt: clock);
+    await tester.pump();
+    await tester.pump();
+
+    expect(find.byType(RingingScreen), findsOneWidget);
+    expect(find.byType(RingingWinOverlay), findsNothing);
+    await tester.pump(RingingWinOverlay.visibleFor);
+  });
+
+  testWidgets('under reduce-motion the celebration is a still frame', (
+    tester,
+  ) async {
+    tester.platformDispatcher.accessibilityFeaturesTestValue =
+        const FakeAccessibilityFeatures(disableAnimations: true);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+    await ring(tester, gamesOnly('catch_the_capy'));
+    await win(tester);
+
+    expect(find.byType(GameWinCelebration), findsOneWidget);
+    expect(tester.binding.transientCallbackCount, 0);
+    await tester.pump(RingingWinOverlay.visibleFor);
   });
 
   testWidgets("the escape rises at the alarm's own tolerance (H6)", (

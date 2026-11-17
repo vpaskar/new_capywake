@@ -6,6 +6,7 @@ import 'package:capywake/core/permissions/permission_service.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
+import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_nav_bar.dart';
 import 'package:capywake/design/capy_toggle.dart';
 import 'package:capywake/design/meadow_footer.dart';
@@ -201,6 +202,26 @@ void main() {
       expect(find.bySemanticsLabel(l10n.settingsThemeLight), findsOneWidget);
       expect(find.bySemanticsLabel(l10n.settingsThemeDark), findsOneWidget);
       expect(find.textContaining('Sunset'), findsNothing);
+    });
+
+    testWidgets('each tile shows its own painted art (G12)', (tester) async {
+      await pumpSettings(tester);
+      final l10n = l10nOf(tester);
+
+      for (final (label, art) in [
+        (l10n.settingsThemeSystem, CapyArt.themeSystem),
+        (l10n.settingsThemeLight, CapyArt.themeLight),
+        (l10n.settingsThemeDark, CapyArt.themeDark),
+      ]) {
+        final image = tester.widget<Image>(
+          find.descendant(
+            of: find.bySemanticsLabel(label),
+            matching: find.byType(Image),
+          ),
+        );
+        expect((image.image as AssetImage).assetName, art.path, reason: label);
+        expect(image.fit, BoxFit.cover);
+      }
     });
 
     testWidgets('selection is readable without colour', (tester) async {

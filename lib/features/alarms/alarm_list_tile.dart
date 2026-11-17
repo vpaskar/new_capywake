@@ -104,21 +104,16 @@ class AlarmListTile extends StatelessWidget {
         borderRadius: const BorderRadiusDirectional.horizontal(
           start: Radius.circular(CapyRadius.lg),
         ).resolve(Directionality.of(context)),
-        // A bounded box: the squarer cells drove the row 40 pt taller.
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            minWidth: artWidth,
-            maxWidth: artWidth,
-            maxHeight: height,
-          ),
-          child: ColoredBox(
-            color: dark ? CapyColors.darkSurfaceAlt : CapyColors.surfaceAlt,
-            child: Padding(
-              padding: const EdgeInsets.all(CapySpacing.xs),
-              child: Image.asset(
-                CapyArt.thumbnailForIndex(index).path,
-                fit: BoxFit.contain,
-              ),
+        child: SizedBox(
+          width: artWidth,
+          height: height,
+          child: ColorFiltered(
+            colorFilter: dark
+                ? const ColorFilter.mode(CapyColors.artScrim, BlendMode.srcOver)
+                : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
+            child: Image.asset(
+              CapyArt.thumbnailForIndex(index).path,
+              fit: BoxFit.cover,
             ),
           ),
         ),

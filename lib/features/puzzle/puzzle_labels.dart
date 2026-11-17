@@ -1,8 +1,8 @@
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
+import 'package:capywake/design/art.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
-import 'package:flutter/material.dart';
 
 /// The localized name of one puzzle type.
 String puzzleTypeLabel(PuzzleType type, AppLocalizations l10n) =>
@@ -19,20 +19,21 @@ String puzzleTypeLabel(PuzzleType type, AppLocalizations l10n) =>
       PuzzleType.shapeRotation => l10n.puzzleTypeShapeRotation,
     };
 
-/// A glanceable icon per type — Material glyphs, not cutouts (`asset_gaps.md`
-/// G21); decorative, excluded from semantics.
-IconData puzzleTypeIcon(PuzzleType type) => switch (type) {
-  PuzzleType.arithmetic => Icons.calculate_outlined,
-  PuzzleType.sequenceNext => Icons.trending_up_rounded,
-  PuzzleType.missingOperator => Icons.add_circle_outline_rounded,
-  PuzzleType.compareValues => Icons.sort_rounded,
-  PuzzleType.oddOneOutNumeric => Icons.filter_alt_outlined,
-  PuzzleType.digitRecall => Icons.pin_outlined,
-  PuzzleType.digitRecallReversed => Icons.swap_horiz_rounded,
-  PuzzleType.gridPatternRecall => Icons.grid_view_rounded,
-  PuzzleType.spotTheChange => Icons.difference_outlined,
-  PuzzleType.shapeRotation => Icons.rotate_right_rounded,
-};
+/// A glanceable painted icon per type; decorative, excluded from semantics.
+ArtAsset puzzleTypeArt(PuzzleType type) => CapyArt.byId(
+  'icon.puzzle.${switch (type) {
+    PuzzleType.arithmetic => 'arithmetic',
+    PuzzleType.sequenceNext => 'sequence_next',
+    PuzzleType.missingOperator => 'missing_operator',
+    PuzzleType.compareValues => 'compare_values',
+    PuzzleType.oddOneOutNumeric => 'odd_one_out',
+    PuzzleType.digitRecall => 'digit_recall',
+    PuzzleType.digitRecallReversed => 'digit_recall_reversed',
+    PuzzleType.gridPatternRecall => 'grid_pattern',
+    PuzzleType.spotTheChange => 'spot_the_change',
+    PuzzleType.shapeRotation => 'shape_rotation',
+  }}',
+);
 
 /// The localized accessibility note shown on a type card.
 String puzzleAccessibilityLabel(PuzzleType type, AppLocalizations l10n) =>

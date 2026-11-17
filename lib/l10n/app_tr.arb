@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "Bulmacalar",
   "puzzleSettingsTaskCountPuzzlesOnly": "Yalnızca bulmacalar için.",
   "alarmChallengePoolLabel": "Bu alarmın görevleri",
-  "gameMemoryHideoutShuffleInstruction": "Çalıları izle."
+  "gameMemoryHideoutShuffleInstruction": "Çalıları izle.",
+  "gameWinImageLabel": "Capy konfetiler arasında seviniyor",
+  "ringingGameWonTitle": "Alarm durduruldu",
+  "gameWinCloseAction": "Kapat",
+  "gameWinHeadline": "Başardın!",
+  "gameWinHeadlineCatchTheCapy": "Güzel yakaladın!",
+  "gameWinHeadlineMemoryHideout": "Capy'yi buldun!",
+  "gameWinHeadlineRhythmRescue": "Tam ritminde!",
+  "gameWinHeadlineCapyRocket": "Kalkış!",
+  "gameWinHeadlineMorningSort": "Hepsi sıralandı!",
+  "gameWinHeadlineFindTheImpostor": "Buldun!",
+  "gameWinHeadlineShakeDj": "Harika miks!",
+  "gameWinHeadlineTiltMaze": "Labirentten çıktın!",
+  "gameWinHeadlineStepQuest": "Adımlar tamam!",
+  "gameWinHeadlineQrTreasureHunt": "Hazine bulundu!"
 }

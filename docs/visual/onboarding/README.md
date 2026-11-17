@@ -41,3 +41,10 @@ measurement — interaction only):
 
 Screenshots were viewed in-session, not committed — the Tier A capture harness
 captures the five primary screens plus ringing, not onboarding.
+
+## 2026-11-18 — owner art package
+
+Welcome scene is the owner's bedroom with the sleeping Capy
+(`scenes/welcome.webp`, G20 — identical to the pre-patch Home hero, no
+nightcap). The puzzle step opens with the puzzle hero as a 150 pt picture card
+(G22; a cutout on white, so not used as the chooser's band).

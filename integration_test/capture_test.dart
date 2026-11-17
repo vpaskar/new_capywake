@@ -7,6 +7,9 @@ import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
+import 'package:capywake/design/capy_button.dart';
+import 'package:capywake/features/games/game_win_celebration.dart';
+import 'package:capywake/features/ringing/ringing_win_overlay.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -261,6 +264,41 @@ Future<void> main() async {
         ...?binding.reportData,
         'ringing_$game': tester.view.padding.top / tester.view.devicePixelRatio,
       };
+
+      await _win(tester, game);
+      await tester.runAsync(() async {
+        for (final element in find.byType(Image).evaluate()) {
+          await precacheImage((element.widget as Image).image, element);
+        }
+      });
+      await tester.pump(GameWinCelebration.entrance);
+      await binding.takeScreenshot('win_$game');
+      binding.reportData = <String, dynamic>{
+        ...?binding.reportData,
+        'win_$game': tester.view.padding.top / tester.view.devicePixelRatio,
+      };
+      await tester.tap(find.byType(CapyButton).last);
+      await tester.pumpAndSettle();
     });
+  }
+}
+
+/// Finishes the ringing game the way a user would, by its own targets.
+Future<void> _win(WidgetTester tester, String game) async {
+  if (game == 'catch_the_capy') {
+    for (var i = 0; i < 5; i++) {
+      await tester.tap(find.byKey(const ValueKey('catch-the-capy-target')));
+      await tester.pump(const Duration(milliseconds: 400));
+    }
+    return;
+  }
+  for (var attempt = 0; attempt < 30; attempt++) {
+    if (find.byType(RingingWinOverlay).evaluate().isNotEmpty) return;
+    await tester.tap(find.text('Ready'));
+    await tester.pumpAndSettle();
+    await tester.tap(
+      find.byKey(ValueKey('memory-hideout-bush-${attempt % 3}')),
+    );
+    await tester.pumpAndSettle();
   }
 }

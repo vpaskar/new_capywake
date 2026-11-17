@@ -95,22 +95,14 @@ void main() {
       }
     });
 
-    testWidgets('the five unbuilt games without art are a logged gap', (
+    testWidgets('every game has its painted tile (G24-G28 closed)', (
       tester,
     ) async {
-      final homeIds = GameCatalogue.homeRail.map((e) => e.id).toSet();
-      final gapOnly = GameCatalogue.entries.where(
-        (e) => !homeIds.contains(e.id) && !e.isPlayable,
-      );
-      expect(gapOnly, hasLength(5));
-
-      for (final entry in gapOnly) {
+      for (final entry in GameCatalogue.entries) {
         expect(
-          () => CapyArt.byId(entry.tileAssetId),
-          throwsArgumentError,
-          reason:
-              '${entry.id} must have no art until its phase; a resolvable '
-              'tile here means art was added without updating asset_gaps.md',
+          CapyArt.byId(entry.tileAssetId).path,
+          startsWith('assets/art/tiles/'),
+          reason: entry.id,
         );
       }
     });

@@ -2,7 +2,6 @@ import 'package:capywake/app/router.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_button.dart';
-import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/onboarding/steps/onboarding_strictness_step.dart';
 import 'package:capywake/features/onboarding/steps/onboarding_try_step.dart';
@@ -326,9 +325,8 @@ class _WelcomeScene extends StatelessWidget {
                       )
                     : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
                 child: Image.asset(
-                  SceneCrop.home.asset,
+                  CapyArt.welcomeScene.path,
                   fit: BoxFit.cover,
-                  alignment: SceneCrop.home.alignment,
                 ),
               ),
               Align(

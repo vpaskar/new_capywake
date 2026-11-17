@@ -42,7 +42,25 @@ enum ArtUse {
   gameBush(renderBoxPt: 96),
 
   /// A game field's painted backdrop.
-  gameScene(renderBoxPt: 360);
+  gameScene(renderBoxPt: 360),
+
+  /// A full-width strip: the meadow footer, the cream sheet's cloud edge.
+  band(renderBoxPt: 393),
+
+  /// A Settings theme tile.
+  themeTile(renderBoxPt: 57),
+
+  /// A 3:2 scene covering a theme tile, so scaled to its 44.8 pt height.
+  themeScene(renderBoxPt: 68),
+
+  /// A puzzle type's painted icon.
+  puzzleIcon(renderBoxPt: 32),
+
+  /// An illustration inside the content, not a header band.
+  hero(renderBoxPt: 240),
+
+  /// A game's still win pose.
+  winPose(renderBoxPt: 100);
 
   const ArtUse({required this.renderBoxPt});
 
@@ -90,7 +108,147 @@ abstract final class CapyArt {
       'assets/art/tiles/memory_hideout.webp',
       ArtUse.tile,
     ),
+    ArtAsset('tile.tiltMaze', 'assets/art/tiles/tilt_maze.webp', ArtUse.tile),
+    ArtAsset(
+      'tile.morningSort',
+      'assets/art/tiles/morning_sort.webp',
+      ArtUse.tile,
+    ),
+    ArtAsset(
+      'tile.rhythmRescue',
+      'assets/art/tiles/rhythm_rescue.webp',
+      ArtUse.tile,
+    ),
+    ArtAsset(
+      'tile.capyRocket',
+      'assets/art/tiles/capy_rocket.webp',
+      ArtUse.tile,
+    ),
+    ArtAsset(
+      'tile.qrTreasureHunt',
+      'assets/art/tiles/qr_treasure_hunt.webp',
+      ArtUse.tile,
+    ),
   ];
+
+  /// The shared win celebration, eight frames on one canvas and baseline.
+  static final winFrames = List<ArtAsset>.unmodifiable([
+    for (var i = 0; i < 8; i++)
+      ArtAsset(
+        'animation.win.$i',
+        'assets/art/animations/win_0$i.webp',
+        ArtUse.animation,
+      ),
+  ]);
+
+  static const winPoses = <ArtAsset>[
+    ArtAsset(
+      'pose.qrTreasureHunt',
+      'assets/art/animations/pose_qr_treasure_hunt.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.shakeDj',
+      'assets/art/animations/pose_shake_dj.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.catchTheCapy',
+      'assets/art/animations/pose_catch_the_capy.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.findTheImpostor',
+      'assets/art/animations/pose_find_the_impostor.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.memoryHideout',
+      'assets/art/animations/pose_memory_hideout.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.tiltMaze',
+      'assets/art/animations/pose_tilt_maze.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.morningSort',
+      'assets/art/animations/pose_morning_sort.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.rhythmRescue',
+      'assets/art/animations/pose_rhythm_rescue.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
+      'pose.capyRocket',
+      'assets/art/animations/pose_capy_rocket.webp',
+      ArtUse.winPose,
+    ),
+  ];
+
+  static const meadowFooter = ArtAsset(
+    'decor.meadowFooter',
+    'assets/art/decor/meadow_footer.webp',
+    ArtUse.band,
+  );
+
+  static const cloudEdge = ArtAsset(
+    'decor.cloudEdge',
+    'assets/art/decor/cloud_edge.webp',
+    ArtUse.band,
+  );
+
+  static const themeSystem = ArtAsset(
+    'theme.system',
+    'assets/art/themes/system.webp',
+    ArtUse.themeTile,
+  );
+  static const themeLight = ArtAsset(
+    'theme.light',
+    'assets/art/themes/light.webp',
+    ArtUse.themeScene,
+  );
+  static const themeDark = ArtAsset(
+    'theme.dark',
+    'assets/art/themes/dark.webp',
+    ArtUse.themeScene,
+  );
+
+  static const welcomeScene = ArtAsset(
+    'scene.welcome',
+    'assets/art/scenes/welcome.webp',
+    ArtUse.scene,
+  );
+
+  static const puzzleHero = ArtAsset(
+    'hero.puzzle',
+    'assets/art/scenes/puzzle_hero.webp',
+    ArtUse.hero,
+  );
+
+  /// One per puzzle type, keyed by the type's file-name stem.
+  static final puzzleIcons = List<ArtAsset>.unmodifiable([
+    for (final stem in const [
+      'arithmetic',
+      'sequence_next',
+      'missing_operator',
+      'compare_values',
+      'odd_one_out',
+      'digit_recall',
+      'digit_recall_reversed',
+      'grid_pattern',
+      'spot_the_change',
+      'shape_rotation',
+    ])
+      ArtAsset(
+        'icon.puzzle.$stem',
+        'assets/art/icons/puzzle_$stem.webp',
+        ArtUse.puzzleIcon,
+      ),
+  ]);
 
   /// The eight run-cycle frames, in order, sharing one canvas and baseline.
   static final runFrames = List<ArtAsset>.unmodifiable([
@@ -133,27 +291,23 @@ abstract final class CapyArt {
     ),
   ];
 
-  /// Alarm-row art for `02_ALARMS.png`'s four rows. Cutouts standing in for
-  /// painted panels, under-resolution: gaps G14/G15 in `asset_gaps.md`.
+  /// Alarm-row art for `02_ALARMS.png`'s four rows, painted panels supplied
+  /// under-resolution (gap G15).
   static const thumbnails = <ArtAsset>[
     ArtAsset(
       'thumb.sleeping',
-      'assets/art/mascots/moments_01.webp',
+      'assets/art/thumbnails/sleeping.webp',
       ArtUse.thumbnail,
     ),
     ArtAsset(
       'thumb.workout',
-      'assets/art/mascots/moments_03.webp',
+      'assets/art/thumbnails/workout.webp',
       ArtUse.thumbnail,
     ),
-    ArtAsset(
-      'thumb.walk',
-      'assets/art/mascots/collection_02.webp',
-      ArtUse.thumbnail,
-    ),
+    ArtAsset('thumb.walk', 'assets/art/thumbnails/walk.webp', ArtUse.thumbnail),
     ArtAsset(
       'thumb.music',
-      'assets/art/mascots/collection_06.webp',
+      'assets/art/thumbnails/music.webp',
       ArtUse.thumbnail,
     ),
   ];
@@ -177,6 +331,16 @@ abstract final class CapyArt {
     ...games,
     ...mascots,
     ...thumbnails,
+    ...winFrames,
+    ...winPoses,
+    ...puzzleIcons,
+    meadowFooter,
+    cloudEdge,
+    themeSystem,
+    themeLight,
+    themeDark,
+    welcomeScene,
+    puzzleHero,
     wordmark,
   ];
 

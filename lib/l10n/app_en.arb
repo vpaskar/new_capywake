@@ -2211,5 +2211,61 @@
   "gameMemoryHideoutShuffleInstruction": "Watch the bushes.",
   "@gameMemoryHideoutShuffleInstruction": {
     "description": "Memory Hideout, while the bushes swap places."
+  },
+  "gameWinImageLabel": "Capy cheering, with confetti",
+  "@gameWinImageLabel": {
+    "description": "Accessibility label for the win animation shown after a game is finished. Describes the picture only: no score, no praise."
+  },
+  "ringingGameWonTitle": "Alarm stopped",
+  "@ringingGameWonTitle": {
+    "description": "Shown briefly over the win animation after a ringing alarm was stopped by finishing a game. A plain outcome, never a cheer."
+  },
+  "gameWinCloseAction": "Close",
+  "@gameWinCloseAction": {
+    "description": "Closes the win animation shown after a ringing alarm was stopped."
+  },
+  "gameWinHeadline": "You did it!",
+  "@gameWinHeadline": {
+    "description": "Headline over the win animation when a game is finished and has no line of its own. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineCatchTheCapy": "Nice catch!",
+  "@gameWinHeadlineCatchTheCapy": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineMemoryHideout": "Found Capy!",
+  "@gameWinHeadlineMemoryHideout": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineRhythmRescue": "Right on the beat!",
+  "@gameWinHeadlineRhythmRescue": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineCapyRocket": "Liftoff!",
+  "@gameWinHeadlineCapyRocket": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineMorningSort": "All sorted!",
+  "@gameWinHeadlineMorningSort": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineFindTheImpostor": "Spotted it!",
+  "@gameWinHeadlineFindTheImpostor": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineShakeDj": "What a mix!",
+  "@gameWinHeadlineShakeDj": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineTiltMaze": "Out of the maze!",
+  "@gameWinHeadlineTiltMaze": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineStepQuest": "Steps done!",
+  "@gameWinHeadlineStepQuest": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameWinHeadlineQrTreasureHunt": "Treasure found!",
+  "@gameWinHeadlineQrTreasureHunt": {
+    "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
   }
 }

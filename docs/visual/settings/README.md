@@ -115,3 +115,12 @@ own first reading, which took each card's **bottom drop-shadow** for the next
 card's **top** — an error that would have put every group ~15 pt high and
 every gap at −1.4 pt. A negative gap should have been the tell, and nearly
 wasn't.
+
+## 2026-11-18 — owner art package
+
+Theme tiles are painted (G12): System `themes/system.webp` (split sun/moon,
+145 px, under its 171 px box — recorded), Light `morning_sunrise`, Dark
+`night_sky`. The sheet has the owner's cloud edge (G18). `compare.dart` now reads
+`hero scene lower edge` as `absent` because its detector meets the cloud's
+lobes; the flat top measures 169.3 vs 168.9 (see `asset_gaps.md`). Group 1/2
+blocks unchanged.

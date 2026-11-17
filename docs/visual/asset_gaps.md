@@ -914,3 +914,91 @@ trophy and confetti) does not fit: **no nightcap** (the game's Capy wears one),
 ~540 KB lossy against ~187 KB left in the `assets/art` budget. **Ask:** item 1 of
 `ART_REQUESTS.md` — 6–8 frames of nightcap Capy cheering with confetti, no
 trophy, ≥ 360 px, one canvas.
+
+---
+
+# Owner art package — `CapyWake_Open_Art_Requests` (2026-11-18)
+
+Answers `ART_REQUESTS.md` items 1–11. 40 files, copied unmodified into
+`reference/02_ASSETS/` (git-ignored) and imported by `tool/import_art.dart`.
+Every file was checked for size, alpha (ghosts, the 250–254 band), backing,
+crop, frame alignment and variant before use, and every defect below was
+reported to the owner in session.
+
+| Gap | Supplied | Verdict | Bundled as |
+|---|---|---|---|
+| G33 | `game_tiles/catch_the_capy.png` 1254² native, nightcap | **Closed.** Clean, full-bleed. | `tiles/catch_the_capy.webp` 360² |
+| G24, G27 | `tilt_maze.png`, `capy_rocket.png` 1254² native | **Closed.** Clean, full-bleed. | `tiles/tilt_maze.webp`, `tiles/capy_rocket.webp` |
+| G25, G26, G28 | `morning_sort.png`, `rhythm_rescue.png`, `qr_treasure_hunt.png` | **Closed, Tier B.** Upscaled from a sheet panel, and the **wrong variant**: a rounded frame (radius ≈ 220 px) on white corners, not full-bleed. Cut 72/72/80 px inside the frame (`inset:`), as with Memory Hideout; residual corner white measured 0 px. Lower native detail, invisible at 360 px. | `tiles/morning_sort.webp`, `rhythm_rescue.webp`, `qr_treasure_hunt.webp` |
+| G34 | `animations/06_win_celebration/frames/frame_00`–`07.png`, 360² | **Closed, Tier B.** One canvas, every frame's feet on row 343 (checked by the importer, `BASELINE DRIFT` otherwise). Defects: a **light halo** from background removal along every outline and confetti piece, visible on dark backgrounds (unseen on cream, where the win screen draws it); **`frame_03` is noisier** and carried 1,531 ghost and 918 near-solid (250–254) pixels, cleared by the pipeline. Lossy colour, lossless alpha. | `animations/win_00`–`07.webp` |
+| G13, G19 | `decor/meadow_footer.png` 1179×196, transparent | **Closed, Tier B.** Clean alpha. Flat vector style (programmatic per the manifest) — simpler than the mockup's painted grass, but the right shape: ink is the bottom 124 px, so it paints ~41 pt of grass in a 65.2 pt box, where `_MeadowPainter` painted ~60. Imported as an edge-to-edge band (`cutout: false`): it touches both sides by design, so the severed-crop check does not apply. | `decor/meadow_footer.webp` |
+| G18 | `decor/cloud_edge_cream.png` 1179×200 | **Closed.** Cream is `#FEF4E8`. Defect: a **1 px tan outline on the left, right and bottom edges**, which would draw a seam where the cloud meets the sheet; cut with `inset: 1`, leaving 1177 px (2 px under 1179, recorded in `knownUnderResolution`). Lobes are rows 0–77 of 198, so they rise 26 pt above the sheet's flat top; `SceneHeader` pins both numbers and `art_manifest_test` checks them against the file. Dark mode tints it to the sheet colour (`srcIn`), which drops the outline. | `decor/cloud_edge.webp` |
+| G14, G15 | `alarm_thumbnails/*.png` 372×264 | **G14 closed, G15 still open.** Painted panels, the right subjects, **blue** headphones. Defects: upscaled sheet crops (soft), **rounded white corners baked in** (up to 20 px on the diagonal). Cut with `inset: 20` → 332×224, **under the 372 px a 124 pt panel needs**, recorded in `knownUnderResolution`. | `thumbnails/sleeping`, `workout`, `walk`, `music` |
+| G12 | `themes/system.png` 171×135 | **Closed, Tier B.** Split sun/moon as asked. Defects: a board crop, upscaled and soft; white margins and rounded white corners, off-centre. Cut with `inset: 13` → 145×109, **under 171 px**, recorded. | `themes/system.webp` |
+| G12 | `morning_sunrise.png`, `night_sky.png` 1200×800 (`Remaining_Assets_Patch`) | **Closed.** 3:2 scenes covering a 1.27:1 tile are scaled to its 44.8 pt height, so they are imported at 204 px wide (`ArtUse.themeScene`, 68 pt). | `themes/light.webp`, `themes/dark.webp` |
+| G21 | `puzzle_icons/*.png` 132² | **Closed, Tier B.** Defects: **cream tile backing** (not transparent glyphs), rounded white corners, upscaled, crops inconsistent (`rotated_shapes` and `grid_patterns` cut through the glyph edge); and **four file names are shifted against their drawings**: `digits_backwards.png` draws "[123]" (remember digits), `grid_patterns.png` draws "123" between reverse arrows (digits backwards), `spot_the_change.png` draws the 3×3 grid (grid patterns), `remember_digits.png` draws two cards (spot the change). Mapped by drawing, not by name, in `_puzzleIconJobs`. Cut with `inset: 14`, drawn at 32 pt in an 8 pt rounded clip. | `icons/puzzle_*.webp` 96² |
+| G20 | `onboarding/welcome_scene.png` 1536×1024 | **Closed, Tier B.** Sleeping Capy in the bedroom with a sunrise window, matching the splash board. It is **pixel-identical to `header_scenes/today_integrated_ORIGINAL.png`** (the pre-patch Home hero), and the Capy wears **no nightcap**. | `scenes/welcome.webp` |
+| G22 | `header_scenes/puzzle_hero.png` 1536×1024 | **Half closed.** Used in the onboarding puzzle step as a 150 pt picture card. Defects: **not a scene** — a cutout on a flat white matte, upscaled from a sheet, soft. **Not used in the chooser:** its 109 pt band covering a 3:2 image keeps 42 % of the height and cuts the Capy's face. The chooser keeps `SceneCrop.settings`. | `scenes/puzzle_hero.webp` 720×480 |
+| G17 | `header_scenes/alarms_hero.png`, `add_edit_hero.png` | **Not new art.** `alarms_hero.png` is pixel-identical to `alarms_integrated.png` (already the Alarms scene); `add_edit_hero.png` is pixel-identical to `settings_integrated.png` (already the Settings scene). Neither is the mockups' Capy hugging a clock. Nothing imported. | — |
+
+**Budget.** `assets/art` would not have fitted (≈ 187 KB left, ≈ 600 KB new).
+The 31 sticker-sheet mascots, 1,469 KB lossless, now use the run cycle's lossy
+colour / lossless alpha: 473 KB. `assets/art` is 1,380 KB of 2,182 KB; the
+budget was not touched.
+
+**Known short, by name** (`knownUnderResolution` in `art_manifest_test.dart`
+and `knownShort:` in the importer, so every other file still fails the gate):
+thumbnails 332 px of 372, System tile 145 of 171, cloud edge 1177 of 1179.
+
+## What would close the rest
+
+1. **Alarm thumbnails at ≥ 372 × 264 px, native, full-bleed** (no rounded
+   corners, no white) — closes G15.
+2. **System theme tile at ≥ 171 × 135 px, native, full-bleed** — the drawing is
+   right, only the crop and resolution are not.
+3. **Ten puzzle icons as transparent glyphs at ≥ 96 px**, each centred with a
+   margin, no cream tile — or, if the cream tile is wanted, the tile drawn whole
+   with no white corners.
+4. **Puzzle hero as a painted scene, 1536 × 1024**, with the Capy's head and
+   piece inside the middle 40 % of the height so a 109 pt band can crop it.
+5. **Win celebration without the halo** — the same frames, cut with a clean
+   matte edge.
+6. *(optional)* **Alarms / Add-Edit heroes** that actually show the mockups'
+   Capy hugging a clock (G17); the two supplied are the existing scenes.
+
+## G34 follow-up — per-game win poses (`CapyWake_10_Celebrations`, 2026-11-18)
+
+Ten stills in a 2×5 sheet plus ten 512×308 cell crops, copied unmodified to
+`reference/02_ASSETS/animations/07_game_celebrations/`. Imported per game as
+`animations/pose_<game>.webp` (300 px, lossy colour / lossless alpha, ~20 KB
+each); `GameEntry.winPoseAssetId` keys them by game, and the win screen falls
+back to the shared `06_win_celebration` frames for a game without one.
+
+| Finding | Detail | Handling |
+|---|---|---|
+| **Blue nightcaps** | Every pose wears a **blue** cap; the games' Capy wears **orange**. The README says the generator did this. | **Used anyway**, reported. Blue is not foreign to the app — the Home hero's Capy wears a blue nightcap — and each pose names its game (bush, rocket, magnifier, flag…), which the shared frames cannot. Revert by deleting `winPoseAssetId`s. |
+| **Stills, not animations** | No frames. | A 700 ms spring-in (scale 0.6→1, elastic; fade over the first 40 %). Still under reduce-motion or a screen reader. |
+| **Alpha** | No pixel at 255: all ink in the 250–254 band, plus 15–21 k ghost pixels per cell. Edges are clean on dark (no halo). | Normalized by the pipeline. |
+| **`09_capy_step_quest.png` is severed** | The nightcap is cut flat on the cell's top row (33 px of ink at alpha > 100 on row 0), and the sheet is cut at the same line. | **Not imported** — the severed-crop guard is right. Step Quest is blocked anyway; it falls back to the shared frames. |
+| **`05_morning_sort.png` shows a backpack** | No cards or sorting; reads as a walk. | Used; reported. |
+
+## SceneHeader cloud edge — Home excluded, and what `compare.dart` now reports
+
+`01_HOME.png` draws a **rounded card with an outline**, not a cloud; the other
+four mockups draw a cloud. Home keeps `cloudEdge: false`.
+
+With the cloud on, `compare.dart`'s `hero scene lower edge` moves −7 to −8 pt or
+reads `absent` on Alarms, Add/Edit, Settings and Stats. **That is the
+instrument, not the layout:** its row detector now meets the lobes' crests,
+while the table's values are the mockups' *flat top* (Stats by the arc
+asymptote). Measured directly — first row where every column is sheet cream —
+the flat top is unchanged within 0.7 pt on all five screens (offsets from the
+status bar): Home 247.7 / 248.3, Alarms 209.0 / 208.5, Add/Edit 172.7 / 172.0,
+Settings 169.3 / 168.9, Stats 172.0 / 171.4. Every other block is unchanged or
+better; Alarms went from 5 blocks outside tolerance to 3 (meadow +10.0 → +0.4,
+card 3 bottom +4.8 → −2.6).
+
+**Add/Edit meadow, newly measurable.** With painted grass, `compare.dart` finds
+`meadow footer top` on Add/Edit for the first time: 755.7 vs 749.4 (+6.3). The
+footer's box did not move; the painter's taller grass used to hide the edge.
+It joins Add/Edit's existing Tier A failures (owed, `memory/current-phase.md`).

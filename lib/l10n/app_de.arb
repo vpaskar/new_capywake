@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "Rätsel",
   "puzzleSettingsTaskCountPuzzlesOnly": "Gilt nur für Rätsel.",
   "alarmChallengePoolLabel": "Aufgaben für diesen Wecker",
-  "gameMemoryHideoutShuffleInstruction": "Behalte die Büsche im Blick."
+  "gameMemoryHideoutShuffleInstruction": "Behalte die Büsche im Blick.",
+  "gameWinImageLabel": "Capy jubelt, mit Konfetti",
+  "ringingGameWonTitle": "Wecker gestoppt",
+  "gameWinCloseAction": "Schließen",
+  "gameWinHeadline": "Geschafft!",
+  "gameWinHeadlineCatchTheCapy": "Gut gefangen!",
+  "gameWinHeadlineMemoryHideout": "Capy gefunden!",
+  "gameWinHeadlineRhythmRescue": "Genau im Takt!",
+  "gameWinHeadlineCapyRocket": "Abgehoben!",
+  "gameWinHeadlineMorningSort": "Alles sortiert!",
+  "gameWinHeadlineFindTheImpostor": "Entdeckt!",
+  "gameWinHeadlineShakeDj": "Toller Mix!",
+  "gameWinHeadlineTiltMaze": "Raus aus dem Labyrinth!",
+  "gameWinHeadlineStepQuest": "Schritte geschafft!",
+  "gameWinHeadlineQrTreasureHunt": "Schatz gefunden!"
 }

@@ -106,3 +106,10 @@ phase that builds the filled state inherits them.
   window actually queried (`HistoryService.defaultWindowDays`). 7 is offered
   as a choice, so the mockup's state is reachable — the user picks it, the app
   does not fake it.
+
+## 2026-11-18 — owner art package
+
+Cloud edge (G18) and meadow band (G13/G19) are the owner's art.
+`compare.dart` reports `hero scene lower edge` −7.1 because it now detects the
+lobe crests; the flat top measures 172.0 vs 171.4 (+0.6). Segment track
+unchanged (−1.4 / +3.5).

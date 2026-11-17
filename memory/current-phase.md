@@ -42,8 +42,31 @@
   `pump(duration)` — and remember a tap's animation starts on the *next* frame.
 - **Practice waits for settings**, or it plays the wrong difficulty.
 
+## Owner art package imported (2026-11-18, between Phase 12 and 13)
+
+`CapyWake_Open_Art_Requests` (11 requests) and `CapyWake_10_Celebrations`
+(per-game win poses) are in the app; per-file verdicts in
+`docs/visual/asset_gaps.md` ("Owner art package", "G34 follow-up"), what is
+still owed in `docs/visual/ART_REQUESTS.md`.
+
+- **Win screen:** `GameWinPanel` (pose or shared frames + per-game headline +
+  calm subline) in practice and after a ringing win. The ringing win **stops
+  the alarm first**, then shows `RingingWinOverlay` for 2.6 s. A new game adds
+  `winPoseAssetId` and a `gameWinHeadline` case.
+- **`SceneHeader` cloud edge** on every screen but Home (`cloudEdge: false`,
+  the mockup draws a rounded card there). `compare.dart`'s `hero scene lower
+  edge` now reads the lobe crests (−7…−8 or absent); the flat top is unchanged
+  within 0.7 pt — instrument, not layout.
+- **Mascots are lossy colour / lossless alpha now** (1,469 → 473 KB);
+  `assets/art` 1,561 / 2,182 KB.
+- **Device capture found what widget tests missed:** an overlay outside a
+  `Material` draws the yellow fallback text. Any new full-screen overlay needs
+  a `Material` root.
+- `tool/import_art.dart` gained `knownShort:` (recorded under-resolution) and
+  `lossyColour:`; four puzzle-icon files were mapped by drawing, not name.
+
 ## Owed by nobody (carried)
 
 Sleep boundary / `package:health` (unbuilt 07–12); `CapyNavBar` 98.7 vs 79.9;
-G18/G19; Alarms 3 / Add-Edit 8 Tier A failures; `ringNow` uncalled. Android
+Alarms 3 / Add-Edit 9 Tier A failures (one is the cloud-crest instrument row); `ringNow` uncalled. Android
 untested, no emulator.

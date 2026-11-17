@@ -135,6 +135,7 @@ class _TypeCard extends StatelessWidget {
   final ValueChanged<bool> onToggled;
 
   static const double _minHeight = 56;
+  static const double iconSize = 32;
 
   @override
   Widget build(BuildContext context) {
@@ -172,7 +173,14 @@ class _TypeCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(puzzleTypeIcon(type), size: CapyIconSize.md, color: ink),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(CapyRadius.sm),
+                    child: Image.asset(
+                      puzzleTypeArt(type).path,
+                      width: iconSize,
+                      height: iconSize,
+                    ),
+                  ),
                   const SizedBox(width: CapySpacing.sm),
                   Expanded(
                     child: Text(

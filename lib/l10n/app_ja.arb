@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "問題",
   "puzzleSettingsTaskCountPuzzlesOnly": "問題のみに適用。",
   "alarmChallengePoolLabel": "このアラームのチャレンジ",
-  "gameMemoryHideoutShuffleInstruction": "しげみをよく見て。"
+  "gameMemoryHideoutShuffleInstruction": "しげみをよく見て。",
+  "gameWinImageLabel": "紙吹雪の中で喜ぶカピー",
+  "ringingGameWonTitle": "アラームを停止しました",
+  "gameWinCloseAction": "閉じる",
+  "gameWinHeadline": "やったね！",
+  "gameWinHeadlineCatchTheCapy": "ナイスキャッチ！",
+  "gameWinHeadlineMemoryHideout": "カピーを見つけた！",
+  "gameWinHeadlineRhythmRescue": "リズムぴったり！",
+  "gameWinHeadlineCapyRocket": "発射！",
+  "gameWinHeadlineMorningSort": "ぜんぶ仕分けた！",
+  "gameWinHeadlineFindTheImpostor": "見つけた！",
+  "gameWinHeadlineShakeDj": "いいミックス！",
+  "gameWinHeadlineTiltMaze": "迷路を抜けた！",
+  "gameWinHeadlineStepQuest": "歩数クリア！",
+  "gameWinHeadlineQrTreasureHunt": "宝物発見！"
 }

@@ -465,5 +465,19 @@
   "challengePuzzlesLabel": "Задачи",
   "puzzleSettingsTaskCountPuzzlesOnly": "Только для задач.",
   "alarmChallengePoolLabel": "Задания для этого будильника",
-  "gameMemoryHideoutShuffleInstruction": "Следи за кустами."
+  "gameMemoryHideoutShuffleInstruction": "Следи за кустами.",
+  "gameWinImageLabel": "Капи радуется, вокруг конфетти",
+  "ringingGameWonTitle": "Будильник остановлен",
+  "gameWinCloseAction": "Закрыть",
+  "gameWinHeadline": "Получилось!",
+  "gameWinHeadlineCatchTheCapy": "Отличный улов!",
+  "gameWinHeadlineMemoryHideout": "Капи нашлась!",
+  "gameWinHeadlineRhythmRescue": "Точно в ритм!",
+  "gameWinHeadlineCapyRocket": "Взлёт!",
+  "gameWinHeadlineMorningSort": "Всё разложено!",
+  "gameWinHeadlineFindTheImpostor": "Замечено!",
+  "gameWinHeadlineShakeDj": "Отличный микс!",
+  "gameWinHeadlineTiltMaze": "Выход из лабиринта!",
+  "gameWinHeadlineStepQuest": "Шаги пройдены!",
+  "gameWinHeadlineQrTreasureHunt": "Сокровище найдено!"
 }

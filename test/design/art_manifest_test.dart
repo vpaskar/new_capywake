@@ -3,17 +3,20 @@ import 'dart:math' as math;
 
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/art_audit.dart';
+import 'package:capywake/design/scene_header.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:yaml/yaml.dart';
 
-/// Assets below the pixels their box needs, by measured width (gap G15).
-/// Recorded by name so the gate still protects everything else.
+/// Assets below the pixels their box needs, by measured width (G12, G15,
+/// G18). Recorded by name so the gate still protects everything else.
 const knownUnderResolution = <String, int>{
-  'thumb.sleeping': 288,
-  'thumb.workout': 288,
-  'thumb.walk': 230,
-  'thumb.music': 260,
+  'thumb.sleeping': 332,
+  'thumb.workout': 332,
+  'thumb.walk': 332,
+  'thumb.music': 332,
+  'theme.system': 145,
+  'decor.cloudEdge': 1177,
 };
 
 void main() {
@@ -82,6 +85,20 @@ void main() {
               '${asset.path} has ${result.ghostPixels} ghost pixels. '
               'The import pipeline should have cleared them.',
         );
+      }
+    });
+
+    test("the cloud edge's geometry matches SceneHeader's constants", () {
+      final edge = img.decodeImage(
+        File(CapyArt.cloudEdge.path).readAsBytesSync(),
+      )!;
+      expect(edge.width / edge.height, SceneHeader.cloudAspectRatio);
+      final flatRow = (edge.height * SceneHeader.cloudLobeShare).round();
+      for (final y in [flatRow - 1, flatRow]) {
+        final opaque = [
+          for (var x = 0; x < edge.width; x++) edge.getPixel(x, y).a == 255,
+        ];
+        expect(opaque.every((o) => o), y == flatRow, reason: 'row $y');
       }
     });
 

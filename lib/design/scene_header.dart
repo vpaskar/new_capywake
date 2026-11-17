@@ -1,3 +1,4 @@
+import 'package:capywake/design/art.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:flutter/material.dart';
 
@@ -33,6 +34,7 @@ class SceneHeader extends StatelessWidget {
     required this.child,
     required this.bandHeight,
     this.header,
+    this.cloudEdge = true,
     super.key,
   });
 
@@ -48,9 +50,17 @@ class SceneHeader extends StatelessWidget {
   /// Row drawn above the art — the wordmark and the settings gear.
   final Widget? header;
 
+  /// `01_HOME.png` alone draws a rounded card, not a cloud.
+  final bool cloudEdge;
+
+  /// Rows 0-77 of `cloud_edge.webp`'s 198 are lobes; row 78 is the flat top.
+  static const double cloudLobeShare = 78 / 198;
+  static const double cloudAspectRatio = 1177 / 198;
+
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
+    final sheet = Theme.of(context).scaffoldBackgroundColor;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -79,17 +89,59 @@ class SceneHeader extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: DecoratedBox(
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(CapyRadius.xl),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Positioned.fill(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: sheet,
+                    borderRadius: cloudEdge
+                        ? null
+                        : const BorderRadius.vertical(
+                            top: Radius.circular(CapyRadius.xl),
+                          ),
+                  ),
+                ),
               ),
-            ),
-            child: child,
+              if (cloudEdge)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: _CloudEdge(sheet: sheet, dark: dark),
+                ),
+              Positioned.fill(child: child),
+            ],
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The scalloped top of the cream sheet, rising into the art above it.
+class _CloudEdge extends StatelessWidget {
+  const _CloudEdge({required this.sheet, required this.dark});
+
+  final Color sheet;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return ExcludeSemantics(
+      child: FractionalTranslation(
+        translation: const Offset(0, -SceneHeader.cloudLobeShare),
+        child: ColorFiltered(
+          colorFilter: dark
+              ? ColorFilter.mode(sheet, BlendMode.srcIn)
+              : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
+          child: AspectRatio(
+            aspectRatio: SceneHeader.cloudAspectRatio,
+            child: Image.asset(CapyArt.cloudEdge.path, fit: BoxFit.fill),
+          ),
+        ),
+      ),
     );
   }
 }

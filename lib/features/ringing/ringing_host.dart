@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:capywake/core/games/game_challenge.dart';
 import 'package:capywake/core/games/wake_challenge.dart';
 import 'package:capywake/core/models/models.dart';
@@ -9,9 +11,11 @@ import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_registry.dart';
 import 'package:capywake/features/ringing/game_ringing_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
+import 'package:capywake/features/ringing/ringing_controller.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
 import 'package:capywake/features/ringing/ringing_session.dart';
+import 'package:capywake/features/ringing/ringing_win_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,6 +44,31 @@ class _RingingHostState extends ConsumerState<RingingHost> {
   int _roundSnoozeCount = -1;
   WakeChallenge? _challenge;
   GameChallenge? _gameProgress;
+  ({Timer timer, String gameId})? _win;
+
+  @override
+  void dispose() {
+    _win?.timer.cancel();
+    super.dispose();
+  }
+
+  /// Stops the alarm first, then shows the win for a moment.
+  void _onGameWon(RingingController controller, String gameId) {
+    unawaited(controller.dismiss());
+    _win?.timer.cancel();
+    setState(() {
+      _win = (
+        timer: Timer(RingingWinOverlay.visibleFor, _closeWin),
+        gameId: gameId,
+      );
+    });
+  }
+
+  void _closeWin() {
+    if (!mounted) return;
+    _win?.timer.cancel();
+    setState(() => _win = null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +78,23 @@ class _RingingHostState extends ConsumerState<RingingHost> {
       _roundOccurrenceId = null;
       _challenge = null;
       _gameProgress = null;
-      return widget.child;
+      final win = _win;
+      if (win == null) return widget.child;
+      return Stack(
+        children: [
+          widget.child,
+          Positioned.fill(
+            child: RingingWinOverlay(
+              gameId: win.gameId,
+              onClose: _closeWin,
+            ),
+          ),
+        ],
+      );
+    }
+    if (_win != null && _roundOccurrenceId != session.occurrence.id) {
+      _win!.timer.cancel();
+      _win = null;
     }
 
     return Stack(
@@ -102,7 +147,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
               seed: PuzzleRound.advanceSeed(_ringSeed(session)),
               difficulty: settings.difficulty,
               onProgress: (progress) => _onGameProgress(progress, settings),
-              onCompleted: controller.dismiss,
+              onCompleted: () => _onGameWon(controller, gameId),
               reduceMotion: reduceMotion,
             ),
             key: ValueKey(_ringSeed(session)),
