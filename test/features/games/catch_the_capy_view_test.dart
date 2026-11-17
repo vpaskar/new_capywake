@@ -338,7 +338,12 @@ void main() {
     expect((after - tap.dx).abs(), greaterThan(field.width / 2));
   });
 
-  Finder frame(int i) => find.byKey(ValueKey('catch-the-capy-frame-$i'));
+  Finder frame(int i) => find.byWidgetPredicate(
+    (w) =>
+        w is Image &&
+        w.image is AssetImage &&
+        (w.image as AssetImage).assetName == CapyArt.runFrames[i].path,
+  );
 
   testWidgets('the legs run through the whole cycle during a run', (
     tester,
@@ -424,6 +429,44 @@ void main() {
       expect(rect.left, greaterThanOrEqualTo(field.left - 0.5));
       expect(rect.right, lessThanOrEqualTo(field.right + 0.5));
       await tester.pumpAndSettle();
+    }
+  });
+
+  testWidgets('frames swap inside one Image, held while the next decodes', (
+    tester,
+  ) async {
+    await _pump(tester);
+    final before = tester.element(frame(0));
+    await tester.tap(_target);
+    await tester.pump();
+    await tester.pump(CatchTheCapyRound.runFor(PuzzleDifficulty.easy) ~/ 5);
+
+    final image = find.descendant(of: _target, matching: find.byType(Image));
+    expect(image, findsOneWidget);
+    expect(tester.widget<Image>(image).gaplessPlayback, isTrue);
+    expect(tester.element(image), isNot(before), reason: 'a new run, new key');
+    final during = tester.element(image);
+    await tester.pump(CatchTheCapyRound.runFor(PuzzleDifficulty.easy) ~/ 5);
+    expect(
+      tester.element(image),
+      same(during),
+      reason: 'a frame change must not rebuild the Image element',
+    );
+  });
+
+  testWidgets('a catch carries the capybara clear of where it was caught', (
+    tester,
+  ) async {
+    await _pump(tester, difficulty: PuzzleDifficulty.hard);
+    for (var i = 0; i < 5; i++) {
+      final caughtAt = tester.getCenter(_target);
+      await tester.tap(_target);
+      await tester.pumpAndSettle();
+      final now = tester.getCenter(_target);
+      expect(
+        (now - caughtAt).distance,
+        greaterThan(CatchTheCapyView.capyWidth),
+      );
     }
   });
 }

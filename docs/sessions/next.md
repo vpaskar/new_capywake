@@ -6,7 +6,7 @@ Phases 00–12 are **done** and committed.
 
 **Current phase: `13` — Touch games II (Rhythm Rescue, Capy Rocket).**
 
-**1,759 tests** pass. `lib` 98.20%, `lib/core` 99.67%, `lib/core/games` and
+**1,767 tests** pass. `lib` 98.20%, `lib/core` 99.67%, `lib/core/games` and
 `lib/features/games` **100%**, `lib/data` 89.17%, `lib/features/ringing` 98.62%.
 **466 ARB keys × 10 locales.** Comment baseline **113**.
 

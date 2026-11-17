@@ -74,9 +74,22 @@ class _CatchTheCapyViewState extends State<CatchTheCapyView> {
   bool get _moves =>
       !widget.reduceMotion && !MediaQuery.accessibleNavigationOf(context);
 
+  bool _precached = false;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (!_precached) {
+      _precached = true;
+      for (final asset in [
+        ...CapyArt.runFrames,
+        ...CapyArt.dustFrames,
+        CapyArt.byId('game.paw'),
+        CapyArt.byId('game.meadow'),
+      ]) {
+        unawaited(precacheImage(AssetImage(asset.path), context));
+      }
+    }
     _scheduleWander();
   }
 
@@ -285,9 +298,10 @@ class _Runner extends StatelessWidget {
     );
   }
 
+  // One Image element across frames, so `gaplessPlayback` holds the last
+  // frame while the next decodes instead of flashing blank.
   Widget _frame(int index) => Image.asset(
     CapyArt.runFrames[index].path,
-    key: ValueKey('catch-the-capy-frame-$index'),
     fit: BoxFit.contain,
     alignment: Alignment.bottomCenter,
     gaplessPlayback: true,

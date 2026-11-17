@@ -2,7 +2,7 @@
 
 **Phase 12 — Touch games I: done, 2026-11-17. `Current phase: 13`.**
 
-**1,759 tests**, analyze clean including infos, lib 98.20% / `lib/core` 99.67% /
+**1,767 tests**, analyze clean including infos, lib 98.20% / `lib/core` 99.67% /
 `lib/core/games` **100%** / `lib/features/games` **100%** / `lib/data` 89.17% /
 `lib/features/ringing` 98.62%, **466 ARB keys × 10 locales**. Comment baseline 113
 (+0).

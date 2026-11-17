@@ -64,17 +64,16 @@ class CatchTheCapyRound {
     struggleCount: misses,
   );
 
-  /// The capybara is caught and moves to a different spot. A no-op once the
-  /// goal is reached, so a double tap cannot count twice.
+  /// Caught: it counts, and the capybara bolts clear of the catch. A no-op
+  /// once complete, so a double tap cannot count twice.
   CatchTheCapyRound catchCapy() {
     if (isComplete) return this;
-    final draw = math.Random(_seed).nextInt(spotCount - 1);
     return CatchTheCapyRound._(
       PuzzleRound.advanceSeed(_seed),
       target: target,
       caught: caught + 1,
       misses: misses,
-      spot: draw >= spot ? draw + 1 : draw,
+      spot: _spotAwayFrom(column, row),
     );
   }
 
@@ -91,10 +90,24 @@ class CatchTheCapyRound {
     );
   }
 
-  /// The capybara bolts from a tap at ([column], [row]) to one of the spots
-  /// farthest from it; ties are broken by the seed.
+  /// The capybara bolts from a missed tap at ([column], [row]) to a spot
+  /// farthest from it.
   CatchTheCapyRound fleeFrom({required int column, required int row}) {
     if (isComplete) return this;
+    return CatchTheCapyRound._(
+      PuzzleRound.advanceSeed(_seed),
+      target: target,
+      caught: caught,
+      misses: misses,
+      spot: _spotAwayFrom(column, row, farthestOnly: true),
+    );
+  }
+
+  /// Squared distance a landing spot keeps from the danger: two steps, or the
+  /// farthest there is when nothing is that far (from the centre).
+  static const _clearDistance = 4;
+
+  int _spotAwayFrom(int column, int row, {bool farthestOnly = false}) {
     int distance(int s) {
       final dc = s % columns - column;
       final dr = s ~/ columns - row;
@@ -106,17 +119,12 @@ class CatchTheCapyRound {
         if (s != spot) s,
     ];
     final farthest = candidates.map(distance).reduce(math.max);
-    final best = [
+    final floor = farthestOnly ? farthest : math.min(_clearDistance, farthest);
+    final clear = [
       for (final s in candidates)
-        if (distance(s) == farthest) s,
+        if (distance(s) >= floor) s,
     ];
-    return CatchTheCapyRound._(
-      PuzzleRound.advanceSeed(_seed),
-      target: target,
-      caught: caught,
-      misses: misses,
-      spot: best[math.Random(_seed).nextInt(best.length)],
-    );
+    return clear[math.Random(_seed).nextInt(clear.length)];
   }
 
   CatchTheCapyRound miss() {

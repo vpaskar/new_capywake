@@ -26,40 +26,42 @@ class SettingsHeader extends StatelessWidget {
         height: height,
         child: Stack(
           children: [
-            // Inset past the back control on both sides, so a long title in
-            // any of the ten locales stays centred and never overlaps it.
+            // Centred on the back control's line, inset past it on both sides
+            // so a long title in any locale never overlaps it.
             Padding(
               padding: const EdgeInsetsDirectional.symmetric(
                 horizontal: CapyToggle.minTapTarget + CapySpacing.sm,
               ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ExcludeSemantics(
-                    child: Image.asset(
-                      CapyArt.byId('mascot.sleeping').path,
-                      height: CapyIconSize.wordmark,
-                      fit: BoxFit.contain,
+              child: Center(
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ExcludeSemantics(
+                      child: Image.asset(
+                        CapyArt.byId('mascot.sleeping').path,
+                        height: CapyIconSize.wordmark,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: CapySpacing.sm),
-                  Flexible(
-                    child: Semantics(
-                      header: true,
-                      child: Text(
-                        title,
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
-                        style: theme.textTheme.headlineSmall?.copyWith(
-                          color: ink,
-                          fontWeight: FontWeight.w800,
+                    const SizedBox(width: CapySpacing.sm),
+                    Flexible(
+                      child: Semantics(
+                        header: true,
+                        child: Text(
+                          title,
+                          maxLines: 1,
+                          overflow: TextOverflow.fade,
+                          softWrap: false,
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                            color: ink,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             PositionedDirectional(

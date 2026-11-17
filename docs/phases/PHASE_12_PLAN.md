@@ -288,3 +288,18 @@ with its head over the top. The painted tile replaces the `moments_14`
 stand-in. Reduce-motion and screen-reader behaviour unchanged: one still frame,
 no dust, no prints, no shuffle. Import, validation and the two supply defects
 (tile frame, bush edge) are recorded in `asset_gaps.md`.
+
+## 14. Owner follow-ups (2026-11-17, in session)
+
+- **A catch sends the capybara clear of the catch:** it lands two steps or more
+  from where it was caught (from the centre, a corner), drawn at random from
+  those spots so it is not predictable. A missed tap still sends it to the spot
+  farthest from the tap.
+- **First-second flicker fixed.** Each run frame was a new `Image` element (a
+  per-frame key), so `gaplessPlayback` never applied and every frame not yet
+  decoded flashed blank. Frames now swap inside one element, and the run, dust,
+  paw and meadow images are pre-cached when the game opens. A test fails if a
+  frame change rebuilds the element.
+- **Pushed-route header:** the title now sits centred across the screen on the
+  back button's line (it was top-start). Shared by Settings, its pushed routes,
+  the chooser and practice; Settings re-captured for Tier A.

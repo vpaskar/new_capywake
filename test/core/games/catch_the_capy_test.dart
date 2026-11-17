@@ -115,4 +115,27 @@ void main() {
       const Duration(seconds: 1),
     );
   });
+
+  test('once caught it lands clear of where it was caught', () {
+    for (var seed = 0; seed < 300; seed++) {
+      final round = _start(seed: seed, difficulty: PuzzleDifficulty.hard);
+      final next = round.catchCapy();
+      final dc = next.column - round.column;
+      final dr = next.row - round.row;
+      final fromCentre = round.column == 1 && round.row == 1;
+      expect(
+        dc * dc + dr * dr,
+        greaterThanOrEqualTo(fromCentre ? 2 : 4),
+        reason: 'seed $seed: ${round.spot} -> ${next.spot}',
+      );
+    }
+  });
+
+  test('where it lands after a catch still varies', () {
+    final landings = {
+      for (var seed = 0; seed < 300; seed++)
+        _start(seed: seed).catchCapy().spot,
+    };
+    expect(landings.length, greaterThan(4));
+  });
 }
