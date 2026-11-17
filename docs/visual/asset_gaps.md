@@ -890,3 +890,17 @@ Supplied as `CapyWake_Game_Art_Assets` (six files), kept unmodified in
 All ink sat at alpha 250–254 (G11's pattern), snapped by the pipeline. The
 earlier stand-ins (`collection_10` runner, `decor/` bush, shrubs, sprouts and
 tufts) are removed from the bundle.
+
+## G33 — Catch the Capy tile has no nightcap (Phase 12, owner ask open)
+
+The game's capybara wears the orange nightcap (owner run cycle); the Home tile
+`reference/02_ASSETS/game_tiles/catch_the_capy.png` shows it bare-headed, so
+the tile and the game disagree. **Owner decision (2026-11-17): a new tile with
+the hat.** Until it arrives the current tile stays.
+
+**Ask:** redraw `game_tiles/catch_the_capy.png` with the capybara wearing the
+nightcap from `game_art/run_cycle_sprite_sheet.png` (orange, white brim and
+pompom). Keep everything else as it is: 1254 × 1254 px, full-bleed (no frame,
+no black corners, no baked rounded edge), the same meadow, pose and motion
+lines, no text. Drop it in as `reference/02_ASSETS/game_tiles/catch_the_capy.png`;
+`dart run tool/import_art.dart` picks it up with no code change.
