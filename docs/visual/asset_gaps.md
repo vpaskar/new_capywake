@@ -904,3 +904,13 @@ pompom). Keep everything else as it is: 1254 × 1254 px, full-bleed (no frame,
 no black corners, no baked rounded edge), the same meadow, pose and motion
 lines, no text. Drop it in as `reference/02_ASSETS/game_tiles/catch_the_capy.png`;
 `dart run tool/import_art.dart` picks it up with no code change.
+
+## G34 — No win celebration for the games (Phase 12, owner ask open)
+
+Owner asked (2026-11-17) for an animation or image when a game is won, in every
+game. The package's `animations/05_celebration` (36 frames, capybara with a
+trophy and confetti) does not fit: **no nightcap** (the game's Capy wears one),
+**a trophy** (the app has no scores, streaks or bests), and 36 frames come to
+~540 KB lossy against ~187 KB left in the `assets/art` budget. **Ask:** item 1 of
+`ART_REQUESTS.md` — 6–8 frames of nightcap Capy cheering with confetti, no
+trophy, ≥ 360 px, one canvas.
