@@ -39,10 +39,13 @@ white bobble), as in `game_art/run_cycle_sprite_sheet.png`.
 
 | # | Request | Size | Base / style reference | Gap |
 |---|---|---|---|---|
-| 8 | **Three theme tiles**: Light (sunrise over hills), System (split sun / moon — *not* a sunset), Dark (night sky, crescent moon, stars) | ≥ 171 × 135 each | `04_SETTINGS.png`, Appearance row | G12 |
+| 8 | **One theme tile: System** — a sun and moon split in half (*not* a sunset). Light and Dark are **already supplied**: `morning_sunrise.png` and `night_sky.png` in `CapyWake_Remaining_Assets_Patch/scenes_1200x800_upscaled/` | ≥ 171 × 135 | `04_SETTINGS.png`, Appearance row | G12 |
 | 9 | **Ten puzzle-type icons**: Arithmetic, Number sequences, Missing sign, Compare numbers, Odd one out, Remember digits, Digits backwards, Grid patterns, Spot the change, Rotated shapes | ≥ 132 × 132 each | `asset_library/icons/` (`math`, `numbers`, `memory_cards`, `shapes`…) for style | G21 |
-| 10 | **Onboarding welcome scene** — Capy asleep in bed, sunrise window | 1536 × 1024 | `screens/alternative/onboarding_illustrated.png` | G20 |
+| 10 | **Onboarding welcome: a sleeping Capy** to sit in the bedroom. The empty room is **already supplied** (`cozy_bedroom.png`, same patch); only the Capy in bed is missing — or the whole scene in one image | Capy ≥ 600 px wide, or the scene at 1536 × 1024 | `screens/alternative/onboarding_illustrated.png` | G20 |
 | 11 | **Puzzle hero scene** — Capy holding a puzzle piece (chooser and onboarding) | 1536 × 1024 | `CapyWake_Puzzle_Chooser_Onboarding_Handoff` boards | G22 |
+
+**Checked against every download on 2026-11-17:** apart from items 8 and 10
+(partly supplied, above), none of these exists in any file sent so far.
 
 Items 1–3 change what a player sees in the games right now; 4–5 are on every
 tab; the rest are polish. Nothing here blocks the app from working.
