@@ -30,7 +30,7 @@
 
 | | Phase 11 | Phase 12 |
 |---|---|---|
-| Tests | 1,572 | **1,751** (+179) |
+| Tests | 1,572 | **1,759** (+187) |
 | `lib` | 97.95 % | **98.20 %** |
 | `lib/core` | 99.61 % | **99.67 %** |
 | `lib/core/games` | 100 % | **100 %** |
@@ -77,10 +77,13 @@ The ones that matter:
   bottom **+4.5** is Phase 07's declared tap-floor conflict, unchanged; group 1
   top `absent`, unchanged.
 
-**Tier B substitutions, all reported in session:** G23 (Memory Hideout tile =
-`moments_14`), **G29** (32 pt bush), **G30** (headband capybara for the nightcap
-one), **G31** (meadow = flat fill + small decor), **G32** (no run cycle, dust or
-footprints — the legs do not move because no frames exist). See `docs/visual/asset_gaps.md`.
+**Tier B:** G23, G29, G30, G31 and G32 were reported in session and then
+**closed by the owner's art** (plan §13): run cycle, dust, paw prints, meadow,
+plain bush and tile, each validated and imported through the pipeline. Two
+supply defects handled in the pipeline, not by loosening a guard: the tile's
+baked frame (cut inside it, pinned by a pixel test) and the bush's flat base
+(2 px margin). The meadow's saturated blue sky is cooler than the app palette —
+noted, used as supplied. See `docs/visual/asset_gaps.md`.
 
 ## Evidence
 

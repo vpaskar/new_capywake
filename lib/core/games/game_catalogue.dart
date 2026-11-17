@@ -101,8 +101,7 @@ abstract final class GameCatalogue {
   static const _memoryHideout = GameEntry(
     id: 'memory_hideout',
     nameKey: 'gameMemoryHideout',
-    // No painted tile in the package (gap G23): the game's own art stands in.
-    tileAssetId: 'game.memoryCapy',
+    tileAssetId: 'tile.memoryHideout',
     availability: GameAvailability.playable,
     screenReaderSolvable: true,
   );

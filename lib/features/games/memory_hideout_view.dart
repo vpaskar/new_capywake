@@ -37,7 +37,13 @@ class MemoryHideoutView extends GameRingingView {
   final PuzzleDifficulty difficulty;
 
   static const cardHeight = 112.0;
-  static const revealedCapyHeight = 84.0;
+
+  /// How far the peeking capybara stands above the card floor: its feet
+  /// stay behind the bush, its head shows over it.
+  static const capyPeekLift = 18.0;
+
+  /// The upright run frame, legs gathered under the body.
+  static const peekFrame = 4;
 
   /// One swap of two bushes. Slow enough to follow half-asleep.
   static const swapDuration = Duration(milliseconds: 550);
@@ -242,17 +248,28 @@ class _MemoryHideoutViewState extends State<MemoryHideoutView> {
               width: 1.5,
             ),
           ),
-          child: shown
-              ? Image.asset(
-                  CapyArt.byId('game.memoryCapy').path,
-                  height: MemoryHideoutView.revealedCapyHeight,
-                  fit: BoxFit.contain,
-                )
-              : Image.asset(
-                  CapyArt.byId('game.bush').path,
-                  width: ArtUse.gameBush.renderBoxPt,
-                  fit: BoxFit.contain,
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            clipBehavior: Clip.none,
+            children: [
+              if (shown)
+                Positioned(
+                  key: const ValueKey('memory-hideout-peeking-capy'),
+                  left: CapySpacing.xs,
+                  right: CapySpacing.xs,
+                  bottom: MemoryHideoutView.capyPeekLift,
+                  child: Image.asset(
+                    CapyArt.runFrames[MemoryHideoutView.peekFrame].path,
+                    fit: BoxFit.contain,
+                  ),
                 ),
+              Image.asset(
+                CapyArt.byId('game.bush').path,
+                width: double.infinity,
+                fit: BoxFit.contain,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -13,7 +13,7 @@ Deviations from the poster:
   reveal happens in the card the user taps, so there is one thing to remember.
 - **Ready** is an outlined in-card control, not filled: filled, it was a twin of
   Snooze directly below (full-project review M1).
-- **Tier B:** the revealed card shows `moments_14`; hidden cards show a 32 pt
-  bush, all the package's only plain bush supports (G29).
+- **Owner art (G29 closed):** every card shows the supplied plain bush; on the
+  reveal card the nightcap Capy stands behind it, head over the top.
 - The capture pre-caches images before the screenshot (full-project review M2):
   an earlier run caught the cards before the art decoded.

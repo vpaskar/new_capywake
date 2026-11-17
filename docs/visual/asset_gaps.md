@@ -872,3 +872,21 @@ so frames do not jitter, no baked dust):
    capybara so it can trail behind.
 3. **Footprint** — one paw print (or a left/right pair), ≥ 90 px, to stamp and
    fade along the path.
+
+## G23, G29, G30, G31, G32 — closed by the owner's game art (2026-11-17)
+
+Supplied as `CapyWake_Game_Art_Assets` (six files), kept unmodified in
+`reference/02_ASSETS/game_art/` and imported by `tool/import_art.dart`:
+
+| Gap | Supplied file | Bundled as | Notes |
+|---|---|---|---|
+| G30, G32 | `run_cycle_sprite_sheet.png` (4×2, nightcap, facing right) | `games/run_00`–`07.webp`, 288×240 | Cut on the grid, ink bounds at alpha ≥ 100 (the sheet carries faint specks), right- and bottom-aligned on one canvas: nose fixed, feet on one baseline. Consecutive-frame difference 7–19 %, loop seam 9 % — no jump. Lossy colour / lossless alpha (−75 % size) to keep `assets/art` inside its budget. |
+| G32 | `dust_puff_sprite_sheet.png` (2×2: appear, grow, full, fade) | `games/dust_00`–`03.webp`, 144×105 | Same alignment; 31 % of its non-zero pixels were ghosts, cleared. |
+| G32 | `paw_footprints.png` (a pair) | `games/paw.webp`, 72×70 | The two paws are the same drawing, so one is used; prints alternate sides of the path instead. |
+| G31 | `meadow_background.png` 1402×1122 (exactly the field's 1.25 aspect) | `games/meadow.webp`, 1080×864 | **Palette note:** a saturated blue sky, cooler than the app's warm cream/peach. Used as supplied; the capybara is kept below the horizon (22 % of the field). |
+| G29 | `plain_bush.png` | `games/plain_bush.webp`, 292×135 | Flat base sat on the trimmed edge and tripped the severed-crop check (visually intact); a 2 px margin rather than a relaxed guard. |
+| G23 | `memory_hideout_tile.png` | `tiles/memory_hideout.webp`, 360×360 | **Wrong variant as supplied:** a baked cream frame on black corners, while the four other tiles are full-bleed. Cut 64 px inside the frame; the remaining dark corner reaches 9 px, under the tightest clip the app draws (21 px) — pinned by a pixel test. |
+
+All ink sat at alpha 250–254 (G11's pattern), snapped by the pipeline. The
+earlier stand-ins (`collection_10` runner, `decor/` bush, shrubs, sprouts and
+tufts) are removed from the bundle.

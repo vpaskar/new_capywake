@@ -2,7 +2,7 @@
 
 **Phase 12 — Touch games I: done, 2026-11-17. `Current phase: 13`.**
 
-**1,751 tests**, analyze clean including infos, lib 98.20% / `lib/core` 99.67% /
+**1,759 tests**, analyze clean including infos, lib 98.20% / `lib/core` 99.67% /
 `lib/core/games` **100%** / `lib/features/games` **100%** / `lib/data` 89.17% /
 `lib/features/ringing` 98.62%, **466 ARB keys × 10 locales**. Comment baseline 113
 (+0).
@@ -20,7 +20,11 @@
    stops under `disableAnimations` **or** `accessibleNavigation`, and each game
    stays finishable there. `CLAUDE.md` now limits "no animation" to the ringing
    **chrome**. **Phases 13–17 design motion in from the start.**
-3. **Never draw art in code.** Legs, dust and footprints wait for frames (G32).
+3. **Never draw art in code.** G32 asked for frames; the owner supplied them the
+   same day (`reference/02_ASSETS/game_art/`). Sprite sheets go through
+   `_FrameSheet` in `tool/import_art.dart`: grid cut, one canvas, right+bottom
+   aligned. Expect supplied art to need validation — this batch had a framed
+   tile and a flat-based bush.
 
 ## Findings that matter later
 

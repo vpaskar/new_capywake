@@ -115,12 +115,15 @@ void main() {
       }
     });
 
-    testWidgets('Memory Hideout borrows its game art as a tile (G23)', (
+    testWidgets('Memory Hideout has its own painted tile (G23 closed)', (
       tester,
     ) async {
       final entry = GameCatalogue.byId('memory_hideout')!;
-      expect(entry.tileAssetId, 'game.memoryCapy');
-      expect(CapyArt.byId(entry.tileAssetId).path, contains('moments_14'));
+      expect(entry.tileAssetId, 'tile.memoryHideout');
+      expect(
+        CapyArt.byId(entry.tileAssetId).path,
+        'assets/art/tiles/memory_hideout.webp',
+      );
     });
 
     testWidgets('a playable tile opens practice, not the sheet', (

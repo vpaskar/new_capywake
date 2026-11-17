@@ -1,6 +1,7 @@
 import 'package:capywake/core/games/catch_the_capy.dart';
 import 'package:capywake/core/games/game_challenge.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
+import 'package:capywake/design/art.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -293,7 +294,7 @@ void main() {
       await tester.pump(CatchTheCapyRound.runFor(PuzzleDifficulty.hard));
       final to = tester.getCenter(_target).dx;
       final flip = tester.widget<Transform>(
-        find.descendant(of: _target, matching: find.byType(Transform)).last,
+        find.descendant(of: _target, matching: find.byType(Transform)).first,
       );
       final mirrored = flip.transform.storage[0] < 0;
       if (to < from) {
@@ -337,28 +338,92 @@ void main() {
     expect((after - tap.dx).abs(), greaterThan(field.width / 2));
   });
 
-  testWidgets('each stride rocks to the other side', (tester) async {
+  Finder frame(int i) => find.byKey(ValueKey('catch-the-capy-frame-$i'));
+
+  testWidgets('the legs run through the whole cycle during a run', (
+    tester,
+  ) async {
+    await _pump(tester);
+    expect(frame(0), findsOneWidget, reason: 'standing frame before a run');
+    await tester.tap(_target);
+    await tester.pump();
+
+    final run = CatchTheCapyRound.runFor(PuzzleDifficulty.easy);
+    final seen = <int>{};
+    for (var step = 0; step < 32; step++) {
+      await tester.pump(run ~/ 32);
+      for (var i = 0; i < CapyArt.runFrames.length; i++) {
+        if (frame(i).evaluate().isNotEmpty) seen.add(i);
+      }
+    }
+    expect(seen, hasLength(CapyArt.runFrames.length));
+  });
+
+  testWidgets('a run leaves dust where it began and alternating prints', (
+    tester,
+  ) async {
     await _pump(tester);
     await tester.tap(_target);
     await tester.pump();
     final run = CatchTheCapyRound.runFor(PuzzleDifficulty.easy);
-    double rock() => tester
-        .widgetList<Transform>(
-          find.descendant(of: _target, matching: find.byType(Transform)),
-        )
-        .elementAt(1)
-        .transform
-        .storage[1];
+    final dust = find.byKey(const ValueKey('catch-the-capy-dust'));
+    expect(dust, findsOneWidget);
 
-    await tester.pump(run ~/ 6);
-    final first = rock();
-    await tester.pump(run ~/ 3);
-    final second = rock();
-    await tester.pump(run ~/ 3);
-    final third = rock();
+    await tester.pump(run * 0.4);
+    final p0 = tester.getCenter(
+      find.byKey(const ValueKey('catch-the-capy-paw-0')),
+    );
+    final p1 = tester.getCenter(
+      find.byKey(const ValueKey('catch-the-capy-paw-1')),
+    );
+    expect(p0, isNot(p1));
 
-    expect(first, isNot(0));
-    expect(first.sign, isNot(second.sign), reason: 'right step, left step');
-    expect(second.sign, isNot(third.sign));
+    await tester.pump(run * 0.6);
+    expect(dust, findsNothing, reason: 'gone by the end of its run');
+    expect(find.byKey(const ValueKey('catch-the-capy-paw-0')), findsNothing);
+  });
+
+  testWidgets('under reduce-motion: one still frame, no dust, no prints', (
+    tester,
+  ) async {
+    await _pump(tester, reduceMotion: true);
+    await tester.tap(_target);
+    await tester.pump();
+    expect(frame(0), findsOneWidget);
+    expect(find.byKey(const ValueKey('catch-the-capy-dust')), findsNothing);
+    expect(find.byKey(const ValueKey('catch-the-capy-paw-0')), findsNothing);
+  });
+
+  testWidgets('it always runs on the grass, never in the sky', (
+    tester,
+  ) async {
+    await _pump(tester, difficulty: PuzzleDifficulty.hard);
+    final field = tester.getRect(_meadow);
+    for (var i = 0; i < 6; i++) {
+      final capy = tester.getRect(_target);
+      expect(
+        capy.top - field.top,
+        greaterThanOrEqualTo(
+          CatchTheCapyView.fieldHeight * CatchTheCapyView.groundTop - 0.5,
+        ),
+      );
+      await tester.tap(_target);
+      await tester.pumpAndSettle();
+    }
+  });
+
+  testWidgets('the dust stays inside the field', (tester) async {
+    await _pump(tester, difficulty: PuzzleDifficulty.hard);
+    final field = tester.getRect(_meadow);
+    final dust = find.byKey(const ValueKey('catch-the-capy-dust'));
+    for (var i = 0; i < 6; i++) {
+      await tester.tap(_target);
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 50));
+      final rect = tester.getRect(dust);
+      expect(rect.left, greaterThanOrEqualTo(field.left - 0.5));
+      expect(rect.right, lessThanOrEqualTo(field.right + 0.5));
+      await tester.pumpAndSettle();
+    }
   });
 }

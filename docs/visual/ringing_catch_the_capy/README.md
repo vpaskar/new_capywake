@@ -13,10 +13,9 @@ What the capture shows, and the deviations from the poster:
   and **Stop without solving** stay below it, owned by the ringing surface.
 - Name pill, instruction, `0 / 5` and five pips — the poster's header, in our
   tokens and type.
-- **Tier B:** the capybara is `collection_10` (headband) not the poster's
-  nightcap pose (G30); the meadow is a flat fill dressed with the package's small
-  decor, not a painted scene (G31); the legs do not move — no run-cycle frames
-  exist (G32).
+- **Owner art (G30–G32 closed):** the 8-frame nightcap gallop, a dust puff and
+  paw prints over the supplied meadow. The meadow's blue sky is cooler than the
+  app palette; the capybara stays below the horizon.
 - **Dynamic (owner, 2026-11-17):** the capybara runs non-stop and faces its
   direction; a still capture shows one moment of it. The ringing chrome (clock,
   Snooze, escape) does not move. Under reduce-motion it holds still.

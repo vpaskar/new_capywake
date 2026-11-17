@@ -6,7 +6,7 @@ Phases 00–12 are **done** and committed.
 
 **Current phase: `13` — Touch games II (Rhythm Rescue, Capy Rocket).**
 
-**1,751 tests** pass. `lib` 98.20%, `lib/core` 99.67%, `lib/core/games` and
+**1,759 tests** pass. `lib` 98.20%, `lib/core` 99.67%, `lib/core/games` and
 `lib/features/games` **100%**, `lib/data` 89.17%, `lib/features/ringing` 98.62%.
 **466 ARB keys × 10 locales.** Comment baseline **113**.
 
@@ -21,7 +21,8 @@ Two games are playable — Catch the Capy and Memory Hideout — on a ringing al
 3. `memory/current-phase.md` — the selection model and what Phase 12 found.
 4. `docs/phases/PHASE_12_PLAN.md` §12 — the owner's mid-phase directions.
 5. `docs/phases/PHASE_12_FULL_PROJECT_REVIEW.md` — the two cross-app defects.
-6. `docs/visual/asset_gaps.md` G29–G32 — open art asks, including the run cycle.
+6. `docs/visual/asset_gaps.md` — G29–G32 closed by owner art; how sprite sheets
+   were validated and imported.
 
 ## How a game plugs in now (Phase 11 contract + Phase 12 model)
 

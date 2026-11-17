@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/art_audit.dart';
@@ -119,6 +120,49 @@ void main() {
           reason: '${file.path} is wide enough to hold two merged poses',
         );
       }
+    });
+  });
+
+  group('supplied game art', () {
+    test('the Memory Hideout tile shows no frame at any clip the app uses', () {
+      final tile = img.decodeImage(
+        File(CapyArt.byId('tile.memoryHideout').path).readAsBytesSync(),
+      )!;
+      // The tightest clip: the chooser's 40 pt tile at an 8 pt radius cuts
+      // this far into each corner along the diagonal.
+      final cut = (tile.width * (8 / 40) * (1 - math.sqrt1_2)).floor();
+      for (final (x, y) in [
+        (cut, cut),
+        (tile.width - 1 - cut, cut),
+        (cut, tile.height - 1 - cut),
+        (tile.width - 1 - cut, tile.height - 1 - cut),
+      ]) {
+        final p = tile.getPixel(x, y);
+        expect(p.r + p.g + p.b, greaterThan(300), reason: 'dark at ($x, $y)');
+      }
+    });
+
+    test('run frames share one canvas and a foot baseline', () {
+      final sizes = <(int, int)>{};
+      for (final frame in CapyArt.runFrames) {
+        final decoded = img.decodeImage(File(frame.path).readAsBytesSync())!;
+        sizes.add((decoded.width, decoded.height));
+        final ink = auditImage(decoded).trimRect!;
+        expect(ink.bottom, decoded.height - 1, reason: '${frame.id} floats');
+        expect(ink.right, decoded.width - 1, reason: '${frame.id} nose moved');
+      }
+      expect(sizes, hasLength(1));
+    });
+
+    test('dust frames share one canvas', () {
+      final sizes = {
+        for (final f in CapyArt.dustFrames)
+          () {
+            final d = img.decodeImage(File(f.path).readAsBytesSync())!;
+            return (d.width, d.height);
+          }(),
+      };
+      expect(sizes, hasLength(1));
     });
   });
 }

@@ -329,4 +329,29 @@ void main() {
       expect(tester.binding.transientCallbackCount, 0);
     });
   });
+
+  testWidgets('Capy peeks over the bush only on the reveal card', (
+    tester,
+  ) async {
+    await _pump(tester);
+    final hidden = _mirror(PuzzleDifficulty.easy).hiddenAt;
+    final peek = find.byKey(const ValueKey('memory-hideout-peeking-capy'));
+    expect(peek, findsOneWidget);
+    expect(
+      find.descendant(of: _bush(hidden), matching: peek),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
+        of: _bush((hidden + 1) % 3),
+        matching: find.byType(Image),
+      ),
+      findsOneWidget,
+      reason: 'a hidden card shows only its bush',
+    );
+
+    await tester.tap(find.text('Ready'));
+    await tester.pumpAndSettle();
+    expect(peek, findsNothing);
+  });
 }

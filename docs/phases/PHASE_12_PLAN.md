@@ -275,3 +275,16 @@ What changed as a result, and the guardrails kept:
 
 `CLAUDE.md`'s "no animation on the ringing surface" is narrowed to the ringing
 **chrome** (clock, Snooze, escape), with the owner's direction recorded beside it.
+
+## 13. Owner game art (2026-11-17, in session)
+
+The owner supplied the six files G32 asked for. Catch the Capy now draws the
+meadow backdrop, plays the 8-frame nightcap gallop (two leg cycles per run, so a
+harder setting also moves the legs faster) with a small bounce per stride,
+drops a dust puff where each run starts and four alternating paw prints that
+fade along the path. Memory Hideout draws the plain bush on every card; on the
+reveal card Capy (the same nightcap character, run frame 4) stands behind it
+with its head over the top. The painted tile replaces the `moments_14`
+stand-in. Reduce-motion and screen-reader behaviour unchanged: one still frame,
+no dust, no prints, no shuffle. Import, validation and the two supply defects
+(tile frame, bush edge) are recorded in `asset_gaps.md`.

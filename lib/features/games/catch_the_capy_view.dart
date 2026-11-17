@@ -12,8 +12,8 @@ import 'package:capywake/features/ringing/game_ringing_view.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// Catch the Capy. The capybara wanders the meadow (owner, 2026-11-17); under
-/// reduce-motion or a screen reader it holds still and moves only when caught.
+/// Catch the Capy: a capybara galloping round the meadow. Under reduce-motion
+/// or a screen reader it holds still and moves only when caught.
 class CatchTheCapyView extends GameRingingView {
   const CatchTheCapyView({
     required this.seed,
@@ -39,7 +39,17 @@ class CatchTheCapyView extends GameRingingView {
 
   /// A fixed box: the ringing slot scrolls, so its height is unbounded.
   static const fieldHeight = 280.0;
-  static const capySize = 88.0;
+
+  /// The tap box round the running capybara; the frames are 1.2 : 1.
+  static const capyWidth = 96.0;
+  static const capyHeight = 88.0;
+
+  /// Where the meadow's grass starts, as a share of the field: the capybara's
+  /// feet stay below it, never in the sky.
+  static const groundTop = 0.22;
+
+  /// Leg cycles per run, so faster runs also move the legs faster.
+  static const strides = 2;
 
   /// A short footfall beat between runs — it never rests longer.
   static const footfall = Duration(milliseconds: 150);
@@ -58,6 +68,7 @@ class _CatchTheCapyViewState extends State<CatchTheCapyView> {
   );
   bool _completionReported = false;
   bool _facingStart = false;
+  late int _from = _round.spot;
   Timer? _wander;
 
   bool get _moves =>
@@ -90,6 +101,7 @@ class _CatchTheCapyViewState extends State<CatchTheCapyView> {
       if (next.column != _round.column) {
         _facingStart = next.column < _round.column;
       }
+      _from = _round.spot;
       _round = next;
     });
   }
@@ -156,14 +168,25 @@ class _CatchTheCapyViewState extends State<CatchTheCapyView> {
     );
   }
 
+  Offset _spotAt(int spot, double width) {
+    const w = CatchTheCapyView.capyWidth;
+    const h = CatchTheCapyView.capyHeight;
+    const field = CatchTheCapyView.fieldHeight;
+    const minTop = field * CatchTheCapyView.groundTop;
+    const lastColumn = CatchTheCapyRound.columns - 1;
+    const lastRow = CatchTheCapyRound.rows - 1;
+    return Offset(
+      (width - w) * (spot % CatchTheCapyRound.columns) / lastColumn,
+      minTop +
+          (field - h - minTop) * (spot ~/ CatchTheCapyRound.columns) / lastRow,
+    );
+  }
+
   Widget _field(AppLocalizations l10n, {required double width}) {
-    const size = CatchTheCapyView.capySize;
-    final start =
-        (width - size) * _round.column / (CatchTheCapyRound.columns - 1);
-    final top =
-        (CatchTheCapyView.fieldHeight - size) *
-        _round.row /
-        (CatchTheCapyRound.rows - 1);
+    final at = _spotAt(_round.spot, width);
+    final from = _spotAt(_from, width);
+    final flip =
+        _facingStart != (Directionality.of(context) == TextDirection.rtl);
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(CapyRadius.lg),
@@ -178,22 +201,36 @@ class _CatchTheCapyViewState extends State<CatchTheCapyView> {
                   details.localPosition,
                   width: width,
                 ),
-                child: const ColoredBox(color: CapyColors.meadow),
+                child: Image.asset(
+                  CapyArt.byId('game.meadow').path,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.bottomCenter,
+                ),
               ),
             ),
           ),
-          const Positioned.fill(
-            child: IgnorePointer(
-              child: ExcludeSemantics(child: _MeadowDecor()),
+          if (_moves && _from != _round.spot)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: ExcludeSemantics(
+                  child: _Trail(
+                    key: ValueKey(('trail', _round.spot, _round.caught)),
+                    from: from,
+                    to: at,
+                    flip: flip,
+                    duration: widget.run,
+                    fieldWidth: width,
+                  ),
+                ),
+              ),
             ),
-          ),
           AnimatedPositionedDirectional(
             duration: _moves ? widget.run : Duration.zero,
             curve: Curves.easeInOut,
-            start: start,
-            top: top,
-            width: size,
-            height: size,
+            start: at.dx,
+            top: at.dy,
+            width: CatchTheCapyView.capyWidth,
+            height: CatchTheCapyView.capyHeight,
             child: Semantics(
               button: true,
               label: l10n.gameCatchTheCapyTargetLabel,
@@ -203,17 +240,13 @@ class _CatchTheCapyViewState extends State<CatchTheCapyView> {
                 key: const ValueKey('catch-the-capy-target'),
                 behavior: HitTestBehavior.opaque,
                 onTap: () => _update(_round.catchCapy()),
-                child: _Hop(
-                  key: ValueKey(_round.spot),
-                  duration: _moves ? widget.run : Duration.zero,
-                  child: Transform.flip(
-                    flipX:
-                        _facingStart !=
-                        (Directionality.of(context) == TextDirection.rtl),
-                    child: Image.asset(
-                      CapyArt.byId('game.catchCapy').path,
-                      fit: BoxFit.contain,
-                    ),
+                child: Transform.flip(
+                  flipX: flip,
+                  child: _Runner(
+                    key: ValueKey(('run', _round.spot, _round.caught)),
+                    duration: _moves && _from != _round.spot
+                        ? widget.run
+                        : Duration.zero,
                   ),
                 ),
               ),
@@ -225,71 +258,126 @@ class _CatchTheCapyViewState extends State<CatchTheCapyView> {
   }
 }
 
-/// Small bounces while the capybara runs. Stands in for a run cycle the
-/// package lacks (see asset_gaps.md G32).
-class _Hop extends StatelessWidget {
-  const _Hop({required this.duration, required this.child, super.key});
+/// The run cycle, played over one run with a small bounce per stride. Still
+/// on its first frame when there is no run to play.
+class _Runner extends StatelessWidget {
+  const _Runner({required this.duration, super.key});
 
   final Duration duration;
-  final Widget child;
 
-  static const height = 8.0;
-
-  /// Bounces per run, so a run reads as steps rather than one leap.
-  static const strides = 3;
-
-  /// Body rock per stride, alternating sides: right step, left step.
-  static const waddle = 0.12;
+  static const bounce = 4.0;
 
   @override
   Widget build(BuildContext context) {
-    if (duration == Duration.zero) return child;
+    if (duration == Duration.zero) return _frame(0);
+    final frames = CapyArt.runFrames.length;
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: duration,
-      builder: (context, t, child) {
-        final step = math.sin(math.pi * strides * t);
+      builder: (context, t, _) {
+        final cycle = t * CatchTheCapyView.strides;
+        final index = (cycle * frames).floor() % frames;
         return Transform.translate(
-          offset: Offset(0, -height * step.abs()),
-          child: Transform.rotate(angle: waddle * step, child: child),
+          offset: Offset(0, -bounce * math.sin(math.pi * cycle * 2).abs()),
+          child: _frame(t >= 1 ? 0 : index),
         );
       },
-      child: child,
     );
   }
+
+  Widget _frame(int index) => Image.asset(
+    CapyArt.runFrames[index].path,
+    key: ValueKey('catch-the-capy-frame-$index'),
+    fit: BoxFit.contain,
+    alignment: Alignment.bottomCenter,
+    gaplessPlayback: true,
+  );
 }
 
-/// Shrubs, sprouts and grass behind the capybara, from the package's decor.
-class _MeadowDecor extends StatelessWidget {
-  const _MeadowDecor();
+/// What a run leaves behind: a dust puff where it started and paw prints
+/// along the way, alternating feet, each fading as the run goes on.
+class _Trail extends StatelessWidget {
+  const _Trail({
+    required this.from,
+    required this.to,
+    required this.flip,
+    required this.duration,
+    required this.fieldWidth,
+    super.key,
+  });
 
-  static const _pieces = <(String, Alignment)>[
-    ('game.shrub', Alignment(-0.95, -0.85)),
-    ('game.shrub', Alignment(0.95, 0.9)),
-    ('game.bush', Alignment(0.2, -0.95)),
-    ('game.bush', Alignment(-0.7, 0.95)),
-    ('game.sprout', Alignment(-0.35, 0.25)),
-    ('game.sprout', Alignment(0.6, -0.3)),
-    ('game.tuft', Alignment(0.05, 0.6)),
-    ('game.tuft', Alignment(0.85, -0.7)),
-    ('game.tuft', Alignment(-0.9, 0.1)),
-    ('game.tuft', Alignment(0.45, 0.45)),
-  ];
+  final double fieldWidth;
+  final Offset from;
+  final Offset to;
+  final bool flip;
+  final Duration duration;
+
+  static const printSize = 18.0;
+  static const dustWidth = 48.0;
+  static const printsAt = [0.15, 0.32, 0.49, 0.66];
+  static const printLife = 0.4;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        for (final (id, alignment) in _pieces)
-          Align(
-            alignment: alignment,
-            child: Image.asset(
-              CapyArt.byId(id).path,
-              width: CapyArt.byId(id).use.renderBoxPt,
-              fit: BoxFit.contain,
+    const w = CatchTheCapyView.capyWidth;
+    const h = CatchTheCapyView.capyHeight;
+    final start = from + const Offset(w / 2, h - printSize / 2);
+    final end = to + const Offset(w / 2, h - printSize / 2);
+    final heading = math.atan2(end.dy - start.dy, end.dx - start.dx);
+    final rtl = Directionality.of(context) == TextDirection.rtl;
+    final onScreenHeading = rtl ? math.pi - heading : heading;
+    final side = Offset(-math.sin(heading), math.cos(heading)) * 5;
+    final dust = CapyArt.dustFrames;
+
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 0, end: 1),
+      duration: duration,
+      builder: (context, t, _) => Stack(
+        children: [
+          if (t < 1)
+            PositionedDirectional(
+              start:
+                  (flip ? from.dx + w - dustWidth / 2 : from.dx - dustWidth / 2)
+                      .clamp(0, math.max(0, fieldWidth - dustWidth))
+                      .toDouble(),
+              top: from.dy + h - dustWidth * 0.73,
+              width: dustWidth,
+              child: Transform.flip(
+                flipX: flip,
+                child: Image.asset(
+                  dust[(t * dust.length).floor().clamp(0, dust.length - 1)]
+                      .path,
+                  key: const ValueKey('catch-the-capy-dust'),
+                  gaplessPlayback: true,
+                ),
+              ),
             ),
-          ),
-      ],
+          for (var i = 0; i < printsAt.length; i++)
+            if (t >= printsAt[i] && t < printsAt[i] + printLife)
+              PositionedDirectional(
+                start:
+                    Offset.lerp(start, end, printsAt[i])!.dx +
+                    (i.isEven ? side.dx : -side.dx) -
+                    printSize / 2,
+                top:
+                    Offset.lerp(start, end, printsAt[i])!.dy +
+                    (i.isEven ? side.dy : -side.dy) -
+                    printSize / 2,
+                width: printSize,
+                height: printSize,
+                child: Opacity(
+                  opacity: 0.8 * (1 - (t - printsAt[i]) / printLife),
+                  child: Transform.rotate(
+                    angle: onScreenHeading + math.pi / 2,
+                    child: Image.asset(
+                      CapyArt.byId('game.paw').path,
+                      key: ValueKey('catch-the-capy-paw-$i'),
+                    ),
+                  ),
+                ),
+              ),
+        ],
+      ),
     );
   }
 }
