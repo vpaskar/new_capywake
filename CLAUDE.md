@@ -162,13 +162,18 @@ why the previous attempt could not match the mockups.
 ## Content integrity — the three screens that will try to lie
 
 - **Stats:** the empty state is the **default**, not the fallback. No numeric
-  literal in a user-facing position in `lib/features/stats/`. Demo data lives
-  in tests and goldens only. No fabricated sleep averages, goals or
-  percentages. **Phase 08 owes the gate:** this line claimed
-  `tool/check_no_fake_stats.dart` enforced the rule and **that file has never
-  existed** (Phase 07 full-project review — the same defect Phase 02 found in
-  the documented `tool/audit_art.dart`). Until it is written, the rule is
-  prose, not a gate.
+  literal in a user-facing position in `lib/features/`. Demo data lives in
+  tests and goldens only. No fabricated sleep averages, goals or percentages.
+  **`tool/check_no_fake_stats.dart` enforces it** — written in Phase 08, after
+  Phase 07's full-project review found this line claiming a file that had
+  never existed (the same defect Phase 02 found in the documented
+  `tool/audit_art.dart`).
+  **The gate is blind to three shapes and this is measured, not assumed:** a
+  `??` fallback, a provider default, and arithmetic over constants. A planted
+  numeric fallback passes it and only the widget test fails. So the rule is
+  the gate **plus** a test that every value slot renders the empty token;
+  `test/style/check_no_fake_stats_test.dart` asserts the blind spots so they
+  cannot be forgotten.
 - **Settings:** show only implemented rows. Backup & Sync and Restore Purchases
   are dropped — there is no backend and nothing to restore.
 - **Home:** the game rail reads from a typed catalogue; a `comingSoon` card is
@@ -232,6 +237,7 @@ dart format --set-exit-if-changed .
 flutter analyze                                             # zero issues
 dart run tool/check_arb.dart                                # 10 locales
 dart run tool/check_bundle_size.dart                        # every asset tree
+dart run tool/check_no_fake_stats.dart                      # lib/features/
 flutter test --coverage      # incl. the art audit, manifest + comment budget
 dart run tool/check_coverage.dart --path lib                # project >= 85%
 dart run tool/check_coverage.dart --min 95 --path lib/core  # core >= 95%

@@ -196,3 +196,46 @@ Declared with the arithmetic. **1,452 tests** (registered 70–100, measured
 **80**), 427 ARB keys, lib 97.80% / core **99.61%** (registered *unchanged* —
 this phase is the first **caller** of the ported reliability services).
 38 findings across four passes, all applied.
+
+## Phase 08 — Stats (2026-11-17)
+
+**The screen `CLAUDE.md` calls most likely to lie, and the gate it had claimed
+since Phase 00.** `05_STATS.png` draws `7 h 32 m`, a 7-bar chart, `6 days`,
+`Best: 14 days`, `94%` — all fabricated. The shipped default is empty.
+
+1. **A gate that exists is not the same as a rule that holds.**
+   `tool/check_no_fake_stats.dart` written, tested (16), widened to all of
+   `lib/features/` (38 files, already clean). Three mutations run separately;
+   the third is the finding: **a planted numeric `?? 6` fallback PASSES the
+   gate entirely** and is caught only by the widget test. Writing the file
+   Phase 07 found missing would have left `CLAUDE.md` making a *new* false
+   claim. Blind spots now stated beside the rule and asserted in its test.
+2. **The gate shipped with two defects of its own**, caught by fixtures
+   written before the screen: **it could not match a percentage** (`\b` after
+   `%` can never hold) and it flagged every localized call taking a number.
+3. **The block table named the *track* and measured the *pill*.**
+   `compare.dart` printed `+4.4 TIER A FAIL` for a pill **0.2 pt** from its
+   mark. *The tool was right, the widget was right, the table between them was
+   wrong.* Phase 05's rule, fourth consecutive phase, third in this same tool.
+4. **Three failing meadows are ONE fact.** Every tab's grass ends at 694.3,
+   the pushed Settings route reaches 793.0: `CapyNavBar` takes 98.7 pt against
+   the mockup's 79.9. Phase 07 had recorded them as three screen-local
+   defects.
+5. **The plan declared eight blocks its own default cannot render.**
+   Pre-review cut the claimed set 13 → 5; the eight keep their mockup values
+   for the phase that builds the filled state.
+6. **`sleepHistoryEmpty` says "Connect Health" and no Connect control exists**
+   anywhere in the app — Phase 07's dead-control defect in new clothes.
+7. **The green-collapse hero-edge method does not work on every screen.**
+   It reproduces Settings (213.1 vs 212.9) and Alarms (252.4 vs 252.5) and
+   produces **nothing** on Stats, whose cream is a scalloped cloud.
+8. **The sleep boundary is NOT discharged**, and this is said explicitly for
+   the second phase running.
+
+**Tier A: header +0.1, hero −0.1, track top −1.4, track bottom +3.5, meadow
+`absent` ❌** — 4 of 5 claimed pass and the failure is named. Band **111.5**
+(fifth distinct value), meadow **79.9** (sixth). **1,493 tests** (registered
+70–100, measured **+41** — restated: a screen that deliberately renders
+nothing has less to assert), 437 ARB keys, lib 97.88% / core 99.61% /
+**`lib/features/stats` 100.00%**. 15 findings across four passes, all applied,
+none invalid.

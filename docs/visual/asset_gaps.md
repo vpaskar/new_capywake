@@ -695,3 +695,64 @@ makes reachability binding — "a half-asleep user, no precision tapping" — so
 rows are 44.0 pt and group 1 is 117.2 against the mockup's 110.4. This is not
 fixable without breaking the accessibility rule, and is declared as a Tier A
 deviation in `docs/visual/settings/README.md` rather than papered over.
+
+## G18 — `SceneHeader` draws a flat-topped sheet; every mockup draws a cloud (Phase 08)
+
+Measured on `05_STATS.png` while deriving the hero band. The cream shape's top
+is a **scalloped cloud with lobes rising ~65 pt above its flat top** — columns
+at x=48–340 return 149.6 because they hit pale lobes, while the edge columns
+trace a smooth arc from 230.9 (x=4) to a flat 214.3 (x≥44).
+
+`SceneHeader` renders `BorderRadius.vertical(top: Radius.circular(28))`.
+
+**This affects all five screens, not Stats.** The visible consequence on Stats
+is that `05_STATS.png` places "Statistics" **6.7 pt above** the cream's flat
+top, inside a lobe, which a flat-topped sheet cannot do. So the title must
+start below that edge, and the whole spacing budget above the switcher is
+consumed by the title's own line box: `titleTopGap` and `titleToSwitcherGap`
+are both **0.0** and the track still lands 1.4 pt low.
+
+**What it would take:** a clip path or a scalloped art slice on the cream
+sheet's upper edge, shared by `SceneHeader`, so the lobes are art rather than
+a rounded rectangle. Not attempted here — it changes the composition of five
+screens, four of them measured by other phases.
+
+Using the flat-top measurement for `bandHeight` is correct regardless: it is
+the edge the sheet actually has.
+
+## G19 — `MeadowFooter` paints roughly twice the grass the mockups draw (Phase 08)
+
+The widget box heights are right per screen; the painter fills far more of the
+box than the mockup inks.
+
+| | Painted grass |
+|---|---|
+| `05_STATS.png` | **29.1 pt** — scalloped top 744.0–764.3 down to a flat 773.1 |
+| Stats capture | **60.6 pt** — 633.7 → 694.3 |
+
+No Tier A block measures painted extent — they measure the footer's box — so
+no screen has ever failed on it, which is why four phases have shipped past
+it. Shared by every screen using `MeadowFooter`.
+
+**Not changed here:** `_MeadowPainter` is used by Home, Alarms, Settings and
+Stats, and three of those were measured by other phases.
+
+## Not a gap — one nav bar, three meadows (Phase 08)
+
+`meadow footer bottom` reports `absent` on Stats, and Phase 07 recorded Alarms
+at **+10.0** and Home as `absent`. Measured across every capture:
+
+| Screen | Painted grass ends | Nav bar |
+|---|---|---|
+| home | 694.3 | present |
+| alarms | 694.3 | present |
+| stats | 694.3 | present |
+| settings | 793.0 | absent — pushed route |
+
+**Every tab ends at exactly 694.3; the pushed route reaches the screen
+bottom.** `CapyNavBar` occupies 98.7 pt (its 64.6 plus the home-indicator safe
+area) where the mockup allots 79.9.
+
+These are **one fact, not three screen-local ones**: each tab's meadow is
+pushed up by the same nav bar. Recorded as a single shell-geometry item rather
+than as a defect owed by three separate phases.

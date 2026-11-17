@@ -87,6 +87,16 @@ const screenBlocks = <String, Map<String, double>>{
     'group 1 card bottom': 341.8 - statusBarPt,
     'group 2 card top': 355.6 - statusBarPt,
   },
+  // Phase 08. The mockup draws a filled screen; the default state is empty,
+  // so no card bottom can reach its mark. See docs/visual/stats/README.md.
+  'stats': {
+    'hero scene lower edge': 215.4 - statusBarPt,
+    // The track's own border, not the selected pill inside it: the detector
+    // finds the hairline, and naming the pill here compared unlike edges.
+    'segment track top': 246.1 - statusBarPt,
+    'segment track bottom': 281.2 - statusBarPt,
+    'meadow footer bottom': 773.1 - statusBarPt,
+  },
 };
 
 Map<String, double> blocksFor(String screen) {

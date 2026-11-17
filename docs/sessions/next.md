@@ -2,107 +2,119 @@
 
 ## State
 
-Phases 00–07 are **done** and committed.
+Phases 00–08 are **done** and committed.
 
-**Current phase: `08` — Stats.** `05_STATS.png` is a real Tier A mockup.
+**Current phase: `09` — Onboarding.** Just-in-time permissions.
 
-**1,452 tests** pass. `lib` 97.80%, `lib/core` 99.61%, `lib/data` 88.95%,
-`lib/features/settings` 98.49%. **427 ARB keys × 10 locales.**
+**1,493 tests** pass. `lib` 97.85%, `lib/core` 99.61%, `lib/data` 88.95%,
+`lib/features/stats` **100.00%**. **437 ARB keys × 10 locales.**
 
-Home, Alarms, Add/Edit and Settings are built and captured. A saved alarm
-reaches the platform, a ringing alarm reaches a surface the user can stop, and
-as of Phase 07 the permissions an alarm needs are asked for **at the moment
-one is first enabled** — never on app start.
+All five primary screens are built and captured. A saved alarm reaches the
+platform, a ringing alarm reaches a surface the user can stop, permissions are
+asked for when an alarm is first enabled, and Stats renders **nothing it
+cannot measure**.
 
 ## Read in this order
 
 1. `CLAUDE.md` — the project's rules.
 2. `ai-orchestration/PHASE_TRACKER.md` — pointer, protocol, 20 phases.
-3. `memory/current-phase.md` — what Phase 07 found.
-4. `docs/phases/PHASE_07_FULL_PROJECT_REVIEW.md` — **read this one.** Three
-   screens fail their own Tier A tables and two phases reported only the
-   blocks they passed.
+3. `memory/current-phase.md` — what Phase 08 found.
+4. `docs/phases/PHASE_08_FULL_PROJECT_REVIEW.md` — **read this one.** A gate
+   that exists is not the same as a rule that holds.
 5. `docs/visual/tier_a_blocks.md` and `docs/visual/asset_gaps.md` — append.
 
-## What Phase 08 owes
+## What Phase 09 owes
 
-1. **The sleep-boundary restoration.** `package:health` and
-   `live_sleep_gateway.dart` **did not land in Phase 07** — Settings has no
-   sleep row. `test/core/sleep/sleep_boundary_test.dart` is still at `at most
+1. **The sleep-boundary restoration — still owed, now twice over.**
+   `package:health` and `live_sleep_gateway.dart` **did not land in Phase 07
+   or Phase 08**, and both said so explicitly rather than leaving it
+   ambiguous. `test/core/sleep/sleep_boundary_test.dart` is still at `at most
    one` importer with the negative invariant for
-   `NSHealthShareUsageDescription` and `READ_SLEEP`. If the health path lands
-   with Stats, restore `exactly one` and the positive assertions
-   (`PHASE_02_SELF_REVIEW_1.md` F5). **If it does not land, say so
-   explicitly** — Phase 07 did, rather than leaving it ambiguous.
-2. **`tool/check_no_fake_stats.dart` has never existed.** `CLAUDE.md` claimed
-   it enforced "no numeric literal in a user-facing position in
-   `lib/features/stats/`" — on the screen `CLAUDE.md` itself calls the one
-   most likely to lie. The line now says the rule is prose. **Writing the gate
-   is Phase 08's**, and it is the phase that can actually test it.
-3. **Stats still carries Home's hero band.** `stats_screen.dart:12` says so in
-   as many words: *"Phase 08 measures this from `05_STATS.png`; Home's 188.4
-   until then."* Four screens now have four different bands (188.4 / 148.6 /
-   112.1 / 109.0) and five different meadows.
+   `NSHealthShareUsageDescription` and `READ_SLEEP`. If the health path lands,
+   restore `exactly one` and the positive assertions
+   (`PHASE_02_SELF_REVIEW_1.md` F5). **If it does not, say so explicitly.**
 
-## What Phase 07 leaves you
+   **It now has a user-visible cost.** The Sleep segment renders a permanent
+   "sleep is not available yet" notice, and `sleepHistoryEmpty` — which says
+   *"Connect Health"* — sits unused in all 10 locales waiting for the phase
+   that builds the control. A widget test asserts it is **not** rendered.
 
-**`CapyToggle.trackSize` is required.** Four mockups draw four toggles
-(59.6 / 54.0 / 48.0 / 44.3 wide). If Stats has one, measure it — do not reach
-for `homeTrack`.
+2. **Nothing else is owed by a specific phase.** Phase 08 discharged the gate
+   and the hero band. What remains is listed under "Owed by nobody" below.
 
-**`compare.dart` is fixed but its block table is per-screen.** Add a `settings`
--style entry for `stats` or it `exit(2)`s; `_topInsetPt` reads
-`docs/visual/stats/inset.txt`, which only `tool/capture.sh` writes. **Run the
-capture before the final review passes**, not after.
+## What Phase 08 leaves you
 
-**Only claim the blocks you can defend.** Phase 07 declared *before* capturing
-which blocks it would claim, because its row cuts move everything below
-Appearance. Stats' empty state is the default, so its block positions depend
-on what it renders with no data — decide and declare that first.
+**The gate is real, and so are its blind spots.**
+`dart run tool/check_no_fake_stats.dart` scans all of `lib/features/` and is
+in both validation blocks. It catches a bare number in `Text()`, a numeric
+`value:`/`label:`, and figures like `'7 h 32 m'` / `'94%'`.
 
-**The tap floor can outrank the mockup.** Settings' rows are 44.0 pt against a
-mockup's 41.1, and group 1 is +4.5 pt as a consequence. That is a declared
-rule conflict, not a defect. If Stats' mockup draws rows under 44 pt, the same
-applies — and the arithmetic goes in `docs/visual/stats/README.md`.
+**It is blind to a `??` fallback, a provider default, and arithmetic over
+constants — measured, not assumed.** A planted numeric `?? 6` passes it
+completely; only the widget test fails. If you add a screen that shows
+numbers, the gate is half the protection and a test asserting the empty token
+is the other half. `test/style/check_no_fake_stats_test.dart` asserts the
+blind spots so they cannot be quietly forgotten.
 
-## The measurement rule, now with a fifth half
+**A block's name and its value must describe the same edge.** Phase 08's table
+said `segment track bottom` and held the *pill's* 280.3. `compare.dart` finds
+the *track's* border, 3 pt outside, and printed `+4.4 TIER A FAIL` for a pill
+**0.2 pt** from its mark. On a control with a selected state, the detector
+finds the container, not the selection.
+
+**Declare which blocks you claim, and do not claim what your own state cannot
+render.** Phase 08's plan claimed 13 and had already specified a default that
+cannot reach 8 of them. Cut to 5 in pre-review; the other 8 keep their
+measured mockup values in `tier_a_blocks.md` for whoever builds the filled
+state.
+
+**`compare.dart` reads whatever `actual.png` is on disk, without checking its
+age.** Phase 08's committed capture was **Phase 03's**. Run the capture before
+the final review passes and record the mtime.
+
+## The measurement rule, now with a sixth half
 
 Phase 03: a row-mean detector cannot tell text from a layout edge.
-
 Phase 04: a method named beside a number is not enough if it ran against the
 wrong artifact.
-
 Phase 05: when a tool reports a failure, check whether the tool is wrong
 before believing it about your code.
-
 Phase 06: a guard whose test cannot fail when the guard is removed is a guard
 on trust.
+Phase 07: a tool that cannot see a block will match it to one it can.
 
-**Phase 07: a tool that cannot see a block will match it to one it can.**
-`compare.dart` searched ±40 pt, found the card's own edge undetected, and
-printed "−18.7 TIER A FAIL" for a card 2.7 pt from its mark. `absent` is the
-honest answer and still counts as a failure. **It also hit Phase 06's rule:**
-nine of ten permission-gate tests passed with the gate deleted, because a
-second rule was quietly covering for the first.
+**Phase 08: the tool and the code can both be right while the table between
+them is wrong.** And its corollary — **a gate that exists is not the same as a
+rule that holds**; the only way to tell was to mutate it and count.
 
-## Owed, and honest gaps
+Also: **a method validated on two screens is validated for those two.** The
+green-collapse hero-edge method reproduces Settings (213.1 vs 212.9) and
+Alarms (252.4 vs 252.5) and produces **nothing** on Stats, whose cream is a
+scalloped cloud rather than a rounded rectangle.
 
+## Owed by nobody — carried forward
+
+- **`CapyNavBar` is 98.7 pt against the mockup's 79.9**, and that single fact
+  pushes **three** tabs' meadows up: every tab's grass ends at 694.3 while the
+  pushed Settings route reaches 793.0. Phase 07 recorded this as three
+  separate screen-local defects; Phase 08 measured it as one. Fixing it moves
+  three screens, so it needs a phase that will measure all of them.
+- **`MeadowFooter` paints ~2× the mockup's grass** (29.1 pt drawn vs 60.6
+  painted) — `asset_gaps.md` **G19**. No Tier A block measures painted extent,
+  which is why four phases shipped past it.
+- **`SceneHeader` draws a flat-topped sheet; all five mockups draw a scalloped
+  cloud** — **G18**. Costs Stats its title position (budget negative by
+  1.35 pt).
 - **Alarms fails 3 real Tier A blocks** (card 3 bottom +4.8, card 4 top +5.6,
-  meadow +10.0) and **Add/Edit fails 8.** Recorded in Phase 07's full-project
-  review with numbers; **not fixed there**, because another phase's screen is
-  not a phase's to change blind. Home's 6 failures are all `absent` — its
-  worst *measured* delta is 1.4 pt and its layout is fine.
-- **Android is untested and has no emulator.** Never mark it tested.
-- **No control was exercised by hand on a device in Phase 07.** The evidence
-  is 80 tests against the real provider graph plus a verified capture. Do not
-  inherit this as "tested by hand".
-- **`AlarmEngine.ringNow` is still called by nothing in `lib/`.** Now
-  user-visible: Settings can set the motion-check kill switch and the motion
-  layer that reads it does not exist.
-- **`check_bundle_size.dart` cannot see the three native plugins.** It
-  measures `assets/` only, at 95% of budget.
-- **The Settings theme tiles have no art** — `asset_gaps.md` **G12**. Drawn
-  from palette tokens.
+  meadow +10.0) and **Add/Edit fails 8.** Phase 07's numbers, unchanged.
+- **`AlarmEngine.ringNow` is still called by nothing in `lib/`.**
+- **The Settings theme tiles have no art** — **G12**.
+- **`check_bundle_size.dart` cannot see the three native plugins.** 95% of
+  budget on `assets/` alone.
+- **Android is untested and has no emulator. Never mark it tested.**
+- **No control has been exercised by hand on a device since Phase 06.** The
+  evidence is 1,493 tests and verified captures. Do not inherit this as
+  "tested by hand".
 
 ## Validation (every phase)
 
@@ -114,6 +126,7 @@ dart format --set-exit-if-changed .
 flutter analyze                                             # zero issues
 dart run tool/check_arb.dart                                # 10 locales
 dart run tool/check_bundle_size.dart                        # every asset tree
+dart run tool/check_no_fake_stats.dart                      # lib/features/
 flutter test --coverage       # incl. art audit, manifest + comment budget
 dart run tool/check_coverage.dart --path lib                # project >= 85%
 dart run tool/check_coverage.dart --min 95 --path lib/core  # core >= 95%
@@ -136,8 +149,8 @@ Use **`flutter run -d <udid>`**, somewhere that persists.
 
 **Never measure Tier A on the 18 Pro** (it is 402×874).
 
-`integration_test/capture_test.dart` now captures six screens: home, alarms,
-add_edit_alarm, stats, **settings**, ringing.
+`integration_test/capture_test.dart` captures six screens: home, alarms,
+add_edit_alarm, stats, settings, ringing.
 
 ## Standing reminders
 
@@ -148,8 +161,8 @@ add_edit_alarm, stats, **settings**, ringing.
 - A finding is applied or invalid. Never deferred.
 - `main` only. **No branches, no worktrees, no stashes.**
 - The comment budget bites every new file. Trim by hand — the auto-fix cuts
-  mid-sentence. **Never add a file to the baseline**; a file that improves
-  must tighten its entry (`--update-baseline`, which may only shrink).
-- **Name the layer, not the phase number**, in any doc comment. Phase 06 fixed
-  12 stale references; Phase 07 found **19 more**.
+  mid-sentence. **Never add a file to the baseline**; it stands at **113** and
+  Phase 08 added zero.
+- **Name the layer, not the phase number**, in any doc comment.
+  `grep -rn "Phase [0-9]" lib/` returns **0**.
 - Store publishing is drafts only.

@@ -285,3 +285,91 @@ Checked against all three already-captured screens before keeping: no new
 failures, and the false deltas fell sharply (Home 36.2 → 1.4 worst, Add/Edit
 31.1 → 10.5). **Their remaining failures are theirs, not this change's** —
 see `PHASE_07_POST_REVIEW.md`.
+
+## Blocks — Stats (`05_STATS.png`), Phase 08
+
+**The mockup is a filled screen and the shipped default is empty.** A fresh
+install has no occurrences and no sleep nights, so most of what `05_STATS.png`
+draws — `7 h 32 m`, a seven-bar chart, `6 days`, `Best: 14 days`, `94%` — is
+data the app must not invent. The claimed set is therefore small, and declared
+here **before** the capture, as Phase 07 established.
+
+### Claimed
+
+| Block | pt | Method |
+|---|---|---|
+| Header band lower edge | 103.9 | **Inherited** — same `CapyHeader` on all three tabs. Not independently derived |
+| Hero art lower edge | **215.4** | Arc asymptote of the cream sheet at both screen edges: left flat 214.3 (x ≥ 44), right flat 216.6 (x 348–358); mean. **Not** the green-collapse method — see below |
+| Segment track top | **246.1** | Track border hairline at x=360 pt, `L<242 ∧ sat<0.35`. The *track*, not the pill |
+| Segment track bottom | **281.2** | same |
+| Meadow footer bottom | **773.1** | Green `hue 0.16–0.45 ∧ sat>0.25 ∧ L>60`, **mode across 40 columns** (28/40 agree). The top is scalloped 744.0–764.3 and is *not* a block |
+
+### Measured, not claimed — and why
+
+These are real measurements of the mockup, recorded so the phase that builds
+the filled state inherits them. They are not claimed because **the empty
+default cannot reach them**: an empty card holding a heading and an em dash is
+shorter than the mockup's filled card, so every card bottom — and therefore
+every card top below it — sits high by construction.
+
+| Block | pt | Method |
+|---|---|---|
+| Selected pill top | 249.4 | Orange bounding box, `hue 0.045–0.11 ∧ sat>0.55`, verified at the pill's centre column |
+| Selected pill bottom | 280.3 | same — pill height **30.9** |
+| Card 1 top | 295.6 | Left-card-edge trace, x 10–26 pt, `L<240 ∧ sat<0.35` (rejects the meadow's green), crop-verified |
+| Card 1 bottom | 403.6 | same |
+| Card 2 top | 413.3 | same, crop-verified |
+| Card 2 bottom | 556.5 | same |
+| Card 3 top | 565.7 | same |
+| Card 3 bottom | 649.8 | same |
+| Card 4 top | 659.5 | same |
+| Card 4 bottom | 736.1 | same |
+
+Card gaps are **9.7 / 9.2 / 9.7** — consistent, and the value
+`AlarmsSegment.cardGap` uses.
+
+### Derived
+
+| Quantity | Arithmetic |
+|---|---|
+| Hero band height | 215.4 − 103.9 = **111.5** — a fifth distinct value |
+| Meadow height | 853 − 773.1 = **79.9** — a sixth distinct value |
+| Painted grass (mockup) | 773.1 − 744.0 = **29.1** — see `asset_gaps.md` G19 |
+
+## Phase 08 — the green-collapse method does not work on every screen
+
+Phase 04 and Phase 07 located the hero's lower edge by a per-row green-pixel
+count that collapses sharply where art meets cream. Re-implemented here and
+**validated against both**: it reproduces Settings at **213.1** (documented
+212.9, Δ0.2) and Alarms at **252.4** (documented 252.5, Δ0.1).
+
+**On Stats it produces nothing.** The profile decays monotonically from 302 to
+0 across 188→238 pt with no knee; the largest relative drop is 6→4 on the
+noise tail at 227.4 — a number that means nothing.
+
+The reason is visible in a crop: **Stats' cream shape is a scalloped cloud
+with lobes, not a rounded rectangle**, so the boundary is not a line and a
+row-count cannot find one. The replacement is the arc asymptote at both screen
+edges, cross-checked independently at left (214.3) and right (216.6).
+
+*A method validated on two screens is validated for those two screens.*
+
+## Phase 08 — a block's name and its value must describe the same edge
+
+The first Stats table named `segment track top/bottom` and recorded
+**249.4 / 280.3** — the *selected pill*. `compare.dart`'s `_hairlines` finds
+the **track's** pale border, 3 pt outside the pill, so the tool compared the
+capture's track against the mockup's pill and reported `+4.4 TIER A FAIL`.
+
+Measured directly, the rendered pill is **30.7** against the mockup's **30.9**
+— 0.2 pt. The screen was right; the table described a different edge than it
+measured. Re-measuring the track at both edges gives −1.4 and +3.5, both
+inside tolerance.
+
+**On a control with a selected state, the detector will find the container's
+border, not the selection's fill.** Name the edge you measured.
+
+A second instance in the same table: `card 1 top` was claimed while the
+capture renders the **Sleep** segment, which has no cards. A block that does
+not exist in the artifact being measured is not a failure — it is a table
+error.

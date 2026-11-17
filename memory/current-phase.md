@@ -1,119 +1,119 @@
 # Current phase
 
-**Phase 07 — Settings, reliability checklist, walkthrough: done, 2026-11-17.
-`Current phase: 08`.**
+**Phase 08 — Stats: done, 2026-11-17. `Current phase: 09`.**
 
-**1,452 tests**, analyze clean including infos, lib 97.80% / `lib/core`
-99.61% / `lib/data` 88.95% / `lib/features/settings` 98.49%, **427 ARB keys ×
-10 locales** (22 new).
+**1,493 tests**, analyze clean including infos, lib 97.85% / `lib/core`
+99.61% / `lib/data` 88.95% / **`lib/features/stats` 100.00%**, **437 ARB keys
+× 10 locales** (+10).
 
 ## What this phase actually found
 
-### 1. The mockup drew a switch that would silence every alarm
+### 1. A gate that exists is not the same as a rule that holds
 
-`04_SETTINGS.png`'s **Alarm Notifications** toggle has two possible meanings
-and both are defects. Mapped to the OS permission, a switch cannot revoke one,
-so "off" must be a local flag suppressing scheduling — a control inside
-Settings that stops every alarm from ringing, with nothing on screen saying
-so. Mapped to nothing, it is a dead control, worse than a dead row because it
-moves.
+`tool/check_no_fake_stats.dart` — claimed by `CLAUDE.md` since Phase 00, found
+absent by Phase 07 — is written, tested (16) and widened to all of
+`lib/features/` (38 files, already clean).
 
-Shipped as a **status row that grants and never revokes**. Revoking stays in
-the OS, where the OS states the consequence. Same safety rule as the
-emergency escape, one step earlier.
+**Three mutations, run separately. The third is the finding:**
 
-### 2. The permanently-denied user got nothing at all
+| Mutation | Gate | Widget tests |
+|---|---|---|
+| Neuter the matcher | — | **4 of its own fail** |
+| Plant `?? '7 h 32 m'` | **caught** | **2 fail** |
+| Plant a numeric `?? 6` | **PASSED — blind** | **1 fails** |
 
-`shouldRequestNotification` is **false** for `permanentlyDenied` — correctly,
-there is no prompt left. The wiring then asked `shouldOpenSettings` *inside*
-that branch, so the route to the OS was unreachable: no dialog, no route, no
-explanation, for the one user a prompt cannot help.
+The gate prints "No fabricated numbers in 7 files" while the screen renders a
+fabricated `6` to every user with no data. **Writing the file Phase 07 found
+missing would have left `CLAUDE.md` making a new false claim** — that the rule
+is enforced. It is enforced against the easy shape and blind to the realistic
+one, now stated beside the rule and asserted in the test.
 
-### 3. Nine of ten gate tests passed with the gate deleted
+### 2. The gate shipped with two defects of its own, caught by its own fixtures
 
-Phase 06's rule applied, and it bit. "Disabling the only alarm does not ask"
-seeded **one** alarm; with the gate gone, *a different rule* ("no alarm is
-enabled") suppressed the prompt, so the test passed without noticing. Seeded
-with two, mutation now fails **two** tests.
+Written **before** the screen, as the plan required:
 
-**Phase 06 found this shape with in-memory fakes hiding an async window. Here
-it was one rule covering for another.** Mutation was the only way to see
-either.
+- **It could not match a percentage.** `\b` after `%` can never hold — `%` and
+  the closing quote are both non-word characters. One of the two figure shapes
+  the mockup draws.
+- **It flagged every localized call taking a number**, and
+  `Text(context.pad1)`.
 
-### 4. `compare.dart` invented a delta for a block it had not measured
+A gate written after the screen would have been "verified" by a screen that
+happened not to contain a percentage.
 
-It printed **"group 1 card top −18.7 TIER A FAIL"** for a card sitting
-**−2.7** from its mark, on a screen whose hero matched to 0.1 pt.
+### 3. The block table named the track and measured the pill
 
-`_hairlines` read **one column at x=360 pt** — text-free on Alarms, where
-Phase 04 chose it, **under the hero art** here. `_nearest` then searched
-±40 pt and claimed the hero's edge. Now three columns, paint rejected below
-L=150, search ±12, `absent` past it. Verified against all three prior
-captures: no new failures, false deltas collapsed (Home 36.2 → 1.4).
+`compare.dart` printed **`segment track bottom +4.4 TIER A FAIL`**. The table
+held **249.4 / 280.3** — the selected *pill*; the detector finds the *track's*
+border, 3 pt outside it. Measured directly, the rendered pill is **30.7**
+against the mockup's **30.9**.
 
-**Phase 05's rule for the third consecutive phase, in the same tool Phase 04
-fixed for the same reason.**
+**The tool was right, the widget was right, the table between them was wrong.**
+Phase 05's rule for the fourth consecutive phase and the third time in this
+same tool — but a new variant: not a boundary the tool could not see
+(Phase 04), not a block matched to a distant edge (Phase 07), but a name and a
+value describing two different edges.
 
-### 5. Three screens fail their own Tier A tables, and two phases wrote down only their passing blocks
+Second instance in the same table: `card 1 top` claimed while the capture
+renders the **Sleep** segment, which has no cards.
 
-Home 6 failures, Alarms 5, Add/Edit 8, Settings 2 — nobody had run
-`compare.dart` across every screen since Phase 04.
+### 4. The three failing meadows are one fact
 
-**Home's failures are all `absent` and its worst measured delta is 1.4 pt** —
-the layout is good, the reporting was not. Phase 03's tracker row lists four
-deltas, all from passing rows, out of fourteen blocks; under its own tool and
-its own committed capture it reports **eight failures at 36.2 pt**. Phase 04's
-row lists six passing numbers out of eleven.
+| Screen | Grass ends | Nav bar |
+|---|---|---|
+| home, alarms, stats | **694.3** | present |
+| settings | 793.0 | absent — pushed route |
 
-Both rows corrected in place. Alarms' and Add/Edit's real failures are
-**recorded, not fixed** — another phase's screen is not this phase's to change
-blind.
+`CapyNavBar` takes **98.7 pt** where the mockup allots 79.9. Phase 07 recorded
+Alarms' `+10.0` and Home's `absent` as separate screen-local defects owed by
+their own phases. One nav bar pushes every tab's meadow up by the same amount.
 
-### 6. Nineteen more stale ported dartdocs, after Phase 06 fixed twelve
+### 5. The plan declared eight blocks its own default cannot render
 
-Counted: `grep -rn "Phase [0-9]" lib/` returned **20** before, **1** after,
-and the survivor is correct. Several named phases that do not exist here at
-all (29, 31, 32, 34, 37); two named **Phase 09** for the reliability
-checklist, which is *this* phase. `reliability_copy_service.dart` claimed its
-ARB keys were "added in Phase 06" — a phase whose own row records **zero**.
+Pre-review H4/M1 cut the claimed set **13 → 5**. The plan claimed all four
+card bottoms while also specifying an empty default — and an empty card is
+shorter than the mockup's filled one, so those positions are high **by
+construction**. The eight keep their measured values in `tier_a_blocks.md` for
+the phase that builds the filled state.
 
-### 7. `CLAUDE.md` documents a gate that has never existed
+### 6. `sleepHistoryEmpty` tells the user to press a control that does not exist
 
-`tool/check_no_fake_stats.dart`, claimed to enforce the no-fake-numbers rule
-on the screen `CLAUDE.md` itself calls most likely to lie. **Phase 02 found
-exactly this with `tool/audit_art.dart`.** Now stated as prose, with Phase 08
-owing the gate.
+*"No sleep to show yet. **Connect Health** to see your nights here."* — in 10
+locales, with **no Connect control anywhere in the app**. Phase 07's
+dead-control defect in new clothes, and `CLAUDE.md`'s overpromising rule. New
+keys state the fact; the old one is kept unused for the gateway phase, and a
+test asserts it is not rendered.
 
-### 8. Four screens, four toggle sizes
+### 7. The green-collapse method does not work on every screen
 
-59.6 / 54.0 / 48.0 / 44.3 wide. `CapyToggle.trackSize` is now **required** —
-the move that made `bandHeight` required in Phase 04. And
-`tier_a_blocks.md`'s Alarms toggle was wrong: "30.5 pt tall" came from a row
-profile at **y=345**, but the pill starts at **356.5**, so it measured the
-rounded cap. *A row profile at a single y is a slice, not a bounding box.*
+Phases 04 and 07 located the hero edge by a per-row green count. Re-implemented
+and **validated against both** (Settings 213.1 vs documented 212.9; Alarms
+252.4 vs 252.5) — then it produced **nothing** on Stats: a monotonic decay
+from 302 to 0, no knee. Stats' cream is a scalloped cloud, so the boundary is
+not a line. *A method validated on two screens is validated for those two.*
 
-## Tier A — one failure, and it is a rule conflict
+## Tier A — four of five, and the failure is named
 
-header **+0.1**, hero **+0.1**, group 1 top **−2.7**, group 2 top **−0.6**,
-group 1 bottom **+4.5 ❌**.
+header **+0.1**, hero **−0.1**, track top **−1.4**, track bottom **+3.5**,
+meadow **`absent` ❌**.
 
-**The mockup's settings row is 41.1 pt. The tap floor is 44.** `CLAUDE.md`
-makes reachability binding, so group 1 cannot be under 28.2 + 44×2 = **116.2**
-against the mockup's **110.4**. Shipped at 117.2 after cutting every removable
-pt. Declared with the arithmetic, not reported as a near-miss.
+The meadow is finding 4 — shell geometry, not this screen. The +3.5 and −1.4
+are declared rule conflicts: the 44 pt tap floor over a 30.9 pt pill, and a
+title-spacing budget that is **negative by 1.35 pt** before any padding,
+because the mockup's title sits inside a cloud lobe a flat-topped
+`SceneHeader` cannot draw (`asset_gaps.md` G18).
 
 ## Predictions
 
-Tests **80** against 70–100 ✅. ARB **22** against 12–22 ✅. `lib` **97.80%**
-against 97.0–97.8 ✅. **`lib/core` restated**: registered *unchanged* at
-99.49%, measured **99.61%** — this phase is the first **caller** of the
-reliability services ported in Phase 02, now 100%. *A coverage prediction has
-to account for code elsewhere that starts calling a tree, not only for lines
-added to it.*
+Tests **+41** against a registered 70–100 ❌ — **restated**: a screen that
+deliberately renders nothing has less to assert than Phase 07's four stateful
+surfaces. Coverage is the better check and the feature is **100%**. ARB **+10**
+against 10–18 ✅. `lib` **97.85%** against 97.3–97.9 ✅. `lib/core` **99.61%**,
+unchanged as registered ✅.
 
-## Next session — Phase 08, Stats
+## Next session — Phase 09, Onboarding
 
-`05_STATS.png`. The empty state is the **default**, not a fallback.
-**Phase 08 owes three things:** the sleep-boundary restoration (health did not
-land in 07), `tool/check_no_fake_stats.dart` (never existed), and Stats' own
-hero band — it still carries Home's 188.4.
+**Still owed:** the sleep-boundary restoration (health did not land in 07 or
+08 — `sleep_boundary_test.dart` stays at `at most one`). **Not owed by any
+phase:** the nav-bar/meadow fact, `MeadowFooter`'s 2× grass (G19),
+`SceneHeader`'s flat top (G18), Alarms' 3 and Add/Edit's 8 Tier A failures.

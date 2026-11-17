@@ -1900,6 +1900,46 @@
   "@sleepHistoryEmpty": {
     "description": "Empty state for the sleep part of History when nothing is cached."
   },
+  "statsTitle": "Statistics",
+  "@statsTitle": {
+    "description": "Title of the Stats tab, shown in the hero band."
+  },
+  "statsSegmentSleep": "Sleep",
+  "@statsSegmentSleep": {
+    "description": "Segment label selecting the sleep statistics."
+  },
+  "statsSegmentAlarms": "Alarms",
+  "@statsSegmentAlarms": {
+    "description": "Segment label selecting the alarm statistics."
+  },
+  "statsSegmentGames": "Games",
+  "@statsSegmentGames": {
+    "description": "Segment label selecting the game statistics."
+  },
+  "statsNoValue": "—",
+  "@statsNoValue": {
+    "description": "Placeholder shown in a value slot when there is no data. An em dash in every locale."
+  },
+  "statsNoValueSemanticLabel": "No data yet",
+  "@statsNoValueSemanticLabel": {
+    "description": "Spoken in place of the em dash placeholder, so a screen reader does not read punctuation."
+  },
+  "statsSleepUnavailableTitle": "Sleep is not available yet",
+  "@statsSleepUnavailableTitle": {
+    "description": "Heading of the sleep segment when no health source can be read. States the fact; promises no control."
+  },
+  "statsSleepUnavailableBody": "CapyWake cannot read sleep on this device yet. Once it can, your nights will appear here.",
+  "@statsSleepUnavailableBody": {
+    "description": "Body of the sleep segment when no health source can be read. Must not tell the user to press a Connect control, because none exists."
+  },
+  "statsGamesNotRecordedTitle": "Game activity is not recorded",
+  "@statsGamesNotRecordedTitle": {
+    "description": "Heading of the games segment. CapyWake keeps no scores or streaks by design."
+  },
+  "statsGamesNotRecordedBody": "Wake-up games are there to help you wake, not to be scored. Nothing about them is stored.",
+  "@statsGamesNotRecordedBody": {
+    "description": "Body of the games segment. CLAUDE.md forbids scores, streaks and personal bests on the puzzle."
+  },
   "todayNoWakeData": "No wake-ups recorded yet",
   "@todayNoWakeData": {
     "description": "Empty status for Today dashboard metrics before wake-up history is available."
