@@ -239,3 +239,57 @@ since Phase 00.** `05_STATS.png` draws `7 h 32 m`, a 7-bar chart, `6 days`,
 nothing has less to assert), 437 ARB keys, lib 97.88% / core 99.61% /
 **`lib/features/stats` 100.00%**. 15 findings across four passes, all applied,
 none invalid.
+
+---
+
+## Phase 09 — Onboarding (2026-11-17)
+
+**Done 2026-11-17.** The phase whose name promised a permission flow that was
+already built, and whose one real defect no test could see.
+
+**What was actually missing.** "Just-in-time permissions" was shipped in
+**Phase 07** — the prompt fires at first alarm enable (confirmed on device:
+Save → "Alarm notifications … Cancel / Allow", with honest degrade copy). The
+legacy onboarding (`../capywake`, read-only) asks for **no** permission — it is
+a three-step preferences flow (welcome → puzzle → strictness). What was missing
+was the first-run entry: **`OnboardingStatus.needsOnboarding` was ported and
+tested but wired to nothing, and `hasCompletedOnboarding` had no writer in
+`lib/`** — a fresh install opened on an empty Home. Added: the `/onboarding`
+route (outside the shell), a push-only redirect, the welcome, and
+`completeOnboarding()`. One ARB key, `onboardingFirstAlarmCta`.
+
+**No onboarding mockup.** The five primary screens contain none; the
+`screens/alternative/onboarding_*` files are two exploratory boards re-handed
+under five names at 887×1774 / 852×1846 device-bezel geometry drawing the
+rejected 4-tab/Games nav — superseded. **Tier A binds nothing**; held to tokens,
+the 44 pt tap floor, RTL, large-text reflow and no-overpromise
+(`docs/visual/_evidence/onboarding_boards.md`). Not added to the capture set.
+
+### What this phase found
+
+1. **A screen every test passed was broken on device (SR1 H1).** The CTA
+   bounced to **Home** on the iPhone 18 Pro. The redirect had a *pull* branch
+   (`atOnboarding && !needed → Home`); `completeOnboarding()` fired the
+   `refreshListenable` mid-tap and the pull beat the CTA's `go(/alarms/new)`.
+   The fake async clock in widget tests ordered them the other way, so the buggy
+   redirect **passed everything**. Fixed to push-only; pinned by a test that
+   fails against the buggy version. Phase 05's rule + Phase 06's, together.
+2. **SR2 — an error-state crash on the hot path.** `alarms.requireValue` after
+   only an `isLoading` check would throw on an errored stream, on a provider
+   read on every navigation. Now yields a value only when both streams have
+   data.
+3. **The phase name over-promised** (full-project M1): the permission flow was
+   already built. Reporting "already done" was the honest output.
+4. **Ported `OnboardingStatus` dartdoc describes a grandfathering path that
+   cannot occur** in a no-users rebuild — the `?? true` mapper branch is
+   unreachable (`toJson` always writes the key). Recorded, not rewritten.
+5. **The `grep "Phase [0-9]" lib/ = 0` baseline is Dart-scoped** — bare it is 2
+   (a pre-existing ARB description + its generated mirror).
+6. **The sleep boundary is still NOT discharged** — no `package:health`, now
+   unbuilt across 07, 08 and 09, stated explicitly.
+
+**1,513 tests** (+20 against a registered +18–28), analyze clean incl. infos,
+lib 97.84% / core 99.61% / data 88.95% / **`lib/features/onboarding` 100.00%**,
+**438 ARB keys** (+1). Comment baseline **+0** (113). 21 findings across four
+passes (12 pre-review, 4 SR1, 2 SR2, 3 full-project), all applied, none
+deferred.

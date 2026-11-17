@@ -287,6 +287,7 @@
   "onboardingBack": "戻る",
   "onboardingNext": "次へ",
   "onboardingFinish": "完了",
+  "onboardingFirstAlarmCta": "最初のアラームを設定",
   "onboardingSkip": "設定をスキップ",
   "onboardingStepProgress": "ステップ {current}／{total}",
   "onboardingWelcomeTitle": "おだやかに起きるために",

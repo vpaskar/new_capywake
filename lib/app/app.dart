@@ -29,21 +29,26 @@ class CapyWakeApp extends StatefulWidget {
 }
 
 class _CapyWakeAppState extends State<CapyWakeApp> {
-  late final GoRouter _router = widget.router ?? createRouter();
-
   @override
   Widget build(BuildContext context) {
-    final app = MaterialApp.router(
-      onGenerateTitle: (context) => AppLocalizations.of(context).appName,
-      debugShowCheckedModeBanner: widget.showDebugBanner,
-      theme: capyTheme(),
-      darkTheme: capyTheme(brightness: Brightness.dark),
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      routerConfig: _router,
-      // Over the router's output: a ring must cover a pushed route too.
-      builder: (context, child) =>
-          RingingHost(child: child ?? const SizedBox.shrink()),
+    // The router is read from a provider so it is created once with a `Ref`
+    // for the onboarding redirect, unless a test supplied its own.
+    final app = Consumer(
+      builder: (context, ref, _) {
+        final router = widget.router ?? ref.watch(routerProvider);
+        return MaterialApp.router(
+          onGenerateTitle: (context) => AppLocalizations.of(context).appName,
+          debugShowCheckedModeBanner: widget.showDebugBanner,
+          theme: capyTheme(),
+          darkTheme: capyTheme(brightness: Brightness.dark),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: router,
+          // Over the router's output: a ring must cover a pushed route too.
+          builder: (context, child) =>
+              RingingHost(child: child ?? const SizedBox.shrink()),
+        );
+      },
     );
 
     final build = widget.scopeBuilder;

@@ -287,6 +287,7 @@
   "onboardingBack": "رجوع",
   "onboardingNext": "التالي",
   "onboardingFinish": "إنهاء",
+  "onboardingFirstAlarmCta": "اضبط منبّهك الأول",
   "onboardingSkip": "تخطّي الإعداد",
   "onboardingStepProgress": "الخطوة {current} من {total}",
   "onboardingWelcomeTitle": "استيقاظ أهدأ",

@@ -1,119 +1,87 @@
 # Current phase
 
-**Phase 08 — Stats: done, 2026-11-17. `Current phase: 09`.**
+**Phase 09 — Onboarding: done, 2026-11-17. `Current phase: 10`.**
 
-**1,493 tests**, analyze clean including infos, lib 97.85% / `lib/core`
-99.61% / `lib/data` 88.95% / **`lib/features/stats` 100.00%**, **437 ARB keys
-× 10 locales** (+10).
+**1,513 tests**, analyze clean including infos, lib 97.84% / `lib/core`
+99.61% / `lib/data` 88.95% / **`lib/features/onboarding` 100.00%**, **438 ARB
+keys × 10 locales** (+1).
 
 ## What this phase actually found
 
-### 1. A gate that exists is not the same as a rule that holds
+### 1. The phase name promised a permission flow that was already built
 
-`tool/check_no_fake_stats.dart` — claimed by `CLAUDE.md` since Phase 00, found
-absent by Phase 07 — is written, tested (16) and widened to all of
-`lib/features/` (38 files, already clean).
+"Onboarding — just-in-time permissions" — but Phase 07 already ships the
+just-in-time permission request: `AlarmPermissionGate`, `AlarmPermissionPrompt`,
+`permissionStateProvider`, the prompt firing at first alarm enable (confirmed on
+device this phase, Save → the prompt). The legacy onboarding (`../capywake`,
+read-only) asks for **no** permission — it is a three-step preferences flow
+(welcome → puzzle → strictness) writing `hasCompletedOnboarding`.
 
-**Three mutations, run separately. The third is the finding:**
+What was actually missing: **`OnboardingStatus.needsOnboarding` was ported and
+tested but wired to nothing, and `hasCompletedOnboarding` had no writer in
+`lib/`.** A fresh install opened on an empty Home with no greeting. This phase
+added the `/onboarding` route (outside the shell), a push-only redirect, the
+welcome, and `completeOnboarding()`. Reporting "already done" was the output,
+not a reason to pad.
 
-| Mutation | Gate | Widget tests |
-|---|---|---|
-| Neuter the matcher | — | **4 of its own fail** |
-| Plant `?? '7 h 32 m'` | **caught** | **2 fail** |
-| Plant a numeric `?? 6` | **PASSED — blind** | **1 fails** |
+### 2. A screen every test passed was broken on device (SR1 H1)
 
-The gate prints "No fabricated numbers in 7 files" while the screen renders a
-fabricated `6` to every user with no data. **Writing the file Phase 07 found
-missing would have left `CLAUDE.md` making a new false claim** — that the rule
-is enforced. It is enforced against the easy shape and blind to the realistic
-one, now stated beside the rule and asserted in the test.
+The CTA "Set your first alarm" bounced to **Home** on the iPhone 18 Pro while
+the identical flow passed in the suite. The redirect had a *pull* branch
+(`atOnboarding && !needed → Home`); `completeOnboarding()` fired the
+`refreshListenable` mid-tap, re-ran the redirect while still on `/onboarding`,
+and the pull-to-Home beat the CTA's `go(/alarms/new)`. **The fake async clock in
+widget tests ordered `go` and the refresh the other way, so the buggy redirect
+passed everything.** Fixed to push-only; pinned by a new test that **fails
+against the buggy version** (verified). Phase 05's rule (the test was wrong
+about the code) and Phase 06's (a guard whose test can't fail is on trust),
+together. The device check is not optional.
 
-### 2. The gate shipped with two defects of its own, caught by its own fixtures
+### 3. There is no onboarding mockup
 
-Written **before** the screen, as the plan required:
+The five primary screens contain none. The `screens/alternative/onboarding_*`
+files are **two** distinct boards re-handed under five names, at **887×1774 /
+852×1846 device-bezel geometry, drawing the rejected 4-tab/Games nav** —
+superseded by the primary mockups. **Tier A binds nothing.** Held to tokens, the
+44 pt tap floor, RTL, large-text reflow, no-overpromise. Evidence:
+`docs/visual/_evidence/onboarding_boards.md`. **Not added to the capture set** —
+`compare.dart` would `exit(2)` on a screen with no block table.
 
-- **It could not match a percentage.** `\b` after `%` can never hold — `%` and
-  the closing quote are both non-word characters. One of the two figure shapes
-  the mockup draws.
-- **It flagged every localized call taking a number**, and
-  `Text(context.pad1)`.
+### 4. SR2 — an error-state crash on the redirect hot path
 
-A gate written after the screen would have been "verified" by a screen that
-happened not to contain a percentage.
+The folded provider called `alarms.requireValue` after only an `isLoading`
+check; an **errored** alarms stream would throw, on a provider read on every
+navigation. Now yields a value only when both streams have data — loading and
+error both resolve to "do not redirect".
 
-### 3. The block table named the track and measured the pill
+### 5. Ported dartdoc describes a path that cannot occur here
 
-`compare.dart` printed **`segment track bottom +4.4 TIER A FAIL`**. The table
-held **249.4 / 280.3** — the selected *pill*; the detector finds the *track's*
-border, 3 pt outside it. Measured directly, the rendered pill is **30.7**
-against the mockup's **30.9**.
+`OnboardingStatus`'s ported dartdoc explains a grandfathering path for
+"installed before onboarding existed". In this no-users rebuild at
+`schemaVersion = 1` the `?? true` mapper branch is **unreachable** (`toJson`
+always writes the key). Code correct; prose is the legacy's world. Recorded, not
+rewritten (Phase 02 judged `lib/core/` prose justified). The real fresh-install
+path: no row → `UserSettings.initial` → flag `false` → onboarding.
 
-**The tool was right, the widget was right, the table between them was wrong.**
-Phase 05's rule for the fourth consecutive phase and the third time in this
-same tool — but a new variant: not a boundary the tool could not see
-(Phase 04), not a block matched to a distant edge (Phase 07), but a name and a
-value describing two different edges.
+### 6. The `grep "Phase [0-9]" lib/ = 0` baseline is Dart-scoped
 
-Second instance in the same table: `card 1 top` claimed while the capture
-renders the **Sleep** segment, which has no cards.
+Run bare it returns **2** — an ARB description (`app_en.arb:17`, "the Phase 00
+launch surface …") and its generated mirror, pre-existing accurate history. The
+rule is about doc comments; `--include="*.dart"` excl. generated is **0**, and
+Phase 09 added none.
 
-### 4. The three failing meadows are one fact
+## Predictions — all held
 
-| Screen | Grass ends | Nav bar |
-|---|---|---|
-| home, alarms, stats | **694.3** | present |
-| settings | 793.0 | absent — pushed route |
+Tests **+20** against +18–28 ✅. ARB **+1** against +1–2 ✅. lib **97.84%**
+against ≥97.8 ✅. core/data unchanged ✅. onboarding **100%**. Comment baseline
+**+0** (113) ✅.
 
-`CapyNavBar` takes **98.7 pt** where the mockup allots 79.9. Phase 07 recorded
-Alarms' `+10.0` and Home's `absent` as separate screen-local defects owed by
-their own phases. One nav bar pushes every tab's meadow up by the same amount.
+## Next session — Phase 10, Puzzle chooser and the ten existing puzzle types
 
-### 5. The plan declared eight blocks its own default cannot render
-
-Pre-review H4/M1 cut the claimed set **13 → 5**. The plan claimed all four
-card bottoms while also specifying an empty default — and an empty card is
-shorter than the mockup's filled one, so those positions are high **by
-construction**. The eight keep their measured values in `tier_a_blocks.md` for
-the phase that builds the filled state.
-
-### 6. `sleepHistoryEmpty` tells the user to press a control that does not exist
-
-*"No sleep to show yet. **Connect Health** to see your nights here."* — in 10
-locales, with **no Connect control anywhere in the app**. Phase 07's
-dead-control defect in new clothes, and `CLAUDE.md`'s overpromising rule. New
-keys state the fact; the old one is kept unused for the gateway phase, and a
-test asserts it is not rendered.
-
-### 7. The green-collapse method does not work on every screen
-
-Phases 04 and 07 located the hero edge by a per-row green count. Re-implemented
-and **validated against both** (Settings 213.1 vs documented 212.9; Alarms
-252.4 vs 252.5) — then it produced **nothing** on Stats: a monotonic decay
-from 302 to 0, no knee. Stats' cream is a scalloped cloud, so the boundary is
-not a line. *A method validated on two screens is validated for those two.*
-
-## Tier A — four of five, and the failure is named
-
-header **+0.1**, hero **−0.1**, track top **−1.4**, track bottom **+3.5**,
-meadow **`absent` ❌**.
-
-The meadow is finding 4 — shell geometry, not this screen. The +3.5 and −1.4
-are declared rule conflicts: the 44 pt tap floor over a 30.9 pt pill, and a
-title-spacing budget that is **negative by 1.35 pt** before any padding,
-because the mockup's title sits inside a cloud lobe a flat-topped
-`SceneHeader` cannot draw (`asset_gaps.md` G18).
-
-## Predictions
-
-Tests **+41** against a registered 70–100 ❌ — **restated**: a screen that
-deliberately renders nothing has less to assert than Phase 07's four stateful
-surfaces. Coverage is the better check and the feature is **100%**. ARB **+10**
-against 10–18 ✅. `lib` **97.85%** against 97.3–97.9 ✅. `lib/core` **99.61%**,
-unchanged as registered ✅.
-
-## Next session — Phase 09, Onboarding
-
-**Still owed:** the sleep-boundary restoration (health did not land in 07 or
-08 — `sleep_boundary_test.dart` stays at `at most one`). **Not owed by any
-phase:** the nav-bar/meadow fact, `MeadowFooter`'s 2× grass (G19),
-`SceneHeader`'s flat top (G18), Alarms' 3 and Add/Edit's 8 Tier A failures.
+**Still owed:** the sleep-boundary restoration — `package:health` and
+`live_sleep_gateway.dart` did **not** land in 07, 08 or 09, each said so.
+`sleep_boundary_test.dart` stays at `at most one`. **Owed by nobody:** the
+nav-bar/meadow fact, `MeadowFooter` 2× grass (G19), `SceneHeader` flat top
+(G18), Alarms' 3 / Add/Edit's 8 Tier A failures. The 9 ported puzzle/strictness
+onboarding strings are **unused on purpose** (Phase 10's domain) — a widget test
+asserts the welcome does not render them.

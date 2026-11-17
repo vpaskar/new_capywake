@@ -79,6 +79,11 @@ class SettingsController {
   Future<void> setMotionConfirmationEnabled({required bool enabled}) =>
       _update((s) => s.copyWith(motionConfirmationEnabled: enabled));
 
+  /// Close the first-run flow. The only writer of this flag; without it the
+  /// onboarding redirect could never stop firing.
+  Future<void> completeOnboarding() =>
+      _update((s) => s.copyWith(hasCompletedOnboarding: true));
+
   /// Record that the user judged a checklist item for themselves.
   Future<void> acknowledgeChecklistItem(
     ReliabilityChecklistItem item, {

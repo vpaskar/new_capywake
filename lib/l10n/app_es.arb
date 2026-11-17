@@ -287,6 +287,7 @@
   "onboardingBack": "Atrás",
   "onboardingNext": "Siguiente",
   "onboardingFinish": "Listo",
+  "onboardingFirstAlarmCta": "Crea tu primera alarma",
   "onboardingSkip": "Omitir la configuración",
   "onboardingStepProgress": "Paso {current} de {total}",
   "onboardingWelcomeTitle": "Una forma más tranquila de levantarte",

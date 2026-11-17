@@ -1451,6 +1451,10 @@
   "@onboardingFinish": {
     "description": "Primary button on the last setup step. Completes setup."
   },
+  "onboardingFirstAlarmCta": "Set your first alarm",
+  "@onboardingFirstAlarmCta": {
+    "description": "Primary button on the first-run welcome. Leads to the Add alarm screen. Calm and practical, never a promise about waking."
+  },
   "onboardingSkip": "Skip setup",
   "@onboardingSkip": {
     "description": "Secondary control, present from the first step. Skipping is an ordinary path, never framed as a loss."

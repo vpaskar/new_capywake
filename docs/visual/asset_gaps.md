@@ -756,3 +756,16 @@ area) where the mockup allots 79.9.
 These are **one fact, not three screen-local ones**: each tab's meadow is
 pushed up by the same nav bar. Recorded as a single shell-geometry item rather
 than as a defect owed by three separate phases.
+
+## G20 — Onboarding welcome: home scene substituted for the splash bedroom (Phase 09, Tier B)
+
+The onboarding welcome has no primary mockup (`docs/visual/onboarding/`). The
+exploratory splash board (`onboarding_illustrated.png`) draws a sleeping
+capybara in bed with a sunrise window — a scene the asset package has no exact
+cutout for. **`SceneCrop.home` (`assets/art/scenes/today.webp`) is used
+instead**, the nearest supplied scene: the same cozy sleeping-capybara-at-dawn
+register, already in the bundle and already audited. The wordmark
+(`assets/art/wordmark.webp`) sits over it, as on Home.
+
+Logged as a Tier B substitution by name, per `CLAUDE.md`. No new art generated,
+no fidelity claim made — there is no mockup to match.

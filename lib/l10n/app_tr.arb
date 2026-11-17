@@ -287,6 +287,7 @@
   "onboardingBack": "Geri",
   "onboardingNext": "İleri",
   "onboardingFinish": "Bitir",
+  "onboardingFirstAlarmCta": "İlk alarmını kur",
   "onboardingSkip": "Kurulumu atla",
   "onboardingStepProgress": "Adım {current} / {total}",
   "onboardingWelcomeTitle": "Sakin bir uyanış",

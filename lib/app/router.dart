@@ -2,11 +2,14 @@ import 'package:capywake/app/shell.dart';
 import 'package:capywake/features/alarms/alarms_screen.dart';
 import 'package:capywake/features/alarms/edit/alarm_edit_screen.dart';
 import 'package:capywake/features/home/home_screen.dart';
+import 'package:capywake/features/onboarding/onboarding_providers.dart';
+import 'package:capywake/features/onboarding/onboarding_screen.dart';
 import 'package:capywake/features/settings/reliability_checklist_screen.dart';
 import 'package:capywake/features/settings/settings_screen.dart';
 import 'package:capywake/features/settings/walkthrough_screen.dart';
 import 'package:capywake/features/stats/stats_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 abstract final class Routes {
@@ -16,6 +19,7 @@ abstract final class Routes {
   static const settings = '/settings';
   static const settingsReliability = '/settings/reliability';
   static const settingsWalkthrough = '/settings/walkthrough';
+  static const onboarding = '/onboarding';
 
   static const alarmNew = '/alarms/new';
 
@@ -24,15 +28,23 @@ abstract final class Routes {
   static String alarmEdit(String id) => '/alarms/$id';
 }
 
+/// The app's router, created once with a `Ref` so the onboarding redirect can
+/// read first-run state. A `ref`-less `createRouter` runs no redirect.
+final routerProvider = Provider<GoRouter>((ref) => createRouter(ref: ref));
+
 final _rootKey = GlobalKey<NavigatorState>();
 final _homeKey = GlobalKey<NavigatorState>();
 final _alarmsKey = GlobalKey<NavigatorState>();
 final _statsKey = GlobalKey<NavigatorState>();
 
-GoRouter createRouter({String initialLocation = Routes.home}) {
+GoRouter createRouter({String initialLocation = Routes.home, Ref? ref}) {
   return GoRouter(
     navigatorKey: _rootKey,
     initialLocation: initialLocation,
+    refreshListenable: ref == null ? null : _OnboardingRefresh(ref),
+    redirect: ref == null
+        ? null
+        : (context, state) => _onboardingRedirect(ref, state),
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
@@ -103,6 +115,38 @@ GoRouter createRouter({String initialLocation = Routes.home}) {
           ),
         ],
       ),
+      GoRoute(
+        path: Routes.onboarding,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const OnboardingScreen(),
+      ),
     ],
   );
+}
+
+/// Pushes a genuine first run into onboarding. Only a push: leaving is the
+/// user's own `go`, which pulling back to Home here would race and beat.
+String? _onboardingRedirect(Ref ref, GoRouterState state) {
+  final needs = ref.read(needsOnboardingProvider);
+  if (needs.value != true) return null;
+  return state.matchedLocation == Routes.onboarding ? null : Routes.onboarding;
+}
+
+/// Re-runs the redirect when first-run state resolves after the first frame.
+class _OnboardingRefresh extends ChangeNotifier {
+  _OnboardingRefresh(this._ref) {
+    _sub = _ref.listen<AsyncValue<bool>>(
+      needsOnboardingProvider,
+      (_, _) => notifyListeners(),
+    );
+  }
+
+  final Ref _ref;
+  late final ProviderSubscription<AsyncValue<bool>> _sub;
+
+  @override
+  void dispose() {
+    _sub.close();
+    super.dispose();
+  }
 }

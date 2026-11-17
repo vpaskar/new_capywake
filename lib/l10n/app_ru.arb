@@ -287,6 +287,7 @@
   "onboardingBack": "Назад",
   "onboardingNext": "Далее",
   "onboardingFinish": "Готово",
+  "onboardingFirstAlarmCta": "Создать первый будильник",
   "onboardingSkip": "Пропустить настройку",
   "onboardingStepProgress": "Шаг {current} из {total}",
   "onboardingWelcomeTitle": "Спокойное пробуждение",

@@ -2,77 +2,80 @@
 
 ## State
 
-Phases 00–08 are **done** and committed.
+Phases 00–09 are **done** and committed.
 
-**Current phase: `09` — Onboarding.** Just-in-time permissions.
+**Current phase: `10` — Puzzle chooser and the ten existing puzzle types.**
 
-**1,493 tests** pass. `lib` 97.85%, `lib/core` 99.61%, `lib/data` 88.95%,
-`lib/features/stats` **100.00%**. **437 ARB keys × 10 locales.**
+**1,513 tests** pass. `lib` 97.84%, `lib/core` 99.61%, `lib/data` 88.95%,
+`lib/features/onboarding` **100.00%**. **438 ARB keys × 10 locales.**
 
 All five primary screens are built and captured. A saved alarm reaches the
 platform, a ringing alarm reaches a surface the user can stop, permissions are
-asked for when an alarm is first enabled, and Stats renders **nothing it
-cannot measure**.
+asked for when an alarm is first enabled, Stats renders nothing it cannot
+measure, and a **fresh install now opens on a cozy onboarding welcome** that
+hands off to the first-alarm screen.
 
 ## Read in this order
 
 1. `CLAUDE.md` — the project's rules.
 2. `ai-orchestration/PHASE_TRACKER.md` — pointer, protocol, 20 phases.
-3. `memory/current-phase.md` — what Phase 08 found.
-4. `docs/phases/PHASE_08_FULL_PROJECT_REVIEW.md` — **read this one.** A gate
-   that exists is not the same as a rule that holds.
+3. `memory/current-phase.md` — what Phase 09 found.
+4. `docs/phases/PHASE_09_SELF_REVIEW_1.md` — **read this one.** A screen every
+   test passed was broken on device; the fix is pinned by a test that fails
+   against the bug.
 5. `docs/visual/tier_a_blocks.md` and `docs/visual/asset_gaps.md` — append.
 
-## What Phase 09 owes
+## What Phase 10 owes
 
-1. **The sleep-boundary restoration — still owed, now twice over.**
-   `package:health` and `live_sleep_gateway.dart` **did not land in Phase 07
-   or Phase 08**, and both said so explicitly rather than leaving it
-   ambiguous. `test/core/sleep/sleep_boundary_test.dart` is still at `at most
-   one` importer with the negative invariant for
-   `NSHealthShareUsageDescription` and `READ_SLEEP`. If the health path lands,
-   restore `exactly one` and the positive assertions
-   (`PHASE_02_SELF_REVIEW_1.md` F5). **If it does not, say so explicitly.**
+1. **The sleep-boundary restoration — still owed, now three times over.**
+   `package:health` and `live_sleep_gateway.dart` **did not land in Phase 07,
+   08 or 09**, and each said so explicitly.
+   `test/core/sleep/sleep_boundary_test.dart` is still at `at most one`
+   importer with the negative invariant for `NSHealthShareUsageDescription`
+   and `READ_SLEEP`. If the health path lands, restore `exactly one` and the
+   positive assertions (`PHASE_02_SELF_REVIEW_1.md` F5). **If it does not, say
+   so explicitly** — three phases have.
 
-   **It now has a user-visible cost.** The Sleep segment renders a permanent
-   "sleep is not available yet" notice, and `sleepHistoryEmpty` — which says
-   *"Connect Health"* — sits unused in all 10 locales waiting for the phase
-   that builds the control. A widget test asserts it is **not** rendered.
+   The Sleep segment renders a permanent "sleep is not available yet" notice,
+   and `sleepHistoryEmpty` ("Connect Health") sits unused in all 10 locales. A
+   widget test asserts it is **not** rendered.
 
-2. **Nothing else is owed by a specific phase.** Phase 08 discharged the gate
-   and the hero band. What remains is listed under "Owed by nobody" below.
+2. **The nine ported puzzle/strictness onboarding strings are unused on
+   purpose** — Phase 09 shipped the welcome only, naming them out of scope as
+   Phase 10's domain. `test/features/onboarding/onboarding_screen_test.dart`
+   asserts the welcome does **not** render them, so a Phase 10 wiring is
+   deliberate, not accidental. Phase 10 may now use `onboardingPuzzle*`,
+   `onboardingStrictness*`, `onboardingArithmeticExample`, `onboardingTryGame`
+   and the practice keys — they are already ported in 10 locales.
 
-## What Phase 08 leaves you
+## What Phase 09 leaves you
 
-**The gate is real, and so are its blind spots.**
-`dart run tool/check_no_fake_stats.dart` scans all of `lib/features/` and is
-in both validation blocks. It catches a bare number in `Text()`, a numeric
-`value:`/`label:`, and figures like `'7 h 32 m'` / `'94%'`.
+**A screen every test passed can be broken on device.** The onboarding CTA
+bounced to Home on the iPhone 18 Pro while the suite was green: a `go_router`
+redirect pull-branch raced the CTA's own navigation, and the fake async clock
+in widget tests ordered them the other way. **Run the screen on the device
+before claiming an interaction works** — a widget test's clock is not the real
+event loop. The fix is pinned by a test that fails against the buggy redirect
+(reinstate it and watch it go red).
 
-**It is blind to a `??` fallback, a provider default, and arithmetic over
-constants — measured, not assumed.** A planted numeric `?? 6` passes it
-completely; only the widget test fails. If you add a screen that shows
-numbers, the gate is half the protection and a test asserting the empty token
-is the other half. `test/style/check_no_fake_stats_test.dart` asserts the
-blind spots so they cannot be quietly forgotten.
+**A `go_router` redirect is read on every navigation.** A provider it reads
+must never throw on a non-data state — `requireValue` on an errored stream is a
+crash on the hot path (SR2 M1). Fold streams to a value only when **all** have
+data.
 
-**A block's name and its value must describe the same edge.** Phase 08's table
-said `segment track bottom` and held the *pill's* 280.3. `compare.dart` finds
-the *track's* border, 3 pt outside, and printed `+4.4 TIER A FAIL` for a pill
-**0.2 pt** from its mark. On a control with a selected state, the detector
-finds the container, not the selection.
+**`routerProvider` now builds the app's router with a `Ref`.** A `ref`-less
+`createRouter` runs **no** redirect — which is how every existing screen-test
+harness stays green (it constructs `createRouter(initialLocation: …)` directly).
+A new app-level test that needs the gate builds `CapyWakeApp` with a scope, or
+passes a `ref`.
 
-**Declare which blocks you claim, and do not claim what your own state cannot
-render.** Phase 08's plan claimed 13 and had already specified a default that
-cannot reach 8 of them. Cut to 5 in pre-review; the other 8 keep their
-measured mockup values in `tier_a_blocks.md` for whoever builds the filled
-state.
+**There was no onboarding mockup, and that was said in the plan, not papered
+over.** The `screens/alternative/onboarding_*` boards are superseded
+explorations at device-bezel geometry. If a later phase is tempted to add
+onboarding to `capture_test.dart`, don't — `compare.dart` `exit(2)`s on a
+screen with no block table. `docs/visual/onboarding/README.md` says so.
 
-**`compare.dart` reads whatever `actual.png` is on disk, without checking its
-age.** Phase 08's committed capture was **Phase 03's**. Run the capture before
-the final review passes and record the mtime.
-
-## The measurement rule, now with a sixth half
+## The measurement rule, now with a seventh entry
 
 Phase 03: a row-mean detector cannot tell text from a layout edge.
 Phase 04: a method named beside a number is not enough if it ran against the
@@ -82,15 +85,12 @@ before believing it about your code.
 Phase 06: a guard whose test cannot fail when the guard is removed is a guard
 on trust.
 Phase 07: a tool that cannot see a block will match it to one it can.
+Phase 08: the tool and the code can both be right while the table between them
+is wrong — and a gate that exists is not the same as a rule that holds.
 
-**Phase 08: the tool and the code can both be right while the table between
-them is wrong.** And its corollary — **a gate that exists is not the same as a
-rule that holds**; the only way to tell was to mutate it and count.
-
-Also: **a method validated on two screens is validated for those two.** The
-green-collapse hero-edge method reproduces Settings (213.1 vs 212.9) and
-Alarms (252.4 vs 252.5) and produces **nothing** on Stats, whose cream is a
-scalloped cloud rather than a rounded rectangle.
+**Phase 09: a widget test's fake async clock is not the device's event loop. A
+flow that passes every test can bounce on the real device, and the only way to
+know is to run it there.**
 
 ## Owed by nobody — carried forward
 

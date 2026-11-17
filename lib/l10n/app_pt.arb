@@ -287,6 +287,7 @@
   "onboardingBack": "Voltar",
   "onboardingNext": "Continuar",
   "onboardingFinish": "Concluir",
+  "onboardingFirstAlarmCta": "Criar o seu primeiro alarme",
   "onboardingSkip": "Pular a configuração",
   "onboardingStepProgress": "Etapa {current} de {total}",
   "onboardingWelcomeTitle": "Um jeito mais calmo de acordar",
