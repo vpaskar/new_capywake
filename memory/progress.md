@@ -520,3 +520,11 @@ The unanchored reviewer found a practice camera held under a ring and a
 cold-start pick on unloaded readiness. 25 guards mutation-checked; no real
 camera run. 2,390 tests, 587 ARB keys. G42. All ten games playable.
 
+
+## Phase 18 — Animation and visual polish
+
+**Done 2026-11-18.** The theme picker now applies (it saved a value nothing
+read); dark mode checked by 8 captures and a two-theme contrast gate; five
+legibility defects fixed; 12/24 h reaches the ringing clock and reminders.
+No loop shipped (G43–G47). Muting the app under a ring reverted — it paused
+alarm arming. 2,459 tests.

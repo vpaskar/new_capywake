@@ -40,5 +40,7 @@ poses are in. Per-file verdicts: `asset_gaps.md`, "Owner replacements".
 | 12 | *(optional)* **Find the Impostor: lookalike faces** — capybara + beaver, otter, hamster, guinea pig, marmot, head and shoulders, one canvas | each ≥ 240 × 240, transparent | G38 |
 | 13 | **Shake DJ: Capy in headphones behind DJ decks**, orange nightcap, arms up; dance frames optional (one canvas) | ≥ 330 × 300, transparent | G39 |
 | 14 | **Tilt Maze: a round curled Capy** (orange nightcap, no "zz") **and a checkered goal flag** | each ≥ 160 × 160, transparent | G40 |
+| 15 | **The four loops re-cut** — `01_wake_up`, `02_sleep_breathing`, `03_walk_cycle`, `04_shake_dj`: keep the dark outline and eyes (opaque, not masked), the whole nightcap, blanket and backpack inside the frame; 36 PNG frames, one canvas | 360 × 360, transparent | G43–G46 |
+| 16 | **Where should `05_celebration` (trophy bounce) go?** It is clean but every win surface already shows the 2026-11-18 replacement | — | G47 |
 
 Every item here is polish; the app works with what it has.

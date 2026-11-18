@@ -1113,3 +1113,27 @@ in the middle; once "Scan QR" is tapped the real camera replaces the field.
 **Needed:** a nightcap Capy peeking over an edge (head and paws only),
 transparent, ≥ 300 × 160; optionally a soft bathroom-wall backdrop with an
 empty taped note (no QR baked in), ≥ 1080 × 600.
+
+## G43–G47 — The five loops (Phase 18, reported; none bundled)
+
+`reference/02_ASSETS/animations/0N_*/` — 36 frames × 80 ms, 360², "tweened
+from a single drawn pose". Read off frame 0 on cream and on dark, plus two
+measures over the frames.
+
+| Gap | Loop | Defect | Measured |
+|---|---|---|---|
+| G43 | `01_wake_up` | blanket's lower edge cut flat — a severed crop **inside** the canvas, which the edge-contact check cannot see | eyeballed |
+| G44 | `02_sleep_breathing` | nightcap tip cut flat at the top, blanket cut flat on the right | outline coverage 0.20 |
+| G45 | `03_walk_cycle` | the backpack is masked away; only its strap is left | 227 px enclosed hole |
+| G46 | `04_shake_dj` | **the dark outline, eyes and leg lines were masked out with the background** — right on a dark page, holes on a light one; plus four 31 px "tofu" boxes where music notes failed to render | outline coverage 0.18 |
+| G47 | `05_celebration` | clean (coverage 0.52); not bundled because its only fit, the win screen, carries the owner's 2026-11-18 replacement | — |
+
+**Used meanwhile:** nothing changes — every screen keeps its still. Phase 18
+encoded `04_shake_dj` (288 px, lossy colour + lossless alpha, 241 KB against a
+220 KB prediction) before seeing G46 on cream, and removed it.
+
+**New gate:** `outlineCoverage` (`lib/design/art_audit.dart`) — the share of a
+sticker's silhouette edge with dark ink within 3 px. Every bundled sticker
+(mascots, game Capys, win poses, win frames) measures 0.30 or more; the floor
+is 0.25; `art_manifest_test` enforces it. It catches G44 and G46; G43 and G45
+still need eyes. **Needed:** `ART_REQUESTS.md` #15 and #16.

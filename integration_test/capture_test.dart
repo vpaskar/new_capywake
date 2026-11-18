@@ -27,6 +27,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
 import '../test/features/games/_maze_by_ear.dart';
+import 'capture_names.dart';
 
 Alarm _seedAlarm({
   required String id,
@@ -115,8 +116,18 @@ Future<void> main() async {
 
   var surfaceConverted = false;
 
-  for (final entry in screens.entries) {
-    testWidgets('capture ${entry.key}', (tester) async {
+  // No light capture: without a block table compare.dart cannot judge one.
+  const darkOnly = <String, String>{
+    'onboarding': Routes.onboarding,
+    'puzzle_chooser': Routes.settingsPuzzle,
+  };
+
+  for (final (entry, dark) in [
+    for (final entry in screens.entries) (entry, false),
+    for (final entry in {...screens, ...darkOnly}.entries) (entry, true),
+  ]) {
+    final name = dark ? '${entry.key}$darkCaptureSuffix' : entry.key;
+    testWidgets('capture $name', (tester) async {
       await bootstrap();
 
       final db = AppDatabase.forTesting(NativeDatabase.memory());
@@ -128,6 +139,7 @@ Future<void> main() async {
       for (final alarm in captureSeed) {
         await container.read(capywakeRepositoryProvider).upsertAlarm(alarm);
       }
+      if (dark) await _chooseDark(container);
 
       await tester.pumpWidget(
         CapyWakeApp(
@@ -149,71 +161,82 @@ Future<void> main() async {
       await tester.pumpAndSettle();
 
       final inset = tester.view.padding.top / tester.view.devicePixelRatio;
-      await binding.takeScreenshot(entry.key);
-      binding.reportData = <String, dynamic>{
-        ...?binding.reportData,
-        entry.key: inset,
-      };
+      await binding.takeScreenshot(name);
+      if (!dark) {
+        binding.reportData = <String, dynamic>{
+          ...?binding.reportData,
+          entry.key: inset,
+        };
+      }
     });
   }
 
   // The ringing surface has no route: it is opened by the engine. Captured by
   // firing a ring into the live provider graph, which is also the only way a
   // user ever sees it.
-  testWidgets('capture ringing', (tester) async {
-    await bootstrap();
+  for (final dark in [false, true]) {
+    testWidgets('capture ringing${dark ? darkCaptureSuffix : ''}', (
+      tester,
+    ) async {
+      await bootstrap();
 
-    final clock = DateTime.utc(2026, 5, 21, 5);
-    final db = AppDatabase.forTesting(NativeDatabase.memory());
-    addTearDown(db.close);
-    final engine = FakeAlarmEngine(now: () => clock);
-    addTearDown(engine.dispose);
-    final container = ProviderContainer(
-      overrides: [
-        appDatabaseProvider.overrideWithValue(db),
-        alarmEngineProvider.overrideWithValue(engine),
-        engineNowProvider.overrideWithValue(() => clock),
-      ],
-    );
-    addTearDown(container.dispose);
-    for (final alarm in captureSeed) {
-      await container.read(capywakeRepositoryProvider).upsertAlarm(alarm);
-    }
+      final clock = DateTime.utc(2026, 5, 21, 5);
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(db.close);
+      final engine = FakeAlarmEngine(now: () => clock);
+      addTearDown(engine.dispose);
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          alarmEngineProvider.overrideWithValue(engine),
+          engineNowProvider.overrideWithValue(() => clock),
+        ],
+      );
+      addTearDown(container.dispose);
+      for (final alarm in captureSeed) {
+        await container.read(capywakeRepositoryProvider).upsertAlarm(alarm);
+      }
+      if (dark) await _chooseDark(container);
 
-    await tester.pumpWidget(
-      CapyWakeApp(
-        router: createRouter(),
-        showDebugBanner: false,
-        scopeBuilder: (child) =>
-            UncontrolledProviderScope(container: container, child: child),
-      ),
-    );
-    await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        CapyWakeApp(
+          router: createRouter(),
+          showDebugBanner: false,
+          scopeBuilder: (child) =>
+              UncontrolledProviderScope(container: container, child: child),
+        ),
+      );
+      await tester.pumpAndSettle();
 
-    if (!surfaceConverted) {
-      await binding.convertFlutterSurfaceToImage();
-      surfaceConverted = true;
-    }
+      if (!surfaceConverted) {
+        await binding.convertFlutterSurfaceToImage();
+        surfaceConverted = true;
+      }
 
-    // Puzzle-backed, because that is the configuration the board draws and
-    // the one where the emergency escape must be visible.
-    await container
-        .read(capywakeRepositoryProvider)
-        .upsertAlarm(
-          captureSeed.first.copyWith(dismissMethod: DismissMethod.puzzle),
-        );
-    await tester.pumpAndSettle();
+      // Puzzle-backed, because that is the configuration the board draws and
+      // the one where the emergency escape must be visible.
+      await container
+          .read(capywakeRepositoryProvider)
+          .upsertAlarm(
+            captureSeed.first.copyWith(dismissMethod: DismissMethod.puzzle),
+          );
+      await tester.pumpAndSettle();
 
-    engine.fire('capture-weekday', firedAt: clock);
-    await tester.pumpAndSettle();
+      engine.fire('capture-weekday', firedAt: clock);
+      await tester.pumpAndSettle();
 
-    final inset = tester.view.padding.top / tester.view.devicePixelRatio;
-    await binding.takeScreenshot('ringing');
-    binding.reportData = <String, dynamic>{
-      ...?binding.reportData,
-      'ringing': inset,
-    };
-  });
+      final inset = tester.view.padding.top / tester.view.devicePixelRatio;
+      if (dark) {
+        await binding.takeScreenshot('ringing$darkCaptureSuffix');
+        return;
+      }
+      await binding.takeScreenshot('ringing');
+      binding.reportData = <String, dynamic>{
+        ...?binding.reportData,
+        'ringing': inset,
+      };
+    });
+  }
 
   // A ring whose alarm draws only one game: the game on the real surface.
   for (final game in [
@@ -313,6 +336,14 @@ Future<void> main() async {
       await tester.pumpAndSettle();
     });
   }
+}
+
+Future<void> _chooseDark(ProviderContainer container) async {
+  final repository = container.read(capywakeRepositoryProvider);
+  final settings = await repository.getSettings();
+  await repository.saveSettings(
+    settings.copyWith(themeMode: ThemeModePreference.dark),
+  );
 }
 
 final _scanner = FakeCodeScanner();

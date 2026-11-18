@@ -128,14 +128,20 @@ class _AttentionCard extends StatelessWidget {
     final theme = Theme.of(context);
     final dark = theme.brightness == Brightness.dark;
     final ink = dark ? CapyColors.darkInk : CapyColors.cocoa;
-    final inkSoft = dark ? CapyColors.darkInkSoft : CapyColors.cocoaSoft;
+    // Soft cocoa on the clay warning fill is 3.9:1, under the body-text bar.
+    final inkSoft = dark
+        ? CapyColors.darkInkSoft
+        : (summary.needsAttention ? CapyColors.cocoa : CapyColors.cocoaSoft);
 
     return DecoratedBox(
       decoration: BoxDecoration(
         // Warm clay carries every warning in this product, never red.
-        color: summary.needsAttention
-            ? CapyColors.surfaceAlt
-            : (dark ? CapyColors.darkSurface : CapyColors.surface),
+        color: switch ((summary.needsAttention, dark)) {
+          (true, false) => CapyColors.surfaceAlt,
+          (true, true) => CapyColors.darkSurfaceAlt,
+          (false, false) => CapyColors.surface,
+          (false, true) => CapyColors.darkSurface,
+        },
         borderRadius: BorderRadius.circular(SettingsGroup.radius),
       ),
       child: Padding(

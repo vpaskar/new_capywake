@@ -91,6 +91,26 @@ void main() {
       }
     });
 
+    test('no bundled sticker lost its outline to masking', () {
+      final stickers = [
+        ...CapyArt.mascots,
+        ...CapyArt.gameCapys,
+        ...CapyArt.winPoses,
+        ...CapyArt.winFrames,
+      ];
+      for (final asset in stickers) {
+        final decoded = img.decodeImage(File(asset.path).readAsBytesSync())!;
+        expect(decoded.numChannels, 4, reason: '${asset.path} has no alpha');
+        expect(
+          outlineCoverage(decoded),
+          greaterThanOrEqualTo(minOutlineCoverage),
+          reason:
+              '${asset.path} has a light silhouette edge: its dark outline '
+              'was probably removed with the background.',
+        );
+      }
+    });
+
     test("the cloud edge's geometry matches SceneHeader's constants", () {
       final edge = img.decodeImage(
         File(CapyArt.cloudEdge.path).readAsBytesSync(),

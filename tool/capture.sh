@@ -15,7 +15,7 @@ set -euo pipefail
 DEVICE_NAME="iPhone 14 Pro"
 EXPECTED_W=1179
 EXPECTED_H=2556
-SCREENS=("${@:-home alarms add_edit_alarm stats}")
+SCREENS=("${@:-home alarms add_edit_alarm stats settings ringing onboarding puzzle_chooser}")
 read -r -a SCREENS <<<"${SCREENS[*]}"
 
 cd "$(dirname "$0")/.."
@@ -49,9 +49,24 @@ flutter drive \
 # Everything below exists because the command above can succeed and still have
 # produced nothing.
 
-failed=0
+# Every screen the harness also captures in dark writes docs/visual/<screen>/
+# dark.png; those are verified with the same checks.
+DARK_SCREENS=" home alarms add_edit_alarm stats settings ringing "
+DARK_ONLY=" onboarding puzzle_chooser "
+ARTIFACTS=()
 for screen in "${SCREENS[@]}"; do
-  png="docs/visual/$screen/actual.png"
+  if [[ "$DARK_ONLY" == *" $screen "* ]]; then
+    ARTIFACTS+=("docs/visual/$screen/dark.png")
+    continue
+  fi
+  ARTIFACTS+=("docs/visual/$screen/actual.png")
+  if [[ "$DARK_SCREENS" == *" $screen "* ]]; then
+    ARTIFACTS+=("docs/visual/$screen/dark.png")
+  fi
+done
+
+failed=0
+for png in "${ARTIFACTS[@]}"; do
 
   if [[ ! -f "$png" ]]; then
     echo "FAIL: $png was not written." >&2

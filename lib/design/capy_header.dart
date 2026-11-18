@@ -15,6 +15,8 @@ class CapyHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final ink = dark ? CapyColors.darkInk : CapyColors.cocoa;
 
     return SafeArea(
       bottom: false,
@@ -38,10 +40,13 @@ class CapyHeader extends StatelessWidget {
                 header: true,
                 label: 'CapyWake',
                 child: ExcludeSemantics(
+                  // One flat cocoa ink, so dark mode can re-ink it.
                   child: Image.asset(
                     CapyArt.wordmark.path,
                     height: CapyIconSize.wordmark,
                     fit: BoxFit.contain,
+                    color: dark ? CapyColors.darkInk : null,
+                    colorBlendMode: BlendMode.srcIn,
                   ),
                 ),
               ),
@@ -49,9 +54,9 @@ class CapyHeader extends StatelessWidget {
               IconButton(
                 onPressed: () => context.push(Routes.settings),
                 tooltip: l10n.navSettingsOpenLabel,
-                icon: const Icon(
+                icon: Icon(
                   Icons.settings_rounded,
-                  color: CapyColors.cocoa,
+                  color: ink,
                   size: CapyIconSize.md,
                 ),
               ),

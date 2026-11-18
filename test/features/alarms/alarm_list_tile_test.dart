@@ -114,7 +114,7 @@ void main() {
     expect(result.toggles, [true]);
   });
 
-  testWidgets('a disabled alarm is dimmed as well as knob-left', (
+  testWidgets('a disabled alarm reads at full ink, as the mockup draws it', (
     tester,
   ) async {
     await _pump(
@@ -122,15 +122,15 @@ void main() {
       alarm: alarmFixture(id: 'a', minutes: 7 * 60, enabled: false),
     );
 
-    final opacity = tester.widget<Opacity>(
-      find
-          .ancestor(
-            of: find.byType(CapyToggle),
-            matching: find.byType(Opacity),
-          )
-          .first,
+    expect(
+      find.ancestor(
+        of: find.byType(CapyToggle),
+        matching: find.byType(Opacity),
+      ),
+      findsNothing,
+      reason: 'the row stays tappable to edit, so its text must stay legible',
     );
-    expect(opacity.opacity, lessThan(1));
+    expect(tester.widget<CapyToggle>(find.byType(CapyToggle)).value, isFalse);
   });
 
   testWidgets('the row paints the mockup height at normal scale', (

@@ -21,10 +21,14 @@ class RingingScreen extends StatelessWidget {
     required this.onEscape,
     this.escapeStrictness = PuzzleEscapeStrictness.confirm,
     this.puzzleSlot,
+    this.timeFormat = TimeFormatPreference.system,
     super.key,
   });
 
   final RingingSession session;
+
+  /// The user's clock preference, as every other screen shows the time.
+  final TimeFormatPreference timeFormat;
   final VoidCallback onDismiss;
   final VoidCallback onSnooze;
   final VoidCallback onEscape;
@@ -58,7 +62,12 @@ class RingingScreen extends StatelessWidget {
           Expanded(
             child: Stack(
               children: [
-                _Hero(session: session, ink: ink, inkSoft: inkSoft),
+                _Hero(
+                  session: session,
+                  timeFormat: timeFormat,
+                  ink: ink,
+                  inkSoft: inkSoft,
+                ),
                 // Overlapping the art, as the board draws it — which is
                 // what keeps the whole surface on one screen.
                 if (puzzleSlot != null)
@@ -106,11 +115,13 @@ class RingingScreen extends StatelessWidget {
 class _Hero extends StatelessWidget {
   const _Hero({
     required this.session,
+    required this.timeFormat,
     required this.ink,
     required this.inkSoft,
   });
 
   final RingingSession session;
+  final TimeFormatPreference timeFormat;
   final Color ink;
   final Color inkSoft;
 
@@ -120,7 +131,7 @@ class _Hero extends StatelessWidget {
     final parts = AlarmFormat.timeParts(
       minutes: session.alarm.targetTimeMinutes,
       localeName: l10n.localeName,
-      format: TimeFormatPreference.system,
+      format: timeFormat,
     );
 
     return Positioned.fill(
@@ -129,7 +140,11 @@ class _Hero extends StatelessWidget {
         children: [
           // The scene is 3:2 and the band taller, so `cover` would zoom past
           // the capybara's face. Fitted to width, surface behind the rest.
-          const ColoredBox(color: CapyColors.surface),
+          ColoredBox(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? CapyColors.darkCream
+                : CapyColors.surface,
+          ),
           Align(
             alignment: Alignment.topCenter,
             child: Stack(

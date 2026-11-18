@@ -135,6 +135,55 @@ img.Image normalizeAlpha(img.Image image) {
   return image;
 }
 
+/// A sticker cutout whose silhouette edge is mostly light lost its dark
+/// outline to background masking. Bundled stickers measure 0.30 and up.
+const minOutlineCoverage = 0.25;
+
+const _outlineReach = 3;
+const _outlineLuminance = 0.3;
+
+/// The share of a cutout's silhouette edge with dark ink within a few pixels
+/// inward: near 1 for an outlined sticker, near 0 when the outline was masked.
+double outlineCoverage(img.Image image) {
+  if (image.numChannels != 4) return 1;
+  final w = image.width;
+  final h = image.height;
+  int alpha(int x, int y) =>
+      x < 0 || y < 0 || x >= w || y >= h ? 0 : image.getPixel(x, y).a.toInt();
+  bool isDark(int x, int y) {
+    final p = image.getPixel(x, y);
+    final luminance =
+        (0.2126 * p.r.toInt() + 0.7152 * p.g.toInt() + 0.0722 * p.b.toInt()) /
+        255;
+    return luminance < _outlineLuminance;
+  }
+
+  var edge = 0;
+  var outlined = 0;
+  for (var y = 0; y < h; y++) {
+    for (var x = 0; x < w; x++) {
+      if (alpha(x, y) <= ghostAlphaCeiling) continue;
+      final onEdge =
+          alpha(x + 1, y) <= ghostAlphaCeiling ||
+          alpha(x - 1, y) <= ghostAlphaCeiling ||
+          alpha(x, y + 1) <= ghostAlphaCeiling ||
+          alpha(x, y - 1) <= ghostAlphaCeiling;
+      if (!onEdge) continue;
+      edge++;
+      search:
+      for (var dy = -_outlineReach; dy <= _outlineReach; dy++) {
+        for (var dx = -_outlineReach; dx <= _outlineReach; dx++) {
+          if (alpha(x + dx, y + dy) > 200 && isDark(x + dx, y + dy)) {
+            outlined++;
+            break search;
+          }
+        }
+      }
+    }
+  }
+  return edge == 0 ? 1 : outlined / edge;
+}
+
 img.Image trimToInk(img.Image image) {
   final rect = auditImage(image).trimRect;
   if (rect == null) return image;

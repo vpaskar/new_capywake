@@ -64,6 +64,13 @@ class ScheduleRefresh extends Notifier<int> {
   void refresh() => state++;
 }
 
+/// The clock format soft-wake reminder bodies are written in.
+final notificationTimeFormatProvider = Provider<TimeFormatPreference>(
+  (ref) =>
+      ref.watch(userSettingsStreamProvider).value?.timeFormat ??
+      TimeFormatPreference.system,
+);
+
 /// Arms and re-syncs the platform scheduler on every database change. Watched
 /// by `AppShell`: unwatched, it is disposed at once and arms nothing.
 final alarmScheduleCoordinatorProvider = Provider<AlarmScheduleCoordinator>(
@@ -102,6 +109,7 @@ final alarmScheduleCoordinatorProvider = Provider<AlarmScheduleCoordinator>(
 
     ref
       ..listen(scheduleRefreshProvider, (_, _) => resync())
+      ..listen(notificationTimeFormatProvider, (_, _) => resync())
       ..onDispose(() {
         pending?.cancel();
         coordinator.dispose();

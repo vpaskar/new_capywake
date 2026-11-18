@@ -2,6 +2,8 @@ import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/hold_to_act_button.dart';
+import 'package:capywake/design/theme.dart';
+import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
 import 'package:capywake/features/ringing/ringing_session.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
@@ -75,9 +77,12 @@ void main() {
     VoidCallback? onDismiss,
     VoidCallback? onSnooze,
     VoidCallback? onEscape,
+    ThemeData? theme,
+    TimeFormatPreference timeFormat = TimeFormatPreference.system,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
+        theme: theme,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         locale: const Locale('en'),
@@ -87,11 +92,28 @@ void main() {
           onSnooze: onSnooze ?? () {},
           onEscape: onEscape ?? () {},
           puzzleSlot: puzzleSlot,
+          timeFormat: timeFormat,
         ),
       ),
     );
     await tester.pumpAndSettle();
   }
+
+  testWidgets('dark mode paints the night page behind the scene', (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      session: _session(),
+      theme: capyTheme(brightness: Brightness.dark),
+    );
+
+    final pages = tester
+        .widgetList<ColoredBox>(find.byType(ColoredBox))
+        .map((box) => box.color);
+    expect(pages, contains(CapyColors.darkCream));
+    expect(pages, isNot(contains(CapyColors.surface)));
+  });
 
   group('clock', () {
     testWidgets('renders the digits and the period apart', (tester) async {
@@ -99,6 +121,17 @@ void main() {
 
       expect(find.text('7:00'), findsOneWidget);
       expect(find.text('AM'), findsOneWidget);
+    });
+
+    testWidgets('follows the clock preference', (tester) async {
+      await pump(
+        tester,
+        session: _session(),
+        timeFormat: TimeFormatPreference.h24,
+      );
+
+      expect(find.text('07:00'), findsOneWidget);
+      expect(find.text('AM'), findsNothing);
     });
 
     testWidgets('shows the alarm label', (tester) async {

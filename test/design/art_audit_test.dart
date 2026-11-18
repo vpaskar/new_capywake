@@ -74,6 +74,46 @@ void main() {
     });
   });
 
+  group('outlineCoverage', () {
+    img.Image sticker({required bool outlined}) {
+      final im = _blank(30, 30);
+      _fill(im, const ArtRect(6, 6, 23, 23), 255);
+      if (outlined) {
+        for (var i = 6; i <= 23; i++) {
+          for (final (x, y) in [(i, 6), (i, 23), (6, i), (23, i)]) {
+            im.setPixel(x, y, img.ColorRgba8(47, 17, 6, 255));
+          }
+        }
+      }
+      return im;
+    }
+
+    test('an outlined sticker is fully covered', () {
+      expect(outlineCoverage(sticker(outlined: true)), 1);
+    });
+
+    test('a sticker whose outline was masked away is not', () {
+      expect(
+        outlineCoverage(sticker(outlined: false)),
+        lessThan(minOutlineCoverage),
+      );
+    });
+
+    test('an opaque image has no silhouette to judge', () {
+      expect(outlineCoverage(img.Image(width: 8, height: 8)), 1);
+    });
+
+    test('ink touching the canvas edge is judged too', () {
+      final im = _blank(10, 10);
+      _fill(im, const ArtRect(0, 0, 9, 9), 255);
+      expect(outlineCoverage(im), lessThan(minOutlineCoverage));
+    });
+
+    test('an empty image has no edge', () {
+      expect(outlineCoverage(_blank(10, 10)), 1);
+    });
+  });
+
   group('normalizeAlpha', () {
     test('clears ghosts and snaps the near-solid band', () {
       final im = _blank(6, 1)

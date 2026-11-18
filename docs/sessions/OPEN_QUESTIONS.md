@@ -171,3 +171,23 @@ The simulator has no camera and Android has no device here. The camera
 permission channel is proven on the simulator (it answers), the scanner's
 failure path in a widget test over the plugin's channel; **no code was ever
 scanned by a real camera**.
+
+## 2026-11-18 — Phase 18 — Four of the five loops are damaged; none shipped
+
+`04_shake_dj` lost its dark outline and eyes to masking (fine on dark, holes on
+light); `02_sleep_breathing` and `01_wake_up` are cut flat inside the frame;
+`03_walk_cycle` lost its backpack. `05_celebration` is clean, but the win
+screen already shows your 2026-11-18 replacement, so it would undo a decision.
+Meanwhile every screen keeps its still art. Re-cut frames (`ART_REQUESTS.md`
+#15) drop straight in: Shake DJ's dancer and the Alarms empty state are the
+places a loop replaces a still of the same pose. Say where the trophy loop
+should go (#16), or that it should replace the win frames.
+
+## 2026-11-18 — Phase 18 — White on orange and green is below contrast
+
+Every CTA's white label on the brand orange (2.07:1) and the ringing "Tap to
+stop" / "Solve a puzzle" pill (white on grass, 2.36:1) fail even the 3:1 bar
+for large text, in both themes. It is the palette recorded in Phase 02 and a
+Tier A choice, so it is counted (and pinned per screen in
+`test/design/text_contrast_test.dart`), not retuned. Cocoa on orange passes
+(7.9:1) if you want the labels dark.

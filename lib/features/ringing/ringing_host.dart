@@ -119,6 +119,8 @@ class _RingingHostState extends ConsumerState<RingingHost> {
 
     return Stack(
       children: [
+        // Never under `TickerMode(false)`: Riverpod pauses every watch
+        // beneath it, the shell's alarm-arming one included.
         widget.child,
         // Covers the app underneath. The Navigator is for the escape sheet:
         // above the router's own, `showModalBottomSheet` would throw.
@@ -140,9 +142,13 @@ class _RingingHostState extends ConsumerState<RingingHost> {
     final session = ref.watch(ringingSessionProvider).value;
     if (session == null) return const SizedBox.shrink();
     final controller = ref.read(ringingControllerProvider);
+    final timeFormat =
+        ref.watch(userSettingsStreamProvider).value?.timeFormat ??
+        TimeFormatPreference.system;
     final settings = _renderableSettings(session.alarm);
     if (_awaitsCameraReadiness(session, settings)) {
       return RingingScreen(
+        timeFormat: timeFormat,
         session: session,
         escapeStrictness: settings.escapeStrictness,
         onDismiss: controller.dismiss,
@@ -158,6 +164,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
     final round = challenge is PuzzleWakeChallenge ? _round : null;
 
     return RingingScreen(
+      timeFormat: timeFormat,
       session: _withGameVisibility(
         _withRoundVisibility(session, round),
         settings,

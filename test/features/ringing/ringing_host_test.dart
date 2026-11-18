@@ -132,6 +132,44 @@ void main() {
     expect(find.byType(RingingScreen), findsNothing);
   });
 
+  testWidgets('the ringing clock follows the saved clock preference', (
+    tester,
+  ) async {
+    final app = await pumpApp(tester);
+    await app.repository.saveSettings(
+      UserSettings.initial.copyWith(timeFormat: TimeFormatPreference.h24),
+    );
+    await app.repository.upsertAlarm(_alarm());
+    await tester.pumpAndSettle();
+
+    app.engine.fire('a1', firedAt: clock);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(
+        of: find.byType(RingingScreen),
+        matching: find.text('07:00'),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('the app beneath a ring stays live', (tester) async {
+    final app = await pumpApp(tester);
+    await app.repository.upsertAlarm(_alarm());
+    await tester.pumpAndSettle();
+    final beneath = find.byType(Scaffold).first;
+
+    app.engine.fire('a1', firedAt: clock);
+    await tester.pumpAndSettle();
+
+    expect(
+      TickerMode.valuesOf(tester.element(beneath)).enabled,
+      isTrue,
+      reason: 'muting it pauses the shell watch that keeps alarms armed',
+    );
+  });
+
   testWidgets(
     'a puzzle alarm shows a puzzle and the escape, not a plain stop',
     (tester) async {

@@ -1,18 +1,16 @@
 # Next session — start here
 
-> **Phase 17 done (2026-11-18).** All ten games are playable and nothing is
-> blocked. The pointer is `18` — **Animation and visual polish** (the five
-> WebP loops, reduce-motion, a dark-mode pass). Not blocked: start it with
-> the usual checklist.
+> **Phase 18 done (2026-11-18).** The pointer is `19` — **Release QA**
+> (iOS + Android regression, bundle size, store readiness). Not blocked: start
+> it with the usual checklist. Store work is drafts only.
 
 ## State
 
-Phases 00–17 are **done** and committed.
+Phases 00–18 are **done** and committed.
 
-**Current phase: `18` — not blocked.**
+**Current phase: `19` — not blocked.**
 
-**2,390 tests** pass. `lib` 98.67%, `lib/core` 99.74%, `lib/core/games` and
-`lib/features/games` **100%**, `lib/data` 90.94%. **587 ARB keys × 10
+**2,459 tests** pass. `lib` 98.74%, `lib/core` 99.74%, `lib/data` 90.98%. **587 ARB keys × 10
 locales.** Comment baseline **113**.
 
 All ten games are playable. **Read `docs/sessions/OPEN_QUESTIONS.md` first** —
@@ -38,6 +36,9 @@ checkpoint for every alarm, and that no real camera was ever run.
    on a ring, and the event-channel defect only the platform could show.
 10. `docs/phases/PHASE_17_POST_REVIEW.md` — the checkpoint, "rings only when
    ready", and the camera held under a ring.
+11. `docs/phases/PHASE_18_POST_REVIEW.md` and `docs/visual/dark_mode.md` — the
+   theme, the two-theme contrast gate, why no loop shipped, and why the app
+   under a ring must never be muted.
 
 ## How a game plugs in now (Phase 11 contract + Phase 12 model)
 

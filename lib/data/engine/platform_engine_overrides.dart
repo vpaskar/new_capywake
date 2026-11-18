@@ -33,11 +33,12 @@ Future<Widget Function(Widget)> platformEngineScope({
   );
   await engine.initialize();
 
+  var clockFormat = () => timeFormat;
   final notifications = PlatformNotificationService(
     channelName: () => l10n.notificationChannelName,
     title: (_) => l10n.notificationSoftWakeTitle,
     body: (n) => l10n.notificationSoftWakeBody(
-      _formatClock(n.payloadAlarmTimeUtc, location, localeName, timeFormat),
+      _formatClock(n.payloadAlarmTimeUtc, location, localeName, clockFormat()),
     ),
     location: () => location,
     now: now,
@@ -51,6 +52,8 @@ Future<Widget Function(Widget)> platformEngineScope({
         return engine;
       }),
       notificationServiceProvider.overrideWith((ref) {
+        clockFormat = () =>
+            ref.mounted ? ref.read(notificationTimeFormatProvider) : timeFormat;
         ref.onDispose(notifications.dispose);
         return notifications;
       }),

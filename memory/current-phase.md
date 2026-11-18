@@ -1,94 +1,28 @@
 # Current phase
 
-**Phase 17 — QR Treasure Hunt: done, 2026-11-18 (owner: "Add the camera").
-`Current phase: 18` — Animation and visual polish (5 WebP loops,
-reduce-motion, dark mode pass). Not blocked.**
+**Phase 18 — Animation and visual polish: done, 2026-11-18.
+`Current phase: 19` — Release QA (iOS + Android regression, bundle size,
+store readiness). Not blocked.**
 
-**2,390 tests**, analyze clean including infos, lib 98.67% / `lib/core` 99.74%
-/ `lib/core/games`, `lib/features/games` **100%** / `lib/data` 90.94% /
-`lib/data/camera` 96.04%, **587 ARB keys × 10 locales**. Comment baseline 113.
+**2,459 tests**, analyze clean, lib 98.74% / `lib/core` 99.74% / `lib/data`
+90.98%, **587 ARB keys × 10 locales**. Comment baseline 113. Bundle unchanged.
 
-**All ten games are playable; nothing is blocked.**
+## What Phase 18 adds to the recipe
 
-## What Phase 17 adds to the recipe
+- **Theme:** `CapyWakeApp` applies `UserSettings.themeMode`; the first frame
+  is held ≤ 400 ms for it (`CapyWakeApp.themeWait`), cross-fade off meanwhile.
+- **Contrast:** `test/design/text_contrast_test.dart` gates every route, every
+  game's practice and both ring kinds in **both** themes. Brand orange/green
+  and text over art are pinned counts per screen; `cocoaSoft` on cream (4.49)
+  is the named palette near-miss. A new screen must pass it.
+- **Dark captures:** `tool/capture.sh` writes and verifies `dark.png` next to
+  `actual.png`; onboarding and the chooser are dark-only.
+- **Never `TickerMode(false)` over a subtree with a side-effecting watch** —
+  Riverpod pauses it (the shell's alarm arming).
+- **Art:** check on cream *and* dark; `outlineCoverage` gates masked outlines.
+- **Disabled rows are full ink** (mockup); the toggle carries the state.
 
-- **Camera:** `GameLaunch.scanner` (a `CodeScanner`) and `qrCheckpoint`;
-  hosts read `codeScannerProvider`, `qrCheckpointProvider`. Build a scanner
-  only after the user taps and only with a grant — the plugin prompts
-  otherwise. Stop it on win, tap, pause, and when a ring is above practice.
-- **A game that can be unfinishable rings only when ready**
-  (`RingingHost._canRing`); a pick waits ≤ 2 s on loading readiness.
-- **Riverpod 3 pauses unlistened providers:** never `read(x.future)` unless
-  something watches `x`; read the source directly instead.
-- **Permissions:** `DeviceAccess` + `DevicePermission`; `DeviceAccessPrompt`
-  with `DeviceAccessCopy.steps/camera`; every OS purpose string × 10
-  `InfoPlist.strings`.
-- **Fakes must model late events** (`FakeCodeScanner.showLate`): a platform
-  event can arrive after the view closed.
+## Open for the owner
 
-## What Phase 16 adds to the recipe
-
-- **Step counting:** `GameLaunch.steps` (a `StepSensor`), hosts read
-  `stepSensorProvider` (an unavailable `FakeStepSensor` by default,
-  `platformStepOverride()` in production). Listen to `steps` **only after
-  `access()` is `ready`**; `StepTally` picks sensor → accelerometer; the button
-  always works. Re-read access on resume, on `accessChanges`, or a new sensor —
-  never on every rebuild.
-- **Never ask for a permission on a ring.** `StepAccessPrompt` lives in
-  practice and the pool sheet only.
-- **A platform event channel has one handler:** cache the stream
-  (`late final`), never `receiveBroadcastStream()` per read — a second listener
-  silently kills the first. Fakes cannot show this.
-- **The iOS app now declares ten localizations**; any new Info.plist purpose
-  string needs all ten `InfoPlist.strings`.
-
-
-## What Phase 15 adds to the recipe
-
-- **Motion input:** `GameLaunch.motion` (a `MotionSensor`); hosts read
-  `motionSensorProvider` (a silent `FakeMotionSensor` by default,
-  `platformMotionOverride()` in production). Subscribe once, cancel on win and
-  dispose, resubscribe in `didUpdateWidget` when the sensor changes, ignore
-  stream errors.
-- **The fallback is always live**, never gated behind a mode or a timer.
-- **`ShakeDetector`** (8 m/s² from gravity, re-arm under 4) and **`TiltReader`**
-  (angles from the first grip, full-turn pitch, 18° engage / 9° release,
-  `suppressUntilLevel()` after a press or escape). Never re-baseline on a
-  tilted grip — letting go reads as the reverse.
-- **`GameOutcomeLine(reserveFor:)`**: pass every result the game can show.
-- **A game control is never a `CapyButton`** — Snooze is one, right below.
-- **Mutation-check every guard**, and pump timers one beat at a time: a long
-  `pump` coalesces several timers into one frame.
-
-## Carried from Phases 12–13 (unchanged)
-
-Games live inside `DismissMethod.puzzle`; a new game = flip its catalogue entry
-**and** add one `GameRegistry.builders` line (pinned equal). Motion stops under
-`disableAnimations` **or** `accessibleNavigation`, re-read every build. Results
-in `GameOutcomeLine`; card ≤ 424 pt (clock guard). Size art from the decoded
-file. Mount new games in the real `RingingScreen` in host tests.
-
-## What Phase 14 adds to the recipe
-
-- **`DriftingGrid`** for a grid that moves: `swap` or `carousel`. Choose the
-  motion that does not reveal the answer. No beat while a finger is on the
-  grid; a tap mid-slide goes to the card aimed at; still snaps home.
-- **`GameOutcomeLine(serial:)`**: pass a count of answers so a repeated result
-  is announced again.
-- **Tests that read state after a timer must pump rest + slide per beat**, and
-  prove they fail without the guard (Phase 14 found two that did not).
-- **Authored banks** (these two games only): enum + one ARB key per entry in
-  all ten locales; pose labels are the screen-reader answer key.
-
-## Owner questions open (`docs/sessions/OPEN_QUESTIONS.md`)
-
-Blue/orange win-pose caps; Capy Rocket cue vs any-swipe; Rhythm Rescue timing;
-short-phone clock overlap; Morning Sort bank (pizza); Find the Impostor
-adaptation; word-only item cards.
-
-## Owed by nobody (carried)
-
-Sleep boundary / `package:health` (unbuilt 07–15). (Settings' motion-check
-switch: built 2026-11-18, see the motion-check follow-up.); `CapyNavBar` 98.7 vs 79.9;
-Alarms 3 / Add-Edit 9 Tier A failures; `ringNow` uncalled; art G35–G38. Android
-untested, no emulator.
+Loops G43–G47 (`ART_REQUESTS.md` #15–16); white on orange/green below
+contrast; everything Phase 17 listed.

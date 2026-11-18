@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:integration_test/integration_test_driver_extended.dart';
 
+import '../integration_test/capture_names.dart';
+
 Future<void> main() async {
   await integrationDriver(
     responseDataCallback: (data) async {
@@ -16,7 +18,13 @@ Future<void> main() async {
       }
     },
     onScreenshot: (name, bytes, [args]) async {
-      final out = File('docs/visual/$name/actual.png');
+      final (screen, file) = name.endsWith(darkCaptureSuffix)
+          ? (
+              name.substring(0, name.length - darkCaptureSuffix.length),
+              'dark.png',
+            )
+          : (name, 'actual.png');
+      final out = File('docs/visual/$screen/$file');
       await out.parent.create(recursive: true);
       await out.writeAsBytes(bytes);
       stdout.writeln('WROTE ${out.path} (${bytes.length} bytes)');

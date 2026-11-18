@@ -57,35 +57,32 @@ class AlarmListTile extends StatelessWidget {
           child: InkWell(
             onTap: onTap,
             borderRadius: BorderRadius.circular(CapyRadius.lg),
-            child: Opacity(
-              opacity: alarm.enabled ? 1 : _disabledOpacity,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: dark ? CapyColors.darkSurface : CapyColors.surface,
-                  borderRadius: BorderRadius.circular(CapyRadius.lg),
-                  border: Border.all(
-                    color: dark
-                        ? CapyColors.darkSurfaceAlt
-                        : CapyColors.surfaceAlt,
-                  ),
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: dark ? CapyColors.darkSurface : CapyColors.surface,
+                borderRadius: BorderRadius.circular(CapyRadius.lg),
+                border: Border.all(
+                  color: dark
+                      ? CapyColors.darkSurfaceAlt
+                      : CapyColors.surfaceAlt,
                 ),
-                // A minimum, not a cap: the row grows at large text.
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(minHeight: height),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      children: [
-                        _art(context, dark),
-                        Expanded(child: _details(parts, repeat, ink, inkSoft)),
-                        _toggle(l10n),
-                        Icon(
-                          Icons.chevron_right_rounded,
-                          size: CapyIconSize.md,
-                          color: inkSoft,
-                        ),
-                        const SizedBox(width: CapySpacing.sm),
-                      ],
-                    ),
+              ),
+              // A minimum, not a cap: the row grows at large text.
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: height),
+                child: IntrinsicHeight(
+                  child: Row(
+                    children: [
+                      _art(context, dark),
+                      Expanded(child: _details(parts, repeat, ink, inkSoft)),
+                      _toggle(l10n),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        size: CapyIconSize.md,
+                        color: inkSoft,
+                      ),
+                      const SizedBox(width: CapySpacing.sm),
+                    ],
                   ),
                 ),
               ),
@@ -203,5 +200,4 @@ class AlarmListTile extends StatelessWidget {
   }
 
   static const _timeSize = 30.0;
-  static const _disabledOpacity = 0.55;
 }

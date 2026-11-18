@@ -204,6 +204,40 @@ void main() {
     });
   });
 
+  group('reminder clock format', () {
+    test('follows the saved preference', () async {
+      final h = _harness();
+      final sub = h.container.listen(notificationTimeFormatProvider, (_, _) {});
+      addTearDown(sub.close);
+      await _settle();
+      expect(sub.read(), TimeFormatPreference.system);
+
+      await h.repo.saveSettings(
+        UserSettings.initial.copyWith(timeFormat: TimeFormatPreference.h24),
+      );
+      await _settle();
+      expect(sub.read(), TimeFormatPreference.h24);
+    });
+
+    test('changing it rewrites the pending reminders', () async {
+      final h = _harness();
+      _hold(h.container);
+      final notifications =
+          h.container.read(notificationServiceProvider)
+              as FakeNotificationService;
+      await h.repo.upsertAlarm(_alarm());
+      await _settle();
+      final before = notifications.scheduleCallCount;
+
+      await h.repo.saveSettings(
+        UserSettings.initial.copyWith(timeFormat: TimeFormatPreference.h24),
+      );
+      await _settle();
+
+      expect(notifications.scheduleCallCount, greaterThan(before));
+    });
+  });
+
   group('failure reporting', () {
     test('a healthy sync reports no failure', () async {
       final h = _harness();
