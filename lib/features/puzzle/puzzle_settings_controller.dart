@@ -1,3 +1,4 @@
+import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
@@ -28,7 +29,7 @@ class PuzzleSettingsController {
 
   /// Add or drop the puzzles from the wake pool; never empties it.
   Future<void> setPuzzlesIncluded({required bool included}) => _update(
-    (s) => !included && s.enabledGames.isEmpty
+    (s) => !included && !hasPlayableGame(s.enabledGames)
         ? s
         : s.copyWith(includePuzzles: included),
   );
@@ -42,7 +43,7 @@ class PuzzleSettingsController {
       } else {
         next.remove(gameId);
       }
-      if (next.isEmpty && !s.includePuzzles) return s;
+      if (!hasPlayableGame(next) && !s.includePuzzles) return s;
       return s.copyWith(enabledGames: next);
     });
   }
@@ -69,3 +70,12 @@ class PuzzleSettingsController {
 final puzzleSettingsControllerProvider = Provider<PuzzleSettingsController>(
   PuzzleSettingsController.new,
 );
+
+/// Whether [gameIds] holds a game that can actually ring: a coming-soon id
+/// must not be the pool's last member.
+bool hasPlayableGame(Set<String> gameIds) =>
+    gameIds.any((id) => GameCatalogue.byId(id)?.isPlayable ?? false);
+
+/// The app-wide puzzle settings every puzzle screen renders from.
+PuzzleSettings watchPuzzleSettings(WidgetRef ref) =>
+    ref.watch(puzzleSettingsStreamProvider).value ?? PuzzleSettings.defaults();

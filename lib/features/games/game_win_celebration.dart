@@ -186,6 +186,7 @@ class _GameWinCelebrationState extends State<GameWinCelebration>
       frames[index].path,
       gaplessPlayback: true,
       excludeFromSemantics: true,
+      errorBuilder: _missingArt,
     );
   }
 
@@ -198,8 +199,18 @@ class _GameWinCelebrationState extends State<GameWinCelebration>
       key: const ValueKey('win-loop'),
       gaplessPlayback: true,
       excludeFromSemantics: true,
+      errorBuilder: _missingArt,
     ),
   );
+
+  /// A build whose bundle predates an asset must not draw Flutter's red box
+  /// on a win; the plain cutout stands in.
+  Widget _missingArt(BuildContext context, Object error, StackTrace? stack) =>
+      Image.asset(
+        CapyArt.emptyStateMascot.path,
+        key: const ValueKey('win-art-fallback'),
+        excludeFromSemantics: true,
+      );
 
   Widget _springIn() {
     final t = _controller.value;
@@ -207,7 +218,11 @@ class _GameWinCelebrationState extends State<GameWinCelebration>
       opacity: Curves.easeOut.transform((t * 2.5).clamp(0, 1)),
       child: Transform.scale(
         scale: 0.6 + 0.4 * Curves.elasticOut.transform(t),
-        child: Image.asset(widget.pose!.path, excludeFromSemantics: true),
+        child: Image.asset(
+          widget.pose!.path,
+          excludeFromSemantics: true,
+          errorBuilder: _missingArt,
+        ),
       ),
     );
   }

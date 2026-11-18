@@ -109,7 +109,7 @@
   "tool/check_arb.dart": 478,
   "tool/check_bundle_size.dart": 1562,
   "tool/check_coverage.dart": 685,
-  "tool/compare.dart": 968,
+  "tool/compare.dart": 965,
   "tool/generate_tones.dart": 1475,
   "tool/import_art.dart": 149
 }

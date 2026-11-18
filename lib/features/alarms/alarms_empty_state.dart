@@ -26,7 +26,7 @@ class AlarmsEmptyState extends StatelessWidget {
         children: [
           ExcludeSemantics(
             child: Image.asset(
-              CapyArt.byId('thumb.sleeping').path,
+              CapyArt.emptyStateMascot.path,
               height: _artHeight,
               fit: BoxFit.contain,
             ),
@@ -48,5 +48,5 @@ class AlarmsEmptyState extends StatelessWidget {
     );
   }
 
-  static const _artHeight = 96.0;
+  static const _artHeight = 72.0;
 }

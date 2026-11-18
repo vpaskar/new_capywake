@@ -1,11 +1,15 @@
 import 'package:capywake/app/shell.dart';
 import 'package:capywake/features/alarms/alarms_screen.dart';
 import 'package:capywake/features/alarms/edit/alarm_edit_screen.dart';
+import 'package:capywake/features/games/all_games_screen.dart';
 import 'package:capywake/features/games/game_practice_screen.dart';
 import 'package:capywake/features/home/home_screen.dart';
 import 'package:capywake/features/onboarding/onboarding_providers.dart';
 import 'package:capywake/features/onboarding/onboarding_screen.dart';
-import 'package:capywake/features/puzzle/puzzle_chooser_screen.dart';
+import 'package:capywake/features/puzzle/games_selection_screen.dart';
+import 'package:capywake/features/puzzle/puzzle_types_screen.dart';
+import 'package:capywake/features/puzzle/wake_puzzle_advanced_screen.dart';
+import 'package:capywake/features/puzzle/wake_puzzle_overview_screen.dart';
 import 'package:capywake/features/settings/reliability_checklist_screen.dart';
 import 'package:capywake/features/settings/settings_screen.dart';
 import 'package:capywake/features/settings/walkthrough_screen.dart';
@@ -22,6 +26,9 @@ abstract final class Routes {
   static const settingsReliability = '/settings/reliability';
   static const settingsWalkthrough = '/settings/walkthrough';
   static const settingsPuzzle = '/settings/puzzle';
+  static const settingsPuzzleGames = '/settings/puzzle/games';
+  static const settingsPuzzleTypes = '/settings/puzzle/types';
+  static const settingsPuzzleAdvanced = '/settings/puzzle/advanced';
   static const onboarding = '/onboarding';
 
   static const alarmNew = '/alarms/new';
@@ -122,9 +129,31 @@ GoRouter createRouter({String initialLocation = Routes.home, Ref? ref}) {
           GoRoute(
             path: 'puzzle',
             parentNavigatorKey: _rootKey,
-            builder: (context, state) => const PuzzleChooserScreen(),
+            builder: (context, state) => const WakePuzzleOverviewScreen(),
+            routes: [
+              GoRoute(
+                path: 'games',
+                parentNavigatorKey: _rootKey,
+                builder: (context, state) => const GamesSelectionScreen(),
+              ),
+              GoRoute(
+                path: 'types',
+                parentNavigatorKey: _rootKey,
+                builder: (context, state) => const PuzzleTypesScreen(),
+              ),
+              GoRoute(
+                path: 'advanced',
+                parentNavigatorKey: _rootKey,
+                builder: (context, state) => const WakePuzzleAdvancedScreen(),
+              ),
+            ],
           ),
         ],
+      ),
+      GoRoute(
+        path: Routes.games,
+        parentNavigatorKey: _rootKey,
+        builder: (context, state) => const AllGamesScreen(),
       ),
       GoRoute(
         path: '${Routes.games}/:id',

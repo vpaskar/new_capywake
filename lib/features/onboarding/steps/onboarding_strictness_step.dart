@@ -91,6 +91,7 @@ class _StrictnessCard extends StatelessWidget {
       checked: selected,
       button: true,
       label: label,
+      onTap: onTap,
       child: ExcludeSemantics(
         child: Material(
           color: dark ? CapyColors.darkSurface : CapyColors.surface,

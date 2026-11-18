@@ -548,3 +548,15 @@ signing, `1.0.0+1`, store drafts in `docs/release/`.
 **Not proven:** nothing on Android, nothing on a real iPhone; the zone notice
 never fired; `ring_lifecycle_test` failed twice, then passed 9 times — cause not
 found.
+
+## Phase 20 — Settings and Wake puzzle redesign (2026-11-18, uncommitted)
+
+Owner's five-mockup package (`reference/01_REFERENCES/screens/settings_redesign/`).
+Routes `/settings/puzzle{,/games,/types,/advanced}`; old chooser deleted.
+Every setting ≤ 2 pushes from Settings; no `lib/core`/`lib/data` change.
+New shared pieces: `CapySegmented`, `CapyColors.successDeep`,
+`SettingsHeader(height:, glyph:)` (min-height, grows with text),
+`SettingsCardSurface`, `PoolSwitchRow`, `hasPlayableGame`.
+Lessons: a widget test has no status-bar inset (the type grid ate 59 pt as
+padding); a squeezed `Text` never leaves its box, so test needed height vs.
+laid-out height, not rectangles. 2,629 tests.

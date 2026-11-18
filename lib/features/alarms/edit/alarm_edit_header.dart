@@ -81,6 +81,7 @@ class _CircleButton extends StatelessWidget {
     return Semantics(
       button: true,
       label: tooltip,
+      onTap: onPressed,
       child: ExcludeSemantics(
         child: Tooltip(
           message: tooltip,

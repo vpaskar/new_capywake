@@ -183,6 +183,7 @@ class _Chevron extends StatelessWidget {
     return Semantics(
       button: true,
       label: label,
+      onTap: onPressed,
       child: ExcludeSemantics(
         child: Tooltip(
           message: label,

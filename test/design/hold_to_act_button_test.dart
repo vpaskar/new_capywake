@@ -1,5 +1,6 @@
 import 'package:capywake/design/hold_to_act_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -120,6 +121,34 @@ void main() {
     expect(find.bySemanticsLabel('Hold to stop'), findsOneWidget);
     handle.dispose();
   });
+
+  for (final action in [SemanticsAction.tap, SemanticsAction.longPress]) {
+    testWidgets('a screen reader ${action.name} completes it at once', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      var completed = 0;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: HoldToActButton(
+              label: 'Hold to stop',
+              onCompleted: () => completed++,
+            ),
+          ),
+        ),
+      );
+
+      tester.semantics.performAction(
+        find.semantics.byLabel('Hold to stop'),
+        action,
+      );
+      await tester.pump();
+
+      expect(completed, 1);
+      handle.dispose();
+    });
+  }
 
   testWidgets('nothing is left running after a completed hold', (tester) async {
     await pumpAndHold(tester, hold: const Duration(milliseconds: 1400));

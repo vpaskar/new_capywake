@@ -167,4 +167,10 @@ void main() {
       expect(saved.enabledGames, isEmpty);
     });
   });
+
+  test('only a playable game counts toward the pool floor', () {
+    expect(hasPlayableGame(const {}), isFalse);
+    expect(hasPlayableGame(const {'not_a_game'}), isFalse);
+    expect(hasPlayableGame(const {'shake_dj'}), isTrue);
+  });
 }

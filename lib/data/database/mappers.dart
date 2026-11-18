@@ -41,6 +41,7 @@ abstract final class AlarmMapper {
           : AlarmPuzzleOverrideMapper.fromJson(row.puzzleOverrideJson!),
       confirmationEnabled: row.confirmationEnabled,
       motionConfirmationEnabled: row.motionConfirmationEnabled,
+      artId: row.artId,
       // Drift's default `DateTimeColumn` stores instants as integers and
       // rebuilds them as *local* `DateTime`s on read. Normalising to UTC
       // here keeps the round-trip value-equal across timezones (and matches
@@ -74,6 +75,7 @@ abstract final class AlarmMapper {
       ),
       confirmationEnabled: Value(alarm.confirmationEnabled),
       motionConfirmationEnabled: Value(alarm.motionConfirmationEnabled),
+      artId: Value(alarm.artId),
       createdAt: Value(alarm.createdAt),
       updatedAt: Value(alarm.updatedAt),
     );

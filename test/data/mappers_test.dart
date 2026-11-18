@@ -30,6 +30,7 @@ void main() {
         dismissChallengeDifficulty: DismissChallengeDifficulty.hard,
         confirmationEnabled: true,
         motionConfirmationEnabled: true,
+        artId: 'thumb.walk',
         createdAt: t,
         updatedAt: t,
       );
@@ -38,6 +39,44 @@ void main() {
       final row = await db.select(db.alarms).getSingle();
       final restored = AlarmMapper.fromRow(row);
       expect(restored, equals(alarm));
+    });
+
+    test('every picture choice survives a round-trip', () async {
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(db.close);
+      final t = DateTime.utc(2026, 5, 21, 8);
+
+      for (final (id, artId) in const [
+        ('auto', null),
+        ('none', Alarm.noArtId),
+        ('walk', 'thumb.walk'),
+      ]) {
+        final alarm = Alarm(
+          id: id,
+          label: '',
+          enabled: true,
+          targetTimeMinutes: 7 * 60,
+          repeatWeekdays: const {},
+          wakeMode: WakeMode.standard,
+          wakeWindowStartMinutesBefore: 0,
+          soundId: '',
+          vibrationEnabled: true,
+          snoozeEnabled: true,
+          snoozeDurationMinutes: 9,
+          maxSnoozes: null,
+          dismissMethod: DismissMethod.normalButton,
+          dismissChallengeDifficulty: null,
+          confirmationEnabled: false,
+          artId: artId,
+          createdAt: t,
+          updatedAt: t,
+        );
+        await db.into(db.alarms).insert(AlarmMapper.toCompanion(alarm));
+        final row = await (db.select(
+          db.alarms,
+        )..where((a) => a.id.equals(id))).getSingle();
+        expect(AlarmMapper.fromRow(row).artId, artId);
+      }
     });
 
     test('fromRow rejects unknown WakeMode value', () {

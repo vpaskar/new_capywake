@@ -1,3 +1,4 @@
+import 'package:capywake/core/models/alarm.dart';
 import 'package:meta/meta.dart';
 
 /// Where an asset is used, which sets the pixels it must carry.
@@ -317,6 +318,9 @@ abstract final class CapyArt {
       ),
   ]);
 
+  /// A cutout for empty states: a painted panel shows its hard edge on cream.
+  static ArtAsset get emptyStateMascot => byId('game.capy.asleepNightcap');
+
   /// The sleeping capybara beside the wordmark on `01_HOME.png`. The choice
   /// is recorded against the mockup crop in `docs/visual/home/`.
   static const mascots = <ArtAsset>[
@@ -352,6 +356,19 @@ abstract final class CapyArt {
   /// language.
   static ArtAsset thumbnailForIndex(int index) =>
       thumbnails[index % thumbnails.length];
+
+  /// The art an alarm row draws, or `null` for the plain placeholder. An id
+  /// whose asset has since left the package falls back to the list position.
+  static ArtAsset? alarmThumbnail({
+    required String? artId,
+    required int index,
+  }) {
+    if (artId == Alarm.noArtId) return null;
+    for (final thumbnail in thumbnails) {
+      if (thumbnail.id == artId) return thumbnail;
+    }
+    return thumbnailForIndex(index);
+  }
 
   static const wordmark = ArtAsset(
     'wordmark',

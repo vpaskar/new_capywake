@@ -11,7 +11,7 @@ class StatsNotice extends StatelessWidget {
   final String title;
   final String body;
 
-  static const artHeight = 96.0;
+  static const artHeight = 72.0;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class StatsNotice extends StatelessWidget {
         children: [
           ExcludeSemantics(
             child: Image.asset(
-              CapyArt.byId('thumb.sleeping').path,
+              CapyArt.emptyStateMascot.path,
               height: artHeight,
               fit: BoxFit.contain,
             ),

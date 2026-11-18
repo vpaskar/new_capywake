@@ -69,6 +69,7 @@ class SettingsChevronRow extends StatelessWidget {
     required this.onTap,
     this.value,
     this.subtitle,
+    this.semanticHint,
     super.key,
   });
 
@@ -76,6 +77,7 @@ class SettingsChevronRow extends StatelessWidget {
   final String title;
   final String? value;
   final String? subtitle;
+  final String? semanticHint;
   final VoidCallback onTap;
 
   /// The most of the row a value may take before it ellipsizes.
@@ -89,7 +91,9 @@ class SettingsChevronRow extends StatelessWidget {
 
     return Semantics(
       button: true,
-      label: [title, if (value != null) value!].join(', '),
+      label: [title, ?value, ?subtitle].join(', '),
+      hint: semanticHint,
+      onTap: onTap,
       child: ExcludeSemantics(
         child: InkWell(
           onTap: onTap,
@@ -241,6 +245,7 @@ class SettingsStatusRow extends StatelessWidget {
     return Semantics(
       button: !satisfied,
       label: '$title, $statusLabel',
+      onTap: satisfied ? null : onAction,
       child: ExcludeSemantics(
         child: InkWell(
           onTap: satisfied ? null : onAction,

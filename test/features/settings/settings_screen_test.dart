@@ -3,6 +3,8 @@ import 'package:capywake/app/router.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/permissions/fake_permission_service.dart';
 import 'package:capywake/core/permissions/permission_service.dart';
+import 'package:capywake/core/puzzle/puzzle_settings.dart';
+import 'package:capywake/core/puzzle/puzzle_type.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
@@ -10,10 +12,16 @@ import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_nav_bar.dart';
 import 'package:capywake/design/capy_toggle.dart';
 import 'package:capywake/design/meadow_footer.dart';
+import 'package:capywake/design/scene_header.dart';
+import 'package:capywake/features/puzzle/games_selection_screen.dart';
+import 'package:capywake/features/puzzle/puzzle_types_screen.dart';
+import 'package:capywake/features/puzzle/wake_puzzle_advanced_screen.dart';
+import 'package:capywake/features/puzzle/wake_puzzle_overview_screen.dart';
 import 'package:capywake/features/settings/settings_group.dart';
 import 'package:capywake/features/settings/settings_header.dart';
 import 'package:capywake/features/settings/settings_rows.dart';
 import 'package:capywake/features/settings/settings_screen.dart';
+import 'package:capywake/features/settings/wake_puzzle_card.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -240,6 +248,7 @@ void main() {
           isButton: true,
           hasSelectedState: true,
           isSelected: true,
+          hasTapAction: true,
         ),
       );
     });
@@ -305,11 +314,20 @@ void main() {
         findsOneWidget,
       );
       expect(find.text(l10n.settingsNotificationAllowAction), findsNothing);
+      final handle = tester.ensureSemantics();
       expect(
-        find.textContaining(l10n.settingsNotificationManageHint),
+        find.bySemanticsLabel(RegExp(l10n.settingsNotificationAllowed)),
         findsOneWidget,
-        reason: 'revoking belongs to the OS, so the row says where',
       );
+      final row = tester.getSemantics(
+        find.bySemanticsLabel(RegExp(l10n.settingsNotificationAllowed)),
+      );
+      expect(
+        row.getSemanticsData().hint,
+        l10n.settingsNotificationManageHint,
+        reason: 'revoking belongs to the OS, so the row says where (M3)',
+      );
+      handle.dispose();
     });
 
     testWidgets('sends a permanently-denied user to the OS settings', (
@@ -358,9 +376,65 @@ void main() {
     });
   });
 
+  group('Phase 20 — the Wake puzzle card', () {
+    testWidgets('shows up to three of the games switched on', (tester) async {
+      final harness = await pumpSettings(tester);
+      await harness.container
+          .read(capywakeRepositoryProvider)
+          .savePuzzleSettings(
+            PuzzleSettings(
+              enabledTypes: const {PuzzleType.arithmetic},
+              enabledGames: const {
+                'catch_the_capy',
+                'memory_hideout',
+                'shake_dj',
+                'capy_rocket',
+              },
+            ),
+          );
+      await tester.pumpAndSettle();
+      final card = find.byType(WakePuzzleCard);
+      expect(
+        find.descendant(of: card, matching: find.byType(Image)),
+        findsNWidgets(WakePuzzleCard.maxTiles),
+      );
+    });
+
+    testWidgets('shows no tile while no game is on', (tester) async {
+      await pumpSettings(tester);
+      expect(
+        find.descendant(
+          of: find.byType(WakePuzzleCard),
+          matching: find.byType(Image),
+        ),
+        findsNothing,
+      );
+    });
+
+    testWidgets('every puzzle setting is two pushes from Settings', (
+      tester,
+    ) async {
+      await pumpSettings(tester);
+      final l10n = l10nOf(tester);
+      await scrollAndTap(tester, find.byType(WakePuzzleCard));
+      expect(find.byType(WakePuzzleOverviewScreen), findsOneWidget);
+
+      for (final (entry, screen) in [
+        (find.text(l10n.challengeGamesTitle), GamesSelectionScreen),
+        (find.text(l10n.puzzleSettingsTypesLabel), PuzzleTypesScreen),
+        (find.text(l10n.alarmDismissDifficultyLabel), WakePuzzleAdvancedScreen),
+      ]) {
+        await scrollAndTap(tester, entry);
+        expect(find.byType(screen), findsOneWidget, reason: '$screen');
+        await tester.pageBack();
+        await tester.pumpAndSettle();
+      }
+    });
+  });
+
   group('Tier A — the blocks the row cuts cannot move', () {
-    testWidgets('hero band and first group sit where 04_SETTINGS.png puts '
-        'them', (tester) async {
+    testWidgets('hero band and first group sit where 01_SETTINGS_REFINED.png '
+        'puts them', (tester) async {
       await pumpSettings(tester);
 
       // The mockup measures from a 44pt status bar; the test view has none,
@@ -368,13 +442,25 @@ void main() {
       final hero = tester.getRect(find.byType(SettingsHeader).first);
       expect(
         hero.height,
-        closeTo(59.9, 0.5),
-        reason: '103.9 - 44.0 on the mockup',
+        closeTo(SettingsHeader.compactHeight, 0.5),
+        reason: 'the tap floor; the mockup draws 34.4',
+      );
+      final band = tester.getRect(
+        find.byWidgetPredicate(
+          (w) =>
+              w is Image &&
+              w.image is AssetImage &&
+              (w.image as AssetImage).assetName == SceneCrop.settings.asset,
+        ),
+      );
+      expect(
+        band.height,
+        closeTo(SettingsScreen.heroBandHeight, 0.5),
+        reason: 'hero lower edge 180.4 - 88, + 4.5 under the cloud',
       );
 
-      // Four of the five fit the viewport; the fifth is below the fold.
       final groups = find.byType(SettingsGroup);
-      expect(tester.widgetList(groups).length, greaterThanOrEqualTo(4));
+      expect(tester.widgetList(groups).length, greaterThanOrEqualTo(2));
 
       final first = tester.getRect(groups.first);
       expect(

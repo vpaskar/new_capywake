@@ -35,7 +35,11 @@ void main() {
 
       expect(
         tester.getSemantics(find.byType(SettingsChevronRow)),
-        matchesSemantics(label: 'Sound, Gentle', isButton: true),
+        matchesSemantics(
+          label: 'Sound, Gentle',
+          isButton: true,
+          hasTapAction: true,
+        ),
       );
     });
 
@@ -125,6 +129,9 @@ void main() {
         matchesSemantics(
           label: 'Motion check. Off here means off for every alarm',
           hasToggledState: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          hasTapAction: true,
         ),
       );
     });

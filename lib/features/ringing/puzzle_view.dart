@@ -213,6 +213,7 @@ class _OptionChip extends StatelessWidget {
     return Semantics(
       button: true,
       label: semanticLabel,
+      onTap: onTap,
       child: ExcludeSemantics(
         child: GestureDetector(
           onTap: onTap,

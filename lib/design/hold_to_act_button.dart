@@ -76,9 +76,12 @@ class _HoldToActButtonState extends State<HoldToActButton> {
     final base = widget.filled ? CapyColors.accent : CapyColors.surfaceAlt;
     final fill = widget.filled ? CapyColors.accentDeep : CapyColors.accent;
 
+    // A screen reader cannot hold: its activation is already deliberate.
     return Semantics(
       button: true,
       label: widget.label,
+      onTap: _complete,
+      onLongPress: _complete,
       child: ExcludeSemantics(
         child: GestureDetector(
           onTapDown: (_) => _start(),

@@ -44,6 +44,7 @@ class Alarm {
     required this.updatedAt,
     this.puzzleOverride,
     this.motionConfirmationEnabled = false,
+    this.artId,
   }) : assert(
          targetTimeMinutes >= 0 && targetTimeMinutes < 24 * 60,
          'targetTimeMinutes must be in [0, 1440).',
@@ -167,6 +168,12 @@ class Alarm {
   /// default to off, so the feature is inert until asked for.
   final bool motionConfirmationEnabled;
 
+  /// The picture on this alarm's row: `null` follows its place in the list,
+  /// [noArtId] shows the plain placeholder, anything else names a thumbnail.
+  final String? artId;
+
+  static const noArtId = 'none';
+
   /// When the alarm row was first created (UTC).
   final DateTime createdAt;
 
@@ -202,6 +209,8 @@ class Alarm {
     bool clearPuzzleOverride = false,
     bool? confirmationEnabled,
     bool? motionConfirmationEnabled,
+    String? artId,
+    bool clearArtId = false,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -230,6 +239,7 @@ class Alarm {
       confirmationEnabled: confirmationEnabled ?? this.confirmationEnabled,
       motionConfirmationEnabled:
           motionConfirmationEnabled ?? this.motionConfirmationEnabled,
+      artId: clearArtId ? null : (artId ?? this.artId),
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -269,6 +279,7 @@ class Alarm {
         other.puzzleOverride == puzzleOverride &&
         other.confirmationEnabled == confirmationEnabled &&
         other.motionConfirmationEnabled == motionConfirmationEnabled &&
+        other.artId == artId &&
         other.createdAt == createdAt &&
         other.updatedAt == updatedAt;
   }
@@ -293,6 +304,7 @@ class Alarm {
     puzzleOverride,
     confirmationEnabled,
     motionConfirmationEnabled,
+    artId,
     createdAt,
     updatedAt,
   ]);

@@ -7,12 +7,25 @@ import 'package:go_router/go_router.dart';
 /// A pushed route's header: back control, brand lockup, centred title.
 /// Lockup y 27.7-57.7, title y 59.6-97.4, chevron x 23.1-35.1.
 class SettingsHeader extends StatelessWidget {
-  const SettingsHeader({required this.title, super.key});
+  const SettingsHeader({
+    required this.title,
+    this.height = defaultHeight,
+    this.glyph,
+    super.key,
+  });
 
   final String title;
+  final double height;
 
-  /// 103.9 - 44.0 on the mockup: status bar to hero art.
-  static const height = 59.9;
+  /// Replaces the sleeping-capy lockup, e.g. the gamepad on Games.
+  final Widget? glyph;
+
+  /// 103.9 - 44.0 on `04_SETTINGS.png`: status bar to hero art.
+  static const defaultHeight = 59.9;
+
+  /// The tap floor. `01_SETTINGS_REFINED.png` draws 34.4, which cannot hold
+  /// a 44 pt back control.
+  static const compactHeight = 44.0;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +35,10 @@ class SettingsHeader extends StatelessWidget {
 
     return SafeArea(
       bottom: false,
-      child: SizedBox(
-        height: height,
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: height),
         child: Stack(
+          alignment: Alignment.center,
           children: [
             // Centred on the back control's line, inset past it on both sides
             // so a long title in any locale never overlaps it.
@@ -38,11 +52,13 @@ class SettingsHeader extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ExcludeSemantics(
-                      child: Image.asset(
-                        CapyArt.byId('mascot.sleeping').path,
-                        height: CapyIconSize.wordmark,
-                        fit: BoxFit.contain,
-                      ),
+                      child:
+                          glyph ??
+                          Image.asset(
+                            CapyArt.byId('mascot.sleeping').path,
+                            height: CapyIconSize.wordmark,
+                            fit: BoxFit.contain,
+                          ),
                     ),
                     const SizedBox(width: CapySpacing.sm),
                     Flexible(
@@ -88,6 +104,7 @@ class _BackControl extends StatelessWidget {
     return Semantics(
       button: true,
       label: label,
+      onTap: () => context.pop(),
       child: ExcludeSemantics(
         child: IconButton(
           onPressed: () => context.pop(),

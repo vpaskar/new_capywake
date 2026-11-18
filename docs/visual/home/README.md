@@ -50,3 +50,11 @@ mockup draws no cloud here. Catch the Capy's tile now wears the nightcap (G33).
 Shake DJ's tile lost its "Soon" badge. `compare.dart home 01_HOME`: worst delta
 2.7 pt (meadow footer), tiles −1.4, labels +1.1 — the same five blocks absent
 as before. No Tier A change.
+
+## 2026-11-18 — My Stats row removed
+
+Owner decision: the row duplicated the Stats tab. Deliberate deviation from
+`01_HOME.png`; see `tier_a_blocks.md`. The capture is byte-identical to the
+previous one: at 393×852 the row sat below the pinned meadow, so it was one of
+the five blocks `compare.dart` reported absent. Now four are absent; worst delta
+still 2.7 pt. A widget test asserts Home draws no bar-chart shortcut; the capture cannot.

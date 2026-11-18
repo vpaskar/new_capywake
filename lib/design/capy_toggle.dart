@@ -48,7 +48,9 @@ class CapyToggle extends StatelessWidget {
 
     return Semantics(
       toggled: value,
+      enabled: onChanged != null,
       label: semanticLabel,
+      onTap: onChanged == null ? null : () => onChanged!(!value),
       child: ExcludeSemantics(
         child: GestureDetector(
           onTap: onChanged == null ? null : () => onChanged!(!value),

@@ -73,6 +73,7 @@ void main() {
       'puzzle_override_json',
       'confirmation_enabled',
       'motion_confirmation_enabled',
+      'art_id',
       'created_at',
       'updated_at',
     });

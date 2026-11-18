@@ -35,14 +35,15 @@ class GameRail extends StatelessWidget {
         ),
         itemCount: entries.length,
         separatorBuilder: (_, _) => const SizedBox(width: CapySpacing.md),
-        itemBuilder: (context, i) => _Tile(entry: entries[i]),
+        itemBuilder: (context, i) => GameTile(entry: entries[i]),
       ),
     );
   }
 }
 
-class _Tile extends StatelessWidget {
-  const _Tile({required this.entry});
+/// One game: playable opens practice, otherwise a sheet saying why not.
+class GameTile extends StatelessWidget {
+  const GameTile({required this.entry, super.key});
 
   final GameEntry entry;
 
@@ -59,14 +60,17 @@ class _Tile extends StatelessWidget {
         ? name
         : '$name, ${l10n.homeGameUnavailableBadge}';
 
+    void open() => GameRegistry.isLaunchable(entry.id)
+        ? context.push(Routes.gamePractice(entry.id))
+        : showGameUnavailableSheet(context, entry);
+
     return Semantics(
       button: true,
       label: label,
+      onTap: open,
       child: ExcludeSemantics(
         child: InkWell(
-          onTap: () => GameRegistry.isLaunchable(entry.id)
-              ? context.push(Routes.gamePractice(entry.id))
-              : showGameUnavailableSheet(context, entry),
+          onTap: open,
           borderRadius: BorderRadius.circular(CapyRadius.lg),
           child: SizedBox(
             width: GameRail.tileSize,

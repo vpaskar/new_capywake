@@ -104,6 +104,7 @@ class _ThemeTile extends StatelessWidget {
       button: true,
       selected: selected,
       label: label,
+      onTap: onTap,
       child: ExcludeSemantics(
         child: GestureDetector(
           onTap: onTap,

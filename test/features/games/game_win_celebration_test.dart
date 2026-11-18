@@ -81,6 +81,24 @@ void main() {
     tester.element(find.byKey(const ValueKey('win-loop'))),
   ).enabled;
 
+  testWidgets('an asset missing from the bundle shows the cutout, not an '
+      'error box', (tester) async {
+    await pumpInApp(
+      tester,
+      const GameWinCelebration(
+        semanticLabel: label,
+        loop: ArtAsset(
+          'loop.missing',
+          'assets/art/animations/not_bundled.webp',
+          ArtUse.animation,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('win-art-fallback')), findsOneWidget);
+    expect(tester.takeException(), isNull);
+  });
+
   testWidgets('a loop plays while motion is on', (tester) async {
     await pumpInApp(
       tester,

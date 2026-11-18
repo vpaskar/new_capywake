@@ -298,6 +298,27 @@ void main() {
     });
   });
 
+  group('Alarm.artId', () {
+    test('defaults to following the list position', () {
+      expect(_alarm().artId, isNull);
+    });
+
+    test('copyWith sets, keeps and clears it', () {
+      final none = _alarm().copyWith(artId: Alarm.noArtId);
+      expect(none.artId, Alarm.noArtId);
+      expect(none.copyWith(label: 'Yoga').artId, Alarm.noArtId);
+      expect(none.copyWith(clearArtId: true).artId, isNull);
+    });
+
+    test('it participates in equality and hashing', () {
+      final base = _alarm();
+      final walk = base.copyWith(artId: 'thumb.walk');
+      expect(walk, isNot(equals(base)));
+      expect(walk.hashCode, isNot(equals(base.hashCode)));
+      expect(walk, equals(base.copyWith(artId: 'thumb.walk')));
+    });
+  });
+
   group('Alarm.motionConfirmationEnabled', () {
     test('defaults to off so an alarm never gains a sensor by accident', () {
       expect(_alarm().motionConfirmationEnabled, isFalse);

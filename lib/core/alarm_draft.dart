@@ -80,6 +80,7 @@ class AlarmDraft {
     required this.createdAt,
     this.puzzleOverride,
     this.motionConfirmationEnabled = false,
+    this.artId,
   });
 
   /// Build a fresh draft for the create flow.
@@ -137,6 +138,7 @@ class AlarmDraft {
       puzzleOverride: alarm.puzzleOverride,
       confirmationEnabled: alarm.confirmationEnabled,
       motionConfirmationEnabled: alarm.motionConfirmationEnabled,
+      artId: alarm.artId,
       createdAt: alarm.createdAt,
     );
   }
@@ -179,6 +181,9 @@ class AlarmDraft {
   /// [Alarm.motionConfirmationEnabled].
   final bool motionConfirmationEnabled;
 
+  /// [Alarm.artId].
+  final String? artId;
+
   final DateTime createdAt;
 
   /// Returns a copy with the given fields replaced.
@@ -206,6 +211,8 @@ class AlarmDraft {
     bool clearPuzzleOverride = false,
     bool? confirmationEnabled,
     bool? motionConfirmationEnabled,
+    String? artId,
+    bool clearArtId = false,
     DateTime? createdAt,
   }) {
     return AlarmDraft(
@@ -233,6 +240,7 @@ class AlarmDraft {
       confirmationEnabled: confirmationEnabled ?? this.confirmationEnabled,
       motionConfirmationEnabled:
           motionConfirmationEnabled ?? this.motionConfirmationEnabled,
+      artId: clearArtId ? null : (artId ?? this.artId),
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -356,6 +364,7 @@ class AlarmDraft {
       // confirmation, not a mode default, so switching mode leaves the user's
       // own choice alone.
       motionConfirmationEnabled: motionConfirmationEnabled,
+      artId: artId,
       createdAt: createdAt,
     );
   }
@@ -430,6 +439,7 @@ class AlarmDraft {
       puzzleOverride: puzzleOverride,
       confirmationEnabled: confirmationEnabled,
       motionConfirmationEnabled: motionConfirmationEnabled,
+      artId: artId,
       createdAt: createdAt,
       updatedAt: now.toUtc(),
     );
@@ -456,6 +466,7 @@ class AlarmDraft {
         other.puzzleOverride == puzzleOverride &&
         other.confirmationEnabled == confirmationEnabled &&
         other.motionConfirmationEnabled == motionConfirmationEnabled &&
+        other.artId == artId &&
         other.createdAt == createdAt;
   }
 
@@ -478,6 +489,7 @@ class AlarmDraft {
     puzzleOverride,
     confirmationEnabled,
     motionConfirmationEnabled,
+    artId,
     createdAt,
   ]);
 }

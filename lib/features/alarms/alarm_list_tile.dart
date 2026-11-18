@@ -1,10 +1,10 @@
 import 'package:capywake/core/alarm_format.dart';
 import 'package:capywake/core/alarm_repeat.dart';
 import 'package:capywake/core/models/models.dart';
-import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_toggle.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
+import 'package:capywake/features/alarms/alarm_art_panel.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
@@ -104,15 +104,7 @@ class AlarmListTile extends StatelessWidget {
         child: SizedBox(
           width: artWidth,
           height: height,
-          child: ColorFiltered(
-            colorFilter: dark
-                ? const ColorFilter.mode(CapyColors.artScrim, BlendMode.srcOver)
-                : const ColorFilter.mode(Colors.transparent, BlendMode.dst),
-            child: Image.asset(
-              CapyArt.thumbnailForIndex(index).path,
-              fit: BoxFit.cover,
-            ),
-          ),
+          child: AlarmArtPanel(artId: alarm.artId, index: index),
         ),
       ),
     );

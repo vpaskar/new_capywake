@@ -84,6 +84,7 @@ class _Tab extends StatelessWidget {
       button: true,
       selected: selected,
       label: destination.label,
+      onTap: onTap,
       child: ExcludeSemantics(
         child: InkWell(
           onTap: onTap,

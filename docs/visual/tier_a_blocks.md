@@ -110,6 +110,22 @@ colour. State which method produced each number.
 These four rows are measured **from the status bar**, like the capture, rather
 than as absolute mockup offsets like the rows above them.
 
+## 2026-11-18 — My Stats row removed (owner)
+
+The owner removed Home's My Stats row: it duplicated the Stats tab in the nav
+bar. `01_HOME.png` still draws it, so this is a **deliberate deviation**, not a
+defect. The `my stats row top` (617.0) block is dropped from `tool/compare.dart`;
+the measurement above stays as history. The meadow footer is pinned, so
+nothing else on Home moves.
+
+## 2026-11-18 — Add/Edit gains a Picture card (owner)
+
+The owner asked to choose an alarm's picture. A Picture card now sits after
+Label on Add/Edit, so every block below it — sound, snooze, save CTA, meadow
+— moves down one card plus a gap. `03_ADD_EDIT_ALARM.png` has no such card:
+a **deliberate deviation**; those rows in `compare.dart` will report the shift
+until the mockup is redrawn.
+
 ## Status
 
 Home is measured. **Alarms, Add/Edit, Settings and Stats are measured by their
@@ -202,7 +218,37 @@ rows, whose 55%-opacity borders land near 236.
 rows were measured at, at L < 244. **A boundary the tool cannot see is
 reported as a layout failure it never measured.**
 
-## Blocks — Settings (`04_SETTINGS.png`), Phase 07
+## Blocks — Settings (`01_SETTINGS_REFINED.png`), Phase 20
+
+Replaces the Phase 07 table below as Settings' binding reference (owner
+package, 2026-11-18). 852×1846 px = 393×852 pt; offsets from the top of the
+mockup, which draws a 44 pt status bar.
+
+| Block | Edge (pt) | Method |
+|---|---|---|
+| Header band lower edge | **78.4** | x=22.2 pt, `blue < 218` run starts (art fade-in) |
+| Hero art lower edge | **180.4** | Saturated-pixel count per row (max−min > 60) crosses 30; the Phase 07 rule |
+| Group 1 (Alarms) card top | **201.1** | x=22.2 band run starts |
+| Group 1 bottom / G2 top | 293.8 / 310.0 | 1 pt drop-shadow line / next band start |
+| G2 bottom / Wake puzzle top | 417.9 / 433.6 | same |
+| Wake puzzle bottom / G3 top | 479.3 / 494.9 | same |
+| G3 bottom / G4 top | 556.8 / 572.9 | same |
+| G4 bottom / G5 top | 687.8 / 703.4 | same |
+| Meadow footer top | **796.2** | Green-dominant pixel count (g > r+20, g > b+40) crosses 20 |
+
+Derived (**inference, not measurement**): band height 24.0 (G1 band 201.1 →
+225.1, same on G2–G5); inter-group gap 15.6–16.2, mean **15.8**; rows ≈34.3
+(92.7 − 24 over two rows — a division, not used).
+
+`compare.dart` checks only the first three: the 44 pt row floor moves every
+block below group 1's top (two-row cards are ~20 pt taller than drawn). The
+header is a **named failure**: the mockup's 34.4 pt band cannot hold a 44 pt
+back control, so the device header is 44 and the hero band is shortened to
+96.9 so the hero's lower edge still lands on 180.4: 92.4 by arithmetic, plus
+4.5 pt the cloud scallop hides, **measured** on the first capture (edge at
+175.7, group 1 at 196.7 — both 4.4–4.7 pt high).
+
+## Blocks — Settings (`04_SETTINGS.png`), Phase 07 — superseded by Phase 20
 
 Absolute pt from the top of the mockup, which draws a 44 pt status bar.
 The method is named beside every number.

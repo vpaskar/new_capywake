@@ -16,6 +16,7 @@ import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
+import 'package:capywake/dev/dev_tools_button.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/morning_sort_view.dart';
 import 'package:capywake/features/ringing/ringing_win_overlay.dart';
@@ -112,6 +113,10 @@ Future<void> main() async {
     'add_edit_alarm': Routes.alarmNew,
     'stats': Routes.stats,
     'settings': Routes.settings,
+    'puzzle_overview': Routes.settingsPuzzle,
+    'puzzle_games': Routes.settingsPuzzleGames,
+    'puzzle_types': Routes.settingsPuzzleTypes,
+    'puzzle_advanced': Routes.settingsPuzzleAdvanced,
   };
 
   var surfaceConverted = false;
@@ -119,7 +124,7 @@ Future<void> main() async {
   // No light capture: without a block table compare.dart cannot judge one.
   const darkOnly = <String, String>{
     'onboarding': Routes.onboarding,
-    'puzzle_chooser': Routes.settingsPuzzle,
+    'all_games': Routes.games,
   };
 
   for (final (entry, dark) in [
@@ -133,7 +138,10 @@ Future<void> main() async {
       final db = AppDatabase.forTesting(NativeDatabase.memory());
       addTearDown(db.close);
       final container = ProviderContainer(
-        overrides: [appDatabaseProvider.overrideWithValue(db)],
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          devToolsEnabledProvider.overrideWithValue(false),
+        ],
       );
       addTearDown(container.dispose);
       for (final alarm in captureSeed) {
@@ -188,6 +196,7 @@ Future<void> main() async {
       final container = ProviderContainer(
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
+          devToolsEnabledProvider.overrideWithValue(false),
           alarmEngineProvider.overrideWithValue(engine),
           engineNowProvider.overrideWithValue(() => clock),
         ],
@@ -262,6 +271,7 @@ Future<void> main() async {
       final container = ProviderContainer(
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
+          devToolsEnabledProvider.overrideWithValue(false),
           alarmEngineProvider.overrideWithValue(engine),
           engineNowProvider.overrideWithValue(() => clock),
           cameraAccessProvider.overrideWithValue(

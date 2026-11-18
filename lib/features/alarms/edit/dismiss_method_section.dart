@@ -150,6 +150,7 @@ class _SummaryRow extends StatelessWidget {
     return Semantics(
       button: true,
       label: '${l10n.settingsPuzzleHeading}, $summary',
+      onTap: () => context.push(Routes.settingsPuzzle),
       child: ExcludeSemantics(
         child: InkWell(
           borderRadius: BorderRadius.circular(CapyRadius.md),

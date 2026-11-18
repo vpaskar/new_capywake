@@ -61,6 +61,9 @@ class Alarms extends Table {
   BoolColumn get motionConfirmationEnabled =>
       boolean().withDefault(const Constant(false))();
 
+  /// `Alarm.artId`; null follows the alarm's place in the list.
+  TextColumn get artId => text().nullable()();
+
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 

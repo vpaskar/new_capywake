@@ -16,6 +16,10 @@ abstract final class CapyColors {
   static const success = Color(0xFF57AA3A);
   static const grass = Color(0xFF85B83B);
 
+  /// The selected segment's fill: 4.94:1 under white text, 3.45:1 on
+  /// `darkSurface`. `success` is 2.91:1 and cannot carry a label.
+  static const successDeep = Color(0xFF3B7F26);
+
   /// A game field's ground, standing in for a meadow backdrop (gap G31).
   static const meadow = Color(0xFFD5E8B5);
 

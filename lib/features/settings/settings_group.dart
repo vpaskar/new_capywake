@@ -2,7 +2,7 @@ import 'package:capywake/design/tokens.dart';
 import 'package:flutter/material.dart';
 
 /// One grouped card on Settings: a tinted header band, then rows split by
-/// hairline dividers. Card x 9.70-383.32, band 28.2, radius ~16, gap 13.9.
+/// hairline dividers. `01_SETTINGS_REFINED.png`: band 24.0, gap 15.8.
 class SettingsGroup extends StatelessWidget {
   const SettingsGroup({
     required this.icon,
@@ -15,22 +15,72 @@ class SettingsGroup extends StatelessWidget {
   final String title;
   final List<Widget> rows;
 
-  static const bandHeight = 28.2;
+  static const bandHeight = 24.0;
   static const radius = 16.0;
-  static const gap = 13.9;
+  static const gap = 15.8;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final dark = theme.brightness == Brightness.dark;
     final band = dark ? CapyColors.darkSurfaceAlt : CapyColors.surfaceAlt;
-    final surface = dark ? CapyColors.darkSurface : CapyColors.surface;
     final ink = dark ? CapyColors.darkInk : CapyColors.cocoa;
 
+    return SettingsCardSurface(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            header: true,
+            child: Container(
+              color: band,
+              padding: const EdgeInsetsDirectional.symmetric(
+                horizontal: CapySpacing.md,
+              ),
+              constraints: const BoxConstraints(minHeight: bandHeight),
+              child: Row(
+                children: [
+                  ExcludeSemantics(
+                    child: Icon(icon, size: CapyIconSize.md, color: ink),
+                  ),
+                  const SizedBox(width: CapySpacing.sm),
+                  Flexible(
+                    child: Text(
+                      title,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: ink,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          for (var i = 0; i < rows.length; i++) ...[
+            if (i > 0) const SettingsDivider(),
+            rows[i],
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// The card a Settings group or the Wake puzzle card is printed on.
+class SettingsCardSurface extends StatelessWidget {
+  const SettingsCardSurface({required this.child, super.key});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final dark = Theme.of(context).brightness == Brightness.dark;
+    final radius = BorderRadius.circular(SettingsGroup.radius);
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: surface,
-        borderRadius: BorderRadius.circular(radius),
+        color: dark ? CapyColors.darkSurface : CapyColors.surface,
+        borderRadius: radius,
         boxShadow: [
           BoxShadow(
             color: CapyColors.cocoa.withValues(alpha: dark ? 0.30 : 0.08),
@@ -42,44 +92,9 @@ class SettingsGroup extends StatelessWidget {
       // The sheet the rows are printed on; an InkWell row needs it.
       child: Material(
         type: MaterialType.transparency,
-        borderRadius: BorderRadius.circular(radius),
+        borderRadius: radius,
         clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Semantics(
-              header: true,
-              child: Container(
-                color: band,
-                padding: const EdgeInsetsDirectional.symmetric(
-                  horizontal: CapySpacing.md,
-                ),
-                constraints: const BoxConstraints(minHeight: bandHeight),
-                child: Row(
-                  children: [
-                    ExcludeSemantics(
-                      child: Icon(icon, size: CapyIconSize.md, color: ink),
-                    ),
-                    const SizedBox(width: CapySpacing.sm),
-                    Flexible(
-                      child: Text(
-                        title,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: ink,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            for (var i = 0; i < rows.length; i++) ...[
-              if (i > 0) const SettingsDivider(),
-              rows[i],
-            ],
-          ],
-        ),
+        child: child,
       ),
     );
   }

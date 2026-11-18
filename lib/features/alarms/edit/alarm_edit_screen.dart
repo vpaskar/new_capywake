@@ -14,6 +14,9 @@ import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/alarms/alarm_permission_prompt.dart';
+import 'package:capywake/features/alarms/alarms_screen.dart'
+    show sortAlarmsForDisplay;
+import 'package:capywake/features/alarms/edit/alarm_art_sheet.dart';
 import 'package:capywake/features/alarms/edit/alarm_edit_header.dart';
 import 'package:capywake/features/alarms/edit/alarm_form_rows.dart';
 import 'package:capywake/features/alarms/edit/dismiss_method_section.dart';
@@ -153,6 +156,8 @@ class _FormState extends ConsumerState<_Form> {
                     const SizedBox(height: _cardGap),
                     _labelCard(l10n),
                     const SizedBox(height: _cardGap),
+                    _artCard(l10n),
+                    const SizedBox(height: _cardGap),
                     _soundCard(l10n),
                     const SizedBox(height: _cardGap),
                     _snoozeCard(l10n),
@@ -252,6 +257,39 @@ class _FormState extends ConsumerState<_Form> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _artCard(AppLocalizations l10n) {
+    return CapyCard(
+      child: AlarmFormRowHeader(
+        icon: Icons.image_outlined,
+        title: l10n.alarmArtLabel,
+        value: alarmArtLabel(l10n, _draft.artId),
+        onTap: _pickArt,
+      ),
+    );
+  }
+
+  int get _listIndex {
+    final alarms = ref.read(alarmsStreamProvider).value ?? const <Alarm>[];
+    final position = sortAlarmsForDisplay(
+      alarms,
+    ).indexWhere((alarm) => alarm.id == _draft.id);
+    return position < 0 ? alarms.length : position;
+  }
+
+  Future<void> _pickArt() async {
+    final choice = await showAlarmArtSheet(
+      context,
+      current: _draft.artId,
+      index: _listIndex,
+    );
+    if (choice == null || !mounted) return;
+    setState(
+      () => _draft = choice.artId == null
+          ? _draft.copyWith(clearArtId: true)
+          : _draft.copyWith(artId: choice.artId),
     );
   }
 

@@ -73,6 +73,36 @@ void main() {
 
       expect(round, equals(alarm));
     });
+
+    test('carries the picture choice through edit and mode switch', () {
+      final t = DateTime.utc(2026, 5, 21, 8);
+      final alarm = Alarm(
+        id: 'a1',
+        label: '',
+        enabled: true,
+        targetTimeMinutes: 7 * 60,
+        repeatWeekdays: const {},
+        wakeMode: WakeMode.standard,
+        wakeWindowStartMinutesBefore: 0,
+        soundId: '',
+        vibrationEnabled: true,
+        snoozeEnabled: true,
+        snoozeDurationMinutes: 9,
+        maxSnoozes: null,
+        dismissMethod: DismissMethod.normalButton,
+        dismissChallengeDifficulty: null,
+        confirmationEnabled: false,
+        artId: Alarm.noArtId,
+        createdAt: t,
+        updatedAt: t,
+      );
+
+      final draft = AlarmDraft.fromAlarm(alarm);
+      expect(draft.toAlarm(now: t).artId, Alarm.noArtId);
+      expect(draft.withWakeMode(WakeMode.strict).artId, Alarm.noArtId);
+      expect(draft.copyWith(clearArtId: true).artId, isNull);
+      expect(draft.copyWith(clearArtId: true), isNot(equals(draft)));
+    });
   });
 
   group('AlarmDraft.toggleWeekday', () {

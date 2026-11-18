@@ -118,6 +118,9 @@ void main() {
           label: 'alarm',
           hasToggledState: true,
           isToggled: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          hasTapAction: true,
         ),
       );
     });
@@ -135,7 +138,13 @@ void main() {
       );
       expect(
         tester.getSemantics(find.byType(CapyToggle)),
-        matchesSemantics(label: 'alarm', hasToggledState: true),
+        matchesSemantics(
+          label: 'alarm',
+          hasToggledState: true,
+          hasEnabledState: true,
+          isEnabled: true,
+          hasTapAction: true,
+        ),
       );
     });
 

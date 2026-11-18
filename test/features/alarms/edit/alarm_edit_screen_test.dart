@@ -251,6 +251,90 @@ void main() {
       expect(stored.snoozeEnabled, isFalse);
     });
 
+    testWidgets('a new alarm starts on Automatic and can pick None', (
+      tester,
+    ) async {
+      final harness = await pumpEdit(tester);
+
+      expect(find.text('Automatic'), findsOneWidget);
+      await tapVisible(tester, find.text('Picture'));
+      expect(find.text('Choose a picture'), findsOneWidget);
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Automatic').last),
+        matchesSemantics(
+          label: 'Automatic',
+          isButton: true,
+          isSelected: true,
+          hasSelectedState: true,
+          hasTapAction: true,
+        ),
+      );
+
+      await tester.tap(find.text('None'));
+      await tester.pumpAndSettle();
+      expect(find.text('Choose a picture'), findsNothing);
+      await tapSave(tester);
+
+      final stored = (await harness.repository.listAlarms()).single;
+      expect(stored.artId, Alarm.noArtId);
+    });
+
+    testWidgets('a chosen picture can go back to Automatic', (tester) async {
+      final harness = await pumpEdit(
+        tester,
+        seed: [
+          alarmFixture(id: 'a1', minutes: 7 * 60).copyWith(artId: 'thumb.walk'),
+        ],
+        alarmId: 'a1',
+      );
+
+      expect(find.text('Walk'), findsOneWidget);
+      await tapVisible(tester, find.text('Picture'));
+      await tester.tap(find.text('Automatic').last);
+      await tester.pumpAndSettle();
+      await tapSave(tester);
+
+      expect((await harness.repository.listAlarms()).single.artId, isNull);
+    });
+
+    testWidgets('the Picture row is activatable by a screen reader', (
+      tester,
+    ) async {
+      await pumpEdit(tester);
+      await tester.ensureVisible(find.text('Picture'));
+      await tester.pumpAndSettle();
+
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Picture')),
+        matchesSemantics(
+          label: 'Picture',
+          value: 'Automatic',
+          isButton: true,
+          hasTapAction: true,
+        ),
+      );
+    });
+
+    testWidgets('dismissing the picture sheet changes nothing', (tester) async {
+      final harness = await pumpEdit(
+        tester,
+        seed: [
+          alarmFixture(id: 'a1', minutes: 7 * 60).copyWith(artId: 'thumb.walk'),
+        ],
+        alarmId: 'a1',
+      );
+
+      await tapVisible(tester, find.text('Picture'));
+      await tester.tapAt(const Offset(196, 20));
+      await tester.pumpAndSettle();
+      await tapSave(tester);
+
+      expect(
+        (await harness.repository.listAlarms()).single.artId,
+        'thumb.walk',
+      );
+    });
+
     testWidgets('the sound row says the picker is not built yet', (
       tester,
     ) async {

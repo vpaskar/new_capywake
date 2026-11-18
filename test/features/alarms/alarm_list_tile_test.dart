@@ -72,6 +72,35 @@ void main() {
     expect(find.text('Wake Up'), findsOneWidget);
   });
 
+  testWidgets('draws the chosen picture, or the placeholder for none', (
+    tester,
+  ) async {
+    await _pump(
+      tester,
+      alarm: alarmFixture(id: 'a', minutes: 7 * 60).copyWith(
+        artId: 'thumb.music',
+      ),
+    );
+    expect(find.byKey(const ValueKey('thumb.music')), findsOneWidget);
+
+    await _pump(
+      tester,
+      alarm: alarmFixture(id: 'a', minutes: 7 * 60).copyWith(
+        artId: Alarm.noArtId,
+      ),
+    );
+    expect(find.byKey(const ValueKey('alarm-art-placeholder')), findsOneWidget);
+  });
+
+  testWidgets('Automatic follows the list position', (tester) async {
+    await _pump(
+      tester,
+      alarm: alarmFixture(id: 'a', minutes: 7 * 60),
+      index: 1,
+    );
+    expect(find.byKey(const ValueKey('thumb.workout')), findsOneWidget);
+  });
+
   testWidgets('omits the label line when the alarm has none', (tester) async {
     await _pump(
       tester,

@@ -3,13 +3,12 @@ import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/next_alarm.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
-import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/design/capy_header.dart';
 import 'package:capywake/design/meadow_footer.dart';
 import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/section_header.dart';
-import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
+import 'package:capywake/dev/dev_tools_button.dart';
 import 'package:capywake/features/home/game_rail.dart';
 import 'package:capywake/features/home/next_alarm_card.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
@@ -100,19 +99,13 @@ class _Body extends ConsumerWidget {
                   child: SectionHeader(
                     title: l10n.homeGamesHeading,
                     actionLabel: l10n.homeGamesSeeAll,
-                    onAction: () => context.go(Routes.stats),
+                    onAction: () => context.push(Routes.games),
                   ),
                 ),
                 const SizedBox(height: _sectionToRailGap),
                 const GameRail(),
-                const SizedBox(height: _railToStatsGap),
-                Padding(
-                  padding: const EdgeInsetsDirectional.symmetric(
-                    horizontal: CapySpacing.gutter,
-                  ),
-                  child: _MyStatsRow(onTap: () => context.go(Routes.stats)),
-                ),
                 const SizedBox(height: CapySpacing.sm),
+                const DevToolsButton(),
               ],
             ),
           ),
@@ -132,60 +125,10 @@ class _Body extends ConsumerWidget {
   }
 
   /// Gaps between mockup edges, from the status bar. See `tier_a_blocks.md`.
-
   static const _cardTopGap = 27.7;
   static const _cardToCtaGap = 15.3;
   static const _ctaToSectionGap = 43.0;
 
   /// Section header top 454.8, tile art top 485.7, less the header row.
   static const double _sectionToRailGap = CapySpacing.sm;
-
-  /// Labels end 593.9, My Stats card top 617.0.
-  static const _railToStatsGap = 23.1;
-}
-
-class _MyStatsRow extends StatelessWidget {
-  const _MyStatsRow({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context);
-    final theme = Theme.of(context);
-    final ink = theme.brightness == Brightness.dark
-        ? CapyColors.darkInk
-        : CapyColors.cocoa;
-
-    return Semantics(
-      button: true,
-      label: l10n.homeMyStats,
-      child: ExcludeSemantics(
-        child: CapyCard(
-          onTap: onTap,
-          child: Row(
-            children: [
-              const Icon(
-                Icons.bar_chart_rounded,
-                color: CapyColors.accentDeep,
-                size: CapyIconSize.md,
-              ),
-              const SizedBox(width: CapySpacing.md),
-              Expanded(
-                child: Text(
-                  l10n.homeMyStats,
-                  style: CapyType.title.copyWith(color: ink),
-                ),
-              ),
-              Icon(
-                Icons.chevron_right_rounded,
-                color: ink,
-                size: CapyIconSize.md,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }

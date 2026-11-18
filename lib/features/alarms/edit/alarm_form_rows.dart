@@ -70,6 +70,7 @@ class AlarmFormRowHeader extends StatelessWidget {
       button: true,
       label: title,
       value: value,
+      onTap: onTap,
       child: ExcludeSemantics(
         child: InkWell(
           onTap: onTap,

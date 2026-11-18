@@ -174,7 +174,10 @@ void main() {
     'settings': Routes.settings,
     'reliability': Routes.settingsReliability,
     'walkthrough': Routes.settingsWalkthrough,
-    'puzzle chooser': Routes.settingsPuzzle,
+    'wake puzzle': Routes.settingsPuzzle,
+    'puzzle games': Routes.settingsPuzzleGames,
+    'puzzle types': Routes.settingsPuzzleTypes,
+    'puzzle advanced': Routes.settingsPuzzleAdvanced,
     'onboarding': Routes.onboarding,
     for (final game in GameCatalogue.entries)
       'practice ${game.id}': Routes.gamePractice(game.id),

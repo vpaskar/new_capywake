@@ -15,7 +15,7 @@ set -euo pipefail
 DEVICE_NAME="iPhone 14 Pro"
 EXPECTED_W=1179
 EXPECTED_H=2556
-SCREENS=("${@:-home alarms add_edit_alarm stats settings ringing onboarding puzzle_chooser}")
+SCREENS=("${@:-home alarms add_edit_alarm stats settings puzzle_overview puzzle_games puzzle_types puzzle_advanced ringing onboarding all_games}")
 read -r -a SCREENS <<<"${SCREENS[*]}"
 
 cd "$(dirname "$0")/.."
@@ -51,8 +51,8 @@ flutter drive \
 
 # Every screen the harness also captures in dark writes docs/visual/<screen>/
 # dark.png; those are verified with the same checks.
-DARK_SCREENS=" home alarms add_edit_alarm stats settings ringing "
-DARK_ONLY=" onboarding puzzle_chooser "
+DARK_SCREENS=" home alarms add_edit_alarm stats settings puzzle_overview puzzle_games puzzle_types puzzle_advanced ringing "
+DARK_ONLY=" onboarding all_games "
 ARTIFACTS=()
 for screen in "${SCREENS[@]}"; do
   if [[ "$DARK_ONLY" == *" $screen "* ]]; then

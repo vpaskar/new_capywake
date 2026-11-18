@@ -194,9 +194,22 @@ void main() {
         expect(find.byType(GameRail), findsOneWidget);
         expect(find.byType(CapyToggle), findsOneWidget);
         expect(find.text('Set an alarm'), findsOneWidget);
-        expect(find.text('My Stats'), findsOneWidget);
       });
     }
+  });
+
+  testWidgets('Home has no Stats shortcut: the nav bar is the way there', (
+    tester,
+  ) async {
+    await _pumpHome(tester, seed: [_alarm()]);
+
+    expect(
+      find.descendant(
+        of: find.byType(HomeScreen),
+        matching: find.byIcon(Icons.bar_chart_rounded),
+      ),
+      findsNothing,
+    );
   });
 
   group('Tier A block positions', () {

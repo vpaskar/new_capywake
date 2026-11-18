@@ -209,6 +209,7 @@ class _TopBar extends StatelessWidget {
                 child: Semantics(
                   button: true,
                   label: l10n.onboardingBack,
+                  onTap: onBack,
                   child: ExcludeSemantics(
                     child: IconButton(
                       onPressed: onBack,

@@ -10,6 +10,40 @@ Captured against the shared `captureSeed`, at **scroll offset 0**. The screen
 scrolls, so blocks below the fold depend on scroll position and are not
 compared.
 
+## Phase 20 — against `01_SETTINGS_REFINED.png`
+
+Reference: `reference/01_REFERENCES/screens/settings_redesign/01_SETTINGS_REFINED.png`
+(852×1846 = 393×852 pt, the only native frame in the redesign package).
+
+| Block | Ref (pt) | Actual | Delta | Method |
+|---|---|---|---|---|
+| header band lower edge | 78.4 | 88.0 | **+9.6** | ❌ named: the 44 pt back control cannot fit the mockup's 34.4 pt header |
+| hero scene lower edge | 180.4 | 180.3 | **−0.1** | ✅ saturated-pixel count crosses 30 — the mockup's method |
+| group 1 card top | 201.1 | 201.3 | **+0.2** | ✅ x=22.2 pt band trace — the mockup's method |
+
+`tool/compare.dart settings ../settings_redesign/01_SETTINGS_REFINED` prints
+`absent` for the hero and group 1: its column scan cannot see either edge
+under the art (the Phase 07 blind spot). The two values above are measured on
+`actual.png` by the same methods used on the mockup; the first capture had
+both 4.5 pt high (the cloud scallop hides the art's lower band), which the
+96.9 pt hero band corrects.
+
+**Below group 1 nothing is claimed.** The mockup's rows are ≈34 pt; ours keep
+the 44 pt tap floor, so each two-row card is ~20 pt taller and the page
+scrolls instead of fitting one viewport.
+
+### Named deviations from `01`
+
+- Rows ≥ 44 pt (above); the motion-check row keeps its one-line description
+  (pre-review M4), so it sits below the fold at scroll 0.
+- **Wake puzzle card:** game tiles show only for games switched on; the
+  capture seed has none, so the card shows none (the mockup's three are
+  sample data).
+- **Notifications:** no "Allow" chip while allowed (spec); a chevron opens the
+  phone's settings instead.
+
+## Phase 07 record (against `04_SETTINGS.png`, superseded)
+
 ## What is claimed, and what is not
 
 `04_SETTINGS.png` draws an **Account** group holding Backup & Sync, Restore

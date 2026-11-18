@@ -1162,3 +1162,16 @@ Gated by `test/platform/app_icon_test.dart`. It is an alarm clock, not the
 brand's capybara. **No Android 13 themed icon** — it needs a one-colour glyph.
 
 **Needed:** `ART_REQUESTS.md` #17.
+
+## G49 — Wake puzzle hero: no nightcap capybara (Phase 20, Tier B, reported)
+
+`02_WAKE_PUZZLE_REFINED.png` draws the armchair capybara **in a nightcap**.
+The package's `header_scenes/cozy_settings_hero.png` and the production
+`scene.settings` both show it bare-headed. **Used instead:** `scene.settings`,
+cropped to an 80 pt band. **Needed to match:** the same scene with the
+nightcap, same canvas, so the crop alignment carries over.
+
+Every other element in the five-screen package maps to a production asset
+already in the app (theme tiles, ten game tiles, ten puzzle icons, mascot,
+meadow, cloud edge). Nothing from the package was imported; the package's
+own PNGs are generator originals of the same art, not crisper cuts.

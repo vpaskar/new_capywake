@@ -1,23 +1,19 @@
 import 'package:capywake/app/router.dart';
 import 'package:capywake/core/camera/fake_camera_access.dart';
-import 'package:capywake/core/games/qr_checkpoint.dart';
+import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
-import 'package:capywake/data/camera/camera_providers.dart';
-import 'package:capywake/data/database/app_database.dart';
-import 'package:capywake/data/motion/motion_providers.dart';
-import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_toggle.dart';
-import 'package:capywake/features/puzzle/puzzle_chooser_screen.dart';
-import 'package:capywake/l10n/generated/app_localizations.dart';
-import 'package:drift/native.dart';
+import 'package:capywake/features/games/game_names.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:go_router/go_router.dart';
+
+import 'puzzle_harness.dart';
 
 Future<ProviderContainer> _pump(
   WidgetTester tester, {
@@ -25,79 +21,35 @@ Future<ProviderContainer> _pump(
   StepSensor? steps,
   FakeCameraAccess? camera,
   bool checkpoint = false,
-}) async {
-  final db = AppDatabase.forTesting(NativeDatabase.memory());
-  tester.view.physicalSize = const Size(393, 852) * 3;
-  tester.view.devicePixelRatio = 3;
-  addTearDown(tester.view.reset);
-  final container = ProviderContainer(
-    overrides: [
-      appDatabaseProvider.overrideWithValue(db),
-      if (steps != null) stepSensorProvider.overrideWithValue(steps),
-      if (camera != null) cameraAccessProvider.overrideWithValue(camera),
-    ],
-  );
-  addTearDown(() async {
-    container.dispose();
-    await db.close();
-  });
-  if (checkpoint) {
-    await container
-        .read(capywakeRepositoryProvider)
-        .saveQrCheckpoint(QrCheckpoint.of('MIRROR', savedAt: DateTime(2026)));
-  }
-  if (seed != null) {
-    await container.read(capywakeRepositoryProvider).savePuzzleSettings(seed);
-  }
-  final router = GoRouter(
-    routes: [
-      GoRoute(path: '/', builder: (_, _) => const PuzzleChooserScreen()),
-      GoRoute(
-        path: '${Routes.games}/:id',
-        builder: (_, state) =>
-            Scaffold(body: Text('practice:${state.pathParameters['id']}')),
-      ),
-    ],
-  );
-  await tester.pumpWidget(
-    UncontrolledProviderScope(
-      container: container,
-      child: MaterialApp.router(
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-      ),
-    ),
-  );
-  await tester.pumpAndSettle();
-  return container;
-}
+}) => pumpPuzzleRoute(
+  tester,
+  Routes.settingsPuzzleGames,
+  seed: seed,
+  steps: steps,
+  camera: camera,
+  checkpoint: checkpoint,
+);
 
-Future<PuzzleSettings> _saved(ProviderContainer c) =>
-    c.read(capywakeRepositoryProvider).getPuzzleSettings();
-
-Finder _toggle(String label) =>
-    find.byWidgetPredicate((w) => w is CapyToggle && w.semanticLabel == label);
+Future<PuzzleSettings> _saved(ProviderContainer c) => savedPuzzleSettings(c);
 
 Future<void> _flip(WidgetTester tester, String label) async {
-  await tester.ensureVisible(_toggle(label));
+  await tester.ensureVisible(toggleLabelled(label));
   await tester.pumpAndSettle();
-  await tester.tap(_toggle(label));
+  await tester.tap(toggleLabelled(label));
   await tester.pumpAndSettle();
 }
 
 void main() {
-  testWidgets('the Games section sits in the chooser', (tester) async {
+  testWidgets('lists every playable game, in catalogue order', (tester) async {
     await _pump(tester);
-    expect(find.text('Wake challenges'), findsOneWidget);
-    expect(find.text('Catch the Capy'), findsOneWidget);
-    expect(find.text('Memory Hideout'), findsOneWidget);
-    await tester.scrollUntilVisible(
-      find.text('Applies to puzzles only.'),
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    expect(find.text('Applies to puzzles only.'), findsOneWidget);
+    final l10n = puzzleL10n(tester);
+    final names = [for (final g in GameCatalogue.playable) gameName(l10n, g)];
+    final toggles = tester
+        .widgetList<CapyToggle>(find.byType(CapyToggle))
+        .map((t) => t.semanticLabel)
+        .toList();
+    expect(toggles, names);
+    expect(find.text(l10n.challengePuzzlesLabel), findsNothing);
   });
 
   testWidgets('enabling a game persists it', (tester) async {
@@ -106,21 +58,9 @@ void main() {
     expect((await _saved(c)).enabledGames, {'catch_the_capy'});
   });
 
-  testWidgets('the Puzzles switch has a writer (M2)', (tester) async {
-    final c = await _pump(
-      tester,
-      seed: PuzzleSettings(
-        enabledTypes: const {PuzzleType.arithmetic},
-        enabledGames: const {'memory_hideout'},
-      ),
-    );
-    await _flip(tester, 'Puzzles');
-    final saved = await _saved(c);
-    expect(saved.includePuzzles, isFalse);
-    expect(saved.enabledGames, {'memory_hideout'});
-  });
-
-  testWidgets('the pool cannot be emptied from the chooser', (tester) async {
+  testWidgets('the last pool member is locked, with the reason (H1)', (
+    tester,
+  ) async {
     final c = await _pump(
       tester,
       seed: PuzzleSettings(
@@ -129,8 +69,47 @@ void main() {
         includePuzzles: false,
       ),
     );
-    await _flip(tester, 'Memory Hideout');
+    final l10n = puzzleL10n(tester);
+    final reason = l10n.challengePoolFloorReason;
+    final locked = toggleLabelled('Memory Hideout. $reason');
+    expect(locked, findsOneWidget);
+    expect(tester.widget<CapyToggle>(locked).onChanged, isNull);
+    expect(find.text(reason), findsOneWidget);
+    await tester.tap(locked);
+    await tester.pumpAndSettle();
     expect((await _saved(c)).enabledGames, {'memory_hideout'});
+  });
+
+  testWidgets('the locked game links to Puzzle types', (tester) async {
+    await _pump(
+      tester,
+      seed: PuzzleSettings(
+        enabledTypes: const {PuzzleType.arithmetic},
+        enabledGames: const {'memory_hideout'},
+        includePuzzles: false,
+      ),
+    );
+    final l10n = puzzleL10n(tester);
+    await showAndTap(tester, find.text(l10n.puzzleSettingsTypesLabel));
+    expect(find.text(l10n.puzzleTypesHelp), findsOneWidget);
+  });
+
+  testWidgets('with puzzles in the pool, no game is locked', (tester) async {
+    await _pump(
+      tester,
+      seed: PuzzleSettings(
+        enabledTypes: const {PuzzleType.arithmetic},
+        enabledGames: const {'memory_hideout'},
+      ),
+    );
+    expect(
+      find.text(puzzleL10n(tester).challengePoolFloorReason),
+      findsNothing,
+    );
+    expect(
+      tester.widget<CapyToggle>(toggleLabelled('Memory Hideout')).onChanged,
+      isNotNull,
+    );
   });
 
   testWidgets('Try it opens practice for that game', (tester) async {
@@ -143,6 +122,19 @@ void main() {
     await tester.tap(tryIt);
     await tester.pumpAndSettle();
     expect(find.text('practice:shake_dj'), findsOneWidget);
+  });
+
+  testWidgets('a screen reader can flip a switch (tap action)', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final c = await _pump(tester);
+    final node = tester.getSemantics(toggleLabelled('Shake DJ'));
+    expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+    node.owner!.performAction(node.id, SemanticsAction.tap);
+    await tester.pumpAndSettle();
+    expect((await _saved(c)).enabledGames, contains('shake_dj'));
+    handle.dispose();
   });
 
   group('switching Step Quest on offers the step sensor', () {

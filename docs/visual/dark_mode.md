@@ -9,7 +9,8 @@ also proves the preference is applied.
 | Screen | Capture |
 |---|---|
 | Home, Alarms, Add/Edit, Stats, Settings, Ringing | `docs/visual/<screen>/dark.png` |
-| Onboarding, puzzle chooser (dark only — no block table) | `docs/visual/onboarding/dark.png`, `docs/visual/puzzle_chooser/dark.png` |
+| Onboarding, All Games (dark only — no block table) | `docs/visual/onboarding/dark.png`, `docs/visual/all_games/dark.png` |
+| Wake puzzle overview, Games, Puzzle types, Advanced (Phase 20, light + dark) | `docs/visual/puzzle_{overview,games,types,advanced}/dark.png` |
 
 `tool/capture.sh` verifies each like `actual.png` (size, freshness, no banner).
 

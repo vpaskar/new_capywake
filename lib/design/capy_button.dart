@@ -38,6 +38,7 @@ class _CapyButtonState extends State<CapyButton> {
       button: true,
       enabled: _enabled,
       label: widget.label,
+      onTap: widget.onPressed,
       child: ExcludeSemantics(
         child: GestureDetector(
           onTapDown: _enabled ? (_) => setState(() => _down = true) : null,

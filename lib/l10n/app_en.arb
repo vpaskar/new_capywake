@@ -629,10 +629,6 @@
   "@settingsReliabilityEntryLabel": {
     "description": "Settings entry that opens the alarm reliability checklist. Calm wording — never claims 'never miss an alarm'."
   },
-  "settingsReliabilityEntryDescription": "Check what affects whether alarms ring on this phone.",
-  "@settingsReliabilityEntryDescription": {
-    "description": "One-line description of the reliability checklist entry. Honest — surfaces the platform-by-platform truth."
-  },
   "settingsPuzzleEntryLabel": "Wake puzzle",
   "@settingsPuzzleEntryLabel": {
     "description": "Settings entry that opens the wake-puzzle chooser. Names the feature, makes no promise about waking."
@@ -1268,10 +1264,6 @@
   "@puzzleAccessibilityVisualLabel": {
     "description": "Shown on a puzzle type's card: this type depends on seeing shapes or positions. Neutral — a sighted user choosing it has done nothing wrong."
   },
-  "settingsPreferencesHeading": "Preferences",
-  "@settingsPreferencesHeading": {
-    "description": "Heading above the grouped preference sections on the Settings screen (alarm defaults, puzzles, display, mornings)."
-  },
   "settingsMoreHeading": "More",
   "@settingsMoreHeading": {
     "description": "Heading above the Settings entries that open their own screen (History, Sleep, reliability checklist, setup walkthrough)."
@@ -1521,10 +1513,6 @@
   "settingsOnboardingEntryLabel": "Setup walkthrough",
   "@settingsOnboardingEntryLabel": {
     "description": "Settings entry that replays first-run setup."
-  },
-  "settingsOnboardingEntryDescription": "Go through the first-run questions again",
-  "@settingsOnboardingEntryDescription": {
-    "description": "Description under the Settings entry that replays first-run setup."
   },
   "todayCountdownRingsIn": "Rings in {duration}",
   "@todayCountdownRingsIn": {
@@ -1967,10 +1955,6 @@
   "@homeGamesSeeAll": {
     "description": "Trailing action beside the game rail heading; opens the full list."
   },
-  "homeMyStats": "My Stats",
-  "@homeMyStats": {
-    "description": "Row on Home that switches to the Stats tab."
-  },
   "homeGameComingSoonTitle": "Not built yet",
   "@homeGameComingSoonTitle": {
     "description": "Title of the sheet shown when a game is not built yet."
@@ -2191,10 +2175,6 @@
   "gameTryAction": "Try it",
   "@gameTryAction": {
     "description": "Opens practice for a game from the chooser."
-  },
-  "challengePoolLabel": "Wake challenges",
-  "@challengePoolLabel": {
-    "description": "Chooser section: what a puzzle alarm can ask for."
   },
   "challengePoolHelp": "Each alarm draws one of these at random. At least one stays on.",
   "@challengePoolHelp": {
@@ -2837,5 +2817,83 @@
   "alarmKillWarningBody": "CapyWake was closed, so its alarms can't ring. Open it to turn them back on.",
   "@alarmKillWarningBody": {
     "description": "Body of that notification. States the fact and the fix; never 'you killed the app'."
+  },
+  "alarmArtLabel": "Picture",
+  "@alarmArtLabel": {
+    "description": "Title of the add/edit card that opens the alarm picture picker."
+  },
+  "alarmArtSheetTitle": "Choose a picture",
+  "@alarmArtSheetTitle": {
+    "description": "Title of the sheet listing the pictures an alarm can show."
+  },
+  "alarmArtAutomatic": "Automatic",
+  "@alarmArtAutomatic": {
+    "description": "Picture option: the app picks one by the alarm's place in the list."
+  },
+  "alarmArtAutomaticHint": "Changes with the alarm's place in the list",
+  "@alarmArtAutomaticHint": {
+    "description": "Explains the Automatic option, so a picture changing after a reorder is not read as a bug."
+  },
+  "alarmArtNone": "None",
+  "@alarmArtNone": {
+    "description": "Picture option: show a plain placeholder instead of a picture."
+  },
+  "alarmArtSleeping": "Sleeping",
+  "@alarmArtSleeping": {
+    "description": "Name of the picture of a capybara asleep in bed."
+  },
+  "alarmArtWorkout": "Workout",
+  "@alarmArtWorkout": {
+    "description": "Name of the picture of a capybara lifting weights."
+  },
+  "alarmArtWalk": "Walk",
+  "@alarmArtWalk": {
+    "description": "Name of the picture of a capybara walking with a backpack."
+  },
+  "alarmArtMusic": "Music",
+  "@alarmArtMusic": {
+    "description": "Name of the picture of a capybara listening to music."
+  },
+  "challengeEntrySummary": "Games, puzzle types, difficulty",
+  "@challengeEntrySummary": {
+    "description": "Second line of the Wake puzzle card on Settings."
+  },
+  "challengeGamesTitle": "Games",
+  "@challengeGamesTitle": {
+    "description": "Title of the games selection screen and its card."
+  },
+  "challengeGamesHelp": "Pick the games your alarms can use.",
+  "@challengeGamesHelp": {
+    "description": "Helper line under the games selection title."
+  },
+  "challengeSelectedCount": "{selected, plural, =1{1 of {total} selected} other{{selected} of {total} selected}}",
+  "@challengeSelectedCount": {
+    "description": "How many of a list are selected, e.g. on the Games card.",
+    "placeholders": {
+      "selected": {
+        "type": "int",
+        "example": "6"
+      },
+      "total": {
+        "type": "int",
+        "example": "10"
+      }
+    }
+  },
+  "challengePoolFloorReason": "Keep at least one game or the puzzles on.",
+  "@challengePoolFloorReason": {
+    "description": "Why the last switched-on wake challenge cannot be switched off."
+  },
+  "puzzleTypesHelp": "Pick the puzzle types you want to use.",
+  "@puzzleTypesHelp": {
+    "description": "Helper line under the puzzle types title."
+  },
+  "puzzleOff": "Off",
+  "@puzzleOff": {
+    "description": "Shown on the Puzzle types card while puzzles are out of the wake pool."
+  },
+  "puzzleHowItWorks": "How it works",
+  "@puzzleHowItWorks": {
+    "description": "Heading of the card listing difficulty and stop settings."
   }
 }

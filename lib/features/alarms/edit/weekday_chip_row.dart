@@ -82,6 +82,7 @@ class _Chip extends StatelessWidget {
       button: true,
       selected: selected,
       label: label,
+      onTap: onTap,
       child: ExcludeSemantics(
         // Paint stays at the mockup's 31.8 pt; only the hit area grows.
         child: InkWell(

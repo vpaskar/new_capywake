@@ -67,14 +67,17 @@ class _GroupHeading extends StatelessWidget {
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     return Padding(
-      padding: const EdgeInsetsDirectional.only(bottom: CapySpacing.sm),
+      padding: const EdgeInsetsDirectional.only(
+        top: CapySpacing.md,
+        bottom: CapySpacing.sm,
+      ),
       child: Semantics(
         header: true,
         child: Text(
           text,
-          style: Theme.of(context).textTheme.labelLarge?.copyWith(
-            color: dark ? CapyColors.darkInkSoft : CapyColors.cocoaSoft,
-            fontWeight: FontWeight.w700,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            color: dark ? CapyColors.darkInk : CapyColors.cocoa,
+            fontWeight: FontWeight.w800,
           ),
         ),
       ),
@@ -97,21 +100,33 @@ class _Grid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: 2,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      mainAxisSpacing: CapySpacing.sm,
-      crossAxisSpacing: CapySpacing.sm,
-      childAspectRatio: 2.4,
+    Widget card(PuzzleType type) => _TypeCard(
+      type: type,
+      selected: enabledTypes.contains(type),
+      locked: type == lockedType,
+      onToggled: (enabled) => onTypeToggled(type, enabled: enabled),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        for (final type in types)
-          _TypeCard(
-            type: type,
-            selected: enabledTypes.contains(type),
-            locked: type == lockedType,
-            onToggled: (enabled) => onTypeToggled(type, enabled: enabled),
+        for (var i = 0; i < types.length; i += 2) ...[
+          if (i > 0) const SizedBox(height: CapySpacing.sm),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(child: card(types[i])),
+                const SizedBox(width: CapySpacing.sm),
+                Expanded(
+                  child: i + 1 < types.length
+                      ? card(types[i + 1])
+                      : const SizedBox.shrink(),
+                ),
+              ],
+            ),
           ),
+        ],
       ],
     );
   }
@@ -157,6 +172,7 @@ class _TypeCard extends StatelessWidget {
                 '${l10n.puzzleSettingsTypesFloorNote}'
           : '${puzzleTypeLabel(type, l10n)}. '
                 '${puzzleAccessibilityLabel(type, l10n)}',
+      onTap: locked ? null : () => onToggled(!selected),
       child: ExcludeSemantics(
         child: Material(
           color: surface,
@@ -182,8 +198,6 @@ class _TypeCard extends StatelessWidget {
                   Expanded(
                     child: Text(
                       puzzleTypeLabel(type, l10n),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: ink,
                         fontWeight: FontWeight.w600,

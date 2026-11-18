@@ -1,3 +1,4 @@
+import 'package:capywake/core/models/alarm.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/capy_nav_bar.dart';
@@ -14,6 +15,20 @@ Widget _host(Widget child, {Brightness brightness = Brightness.light}) =>
 
 void main() {
   group('CapyButton', () {
+    testWidgets('a screen reader can press it', (tester) async {
+      final handle = tester.ensureSemantics();
+      var taps = 0;
+      await tester.pumpWidget(
+        _host(CapyButton(label: 'Add Alarm', onPressed: () => taps++)),
+      );
+
+      tester.semantics.tap(find.semantics.byLabel('Add Alarm'));
+      await tester.pump();
+
+      expect(taps, 1);
+      handle.dispose();
+    });
+
     testWidgets('shows its label and fires onPressed', (tester) async {
       var taps = 0;
       await tester.pumpWidget(
@@ -54,6 +69,7 @@ void main() {
           isButton: true,
           isEnabled: true,
           hasEnabledState: true,
+          hasTapAction: true,
         ),
       );
     });
@@ -149,12 +165,33 @@ void main() {
           isButton: true,
           isSelected: true,
           hasSelectedState: true,
+          hasTapAction: true,
         ),
       );
     });
   });
 
   group('CapyArt catalogue', () {
+    test('an alarm picture resolves by choice, then by position', () {
+      expect(CapyArt.alarmThumbnail(artId: Alarm.noArtId, index: 0), isNull);
+      expect(
+        CapyArt.alarmThumbnail(artId: 'thumb.walk', index: 0)!.id,
+        'thumb.walk',
+      );
+      expect(
+        CapyArt.alarmThumbnail(artId: null, index: 1)!.id,
+        'thumb.workout',
+      );
+      expect(
+        CapyArt.alarmThumbnail(artId: 'thumb.retired', index: 1)!.id,
+        'thumb.workout',
+      );
+    });
+
+    test('empty states use a cutout, never a painted panel', () {
+      expect(CapyArt.emptyStateMascot.use, isNot(ArtUse.thumbnail));
+    });
+
     test('every asset declares the pixels its render box needs', () {
       for (final asset in CapyArt.all) {
         expect(

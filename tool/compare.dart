@@ -17,8 +17,8 @@ const tierATolerancePt = 4.0;
 const roundingTolerancePt = 1.0;
 
 /// Blocks reported for every screen, so a screen cannot pick the ones it
-/// already matches (pre-review finding M5). A screen's phase may add rows; it
-/// may never remove one. Positions are from docs/visual/tier_a_blocks.md.
+/// already matches (pre-review finding M5). Rows are never removed unless the
+/// owner removes the element. Positions: docs/visual/tier_a_blocks.md.
 ///
 /// Offsets are measured from the bottom of the status bar, not from the top of
 /// the screen. The mockup draws a 44pt status bar; the iPhone 14 Pro simulator
@@ -33,8 +33,7 @@ const sharedBlocks = <String, double>{
   'header band lower edge': 103.9 - statusBarPt,
 };
 
-/// Per-screen blocks: nine of Home's fourteen cannot exist on a pushed
-/// route. See `PHASE_04_PRE_REVIEW.md` M4.
+/// Per-screen blocks: most of Home's cannot exist on a pushed route.
 const screenBlocks = <String, Map<String, double>>{
   'home': {
     'hero scene lower edge': 292.3 - statusBarPt,
@@ -48,7 +47,6 @@ const screenBlocks = <String, Map<String, double>>{
     // Measured from the status bar, unlike the rows above.
     'game rail tiles top': 485.7,
     'game rail labels end': 593.9,
-    'my stats row top': 617.0,
     'meadow footer top': 672.4,
     'nav bar top': 774.5 - statusBarPt,
   },
@@ -79,13 +77,12 @@ const screenBlocks = <String, Map<String, double>>{
     'save CTA bottom': 778.1 - statusBarPt,
     'meadow footer top': 793.4 - statusBarPt,
   },
-  // Phase 07. Only the blocks the shipped row set cannot move; the cut rows
-  // move everything below Appearance's top. See docs/visual/settings/.
+  // Phase 20, against settings_redesign/01_SETTINGS_REFINED. The 44 pt row
+  // floor moves every block below group 1's top; docs/visual/settings/.
   'settings': {
-    'hero scene lower edge': 212.9 - statusBarPt,
-    'group 1 card top': 231.4 - statusBarPt,
-    'group 1 card bottom': 341.8 - statusBarPt,
-    'group 2 card top': 355.6 - statusBarPt,
+    'header band lower edge': 78.4 - statusBarPt,
+    'hero scene lower edge': 180.4 - statusBarPt,
+    'group 1 card top': 201.1 - statusBarPt,
   },
   // Phase 08. The mockup draws a filled screen; the default state is empty,
   // so no card bottom can reach its mark. See docs/visual/stats/README.md.

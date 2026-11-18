@@ -1,5 +1,17 @@
 # Current phase
 
+**Phase 20 — Settings and Wake puzzle redesign: done, 2026-11-18, not yet
+committed** (the owner-requests session's work shares the same files; the
+owner picks the commit split). `Current phase: none`.
+
+**2,629 tests**, analyze clean, lib 98.72% / `lib/core` 99.74% / `lib/data`
+91.20%. Settings' Tier A reference is now `01_SETTINGS_REFINED.png`
+(`docs/visual/tier_a_blocks.md`). Records: `docs/phases/PHASE_20_*`.
+
+---
+
+# Current phase
+
 **Phase 19 — Release QA: done, 2026-11-18. `Current phase: none` — the phase
 plan (00–19) is complete.** What remains is the owner's: the open questions,
 the art requests, a real iPhone and a real Android phone, and every store
