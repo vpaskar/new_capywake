@@ -478,3 +478,18 @@ line below (capture); tilt angles inverted face down, then saturated upright
 (unanchored subagent). Cross-app: result lines reserve their tallest result;
 every game fits a 320 pt phone. No accelerometer exercised — thresholds
 untested on hardware. 2,133 tests, 557 ARB keys, 34 findings applied. G39, G40.
+
+---
+
+## Phase 15 follow-up — the post-dismiss motion check (owner: "build the check")
+
+**Done 2026-11-18.** Opt in per alarm (new Add/Edit card) and in Settings
+(which wins); after a dismiss — never the escape or snooze — CapyWake watches
+90 s; fewer than 45 moving seconds rings once more, re-opening the morning's
+row (`AlarmStatusService.motionReRing`), never twice. A silent sensor never
+invents a ring, and the copy says so. **Found on the way, on the simulator with
+the real plugin: every alarm went silent 35 ms after it started** — the ring's
+write re-ran the schedule, whose `stopAll()` silenced it. Fixed;
+`integration_test/ring_lifecycle_test.dart` (by hand) proves the ring and the
+re-ring keep ringing. Committed apart from the concurrent Phase 16 session's
+work in the same checkout.

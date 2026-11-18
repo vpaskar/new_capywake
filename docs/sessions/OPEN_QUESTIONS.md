@@ -105,3 +105,10 @@ from the physics and the plugin's source; **no physical phone was run** (the
 simulator has no accelerometer, Android has no emulator here). If the owner
 tries it and a shake is missed or a tilt fires too easily, the constants are
 `ShakeDetector.defaultShakeDeviation` and `TiltReader(engageDegrees:)`.
+
+## 2026-11-18 — Motion check — the re-ring asks the same puzzle or game
+
+When the motion check rings once more, the alarm rings exactly as before — a
+puzzle or game alarm asks for its puzzle or game again (the escape is there as
+always). The alternative: make the re-ring a plain "Stop" alarm. One line in
+`RingingController._sessionFor` plus a session flag; ask if wanted.

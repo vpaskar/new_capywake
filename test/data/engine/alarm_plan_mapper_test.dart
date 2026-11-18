@@ -53,6 +53,48 @@ void main() {
   setUpAll(tzdata.initializeTimeZones);
   final utc = tz.UTC;
 
+  group('a resync never silences a ringing alarm', () {
+    test('every stored alarm is stopped except the ringing ones', () {
+      expect(
+        AlarmPlanMapper.platformIdsToStop(
+          stored: const [
+            (id: 1, payload: 'a1'),
+            (id: 2, payload: 'a2'),
+            (id: 3, payload: null),
+          ],
+          ringing: {'a2'},
+        ),
+        [1, 3],
+      );
+    });
+
+    test('nothing ringing: everything is stopped', () {
+      expect(
+        AlarmPlanMapper.platformIdsToStop(
+          stored: const [(id: 1, payload: 'a1'), (id: 2, payload: 'a2')],
+          ringing: const {},
+        ),
+        [1, 2],
+      );
+    });
+
+    test('a ringing alarm keeps its slot; the others are armed', () {
+      final ringing = _plan(location: utc, alarm: _alarm());
+      final other = _plan(
+        location: utc,
+        alarm: _alarm(id: 'a2'),
+      );
+      expect(
+        AlarmPlanMapper.plansToArm([ringing, other], ringing: {'a1'}),
+        [other],
+      );
+      expect(
+        AlarmPlanMapper.plansToArm([ringing, other], ringing: const {}),
+        [ringing, other],
+      );
+    });
+  });
+
   group('platformId', () {
     test('is stable across calls for the same id', () {
       expect(

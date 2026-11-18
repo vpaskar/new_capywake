@@ -5,6 +5,7 @@ import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/lifecycle/alarm_status_service.dart';
 import 'package:capywake/core/lifecycle/snooze_service.dart';
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/core/motion/fake_motion_sensor.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
 import 'package:capywake/core/schedule/alarm_schedule_service.dart';
@@ -16,8 +17,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../games/_motion.dart';
+
 Alarm _alarm({
   String id = 'a1',
+  bool motionCheck = false,
   bool snoozeEnabled = true,
   int? maxSnoozes = 3,
   DismissMethod dismissMethod = DismissMethod.normalButton,
@@ -40,6 +44,7 @@ Alarm _alarm({
     dismissMethod: dismissMethod,
     dismissChallengeDifficulty: null,
     confirmationEnabled: false,
+    motionConfirmationEnabled: motionCheck,
     createdAt: now,
     updatedAt: now,
   );
@@ -92,6 +97,7 @@ void main() {
   late DateTime clock;
   late int uuidCounter;
   late tz.Location location;
+  late FakeMotionSensor motion;
 
   DateTime now() => clock;
 
@@ -105,10 +111,12 @@ void main() {
       readLocation: () => location,
       uuid: () => 'occ-${uuidCounter++}',
       now: now,
+      motionSensor: motion,
     );
   }
 
   setUp(() async {
+    motion = FakeMotionSensor();
     location = tz.getLocation('Europe/Berlin');
     clock = DateTime.utc(2026, 11, 16, 6);
     uuidCounter = 0;
@@ -120,6 +128,7 @@ void main() {
 
   tearDown(() async {
     await controller.dispose();
+    await motion.dispose();
     await engine.dispose();
     await db.close();
   });
@@ -414,6 +423,264 @@ void main() {
     );
   });
 
+  group('motion check after dismiss', () {
+    Future<Alarm> armCheck({bool global = true, Alarm? alarm}) async {
+      final a = alarm ?? _alarm(motionCheck: true);
+      await repository.upsertAlarm(a);
+      await repository.saveSettings(
+        UserSettings.initial.copyWith(motionConfirmationEnabled: global),
+      );
+      return a;
+    }
+
+    Future<void> ringAndDismiss(Alarm alarm) async {
+      await ring(alarm);
+      await controller.dismiss();
+      await pumpEventQueue();
+    }
+
+    /// One reading per second for [seconds], moving or still.
+    Future<void> feed(int seconds, {required bool moving}) async {
+      for (var i = 0; i < seconds; i++) {
+        clock = clock.add(const Duration(seconds: 1));
+        motion.emit(moving ? FakeMotionSensor.moving : FakeMotionSensor.still);
+        await pumpEventQueue();
+      }
+    }
+
+    /// The morning that rang first: a later unclaimed ring opens its own row.
+    Future<AlarmOccurrence> morning() async =>
+        (await repository.listOccurrencesForAlarm('a1')).firstWhere(
+          (o) => o.scheduledAt.isAtSameMomentAs(DateTime.utc(2026, 11, 16, 6)),
+        );
+
+    test('a still phone rings once more and re-opens the morning', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      expect(controller.motionCheckRunning, isTrue);
+      expect(motion.hasListener, isTrue);
+
+      await feed(89, moving: false);
+      expect(engine.ringNowCallCount, 0);
+      await feed(1, moving: false);
+
+      expect(engine.ringNowAlarmIds, ['a1']);
+      expect(motion.hasListener, isFalse);
+      final row = await morning();
+      expect(row.status, AlarmStatus.triggered);
+      expect(row.isMotionReRing, isTrue);
+      expect(controller.currentSession?.occurrence.id, row.id);
+    });
+
+    test('dismissing the re-ring opens no second window', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      await feed(90, moving: false);
+      await controller.dismiss();
+      await pumpEventQueue();
+
+      expect(controller.motionCheckRunning, isFalse);
+      expect((await morning()).status, AlarmStatus.dismissed);
+      await feed(120, moving: false);
+      expect(engine.ringNowCallCount, 1);
+    });
+
+    test('moving in 45 separate seconds is enough: nothing happens', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      await feed(45, moving: true);
+      expect(controller.motionCheckRunning, isFalse);
+      expect(motion.hasListener, isFalse);
+      await feed(60, moving: false);
+      expect(engine.ringNowCallCount, 0);
+      expect((await morning()).status, AlarmStatus.dismissed);
+    });
+
+    test('a silent sensor never invents a ring', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      clock = clock.add(const Duration(minutes: 10));
+      await pumpEventQueue();
+      expect(engine.ringNowCallCount, 0);
+    });
+
+    test("Settings' switch wins: off means no window", () async {
+      final alarm = await armCheck(global: false);
+      await ringAndDismiss(alarm);
+      expect(controller.motionCheckRunning, isFalse);
+      expect(motion.hasListener, isFalse);
+    });
+
+    test("the alarm's own switch off means no window", () async {
+      await armCheck(alarm: _alarm());
+      await ringAndDismiss(_alarm());
+      expect(controller.motionCheckRunning, isFalse);
+    });
+
+    test('the escape never opens a window', () async {
+      final alarm = await armCheck();
+      await ring(alarm);
+      await controller.escape();
+      await pumpEventQueue();
+      expect(controller.motionCheckRunning, isFalse);
+    });
+
+    test('a snooze never opens a window', () async {
+      final alarm = await armCheck();
+      await ring(alarm);
+      await controller.snooze();
+      await pumpEventQueue();
+      expect(controller.motionCheckRunning, isFalse);
+    });
+
+    test('turned off in Settings mid-window: no ring (M1)', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      await repository.saveSettings(UserSettings.initial);
+      await feed(90, moving: false);
+      expect(engine.ringNowCallCount, 0);
+    });
+
+    test(
+      'deleted, disabled or switched off mid-window: no ring (M1)',
+      () async {
+        for (final change in <Future<void> Function()>[
+          () => repository.deleteAlarm('a1'),
+          () => repository.upsertAlarm(
+            _alarm(motionCheck: true).copyWith(enabled: false),
+          ),
+          () => repository.upsertAlarm(_alarm()),
+        ]) {
+          await db.delete(db.alarmOccurrences).go();
+          final alarm = await armCheck();
+          await ringAndDismiss(alarm);
+          await change();
+          await feed(90, moving: false);
+          expect(engine.ringNowCallCount, 0);
+        }
+      },
+    );
+
+    test('a ring that starts during the dismissal opens no window', () async {
+      final alarm = await armCheck();
+      final other = _alarm(id: 'a2');
+      await repository.upsertAlarm(other);
+      await ring(alarm);
+      final dismissing = controller.dismiss();
+      engine.fire('a2', firedAt: clock);
+      await dismissing;
+      await pumpEventQueue();
+      expect(controller.currentSession?.alarm.id, 'a2');
+      expect(controller.motionCheckRunning, isFalse);
+    });
+
+    test('another ring closes the window', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      final other = _alarm(id: 'a2');
+      await repository.upsertAlarm(other);
+      await ring(other);
+      expect(controller.motionCheckRunning, isFalse);
+      expect(motion.hasListener, isFalse);
+    });
+
+    test('a sensor error leaves the watch open and harmless', () async {
+      final failing = FailingMotionSensor();
+      addTearDown(failing.dispose);
+      await controller.dispose();
+      controller = RingingController(
+        engine: engine,
+        repository: repository,
+        statusService: const AlarmStatusService(),
+        snoozeService: const SnoozeService(),
+        readPuzzleSettings: PuzzleSettings.defaults,
+        readLocation: () => location,
+        uuid: () => 'occ-${uuidCounter++}',
+        now: now,
+        motionSensor: failing,
+      );
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      failing.fail();
+      await pumpEventQueue();
+      expect(controller.motionCheckRunning, isTrue);
+      expect(engine.ringNowCallCount, 0);
+    });
+
+    test('disposing mid-window releases the sensor', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      await controller.dispose();
+      expect(motion.hasListener, isFalse);
+    });
+
+    test('a refused re-ring is logged, not retried, claims no ring', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      engine.failNextRingNow = const AlarmEngineException('refused');
+      await feed(90, moving: false);
+      await feed(120, moving: false);
+      expect(engine.ringNowCallCount, 1);
+      expect((await morning()).status, AlarmStatus.dismissed);
+      expect(controller.currentSession, isNull);
+    });
+
+    test('a ring long after the dismissal re-opens nothing', () async {
+      final alarm = await armCheck();
+      await ringAndDismiss(alarm);
+      engine.autoFireOnRingNow = false;
+      await feed(90, moving: false);
+      clock = clock.add(
+        RingingController.reRingClaimWindow + const Duration(seconds: 1),
+      );
+      await ring(alarm);
+      expect((await morning()).status, AlarmStatus.dismissed);
+      expect(controller.currentSession?.occurrence.isMotionReRing, isFalse);
+    });
+
+    test(
+      'the re-ring still finds its morning after another alarm rang',
+      () async {
+        final alarm = await armCheck();
+        await ringAndDismiss(alarm);
+        engine.autoFireOnRingNow = false;
+        await feed(90, moving: false);
+        final other = _alarm(id: 'a2');
+        await repository.upsertAlarm(other);
+        await ring(other);
+        await controller.dismiss();
+        await ring(alarm);
+        expect((await morning()).isMotionReRing, isTrue);
+        expect((await morning()).status, AlarmStatus.triggered);
+      },
+    );
+
+    test('a ring of an alarm without the check is never a re-ring', () async {
+      final alarm = await armCheck(alarm: _alarm());
+      await ringAndDismiss(alarm);
+      clock = clock.add(const Duration(seconds: 30));
+      await ring(alarm);
+      expect((await morning()).status, AlarmStatus.dismissed);
+    });
+
+    test(
+      'a re-ring that arrives after a restart still finds its morning',
+      () async {
+        final alarm = await armCheck();
+        await ringAndDismiss(alarm);
+        engine.autoFireOnRingNow = false;
+        await feed(90, moving: false);
+        await controller.dispose();
+        await build();
+        await ring(alarm);
+        expect((await morning()).isMotionReRing, isTrue);
+        await controller.dismiss();
+        await pumpEventQueue();
+        expect(controller.motionCheckRunning, isFalse, reason: 'one re-ring');
+      },
+    );
+  });
+
   group('escape visibility', () {
     PuzzleSettings tolerant(int tolerated) => PuzzleSettings(
       enabledTypes: const {PuzzleType.arithmetic},
@@ -516,6 +783,7 @@ void main() {
           readLocation: () => location,
           uuid: () => 'occ-slow',
           now: now,
+          motionSensor: FakeMotionSensor(),
         );
         addTearDown(slowController.dispose);
 
@@ -560,6 +828,7 @@ void main() {
         readLocation: () => location,
         uuid: () => 'occ-slow-2',
         now: now,
+        motionSensor: FakeMotionSensor(),
       );
       addTearDown(slowController.dispose);
 

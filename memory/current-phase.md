@@ -6,7 +6,9 @@ permission: ACTIVITY_RECOGNITION on Android 10+, Motion & Fitness on iOS).
 Phase 17 (QR Treasure Hunt, camera) is blocked the same way. Do not start
 either without the owner's answer.**
 
-**2,133 tests**, analyze clean including infos, lib 98.55% / `lib/core` 99.72% /
+**Motion check built after Phase 15 (owner); a core ring defect fixed with it
+— every real alarm went silent 35 ms in.** **2,133 tests** (before the
+follow-up), analyze clean including infos, lib 98.55% / `lib/core` 99.72% /
 `lib/core/games` **100%** / `lib/features/games` **100%** / `lib/core/motion`
 **100%** / `lib/data` 89.31% / `lib/features/ringing` 98.71%, **557 ARB keys ×
 10 locales**. Comment baseline 113 (+0).
@@ -61,7 +63,7 @@ adaptation; word-only item cards.
 
 ## Owed by nobody (carried)
 
-Sleep boundary / `package:health` (unbuilt 07–15); Settings' motion-check
-switch governs nothing (the sensor now exists; the check does not); `CapyNavBar` 98.7 vs 79.9;
+Sleep boundary / `package:health` (unbuilt 07–15). (Settings' motion-check
+switch: built 2026-11-18, see the motion-check follow-up.); `CapyNavBar` 98.7 vs 79.9;
 Alarms 3 / Add-Edit 9 Tier A failures; `ringNow` uncalled; art G35–G38. Android
 untested, no emulator.

@@ -132,9 +132,11 @@ in a screenshot was the harness, not the app (pre-cache before capturing).
 
 ## Owed by nobody — carried forward
 
-- **Settings' motion-check switch still governs nothing.** Phase 15 wired the
-  accelerometer and the ported `MotionCheckService` is tested; the post-dismiss
-  check itself is unbuilt.
+- **The device ring check is manual:** `flutter test
+  integration_test/ring_lifecycle_test.dart -d <iPhone 14 Pro udid>` after any
+  change to `lib/data/engine/` or the ringing controller. Every widget test uses
+  the fake engine, which cannot see the plugin silence a ring (it did, from the
+  engine's first phase until 2026-11-18).
 - **The sleep-boundary restoration — still owed, now five times over.**
   `package:health` and `live_sleep_gateway.dart` did **not** land in 07, 08, 09,
   10 or 11. `test/core/sleep/sleep_boundary_test.dart` stays at `at most one`

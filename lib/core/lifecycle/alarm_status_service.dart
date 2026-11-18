@@ -77,6 +77,27 @@ class AlarmStatusService {
     );
   }
 
+  /// The motion check's one re-ring.
+  AlarmOccurrence motionReRing({
+    required AlarmOccurrence occurrence,
+    required DateTime now,
+  }) {
+    _expect(
+      occurrence,
+      from: const {AlarmStatus.dismissed},
+      to: AlarmStatus.triggered,
+    );
+    if (occurrence.isMotionReRing) {
+      throw const AlarmStateException('The motion check rings again once.');
+    }
+    return occurrence.copyWith(
+      status: AlarmStatus.triggered,
+      triggeredAt: now.toUtc(),
+      clearDismissedAt: true,
+      isMotionReRing: true,
+    );
+  }
+
   /// Triggered → snoozed. Snooze count + next ring time are computed
   /// upstream by `SnoozeService`; this method just records the result
   /// and bumps the count.

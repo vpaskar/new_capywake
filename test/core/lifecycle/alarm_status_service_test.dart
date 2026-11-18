@@ -521,6 +521,52 @@ void main() {
     });
   });
 
+  group('AlarmStatusService.motionReRing', () {
+    const service = AlarmStatusService();
+    final dismissedAt = DateTime.utc(2026, 5, 21, 7, 1);
+    final now = DateTime.utc(2026, 5, 21, 7, 3);
+
+    test('dismissed -> triggered once, flagged, dismissal cleared', () {
+      final updated = service.motionReRing(
+        occurrence: _occurrence(
+          status: AlarmStatus.dismissed,
+          dismissedAt: dismissedAt,
+        ),
+        now: now,
+      );
+      expect(updated.status, AlarmStatus.triggered);
+      expect(updated.isMotionReRing, isTrue);
+      expect(updated.triggeredAt, now);
+      expect(updated.dismissedAt, isNull);
+      expect(updated.scheduledAt, DateTime.utc(2026, 5, 21, 7));
+    });
+
+    test('a row already re-rung cannot be re-opened', () {
+      final again = _occurrence(
+        status: AlarmStatus.dismissed,
+        dismissedAt: dismissedAt,
+      ).copyWith(isMotionReRing: true);
+      expect(
+        () => service.motionReRing(occurrence: again, now: now),
+        throwsA(isA<AlarmStateException>()),
+      );
+    });
+
+    test('only a dismissal can be re-opened — never an escape', () {
+      for (final status in AlarmStatus.values) {
+        if (status == AlarmStatus.dismissed) continue;
+        expect(
+          () => service.motionReRing(
+            occurrence: _occurrence(status: status),
+            now: now,
+          ),
+          throwsA(isA<AlarmStateException>()),
+          reason: status.name,
+        );
+      }
+    });
+  });
+
   group('AlarmStateException', () {
     test('toString includes the diagnostic message', () {
       const exception = AlarmStateException('boom');

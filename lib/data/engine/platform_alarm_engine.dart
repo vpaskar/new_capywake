@@ -103,20 +103,30 @@ class PlatformAlarmEngine implements AlarmEngine {
     try {
       await plugin.Alarm.stop(AlarmPlanMapper.platformId(alarmId));
       _armed.remove(alarmId);
+      _reportedRinging.remove(alarmId);
     } on Object catch (error) {
       throw AlarmPlanMapper.engineException('cancel', error);
     }
   }
 
+  /// Leaves a ringing alarm alone: a ring's own write re-runs the schedule,
+  /// and stopping everything here silenced every alarm as it started.
   @override
   Future<void> rescheduleAll(List<AlarmOccurrencePlan> plans) async {
+    final ringing = {..._reportedRinging};
     try {
-      await plugin.Alarm.stopAll();
+      final stored = await plugin.Alarm.getAlarms();
+      for (final id in AlarmPlanMapper.platformIdsToStop(
+        stored: [for (final a in stored) (id: a.id, payload: a.payload)],
+        ringing: ringing,
+      )) {
+        await plugin.Alarm.stop(id);
+      }
     } on Object catch (error) {
       throw AlarmPlanMapper.engineException('rescheduleAll', error);
     }
-    _armed.clear();
-    for (final plan in plans) {
+    _armed.removeWhere((id, _) => !ringing.contains(id));
+    for (final plan in AlarmPlanMapper.plansToArm(plans, ringing: ringing)) {
       await arm(plan);
     }
   }

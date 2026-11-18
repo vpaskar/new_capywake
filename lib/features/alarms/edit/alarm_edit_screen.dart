@@ -15,6 +15,7 @@ import 'package:capywake/features/alarms/alarm_permission_prompt.dart';
 import 'package:capywake/features/alarms/edit/alarm_edit_header.dart';
 import 'package:capywake/features/alarms/edit/alarm_form_rows.dart';
 import 'package:capywake/features/alarms/edit/dismiss_method_section.dart';
+import 'package:capywake/features/alarms/edit/motion_check_card.dart';
 import 'package:capywake/features/alarms/edit/time_stepper_field.dart';
 import 'package:capywake/features/alarms/edit/weekday_chip_row.dart';
 import 'package:capywake/features/games/game_names.dart';
@@ -154,6 +155,8 @@ class _FormState extends ConsumerState<_Form> {
                     _snoozeCard(l10n),
                     const SizedBox(height: _cardGap),
                     _dismissCard(l10n),
+                    const SizedBox(height: _cardGap),
+                    _motionCheckCard(),
                     const SizedBox(height: CapySpacing.lg),
                     CapyButton(
                       label: l10n.alarmSaveAction,
@@ -309,6 +312,19 @@ class _FormState extends ConsumerState<_Form> {
       ),
     );
   }
+
+  Widget _motionCheckCard() => MotionCheckCard(
+    enabled: _draft.motionConfirmationEnabled,
+    globallyEnabled:
+        ref
+            .watch(userSettingsStreamProvider)
+            .value
+            ?.motionConfirmationEnabled ??
+        false,
+    onChanged: (enabled) => setState(
+      () => _draft = _draft.copyWith(motionConfirmationEnabled: enabled),
+    ),
+  );
 
   Future<void> _showSoundUnavailable(AppLocalizations l10n) {
     return showModalBottomSheet<void>(

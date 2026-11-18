@@ -1368,7 +1368,7 @@
   "@alarmMotionCheckDescription": {
     "description": "Honest explanation of the motion check under the switch. States the limit of an accelerometer plainly — it sees the phone, not the person — so a user can decide whether it suits how they sleep."
   },
-  "alarmMotionCheckWindowNote": "{seconds, plural, =1{If the phone does not move within 1 second, the alarm rings once more.} other{If the phone does not move within {seconds} seconds, the alarm rings once more.}}",
+  "alarmMotionCheckWindowNote": "{seconds, plural, =1{If the phone stays mostly still for the next second, the alarm rings once more.} other{If the phone stays mostly still for the next {seconds} seconds, the alarm rings once more.}}",
   "@alarmMotionCheckWindowNote": {
     "description": "How long the motion check watches, and what happens if it sees nothing. Plain statement of the one extra ring, with no fear or shame framing.",
     "placeholders": {
@@ -1377,9 +1377,13 @@
       }
     }
   },
-  "alarmMotionCheckGlobalOffNote": "The motion check is switched off in Settings, so this alarm stops with a tap as usual.",
+  "alarmMotionCheckGlobalOffNote": "The motion check is off in Settings, so nothing happens after you stop this alarm.",
   "@alarmMotionCheckGlobalOffNote": {
     "description": "Shown under the per-alarm switch when the global motion check in Settings is off. Explains, without blame, that the alarm falls back to the plain tap."
+  },
+  "alarmMotionCheckLimitNote": "If your phone pauses CapyWake in the background, the check stops quietly and no extra ring comes.",
+  "@alarmMotionCheckLimitNote": {
+    "description": "Under the motion check's description: the check runs inside the app and stops, without an extra ring, if the phone suspends it. Honest about the limit; never alarming."
   },
   "settingsMotionCheckLabel": "Motion check after dismiss",
   "@settingsMotionCheckLabel": {

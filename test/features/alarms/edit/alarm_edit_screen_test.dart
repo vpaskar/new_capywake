@@ -240,7 +240,7 @@ void main() {
     testWidgets('the snooze toggle writes through', (tester) async {
       final harness = await pumpEdit(tester);
 
-      await tapVisible(tester, find.byType(CapyToggle));
+      await tapVisible(tester, find.byType(CapyToggle).first);
       await tapSave(tester);
 
       final stored = (await harness.repository.listAlarms()).single;

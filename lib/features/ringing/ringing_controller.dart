@@ -1,9 +1,13 @@
 import 'dart:async';
+import 'dart:developer' as developer;
 
 import 'package:capywake/core/engine/alarm_engine.dart';
 import 'package:capywake/core/lifecycle/alarm_status_service.dart';
 import 'package:capywake/core/lifecycle/snooze_service.dart';
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/core/motion/motion_check_service.dart';
+import 'package:capywake/core/motion/motion_sensor.dart';
+import 'package:capywake/core/motion/motion_window.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/schedule/alarm_schedule_service.dart';
@@ -25,7 +29,11 @@ class RingingController {
     required tz.Location Function() readLocation,
     required String Function() uuid,
     required DateTime Function() now,
+    required MotionSensor motionSensor,
+    MotionCheckService? motionCheck,
   }) : _engine = engine,
+       _motionSensor = motionSensor,
+       _motionCheck = motionCheck ?? MotionCheckService(),
        _repository = repository,
        _readPuzzleSettings = readPuzzleSettings,
        _readLocation = readLocation,
@@ -44,8 +52,19 @@ class RingingController {
   final tz.Location Function() _readLocation;
   final String Function() _uuid;
   final DateTime Function() _now;
+  final MotionSensor _motionSensor;
+  final MotionCheckService _motionCheck;
 
   StreamSubscription<RingingAlarm>? _ringingSubscription;
+  StreamSubscription<MotionSample>? _motionSubscription;
+  MotionWindow? _window;
+  ({String alarmId, String occurrenceId})? _watched;
+
+  /// How long a requested re-ring may take to arrive and still be it.
+  static const reRingClaimWindow = Duration(minutes: 5);
+
+  /// Whether a post-dismiss motion window is open.
+  bool get motionCheckRunning => _window != null;
   final _sessionController = StreamController<RingingSession?>.broadcast();
 
   /// Alarm ids with a transition in flight.
@@ -64,12 +83,14 @@ class RingingController {
   Stream<RingingSession?> get sessionStream => _sessionController.stream;
 
   Future<void> _onRinging(RingingAlarm event) async {
+    await _closeWindow();
     if (!_claim(event.alarmId)) return;
     try {
       final alarm = await _repository.getAlarm(event.alarmId);
       // Deleted while the platform alarm was still armed. Bail honestly; the
       // coordinator cancels it on the next sync.
       if (alarm == null) return;
+      if (await _reopenIfReRing(alarm, event)) return;
 
       final existing = await _findOccurrence(
         alarm: alarm,
@@ -94,11 +115,11 @@ class RingingController {
     }
   }
 
-  /// Stop the alarm. Terminal.
-  Future<void> dismiss() => _terminate(_status.dismiss);
+  /// Stop the alarm. Terminal; may open the motion check.
+  Future<void> dismiss() => _terminate(_status.dismiss, mayCheckMotion: true);
 
-  /// Stop the alarm without solving the puzzle. Recorded as
-  /// [AlarmStatus.escaped], not a dismiss, and asks nothing further.
+  /// Stop without solving: [AlarmStatus.escaped]. Asks nothing further, not
+  /// even the motion check — the user said they need quiet.
   Future<void> escape() => _terminate(_status.escape);
 
   Future<void> _terminate(
@@ -106,8 +127,9 @@ class RingingController {
       required AlarmOccurrence occurrence,
       required DateTime now,
     })
-    transition,
-  ) async {
+    transition, {
+    bool mayCheckMotion = false,
+  }) async {
     final session = _current;
     if (session == null) return;
     if (!_claim(session.alarm.id)) return;
@@ -122,6 +144,9 @@ class RingingController {
       await _repository.upsertOccurrence(_withSnoozeNote(next));
       _prominentEscapes.remove(live.occurrence.id);
       _emit(null);
+      if (mayCheckMotion && await _wantsMotionCheck(live)) {
+        _openWindow(live.alarm.id, live.occurrence.id);
+      }
     } finally {
       _release(session.alarm.id);
     }
@@ -245,12 +270,98 @@ class RingingController {
     return occurrence.copyWith(note: note);
   }
 
+  /// The alarm's switch and Settings' (which wins), read fresh; never on a
+  /// ring that is itself the re-ring.
+  Future<bool> _wantsMotionCheck(RingingSession session) async {
+    if (!session.alarm.motionConfirmationEnabled) return false;
+    if (session.occurrence.isMotionReRing) return false;
+    return (await _repository.getSettings()).motionConfirmationEnabled;
+  }
+
+  void _openWindow(String alarmId, String occurrenceId) {
+    _window = MotionWindow(check: _motionCheck, openedAt: _now().toUtc());
+    _watched = (alarmId: alarmId, occurrenceId: occurrenceId);
+    _motionSubscription = _motionSensor.samples.listen(
+      _onMotionSample,
+      onError: (Object _) {},
+    );
+  }
+
+  Future<void> _onMotionSample(MotionSample sample) async {
+    final window = _window;
+    final watched = _watched;
+    if (window == null || watched == null) return;
+    switch (window.register(sample, _now().toUtc())) {
+      case MotionWindowState.watching:
+        return;
+      case MotionWindowState.satisfied:
+        await _closeWindow();
+      case MotionWindowState.expired:
+        await _closeWindow();
+        await _reRing(watched.alarmId);
+    }
+  }
+
+  Future<void> _closeWindow() async {
+    _window = null;
+    _watched = null;
+    final cancelled = _motionSubscription?.cancel();
+    _motionSubscription = null;
+    await cancelled;
+  }
+
+  /// Re-reads both switches first: turned off, deleted or disabled within
+  /// the window means no ring. Nothing is written before the platform rings.
+  Future<void> _reRing(String alarmId) async {
+    final alarm = await _repository.getAlarm(alarmId);
+    if (alarm == null || !alarm.enabled || !alarm.motionConfirmationEnabled) {
+      return;
+    }
+    if (!(await _repository.getSettings()).motionConfirmationEnabled) return;
+    try {
+      await _engine.ringNow(alarm);
+    } on Object catch (error, stack) {
+      developer.log(
+        'motion re-ring refused',
+        name: 'capywake.ringing',
+        error: error,
+        stackTrace: stack,
+      );
+    }
+  }
+
+  /// A ring of an opted-in alarm soon after its morning's dismissal is the
+  /// re-ring — read from the database, so a restart cannot lose it.
+  Future<bool> _reopenIfReRing(Alarm alarm, RingingAlarm event) async {
+    if (!alarm.motionConfirmationEnabled) return false;
+    final fired = event.firedAt.toUtc();
+    final span = _motionCheck.window + reRingClaimWindow;
+    final rows = await _repository.listOccurrencesForAlarm(alarm.id);
+    for (final row in rows) {
+      final dismissedAt = row.dismissedAt;
+      if (row.status != AlarmStatus.dismissed || dismissedAt == null) continue;
+      if (row.isMotionReRing) continue;
+      final since = fired.difference(dismissedAt.toUtc());
+      if (since.isNegative || since > span) continue;
+      final reopened = _status.motionReRing(occurrence: row, now: fired);
+      await _repository.upsertOccurrence(reopened);
+      _emit(_sessionFor(alarm: alarm, occurrence: reopened));
+      return true;
+    }
+    return false;
+  }
+
+  /// A new ring ends any watch, even one opened while that ring was loading.
   void _emit(RingingSession? session) {
+    if (session != null) {
+      unawaited(_closeWindow());
+    }
     _current = session;
     if (!_sessionController.isClosed) _sessionController.add(session);
   }
 
   Future<void> dispose() async {
+    await _closeWindow();
     await _ringingSubscription?.cancel();
     _ringingSubscription = null;
     if (!_sessionController.isClosed) await _sessionController.close();

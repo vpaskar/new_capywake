@@ -100,4 +100,23 @@ abstract final class AlarmPlanMapper {
     if (payload == null || payload.isEmpty) return null;
     return payload;
   }
+
+  /// Every stored platform alarm except the ones ringing right now.
+  static List<int> platformIdsToStop({
+    required List<({int id, String? payload})> stored,
+    required Set<String> ringing,
+  }) => [
+    for (final alarm in stored)
+      if (!ringing.contains(alarmIdFromPayload(alarm.payload))) alarm.id,
+  ];
+
+  /// A ringing alarm keeps its slot until it is stopped; the resync that
+  /// stopping triggers arms its next plan.
+  static List<AlarmOccurrencePlan> plansToArm(
+    List<AlarmOccurrencePlan> plans, {
+    required Set<String> ringing,
+  }) => [
+    for (final plan in plans)
+      if (!ringing.contains(plan.alarm.id)) plan,
+  ];
 }

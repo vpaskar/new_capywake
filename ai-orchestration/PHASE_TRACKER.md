@@ -132,6 +132,15 @@ Per-phase commit `feat: complete phase <id> - <name>`, then
 
 ## Session log
 
+- **2026-11-18** — Phase 15 follow-up (owner: "build the check"). The
+  post-dismiss motion check is real: per-alarm card + Settings kill switch,
+  90 s watch, one re-ring that re-opens the morning (`docs/phases/
+  PHASE_15_MOTION_CHECK_*`). **Found by a device probe with the real plugin:
+  every alarm went silent 35 ms after it started** — the ring's own write
+  re-ran the schedule and `rescheduleAll` called `stopAll()`. Fixed; a manual
+  device test (`integration_test/ring_lifecycle_test.dart`) now guards it.
+  Pointer unchanged at `16`.
+
 - **2026-11-18** — Phase 15. Motion games, run unattended. Shake DJ and Tilt
   Maze playable; `sensors_plus` added behind `MotionSensor`. The buttons are
   always live (a11y and safety), motion works alongside. **The capture found the
