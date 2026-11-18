@@ -1,0 +1,35 @@
+CapyWake is a cozy alarm clock with a capybara who wants you up. Before the alarm stops, it asks for one small thing: a quick puzzle or a short capybara game. Just enough to get your brain moving, never a test.
+
+YOU CHOOSE THE CHALLENGE
+• Ten puzzles: arithmetic, number sequences, missing sign, compare numbers, odd one out, remember digits, digits backwards, grid patterns, spot the change and rotated shapes.
+• Ten capybara games: Catch the Capy, Memory Hideout, Rhythm Rescue, Capy Rocket, Morning Sort, Find the Impostor, Shake DJ, Tilt Maze, Capy Step Quest and QR Treasure Hunt.
+• Keep the ones you enjoy, switch off the rest. Each alarm draws one at random.
+• Set how hard, how many tasks, and how many wrong answers are fine.
+• Try every game in practice first. Practice never touches an alarm.
+
+ALWAYS A WAY OUT
+Every puzzle and game has an emergency stop. If you cannot solve it, you can still stop the alarm. CapyWake never locks you out of your own alarm.
+
+GENTLE OR STRAIGHT TO THE POINT
+• Plain alarms with a big Stop button, when you just want to wake up.
+• A wake window that starts quietly and rises to your phone's volume by your alarm time.
+• Snooze with a length and a limit you choose.
+• An optional check after you stop the alarm: if the phone has not moved in about 90 seconds, it rings once more.
+
+MADE FOR HALF-ASLEEP HANDS
+• Large controls, calm wording, no streaks, no scores, no shaming.
+• Motion games always have buttons too, so they work with the phone on a stand.
+• Light and dark mode, screen reader support and reduced motion.
+• Ten languages: English, German, Russian, Spanish, Turkish, French, Italian, Portuguese, Arabic and Japanese.
+
+PRIVATE BY DESIGN
+No account. Your alarms and history stay on your phone. Permissions are asked only when you turn on the feature that needs them, with the reason first: the camera for QR Treasure Hunt, motion and fitness for Step Quest.
+
+HONEST ABOUT RELIABILITY
+CapyWake shows a checklist of what affects your alarm on your phone.
+• On iPhone, alarms ring while CapyWake is open or in the background. If you force-quit the app, iOS closes it or your iPhone restarts, alarms cannot ring until you open CapyWake again. CapyWake can't promise to ring through silent mode or Focus.
+• On Android, CapyWake uses exact alarms. Some phones close background apps to save battery; the checklist shows how to exempt CapyWake. After changing time zone, open CapyWake once so your alarms follow.
+CapyWake is not more reliable than your phone's own clock app. Keep a backup alarm for anything you cannot miss.
+
+STATS THAT DO NOT MAKE THINGS UP
+See your alarm history and the games you played. Until there is history, Stats stays empty rather than inventing numbers.

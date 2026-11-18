@@ -4,6 +4,7 @@ import 'package:capywake/core/camera/fake_camera_access.dart';
 import 'package:capywake/core/games/qr_checkpoint.dart';
 import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/core/motion/fake_motion_sensor.dart';
 import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/permissions/device_access.dart';
@@ -33,6 +34,7 @@ import 'package:flutter_test/flutter_test.dart';
 Future<ProviderContainer> _pump(
   WidgetTester tester,
   String gameId, {
+  FakeMotionSensor? motion,
   StepSensor? steps,
   FakeCameraAccess? camera,
   FakeCodeScanner? scanner,
@@ -48,6 +50,7 @@ Future<ProviderContainer> _pump(
     overrides: [
       appDatabaseProvider.overrideWithValue(db),
       practiceSeedProvider.overrideWithValue(() => seed++),
+      if (motion != null) motionSensorProvider.overrideWithValue(motion),
       if (steps != null) stepSensorProvider.overrideWithValue(steps),
       if (camera != null) cameraAccessProvider.overrideWithValue(camera),
       if (scanner != null) codeScannerProvider.overrideWithValue(scanner),
@@ -83,7 +86,55 @@ Future<void> _catchAll(WidgetTester tester) async {
   }
 }
 
+Future<void> _moveApp(WidgetTester tester, List<AppLifecycleState> path) async {
+  for (final state in path) {
+    tester.binding.handleAppLifecycleStateChanged(state);
+  }
+  await tester.pump();
+}
+
+const List<AppLifecycleState> _offScreen = [
+  AppLifecycleState.inactive,
+  AppLifecycleState.hidden,
+];
+const List<AppLifecycleState> _onScreen = [
+  AppLifecycleState.inactive,
+  AppLifecycleState.resumed,
+];
+
 void main() {
+  group('practice sensors stop while the app is off screen', () {
+    tearDown(
+      () => TestWidgetsFlutterBinding.instance.handleAppLifecycleStateChanged(
+        AppLifecycleState.resumed,
+      ),
+    );
+
+    testWidgets('the accelerometer, for a motion game', (tester) async {
+      final motion = FakeMotionSensor();
+      await _pump(tester, 'shake_dj', motion: motion);
+      expect(motion.hasListener, isTrue);
+
+      await _moveApp(tester, _offScreen);
+      expect(motion.hasListener, isFalse);
+
+      await _moveApp(tester, _onScreen);
+      expect(motion.hasListener, isTrue);
+    });
+
+    testWidgets('the step sensor, for Step Quest', (tester) async {
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
+      await _pump(tester, 'step_quest', steps: steps);
+      expect(steps.hasListener, isTrue);
+
+      await _moveApp(tester, _offScreen);
+      expect(steps.hasListener, isFalse);
+
+      await _moveApp(tester, _onScreen);
+      expect(steps.hasListener, isTrue);
+    });
+  });
+
   testWidgets('plays Catch the Capy with the practice note', (tester) async {
     await _pump(tester, 'catch_the_capy');
     expect(find.text('Catch the Capy'), findsWidgets);

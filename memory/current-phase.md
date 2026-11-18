@@ -1,32 +1,30 @@
 # Current phase
 
-**Phase 18 — Animation and visual polish: done, 2026-11-18.
-`Current phase: 19` — Release QA (iOS + Android regression, bundle size,
-store readiness). Not blocked.**
+**Phase 19 — Release QA: done, 2026-11-18. `Current phase: none` — the phase
+plan (00–19) is complete.** What remains is the owner's: the open questions,
+the art requests, a real iPhone and a real Android phone, and every store
+button.
 
-**2,459 tests**, analyze clean, lib 98.74% / `lib/core` 99.74% / `lib/data`
-90.98%, **587 ARB keys × 10 locales**. Comment baseline 113. Bundle unchanged.
+**2,525 tests**, analyze clean, lib 98.71% / `lib/core` 99.74% / `lib/data`
+91.28%, **590 ARB keys × 10 locales**. Comment baseline 113.
 
-## What Phase 18 adds to the recipe
+## What Phase 19 adds to the recipe
 
-- **Theme:** `CapyWakeApp` applies `UserSettings.themeMode`; the first frame
-  is held ≤ 400 ms for it (`CapyWakeApp.themeWait`), cross-fade off meanwhile.
-- **Contrast:** `test/design/text_contrast_test.dart` gates every route, every
-  game's practice and both ring kinds in **both** themes. Brand orange/green
-  and text over art are pinned counts per screen; `cocoaSoft` on cream (4.49)
-  is the named palette near-miss. A new screen must pass it.
-- **Dark captures:** `tool/capture.sh` writes and verifies `dark.png` next to
-  `actual.png`; onboarding and the chooser are dark-only.
-- **Never `TickerMode(false)` over a subtree with a side-effecting watch** —
-  Riverpod pauses it (the shell's alarm arming).
-- **Art:** check on cream *and* dark; `outlineCoverage` gates masked outlines.
-- **Disabled rows are full ink** (mockup); the toggle carries the state.
-- **Win art is picked per win** (`WinArt.forSeed`): own pose, shared cheer
-  or the trophy loop. A new win art joins the enum.
-- **Capturing an animation:** pump, wait in real time (`runAsync`), pump —
-  a live binding's animation clock starts on its first pumped frame.
+- **iOS background ring:** `test/platform/ios_platform_setup_test.dart` guards
+  the plugin's setup; `integration_test/background_ring_probe_test.dart`
+  (`--dart-define=CAPYWAKE_BACKGROUND_PROBE=true`) proves it on the simulator.
+- **Zone:** `DeviceZone` (`lib/data/engine/`) — read the zone, never capture it.
+  The coordinator reads `scheduleLocationProvider` at compute time and listens
+  for a move; it must stay one instance across a zone change.
+- **Practice sensors:** wrap in `OnScreenMotionSensor` / `OnScreenStepSensor`
+  (the app lives in the background now). A ring keeps raw sensors.
+- **Privacy copy:** promise only what both platforms do —
+  `test/l10n/privacy_claims_test.dart`.
+- **After the first public build, schema changes need migrations** (`CLAUDE.md`).
+- **Icon:** `dart run tool/make_app_icon.dart <file>`.
 
 ## Open for the owner
 
-Loops G43–G46 (`ART_REQUESTS.md` #15); G47 closed; white on orange/green below
-contrast; everything Phase 17 listed.
+`docs/sessions/OPEN_QUESTIONS.md` (Phase 19: ML Kit, iPhone-only, icon,
+price/URLs, silent mode, Portuguese variant); `ART_REQUESTS.md` #17 (blocks a
+public release); `docs/release/RELEASE_CHECKLIST.md` device matrix.

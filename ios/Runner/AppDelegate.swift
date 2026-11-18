@@ -2,6 +2,8 @@ import AVFoundation
 import CoreMotion
 import Flutter
 import UIKit
+import UserNotifications
+import alarm
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -9,6 +11,8 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    UNUserNotificationCenter.current().delegate = self
+    SwiftAlarmPlugin.registerBackgroundTasks()
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
@@ -19,6 +23,9 @@ import UIKit
     }
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CapyCameraAccess") {
       CameraAccessChannel.register(with: registrar)
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CapyTimeZone") {
+      TimeZoneChannel.register(with: registrar)
     }
   }
 }
@@ -129,5 +136,53 @@ enum CameraAccessChannel {
     case .restricted: return "restricted"
     @unknown default: return "restricted"
     }
+  }
+}
+
+/// The device's IANA zone and its change notice. Names match `PlatformZoneChannel`.
+final class TimeZoneChannel: NSObject, FlutterStreamHandler {
+  private var observer: NSObjectProtocol?
+
+  static func register(with registrar: FlutterPluginRegistrar) {
+    let instance = TimeZoneChannel()
+    FlutterMethodChannel(name: "capywake/timezone", binaryMessenger: registrar.messenger())
+      .setMethodCallHandler { call, result in
+        switch call.method {
+        case "name":
+          result(currentName())
+        default:
+          result(FlutterMethodNotImplemented)
+        }
+      }
+    FlutterEventChannel(name: "capywake/timezone/events", binaryMessenger: registrar.messenger())
+      .setStreamHandler(instance)
+  }
+
+  // TimeZone.current is cached for the process until the system zone is reset.
+  private static func currentName() -> String {
+    NSTimeZone.resetSystemTimeZone()
+    return TimeZone.current.identifier
+  }
+
+  func onListen(withArguments arguments: Any?, eventSink events: @escaping FlutterEventSink)
+    -> FlutterError?
+  {
+    stop()
+    observer = NotificationCenter.default.addObserver(
+      forName: .NSSystemTimeZoneDidChange, object: nil, queue: .main
+    ) { _ in
+      events(Self.currentName())
+    }
+    return nil
+  }
+
+  func onCancel(withArguments arguments: Any?) -> FlutterError? {
+    stop()
+    return nil
+  }
+
+  private func stop() {
+    if let observer { NotificationCenter.default.removeObserver(observer) }
+    observer = nil
   }
 }

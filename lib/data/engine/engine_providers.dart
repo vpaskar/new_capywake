@@ -80,7 +80,8 @@ final alarmScheduleCoordinatorProvider = Provider<AlarmScheduleCoordinator>(
     final coordinator = AlarmScheduleCoordinator(
       engine: ref.watch(alarmEngineProvider),
       notifications: ref.watch(notificationServiceProvider),
-      location: ref.watch(scheduleLocationProvider),
+      location: ref.read(scheduleLocationProvider),
+      readLocation: () => ref.read(scheduleLocationProvider),
       now: ref.watch(engineNowProvider),
     );
 
@@ -109,6 +110,7 @@ final alarmScheduleCoordinatorProvider = Provider<AlarmScheduleCoordinator>(
 
     ref
       ..listen(scheduleRefreshProvider, (_, _) => resync())
+      ..listen(scheduleLocationProvider, (_, _) => resync())
       ..listen(notificationTimeFormatProvider, (_, _) => resync())
       ..onDispose(() {
         pending?.cancel();

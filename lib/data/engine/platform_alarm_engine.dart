@@ -40,6 +40,11 @@ class PlatformAlarmEngine implements AlarmEngine {
     _pluginRinging ??= plugin.Alarm.ringing.listen(_onRinging);
   }
 
+  /// Localizes the notice the plugin posts when the app is force-quit with an
+  /// alarm armed; its English default blames the user.
+  Future<void> setKillWarning({required String title, required String body}) =>
+      plugin.Alarm.setWarningNotificationOnKill(title, body);
+
   /// `Alarm.ringing` is a seeded `BehaviorSubject`, so a late subscriber
   /// replays the current set — reporting one ring twice without this.
   void _onRinging(plugin_set.AlarmSet set) {

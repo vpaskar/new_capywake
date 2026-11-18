@@ -202,6 +202,43 @@ void main() {
         reason: 'resume and timezone change re-sync without a row changing',
       );
     });
+
+    test('a zone change re-arms in the new zone, same coordinator', () async {
+      var zone = tz.getLocation('Europe/Berlin');
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      final container = ProviderContainer(
+        overrides: [
+          appDatabaseProvider.overrideWithValue(db),
+          scheduleLocationProvider.overrideWith((ref) => zone),
+          engineNowProvider.overrideWith(
+            (ref) =>
+                () => DateTime.utc(2026, 11, 18, 12),
+          ),
+        ],
+      );
+      addTearDown(() async {
+        container.dispose();
+        await db.close();
+      });
+      _hold(container);
+      final engine = container.read(alarmEngineProvider) as FakeAlarmEngine;
+      final coordinator = container.read(alarmScheduleCoordinatorProvider);
+
+      await container.read(capywakeRepositoryProvider).upsertAlarm(_alarm());
+      await _settle();
+      expect(engine.armedSnapshot['a1']!.scheduledUtc.hour, 6);
+
+      zone = tz.getLocation('America/New_York');
+      container.invalidate(scheduleLocationProvider);
+      await _settle();
+
+      expect(engine.armedSnapshot['a1']!.scheduledUtc.hour, 12);
+      expect(
+        container.read(alarmScheduleCoordinatorProvider),
+        same(coordinator),
+        reason: 'a rebuild on a zone change is a path the ring guard never saw',
+      );
+    });
   });
 
   group('reminder clock format', () {

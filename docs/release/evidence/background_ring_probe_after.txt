@@ -1,0 +1,4 @@
+PROBE ARMED ringAt=2026-11-18T17:00:00.000
+PROBE RANG startedAt=2026-11-18T17:00:00.248419 late=248ms
+01:48 +1: All tests passed!
+2026-11-18 17:00:00.154 Db Runner[46624:80a471] [com.gdelataillade.alarm:AlarmRingManager] Alarm ring started in 0.11s.

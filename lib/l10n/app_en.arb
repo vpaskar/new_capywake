@@ -369,7 +369,7 @@
   "@alarmWakeWindowExplanation": {
     "description": "Plain-language explanation of what the soft-start window does. Strictly honest — names the volume fade and explicitly disclaims sleep-stage detection."
   },
-  "alarmWakeWindowExplanationStrict": "Strict does not fade in. With a soft start the alarm begins earlier, at full volume.",
+  "alarmWakeWindowExplanationStrict": "Strict does not fade in. With a soft start the alarm begins earlier, at your phone's volume.",
   "@alarmWakeWindowExplanationStrict": {
     "description": "Replaces the soft-start explanation when the alarm is in Strict mode. Strict never fades in, so the window only makes the alarm start earlier — this says so rather than letting the fading-mode wording stand."
   },
@@ -551,13 +551,13 @@
   "@reliabilityCautionBatteryOptimization": {
     "description": "Android caution: surface OEM battery-optimisation kill behaviour (the real failure mode per dontkillmyapp.com). Calm guidance, no fear language."
   },
-  "reliabilityCautionTerminationIos": "If you force-quit CapyWake or iOS clears it from memory, alarms stop ringing.",
+  "reliabilityCautionTerminationIos": "If you force-quit CapyWake, iOS clears it from memory or your iPhone restarts, alarms stop ringing until you open CapyWake again.",
   "@reliabilityCautionTerminationIos": {
     "description": "iOS caution: a terminated/memory-evicted app cannot fire alarms (until AlarmKit). Honest, neutral wording."
   },
-  "reliabilityCautionSilentModeIos": "iOS silent mode and Focus mute alarm sounds. CapyWake does not override them.",
+  "reliabilityCautionSilentModeIos": "CapyWake can't promise to ring through iOS silent mode or Focus. Check before you rely on it.",
   "@reliabilityCautionSilentModeIos": {
-    "description": "iOS caution: no Critical Alerts entitlement, so silent mode / DND mute the alarm. Honest, no implied bypass."
+    "description": "iOS caution: no Critical Alerts entitlement; the ring plays as media, never tested on silent. Promise nothing either way."
   },
   "reliabilityCautionScheduleCapIos": "iOS keeps at most 64 scheduled reminders per app. CapyWake schedules the soonest first.",
   "@reliabilityCautionScheduleCapIos": {
@@ -2712,7 +2712,7 @@
   "@stepAccessTitle": {
     "description": "Prompt before asking the OS for step counting (Android physical activity, iOS Motion & Fitness)."
   },
-  "stepAccessBody": "{game} counts best with your phone's step sensor. CapyWake reads it only while you play, and nothing leaves your phone. Without it, steps are counted from motion, which is less exact.",
+  "stepAccessBody": "{game} counts best with your phone's step sensor. CapyWake reads it only while you play, and your steps never leave your phone. Without it, steps are counted from motion, which is less exact.",
   "@stepAccessBody": {
     "description": "Why step counting is asked for. {game} is the game's name.",
     "placeholders": {
@@ -2798,9 +2798,9 @@
   "@cameraAccessTitle": {
     "description": "Prompt before asking the OS for the camera."
   },
-  "cameraAccessBody": "{game} uses the camera only while you scan a code. Nothing is recorded, and nothing leaves your phone.",
+  "cameraAccessBody": "{game} uses the camera only while you scan a code. No picture is saved, and no picture leaves your phone.",
   "@cameraAccessBody": {
-    "description": "Why the camera is asked for. {game} is the game's name.",
+    "description": "Why the camera is asked for. {game} is the game's name. Claims only images: on Android the scanner (ML Kit) sends Google diagnostics, so never 'nothing leaves'.",
     "placeholders": {
       "game": {
         "type": "String",
@@ -2829,5 +2829,13 @@
         "example": "QR Treasure Hunt"
       }
     }
+  },
+  "alarmKillWarningTitle": "Alarms paused",
+  "@alarmKillWarningTitle": {
+    "description": "Title of the notification iOS shows when the app is force-quit with an alarm armed. Calm, never blaming."
+  },
+  "alarmKillWarningBody": "CapyWake was closed, so its alarms can't ring. Open it to turn them back on.",
+  "@alarmKillWarningBody": {
+    "description": "Body of that notification. States the fact and the fix; never 'you killed the app'."
   }
 }

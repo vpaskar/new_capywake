@@ -333,16 +333,14 @@ void main() {
   });
 
   group('About', () {
-    // The mockup draws v1.0.0 and the pubspec says 0.1.0. A literal here
-    // would be a fabricated value on a screen that cannot carry one.
-    testWidgets('shows the build version, not the mockup one', (tester) async {
+    // The row reads AppVersion, which app_version_test ties to the pubspec.
+    testWidgets('shows the build version', (tester) async {
       await pumpSettings(tester);
       final l10n = l10nOf(tester);
 
       final row = find.text(l10n.settingsAboutVersion(AppVersion.value));
       await tester.scrollUntilVisible(row, 120, maxScrolls: 30);
       expect(row, findsOneWidget);
-      expect(find.text('v1.0.0'), findsNothing);
     });
 
     testWidgets('the sheet opens and makes no reliability claim', (

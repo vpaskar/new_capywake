@@ -13,10 +13,4 @@ void main() {
 
     expect(AppVersion.value, declared);
   });
-
-  test('is not the mockup placeholder', () {
-    // `04_SETTINGS.png` draws "v1.0.0". Shipping that literal would put a
-    // fabricated number on the screen.
-    expect(AppVersion.value, isNot('1.0.0'));
-  });
 }

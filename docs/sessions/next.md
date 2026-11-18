@@ -1,16 +1,17 @@
 # Next session — start here
 
-> **Phase 18 done (2026-11-18).** The pointer is `19` — **Release QA**
-> (iOS + Android regression, bundle size, store readiness). Not blocked: start
-> it with the usual checklist. Store work is drafts only.
+> **Phase 19 done (2026-11-18). The phase plan is complete — `Current phase:
+> none`.** Start with `docs/sessions/OPEN_QUESTIONS.md` and
+> `docs/release/RELEASE_CHECKLIST.md`. Store work is drafts only; the owner
+> presses every final button.
 
 ## State
 
-Phases 00–18 are **done** and committed.
+Phases 00–19 are **done** and committed.
 
-**Current phase: `19` — not blocked.**
+**Current phase: `none`.** New work needs a new phase row from the owner.
 
-**2,459 tests** pass. `lib` 98.74%, `lib/core` 99.74%, `lib/data` 90.98%. **587 ARB keys × 10
+**2,525 tests** pass. `lib` 98.71%, `lib/core` 99.74%, `lib/data` 91.28%. **590 ARB keys × 10
 locales.** Comment baseline **113**.
 
 All ten games are playable. **Read `docs/sessions/OPEN_QUESTIONS.md` first** —
@@ -140,6 +141,18 @@ in a screenshot was the harness, not the app (pre-cache before capturing).
   change to `lib/data/engine/` or the ringing controller. Every widget test uses
   the fake engine, which cannot see the plugin silence a ring (it did, from the
   engine's first phase until 2026-11-18).
+- **`ring_lifecycle_test` failed twice in Phase 19, then passed 9 times** —
+  nothing armed for tomorrow 2 s after a dismiss; cause not found
+  (`PHASE_19_FULL_PROJECT_REVIEW.md` P1). Run it several times, not once.
+- **The background ring check is manual too:** after any change to
+  `ios/Runner/Info.plist`, `AppDelegate.swift` or `lib/data/engine/`, run
+  `integration_test/background_ring_probe_test.dart` with
+  `--dart-define=CAPYWAKE_BACKGROUND_PROBE=true` on the iPhone 14 Pro
+  simulator (skipped otherwise); after `PROBE ARMED`, `xcrun simctl launch <udid>
+  com.apple.Preferences` sends the app home, and after the ring time `xcrun
+  simctl launch <udid> com.capywake.capywake` brings it back. It passes only if
+  the ring started on time in the background (Phase 19: 248 ms; before the
+  fix, 46.8 s — the moment the app returned).
 - **The sleep-boundary restoration — still owed, now five times over.**
   `package:health` and `live_sleep_gateway.dart` did **not** land in 07, 08, 09,
   10 or 11. `test/core/sleep/sleep_boundary_test.dart` stays at `at most one`
@@ -149,7 +162,6 @@ in a screenshot was the harness, not the app (pre-cache before capturing).
 - **`MeadowFooter` paints ~2× the mockup's grass** — `asset_gaps.md` **G19**.
 - **`SceneHeader` draws a flat-topped sheet; the mockups draw a cloud** — **G18**.
 - **Alarms fails 3 Tier A blocks, Add/Edit fails 8.** Phase 07's numbers.
-- **`AlarmEngine.ringNow` is still called by nothing in `lib/`.**
 - **The Settings theme tiles have no art** — **G12**.
 - **`check_bundle_size.dart` cannot see the three native plugins.**
 - **Android is untested and has no emulator. Never mark it tested.**

@@ -1,0 +1,7 @@
+PROBE ARMED ringAt=2026-11-18T16:56:00.000
+PROBE RANG startedAt=2026-11-18T16:56:46.803691 late=46803ms
+Expected: a value less than <10>
+  Actual: <46>
+  Test failed. See exception logs above.
+02:06 +0 -1: Some tests failed.
+2026-11-18 16:56:46.718 Db Runner[39835:80316a] [com.gdelataillade.alarm:AlarmRingManager] Alarm ring started in 0.02s.

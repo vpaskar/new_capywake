@@ -195,3 +195,49 @@ Tier A choice, so it is counted (and pinned per screen in
 **Answered 2026-11-18 (owner):** the trophy loop goes in — every win picks one
 of the game's own pose, the shared cheer, or the trophy at random (by the
 ring's or practice round's seed). The trophy Capy has no nightcap (Tier B).
+
+## 2026-11-18 — Phase 19 — Android's code scanner sends Google diagnostics
+
+`mobile_scanner`'s bundled ML Kit sends Google device and app information,
+installation identifiers and performance metrics (no images) — Google's own
+disclosure page. It is why the Android release has `INTERNET`. Meanwhile:
+**kept and disclosed** — the camera rationale now promises only that no picture
+leaves the phone (ten locales), and `docs/release/PRIVACY.md` declares it in the
+Play Data safety key. iOS uses Apple Vision and sends nothing. Alternative:
+strip `INTERNET` from the merged manifest (`tools:node="remove"`) so Android
+cannot send anything either — needs a scan on a real Android phone first,
+because ML Kit's upload job then fails at runtime and that was never run.
+
+## 2026-11-18 — Phase 19 — iPhone only, portrait only
+
+The app was an iPad target and allowed landscape; nothing was ever designed or
+measured for either, and an iPad target needs iPad screenshots and iPad review.
+Meanwhile: **iPhone only (`TARGETED_DEVICE_FAMILY = 1`), portrait on both
+platforms.** iPads can still run the iPhone app. Revert in `project.pbxproj`
+and `Info.plist` if the owner wants iPad — then iPad captures are owed.
+
+## 2026-11-18 — Phase 19 — The interim app icon is an alarm clock
+
+There is no app icon in the package (G48). Meanwhile the supplied golden alarm
+clock sits on cream. A Capy face (`ART_REQUESTS.md` #17) replaces it with one
+command: `dart run tool/make_app_icon.dart <file>`.
+
+## 2026-11-18 — Phase 19 — Price, support email, privacy-policy URL
+
+Not decided in code: the app has no purchase code (Restore Purchases was
+dropped in Phase 07). The store drafts leave price, support email, privacy URL
+and seller name for the owner (`docs/release/STORE_LISTING.md`).
+
+## 2026-11-18 — Phase 19 — iOS silent mode: the copy may underpromise
+
+`alarm` plays the ring as media (`AVAudioSession` `.playback`), which the
+silent switch does not mute. The reliability copy still says silent mode and
+Focus mute alarms — the safe direction, and never tested on a device. If a
+real iPhone rings on silent (release checklist row 6), the copy can say so.
+
+## 2026-11-18 — Phase 19 — Portuguese: Brazil or Portugal?
+
+`app_pt.arb` is about half European Portuguese (`telemóvel`, `ecrã`, `tu`)
+and half Brazilian (`você`). One store listing locale will be chosen (Apple
+offers pt-BR and pt-PT; Play the same). Say which, and the strings get
+harmonized to it in one pass. Meanwhile nothing changes.

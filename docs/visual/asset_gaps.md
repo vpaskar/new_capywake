@@ -1144,3 +1144,21 @@ shared 8-frame cheer, or `05_celebration` as `animations/loop_celebration.webp`
 (36 frames × 80 ms, 360², lossy colour + lossless alpha, **320 KB**; audited per
 frame: no ghosts, edge contact 8 px, outline coverage ≥ 0.25). **Tier B:** its
 Capy wears no nightcap.
+
+## G48 — No app icon, no store feature graphic (Phase 19, reported)
+
+**Missing:** the package has no app icon; both platforms shipped `flutter
+create`'s Flutter logo, which neither store accepts. No capybara in the package
+is large enough to be one: the sharpest close-up (the welcome scene's Capy
+head) is ~400 px — a 2.5× upscale at 1024. Play's 1024 × 500 feature graphic
+has no source either.
+
+**Used meanwhile (Tier B, declared):** `source_png/cute_golden_twin_bell_alarm_clock.png`
+(1254², art 648 × 764) centred on cream at 64 % of the side — a downscale, no
+upscale — by `tool/make_app_icon.dart` (refuses an undersized source). Every
+iOS iPhone size, the 1024 store icon without alpha, Android legacy mipmaps and
+an adaptive icon (foreground inside the 66 dp safe circle; cream background).
+Gated by `test/platform/app_icon_test.dart`. It is an alarm clock, not the
+brand's capybara. **No Android 13 themed icon** — it needs a one-colour glyph.
+
+**Needed:** `ART_REQUESTS.md` #17.

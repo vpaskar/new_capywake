@@ -1,7 +1,14 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+}
+
+val releaseKeyFile = rootProject.file("key.properties")
+val releaseKey = Properties().apply {
+    if (releaseKeyFile.exists()) releaseKeyFile.inputStream().use(::load)
 }
 
 android {
@@ -17,23 +24,39 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.capywake.capywake"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+    signingConfigs {
+        if (releaseKeyFile.exists()) {
+            create("release") {
+                fun required(name: String) = releaseKey.getProperty(name)?.takeIf { it.isNotBlank() }
+                    ?: throw GradleException("android/key.properties has no $name (see key.properties.example).")
+                keyAlias = required("keyAlias")
+                keyPassword = required("keyPassword")
+                storeFile = rootProject.file(required("storeFile"))
+                storePassword = required("storePassword")
+            }
         }
     }
+
+    buildTypes {
+        release {
+            signingConfig = if (releaseKeyFile.exists()) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
+        }
+    }
+}
+
+if (!releaseKeyFile.exists() && gradle.startParameter.taskNames.any { it.contains("Release") }) {
+    logger.warn("CapyWake: android/key.properties missing - release is debug-signed and Play will reject it.")
 }
 
 kotlin {

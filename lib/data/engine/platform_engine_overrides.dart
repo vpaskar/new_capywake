@@ -1,10 +1,13 @@
+import 'dart:async';
+
 import 'package:capywake/core/alarm_format.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/data/camera/camera_providers.dart';
+import 'package:capywake/data/engine/device_zone.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
-import 'package:capywake/data/engine/local_location_resolver.dart';
 import 'package:capywake/data/engine/platform_alarm_engine.dart';
 import 'package:capywake/data/engine/platform_notification_service.dart';
+import 'package:capywake/data/engine/platform_zone_channel.dart';
 import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/permissions/platform_permission_service.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
@@ -20,27 +23,41 @@ Future<Widget Function(Widget)> platformEngineScope({
   TimeFormatPreference timeFormat = TimeFormatPreference.system,
   DateTime Function() now = DateTime.now,
 }) async {
-  final location = LocalLocationResolver.resolve(now()) ?? tz.UTC;
-  tz.setLocalLocation(location);
+  final zone = DeviceZone(
+    readName: PlatformZoneChannel.name,
+    changes: PlatformZoneChannel.changes,
+    now: now,
+  );
+  await zone.start();
+  AppLifecycleListener(onResume: () => unawaited(zone.refresh()));
 
   final engine = PlatformAlarmEngine(
     title: (_) => l10n.alarmRingNotificationTitle,
     body: (alarm) => l10n.alarmRingNotificationBody(
       alarm.label.isEmpty ? l10n.alarmRingNotificationTitle : alarm.label,
     ),
-    location: () => location,
+    location: () => zone.current,
     now: now,
   );
   await engine.initialize();
+  await engine.setKillWarning(
+    title: l10n.alarmKillWarningTitle,
+    body: l10n.alarmKillWarningBody,
+  );
 
   var clockFormat = () => timeFormat;
   final notifications = PlatformNotificationService(
     channelName: () => l10n.notificationChannelName,
     title: (_) => l10n.notificationSoftWakeTitle,
     body: (n) => l10n.notificationSoftWakeBody(
-      _formatClock(n.payloadAlarmTimeUtc, location, localeName, clockFormat()),
+      _formatClock(
+        n.payloadAlarmTimeUtc,
+        zone.current,
+        localeName,
+        clockFormat(),
+      ),
     ),
-    location: () => location,
+    location: () => zone.current,
     now: now,
   );
   await notifications.initialize();
@@ -60,7 +77,7 @@ Future<Widget Function(Widget)> platformEngineScope({
       permissionServiceProvider.overrideWith(
         (ref) => PlatformPermissionService(),
       ),
-      scheduleLocationProvider.overrideWith((ref) => location),
+      scheduleLocationFollowing(zone),
       engineNowProvider.overrideWith((ref) => now),
       platformMotionOverride(),
       platformStepOverride(),

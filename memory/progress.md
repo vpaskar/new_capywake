@@ -528,3 +528,23 @@ read); dark mode checked by 8 captures and a two-theme contrast gate; five
 legibility defects fixed; 12/24 h reaches the ringing clock and reminders.
 No loop shipped (G43–G47). Muting the app under a ring reverted — it paused
 alarm arming. 2,459 tests.
+
+---
+
+## Phase 19 — Release QA
+
+**Done 2026-11-18.** The last phase of the plan.
+
+**Found:** iOS alarms never rang in the background (`alarm`'s iOS setup was
+never installed; every ring test ran in the foreground) — probe 46.8 s late
+before, 248 ms after. A live zone change was never applied. "Nothing leaves your
+phone" was false on Android (ML Kit diagnostics). The app icon was Flutter's.
+The plugin's kill notice was English and blamed the user.
+
+**Shipped:** the iOS setup, `DeviceZone`, honest copy in ten locales, an
+interim icon (G48), dark launch screens, iPhone + portrait only, release
+signing, `1.0.0+1`, store drafts in `docs/release/`.
+
+**Not proven:** nothing on Android, nothing on a real iPhone; the zone notice
+never fired; `ring_lifecycle_test` failed twice, then passed 9 times — cause not
+found.

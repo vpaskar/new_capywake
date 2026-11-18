@@ -42,5 +42,6 @@ poses are in. Per-file verdicts: `asset_gaps.md`, "Owner replacements".
 | 14 | **Tilt Maze: a round curled Capy** (orange nightcap, no "zz") **and a checkered goal flag** | each ≥ 160 × 160, transparent | G40 |
 | 15 | **The four loops re-cut** — `01_wake_up`, `02_sleep_breathing`, `03_walk_cycle`, `04_shake_dj`: keep the dark outline and eyes (opaque, not masked), the whole nightcap, blanket and backpack inside the frame; 36 PNG frames, one canvas | 360 × 360, transparent | G43–G46 |
 | 16 | ~~Where should `05_celebration` go?~~ **Answered 2026-11-18:** one of three win arts, picked per win (own pose, shared cheer, trophy) | — | G47 closed |
+| 17 | **App icon: Capy's face**, orange nightcap, centred, no text, opaque square on a flat field (iOS masks the corners), plus a **one-colour silhouette** of the same for Android 13 themed icons, plus a **1024 × 500 Play feature graphic** (no text — captions are added per locale) | icon 1024 × 1024 with the face ≥ 660 px; glyph 432 × 432 transparent | G48 |
 
-Every item here is polish; the app works with what it has.
+Every item here is polish except **#17, which blocks a public release**; the app works with what it has.

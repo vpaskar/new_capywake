@@ -13,6 +13,7 @@ import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/games/device_access_prompt.dart';
+import 'package:capywake/features/games/foreground_sensors.dart';
 import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/games/game_registry.dart';
@@ -215,8 +216,8 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen>
               onProgress: (_) {},
               onCompleted: () => setState(() => _done = true),
               reduceMotion: reduceMotion,
-              motion: ref.watch(motionSensorProvider),
-              steps: ref.watch(stepSensorProvider),
+              motion: OnScreenMotionSensor(ref.watch(motionSensorProvider)),
+              steps: OnScreenStepSensor(ref.watch(stepSensorProvider)),
               scanner: ref.watch(codeScannerProvider),
               qrCheckpoint: checkpoint.value,
             ),

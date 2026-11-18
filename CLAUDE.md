@@ -48,7 +48,7 @@ the session.
 | `lib/core/` minus `theme.dart` | 62 files, 9,825 lines — verified pure Dart |
 | `test/core/` | 48 files, **932 passing tests**, zero feature imports |
 | `lib/l10n/` | 383 keys × 10 locales; only 3 are navigation-coupled |
-| `lib/data/` tables + mappers | **at `schemaVersion = 1`** — drop the legacy's 6-version migration history; this app has no users |
+| `lib/data/` tables + mappers | **at `schemaVersion = 1`** — drop the legacy's 6-version migration history; no build had shipped (see Store publishing) |
 | `tool/check_arb.dart`, `check_coverage.dart`, `generate_tones.dart`, `assets/sounds/` | — |
 
 | Not ported | Why |
@@ -328,6 +328,15 @@ finding that feels too small to fix takes 30 seconds — fix it.
 - Pre-flight every session: `pwd && git branch --show-current`.
 
 ## Store publishing
+
+**From the first public build, a schema change needs a real migration** from
+every shipped version, tested from a populated database of that version, because
+a shipped build has users (Phase 19). `migration_origin_test.dart` is deleted on
+purpose by the first phase that adds one.
+
+The store drafts live in `docs/release/`; the platform gates in
+`test/platform/` fail if `alarm`'s iOS background modes or the launcher icon
+regress.
 
 Drafts only. Never submit, publish, release or roll out. The owner presses
 every final button. (Inherited from `pets/CLAUDE.md`.)

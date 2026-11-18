@@ -37,13 +37,6 @@ class _AppShellState extends ConsumerState<AppShell>
     }
   }
 
-  /// A timezone change moves every future ring without changing a row, so the
-  /// schedule has to be recomputed from a database that did not emit.
-  @override
-  void didChangeLocales(List<Locale>? locales) {
-    ref.read(scheduleRefreshProvider.notifier).refresh();
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
