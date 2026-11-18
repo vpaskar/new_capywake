@@ -2673,5 +2673,61 @@
   "gameTiltMazeEscaped": "Out! Next maze.",
   "@gameTiltMazeEscaped": {
     "description": "Tilt Maze: Capy reached the flag; a new maze follows. The next step reads the new distance."
+  },
+  "gameStepQuestInstruction": "Walk with the phone to move Capy.",
+  "@gameStepQuestInstruction": {
+    "description": "Step Quest: the instruction under the game's name."
+  },
+  "gameStepQuestStep": "Take a step",
+  "@gameStepQuestStep": {
+    "description": "Step Quest: the button that takes one step without walking."
+  },
+  "gameStepQuestStalled": "Capy is waiting. Walk or tap.",
+  "@gameStepQuestStalled": {
+    "description": "Step Quest: shown after a long pause with no step."
+  },
+  "gameStepQuestCount": "{total, plural, =1{{count} / {total} step} other{{count} / {total} steps}}",
+  "@gameStepQuestCount": {
+    "description": "Step Quest: steps walked out of the goal, e.g. 8 / 20 steps.",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "example": "8"
+      },
+      "total": {
+        "type": "int",
+        "example": "20"
+      }
+    }
+  },
+  "gameStepQuestSourceSensor": "Counted by your step sensor",
+  "@gameStepQuestSourceSensor": {
+    "description": "Step Quest: the phone's own step sensor is counting."
+  },
+  "gameStepQuestSourceMotion": "Counted from motion",
+  "@gameStepQuestSourceMotion": {
+    "description": "Step Quest: steps are counted from the accelerometer (no step sensor, or not allowed)."
+  },
+  "stepAccessTitle": "Count real steps",
+  "@stepAccessTitle": {
+    "description": "Prompt before asking the OS for step counting (Android physical activity, iOS Motion & Fitness)."
+  },
+  "stepAccessBody": "{game} counts best with your phone's step sensor. CapyWake reads it only while you play, and nothing leaves your phone. Without it, steps are counted from motion, which is less exact.",
+  "@stepAccessBody": {
+    "description": "Why step counting is asked for. {game} is the game's name.",
+    "placeholders": {
+      "game": {
+        "type": "String",
+        "example": "Step Quest"
+      }
+    }
+  },
+  "stepAccessAllow": "Allow step counting",
+  "@stepAccessAllow": {
+    "description": "Button that shows the OS step-counting prompt."
+  },
+  "stepAccessDeniedBody": "Step counting is off for CapyWake. You can turn it on in Settings. Until then, steps are counted from motion.",
+  "@stepAccessDeniedBody": {
+    "description": "Step counting was refused and only device Settings can turn it on."
   }
 }

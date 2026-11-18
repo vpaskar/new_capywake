@@ -557,5 +557,15 @@
   "gameTiltMazeWall": "{direction}, mur",
   "gameTiltMazeSteps": "{count, plural, =1{1 pas jusqu'au drapeau.} other{{count} pas jusqu'au drapeau.}}",
   "gameTiltMazeBumped": "Un mur. Essaie un autre chemin.",
-  "gameTiltMazeEscaped": "Sorti ! Labyrinthe suivant."
+  "gameTiltMazeEscaped": "Sorti ! Labyrinthe suivant.",
+  "gameStepQuestInstruction": "Marche avec le téléphone.",
+  "gameStepQuestStep": "Faire un pas",
+  "gameStepQuestStalled": "Capy attend. Marche ou touche.",
+  "gameStepQuestCount": "{count} / {total} pas",
+  "gameStepQuestSourceSensor": "Via ton capteur de pas",
+  "gameStepQuestSourceMotion": "Via le mouvement",
+  "stepAccessTitle": "Compter de vrais pas",
+  "stepAccessBody": "{game} compte mieux avec le capteur de pas de ton téléphone. CapyWake ne le lit que pendant que tu joues, et rien ne quitte ton téléphone. Sans lui, les pas sont comptés d'après le mouvement, ce qui est moins précis.",
+  "stepAccessAllow": "Autoriser le comptage des pas",
+  "stepAccessDeniedBody": "Le comptage des pas est désactivé pour CapyWake. Tu peux l'activer dans les Réglages. En attendant, les pas sont comptés d'après le mouvement."
 }

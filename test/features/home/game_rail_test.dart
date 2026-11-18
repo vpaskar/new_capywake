@@ -17,6 +17,7 @@ Future<void> _pumpRail(
   WidgetTester tester, {
   Locale locale = const Locale('en'),
   double width = 393,
+  List<GameEntry> entries = GameCatalogue.homeRail,
 }) async {
   tester.view.physicalSize = Size(width, 852) * 3;
   tester.view.devicePixelRatio = 3;
@@ -26,7 +27,9 @@ Future<void> _pumpRail(
     routes: [
       GoRoute(
         path: '/',
-        builder: (_, _) => const Scaffold(body: Center(child: GameRail())),
+        builder: (_, _) => Scaffold(
+          body: Center(child: GameRail(entries: entries)),
+        ),
       ),
       GoRoute(
         path: '${Routes.games}/:id',
@@ -47,8 +50,26 @@ Future<void> _pumpRail(
   await tester.pumpAndSettle();
 }
 
+/// The Home rail has no blocked game left; this one keeps that state tested.
+const _blocked = GameEntry(
+  id: 'qr_treasure_hunt',
+  nameKey: 'gameQrTreasureHunt',
+  tileAssetId: 'tile.qrTreasureHunt',
+  availability: GameAvailability.blocked,
+  screenReaderSolvable: false,
+  blockedReason: GameBlockedReason.camera,
+);
+
 void main() {
   group('GameRail', () {
+    testWidgets('every Home-rail game is playable now Step Quest is built', (
+      tester,
+    ) async {
+      expect(GameCatalogue.homeRail.every((e) => e.isPlayable), isTrue);
+      await _pumpRail(tester);
+      expect(find.text('Soon'), findsNothing);
+    });
+
     testWidgets('renders one tile per Home-rail entry, not the full ten', (
       tester,
     ) async {
@@ -168,9 +189,9 @@ void main() {
     });
 
     testWidgets('a blocked tap explains the permission', (tester) async {
-      await _pumpRail(tester);
+      await _pumpRail(tester, entries: const [_blocked]);
 
-      await tester.tap(find.text('Step Quest'));
+      await tester.tap(find.text('QR Treasure Hunt'));
       await tester.pumpAndSettle();
 
       expect(find.text('Not built yet'), findsOneWidget);
@@ -260,7 +281,7 @@ void main() {
     testWidgets('an unavailable tile announces its state to a11y', (
       tester,
     ) async {
-      await _pumpRail(tester);
+      await _pumpRail(tester, entries: const [_blocked]);
 
       expect(
         tester.getSemantics(find.byType(InkWell).first).label.contains('Soon'),
@@ -274,14 +295,9 @@ void main() {
     ) async {
       // CLAUDE.md: a comingSoon card is "visibly and semantically marked".
       // A semantics-only badge leaves a sighted user with no signal.
-      await _pumpRail(tester);
+      await _pumpRail(tester, entries: const [_blocked]);
 
-      expect(
-        find.text('Soon'),
-        findsNWidgets(
-          GameCatalogue.homeRail.where((e) => !e.isPlayable).length,
-        ),
-      );
+      expect(find.text('Soon'), findsOneWidget);
     });
 
     testWidgets('scrolls rather than overflowing at 320pt', (tester) async {

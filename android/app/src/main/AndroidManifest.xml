@@ -1,4 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Step Quest reads the step sensor, asked for only when the user picks it. -->
+    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <application
         android:label="CapyWake"
         android:name="${applicationName}"

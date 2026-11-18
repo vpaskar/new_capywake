@@ -26,6 +26,7 @@ class GameEntry {
     required this.screenReaderSolvable,
     this.blockedReason,
     this.winPoseAssetId,
+    this.countsSteps = false,
   }) : assert(
          (availability == GameAvailability.blocked) == (blockedReason != null),
          'A blocked game carries a reason; a non-blocked game carries none.',
@@ -45,14 +46,14 @@ class GameEntry {
   /// The game's own win pose; `null` shows the shared win animation.
   final String? winPoseAssetId;
 
+  /// Whether the game counts steps, so a host may offer the step sensor.
+  final bool countsSteps;
+
   bool get isPlayable => availability == GameAvailability.playable;
 }
 
 /// Why a game is blocked. Unblocking one is an owner decision, not a phase's.
 enum GameBlockedReason {
-  /// Adds ACTIVITY_RECOGNITION on Android 10+ and Motion & Fitness on iOS.
-  stepCount,
-
   /// A camera dependency the app does not have.
   camera,
 }
@@ -65,9 +66,9 @@ abstract final class GameCatalogue {
     nameKey: 'gameStepQuest',
     tileAssetId: 'tile.stepQuest',
     winPoseAssetId: 'pose.stepQuest',
-    availability: GameAvailability.blocked,
-    screenReaderSolvable: false,
-    blockedReason: GameBlockedReason.stepCount,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
+    countsSteps: true,
   );
 
   static const _qrTreasureHunt = GameEntry(
@@ -165,7 +166,7 @@ abstract final class GameCatalogue {
     _capyRocket,
   ];
 
-  /// Step Quest is first and blocked, so that state shows on a primary screen.
+  /// The four games `01_HOME.png` draws, in its order.
   static const homeRail = <GameEntry>[
     _stepQuest,
     _shakeDj,

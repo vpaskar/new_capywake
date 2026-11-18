@@ -9,7 +9,12 @@ class PlatformMotionSensor implements MotionSensor {
   @override
   Stream<MotionSample> get samples =>
       accelerometerEventStream(samplingPeriod: samplingPeriod).map(
-        (event) => MotionSample(x: event.x, y: event.y, z: event.z),
+        (event) => MotionSample(
+          x: event.x,
+          y: event.y,
+          z: event.z,
+          timestamp: event.timestamp,
+        ),
       );
 
   /// The plugin stops the sensor when the last listener cancels.

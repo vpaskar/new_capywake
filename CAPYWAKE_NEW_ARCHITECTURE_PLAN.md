@@ -333,16 +333,16 @@ marked and opens a short "not built yet" sheet — never a dead tap or a broken
 route. The rail is tested with **zero** playable games, which is the state it
 ships in.
 
-Two entries are `blocked` from day one, each carrying its reason:
+Two entries were `blocked` from day one, each carrying its reason:
 
-- **Step Quest** needs step counting. `sensors_plus` was chosen specifically to
-  avoid `ACTIVITY_RECOGNITION` (Android 10+) and Motion & Fitness (iOS).
+- **Step Quest** needed step counting. **Unblocked by the owner in Phase 16
+  (2026-11-18):** the phone's own step sensor (Android `ACTIVITY_RECOGNITION`,
+  iOS Motion & Fitness, asked just-in-time and never on a ring), else the
+  accelerometer, and a step button that always works.
 - **QR Treasure Hunt** needs a camera dependency that does not exist.
 
-Both add a store-visible permission, so each needs an explicit owner decision
-to unblock, and both are sequenced last. Step Quest is the **first card on the
-Home mockup**, so this is visible on a primary screen — logged as a deviation
-caused by a real platform constraint, not an oversight.
+Each adds a store-visible permission, so each needs an explicit owner decision
+to unblock, and both are sequenced last.
 
 ## 7. Phase plan
 
@@ -372,7 +372,7 @@ sequencing; this table is a summary and must be updated with it.
 | 13 | Touch games II | Rhythm Rescue, Capy Rocket |
 | 14 | Authored games | Morning Sort, Find the Impostor |
 | 15 | Motion games | Shake DJ, Tilt Maze — a11y fallback mandatory |
-| 16 | Capy Step Quest | **Blocked** — needs a step-count permission |
+| 16 | Capy Step Quest | Step sensor → accelerometer → button (owner, 2026-11-18) |
 | 17 | QR Treasure Hunt | **Blocked** — needs a camera dependency |
 | 18 | Animation and visual polish | The 5 WebP loops, reduce-motion, dark mode pass |
 | 19 | Release QA | iOS + Android regression, bundle size, store readiness |

@@ -96,11 +96,11 @@ void main() {
         expect(
           PuzzleSettings(
             enabledTypes: const {PuzzleType.arithmetic},
-            enabledGames: const {'step_quest'},
+            enabledGames: const {'qr_treasure_hunt'},
             includePuzzles: false,
           ).isVisualOnly,
           isTrue,
-          reason: 'step_quest is not screen-reader solvable',
+          reason: 'qr_treasure_hunt is not screen-reader solvable',
         );
       });
     });

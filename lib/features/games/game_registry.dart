@@ -7,6 +7,7 @@ import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/games/morning_sort_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/games/shake_dj_view.dart';
+import 'package:capywake/features/games/step_quest_view.dart';
 import 'package:capywake/features/games/tilt_maze_view.dart';
 import 'package:capywake/features/ringing/game_ringing_view.dart';
 import 'package:flutter/widgets.dart';
@@ -26,6 +27,7 @@ abstract final class GameRegistry {
     'morning_sort': MorningSortView.fromLaunch,
     'shake_dj': ShakeDjView.fromLaunch,
     'tilt_maze': TiltMazeView.fromLaunch,
+    'step_quest': StepQuestView.fromLaunch,
   };
 
   static bool isLaunchable(String gameId) =>

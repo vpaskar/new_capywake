@@ -1,6 +1,9 @@
+import 'package:capywake/core/motion/fake_step_sensor.dart';
+import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/design/capy_toggle.dart';
 import 'package:capywake/features/alarms/edit/dismiss_method_section.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -88,6 +91,29 @@ void main() {
     expect(
       (await harness.repository.listAlarms()).single.puzzleOverride,
       isNull,
+    );
+  });
+
+  testWidgets('adding Step Quest to an alarm offers the step sensor', (
+    tester,
+  ) async {
+    final steps = FakeStepSensor(current: StepAccess.needsPermission);
+    final harness = await pumpEdit(tester, steps: steps);
+    await _customPuzzle(tester);
+    await tapVisible(tester, _toggle('Step Quest'));
+    final sheet = find.byKey(const ValueKey('step-access-sheet'));
+    expect(sheet, findsOneWidget);
+    await tester.tap(find.text('Not now'));
+    await tester.pumpAndSettle();
+    expect(sheet, findsNothing);
+    expect(steps.requestCount, 0);
+    await tapSave(tester);
+    expect(
+      (await harness.repository.listAlarms())
+          .single
+          .puzzleOverride!
+          .enabledGames,
+      contains('step_quest'),
     );
   });
 }

@@ -39,7 +39,12 @@ void main() {
     final sensor = PlatformMotionSensor();
     expect(
       await sensor.samples.first,
-      const MotionSample(x: 1.5, y: -2, z: 9.5),
+      MotionSample(
+        x: 1.5,
+        y: -2,
+        z: 9.5,
+        timestamp: DateTime.fromMicrosecondsSinceEpoch(0),
+      ),
     );
     expect(periods, [PlatformMotionSensor.samplingPeriod.inMicroseconds]);
     expect(PlatformMotionSensor.samplingPeriod.inMilliseconds, 20);

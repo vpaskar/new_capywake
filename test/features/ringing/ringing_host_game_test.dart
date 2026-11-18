@@ -4,9 +4,12 @@ import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/games/memory_hideout.dart';
 import 'package:capywake/core/games/morning_sort.dart';
 import 'package:capywake/core/games/shake_dj.dart';
+import 'package:capywake/core/games/step_quest.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/motion/fake_motion_sensor.dart';
+import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/motion/motion_sensor.dart';
+import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/motion/tilt_reader.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
@@ -26,6 +29,8 @@ import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/games/morning_sort_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/games/shake_dj_view.dart';
+import 'package:capywake/features/games/step_access_prompt.dart';
+import 'package:capywake/features/games/step_quest_view.dart';
 import 'package:capywake/features/games/tilt_maze_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
@@ -68,6 +73,9 @@ Alarm _alarm({
     updatedAt: t,
   );
 }
+
+FakeMotionSensor sensorOfMotion(ProviderContainer container) =>
+    container.read(motionSensorProvider) as FakeMotionSensor;
 
 void main() {
   setUpAll(() async {
@@ -134,8 +142,16 @@ void main() {
       ProviderContainer container,
     })
   >
-  ring(WidgetTester tester, AlarmPuzzleOverride override) async {
+  ring(
+    WidgetTester tester,
+    AlarmPuzzleOverride override, {
+    StepAccess? stepAccess,
+  }) async {
     final app = await pumpApp(tester);
+    if (stepAccess != null) {
+      (app.container.read(stepSensorProvider) as FakeStepSensor).current =
+          stepAccess;
+    }
     await app.repository.upsertAlarm(
       _alarm(dismissMethod: DismissMethod.puzzle, puzzleOverride: override),
     );
@@ -749,6 +765,71 @@ void main() {
     });
   });
 
+  group('Step Quest', () {
+    void phone(WidgetTester tester) {
+      tester.view.physicalSize = const Size(393, 852) * 3;
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+    }
+
+    FakeStepSensor stepsOf(ProviderContainer container) =>
+        container.read(stepSensorProvider) as FakeStepSensor;
+
+    testWidgets('a ring never asks for step counting, nor opens the sensor '
+        '(M5)', (tester) async {
+      final app = await ring(
+        tester,
+        gamesOnly('step_quest'),
+        stepAccess: StepAccess.needsPermission,
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.byType(StepQuestView), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      expect(find.byType(StepAccessPrompt), findsNothing);
+      final steps = stepsOf(app.container);
+      expect(steps.requestCount, 0);
+      expect(steps.listenCount, 0);
+      expect(sensorOfMotion(app.container).hasListener, isTrue);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a long pause raises the escape at tolerance 0', (
+      tester,
+    ) async {
+      phone(tester);
+      await ring(tester, gamesOnly('step_quest', tolerated: 0));
+      expect(prominentEscape(), findsNothing);
+      await tester.pump(StepQuestRound.stallAfter);
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('walking to the goal on the step sensor dismisses, once', (
+      tester,
+    ) async {
+      phone(tester);
+      final app = await ring(
+        tester,
+        gamesOnly('step_quest'),
+        stepAccess: StepAccess.ready,
+      );
+      final steps = stepsOf(app.container);
+      expect(steps.hasListener, isTrue);
+      for (var i = 0; i < 10; i++) {
+        steps.emit(4);
+        await tester.pump();
+      }
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(RingingScreen), findsNothing);
+      final rows = await app.repository.listOccurrencesForAlarm('a1');
+      expect(
+        rows.where((o) => o.status == AlarmStatus.dismissed),
+        hasLength(1),
+      );
+      expect(steps.hasListener, isFalse);
+    });
+  });
+
   const allGames = [
     'catch_the_capy',
     'memory_hideout',
@@ -758,6 +839,7 @@ void main() {
     'find_the_impostor',
     'shake_dj',
     'tilt_maze',
+    'step_quest',
   ];
 
   Future<({Rect clock, Rect card})> ringOn(

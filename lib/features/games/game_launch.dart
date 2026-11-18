@@ -1,5 +1,6 @@
 import 'package:capywake/core/games/game_challenge.dart';
 import 'package:capywake/core/motion/motion_sensor.dart';
+import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:flutter/foundation.dart';
 
@@ -14,6 +15,7 @@ class GameLaunch {
     required this.onCompleted,
     required this.reduceMotion,
     required this.motion,
+    required this.steps,
   });
 
   final int seed;
@@ -24,4 +26,7 @@ class GameLaunch {
 
   /// Read by the motion games only; touch games never listen.
   final MotionSensor motion;
+
+  /// Read by Step Quest only, and only once access is ready.
+  final StepSensor steps;
 }

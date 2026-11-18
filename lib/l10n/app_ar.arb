@@ -557,5 +557,15 @@
   "gameTiltMazeWall": "{direction}، جدار",
   "gameTiltMazeSteps": "{count, plural, zero{وصلت إلى العلم.} one{خطوة واحدة إلى العلم.} two{خطوتان إلى العلم.} few{{count} خطوات إلى العلم.} many{{count} خطوة إلى العلم.} other{{count} خطوة إلى العلم.}}",
   "gameTiltMazeBumped": "جدار. جرّب طريقًا آخر.",
-  "gameTiltMazeEscaped": "خرجنا! متاهة جديدة."
+  "gameTiltMazeEscaped": "خرجنا! متاهة جديدة.",
+  "gameStepQuestInstruction": "امشِ بالهاتف ليتقدّم كابي.",
+  "gameStepQuestStep": "اخطُ خطوة",
+  "gameStepQuestStalled": "كابي ينتظر. امشِ أو انقر.",
+  "gameStepQuestCount": "{total, plural, few{{count} / {total} خطوات} other{{count} / {total} خطوة}}",
+  "gameStepQuestSourceSensor": "يُحسب بمستشعر الخطوات",
+  "gameStepQuestSourceMotion": "يُحسب من الحركة",
+  "stepAccessTitle": "عُدّ خطوات حقيقية",
+  "stepAccessBody": "يعدّ {game} بشكل أفضل بمستشعر الخطوات في هاتفك. يقرأه CapyWake فقط أثناء اللعب، ولا يغادر أي شيء هاتفك. بدونه تُحسب الخطوات من الحركة، وهذا أقل دقة.",
+  "stepAccessAllow": "السماح بعدّ الخطوات",
+  "stepAccessDeniedBody": "عدّ الخطوات متوقف لـ CapyWake. يمكنك تشغيله من الإعدادات. حتى ذلك الحين تُحسب الخطوات من الحركة."
 }

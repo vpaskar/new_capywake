@@ -557,5 +557,15 @@
   "gameTiltMazeWall": "{direction}, Wand",
   "gameTiltMazeSteps": "{count, plural, =1{1 Schritt bis zur Fahne.} other{{count} Schritte bis zur Fahne.}}",
   "gameTiltMazeBumped": "Eine Wand. Versuch einen anderen Weg.",
-  "gameTiltMazeEscaped": "Raus! Nächstes Labyrinth."
+  "gameTiltMazeEscaped": "Raus! Nächstes Labyrinth.",
+  "gameStepQuestInstruction": "Geh mit dem Handy, damit Capy läuft.",
+  "gameStepQuestStep": "Einen Schritt machen",
+  "gameStepQuestStalled": "Capy wartet. Geh oder tippe.",
+  "gameStepQuestCount": "{total, plural, =1{{count} / {total} Schritt} other{{count} / {total} Schritte}}",
+  "gameStepQuestSourceSensor": "Zählt mit deinem Schrittsensor",
+  "gameStepQuestSourceMotion": "Zählt über Bewegung",
+  "stepAccessTitle": "Echte Schritte zählen",
+  "stepAccessBody": "{game} zählt am besten mit dem Schrittsensor deines Handys. CapyWake liest ihn nur, während du spielst, und nichts verlässt dein Handy. Ohne ihn werden Schritte über Bewegung gezählt, was ungenauer ist.",
+  "stepAccessAllow": "Schrittzählung erlauben",
+  "stepAccessDeniedBody": "Die Schrittzählung ist für CapyWake aus. Du kannst sie in den Einstellungen einschalten. Bis dahin werden Schritte über Bewegung gezählt."
 }

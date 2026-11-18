@@ -557,5 +557,15 @@
   "gameTiltMazeWall": "{direction}, стена",
   "gameTiltMazeSteps": "{count, plural, one{{count} шаг до флажка.} few{{count} шага до флажка.} many{{count} шагов до флажка.} other{{count} шага до флажка.}}",
   "gameTiltMazeBumped": "Стена. Попробуй другой путь.",
-  "gameTiltMazeEscaped": "Выбрались! Новый лабиринт."
+  "gameTiltMazeEscaped": "Выбрались! Новый лабиринт.",
+  "gameStepQuestInstruction": "Иди с телефоном, чтобы Капи шёл.",
+  "gameStepQuestStep": "Сделать шаг",
+  "gameStepQuestStalled": "Капи ждёт. Иди или нажми.",
+  "gameStepQuestCount": "{total, plural, one{{count} / {total} шаг} few{{count} / {total} шага} many{{count} / {total} шагов} other{{count} / {total} шага}}",
+  "gameStepQuestSourceSensor": "Считает датчик шагов",
+  "gameStepQuestSourceMotion": "Считает по движению",
+  "stepAccessTitle": "Считать настоящие шаги",
+  "stepAccessBody": "{game} точнее всего считает с датчиком шагов телефона. CapyWake читает его, только пока ты играешь, и ничего не покидает телефон. Без него шаги считаются по движению, а это менее точно.",
+  "stepAccessAllow": "Разрешить подсчёт шагов",
+  "stepAccessDeniedBody": "Подсчёт шагов для CapyWake выключен. Его можно включить в настройках. Пока шаги считаются по движению."
 }

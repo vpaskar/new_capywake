@@ -557,5 +557,15 @@
   "gameTiltMazeWall": "{direction}, muro",
   "gameTiltMazeSteps": "{count, plural, =1{1 passo alla bandiera.} other{{count} passi alla bandiera.}}",
   "gameTiltMazeBumped": "Un muro. Prova un'altra strada.",
-  "gameTiltMazeEscaped": "Fuori! Nuovo labirinto."
+  "gameTiltMazeEscaped": "Fuori! Nuovo labirinto.",
+  "gameStepQuestInstruction": "Cammina col telefono e Capy avanza.",
+  "gameStepQuestStep": "Fai un passo",
+  "gameStepQuestStalled": "Capy aspetta. Cammina o tocca.",
+  "gameStepQuestCount": "{total, plural, =1{{count} / {total} passo} other{{count} / {total} passi}}",
+  "gameStepQuestSourceSensor": "Conta il sensore di passi",
+  "gameStepQuestSourceMotion": "Conta dal movimento",
+  "stepAccessTitle": "Conta passi veri",
+  "stepAccessBody": "{game} conta meglio con il sensore di passi del telefono. CapyWake lo legge solo mentre giochi, e nulla lascia il telefono. Senza, i passi si contano dal movimento, che è meno preciso.",
+  "stepAccessAllow": "Consenti il conteggio dei passi",
+  "stepAccessDeniedBody": "Il conteggio dei passi è disattivato per CapyWake. Puoi attivarlo nelle Impostazioni. Fino ad allora, i passi si contano dal movimento."
 }

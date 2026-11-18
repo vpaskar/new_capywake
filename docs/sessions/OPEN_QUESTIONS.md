@@ -112,3 +112,33 @@ When the motion check rings once more, the alarm rings exactly as before — a
 puzzle or game alarm asks for its puzzle or game again (the escape is there as
 always). The alternative: make the re-ring a plain "Stop" alarm. One line in
 `RingingController._sessionFor` plus a session flag; ask if wanted.
+
+## 2026-11-18 — Phase 16 — Step Quest adds a store-visible permission
+
+Owner decision this session: count steps as accurately as each phone allows.
+So the app now declares **`ACTIVITY_RECOGNITION`** (Android — the Play listing
+shows "physical activity") and asks iOS **Motion & Fitness** (the prompt shows
+the `NSMotionUsageDescription` text, now in all ten languages). Both are asked
+only from practice or when Step Quest is switched on, with the reason first,
+never while an alarm rings. Without them (or on a phone with no step sensor)
+steps are counted from the accelerometer, and "Take a step" always works.
+The Play Data safety form may need "Fitness info → Physical activity",
+processed on device, not collected. Reword the purpose string freely.
+
+## 2026-11-18 — Phase 16 — Step thresholds were never felt on a device
+
+The accelerometer step detector (for phones without a step sensor, or when
+access is refused) counts a lift of 1.2 m/s² over gravity, 0.3–2 s apart, and
+only after four steps in rhythm; a peak over 10 m/s² is a shake, not a step.
+If the step sensor is silent while the accelerometer counts 16 steps, the round
+switches to the accelerometer and keeps them (`StepTally.defaultDemoteAfter`).
+**No phone was walked with** — the simulator has no pedometer or
+accelerometer, Android has no emulator. Shaking the phone in rhythm can pass
+as walking on the accelerometer path; the step sensor is not fooled as easily.
+
+## 2026-11-18 — Phase 16 — Android builds now (desugaring)
+
+`flutter build apk --debug` had never succeeded: `flutter_local_notifications`
+needs core-library desugaring. Enabled in `android/app/build.gradle.kts` (its
+README's lines). The debug APK builds; **it has never run** — no device, no
+emulator.

@@ -557,5 +557,15 @@
   "gameTiltMazeWall": "{direction}, duvar",
   "gameTiltMazeSteps": "{count, plural, other{Bayrağa {count} adım.}}",
   "gameTiltMazeBumped": "Bir duvar. Başka bir yol dene.",
-  "gameTiltMazeEscaped": "Çıktın! Yeni labirent."
+  "gameTiltMazeEscaped": "Çıktın! Yeni labirent.",
+  "gameStepQuestInstruction": "Capy ilerlesin diye telefonla yürü.",
+  "gameStepQuestStep": "Bir adım at",
+  "gameStepQuestStalled": "Capy bekliyor. Yürü ya da dokun.",
+  "gameStepQuestCount": "{count} / {total} adım",
+  "gameStepQuestSourceSensor": "Adım sensörünle sayılıyor",
+  "gameStepQuestSourceMotion": "Hareketle sayılıyor",
+  "stepAccessTitle": "Gerçek adımları say",
+  "stepAccessBody": "{game} en iyi telefonunun adım sensörüyle sayar. CapyWake onu yalnızca sen oynarken okur ve hiçbir şey telefonundan çıkmaz. Sensör olmadan adımlar hareketle sayılır, bu daha az kesindir.",
+  "stepAccessAllow": "Adım saymaya izin ver",
+  "stepAccessDeniedBody": "CapyWake için adım sayma kapalı. Ayarlar'dan açabilirsin. O zamana kadar adımlar hareketle sayılır."
 }

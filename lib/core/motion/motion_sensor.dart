@@ -11,7 +11,12 @@ import 'package:meta/meta.dart';
 /// and one lying on its side produce the same "not moving" answer.
 @immutable
 class MotionSample {
-  const MotionSample({required this.x, required this.y, required this.z});
+  const MotionSample({
+    required this.x,
+    required this.y,
+    required this.z,
+    this.timestamp,
+  });
 
   /// Acceleration along the device's x axis (m/s²).
   final double x;
@@ -21,6 +26,9 @@ class MotionSample {
 
   /// Acceleration along the device's z axis (m/s²).
   final double z;
+
+  /// When the sensor took the reading; `null` from a source that has none.
+  final DateTime? timestamp;
 
   /// Length of the acceleration vector (m/s²).
   ///
@@ -35,14 +43,18 @@ class MotionSample {
     return other is MotionSample &&
         other.x == x &&
         other.y == y &&
-        other.z == z;
+        other.z == z &&
+        other.timestamp == timestamp;
   }
 
   @override
-  int get hashCode => Object.hash(x, y, z);
+  int get hashCode => Object.hash(x, y, z, timestamp);
 
   @override
-  String toString() => 'MotionSample(x: $x, y: $y, z: $z)';
+  String toString() {
+    final at = timestamp == null ? '' : ', at: ${timestamp!.toIso8601String()}';
+    return 'MotionSample(x: $x, y: $y, z: $z$at)';
+  }
 }
 
 /// Platform-agnostic stream of accelerometer readings.

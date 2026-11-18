@@ -3,8 +3,10 @@ import 'package:capywake/app/bootstrap.dart';
 import 'package:capywake/app/router.dart';
 import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/games/morning_sort.dart';
+import 'package:capywake/core/games/step_quest.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
+import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
@@ -218,6 +220,7 @@ Future<void> main() async {
     'find_the_impostor',
     'shake_dj',
     'tilt_maze',
+    'step_quest',
   ]) {
     testWidgets('capture ringing_$game', (tester) async {
       await bootstrap();
@@ -302,6 +305,14 @@ Future<void> _win(WidgetTester tester, String game) async {
   if (game == 'shake_dj') {
     for (var i = 0; i < 30; i++) {
       await tester.tap(find.byKey(const ValueKey('shake-dj-beat')));
+      await tester.pump(const Duration(milliseconds: 60));
+    }
+    return;
+  }
+  if (game == 'step_quest') {
+    for (var i = 0; i < StepQuestRound.targetFor(PuzzleDifficulty.hard); i++) {
+      if (find.byType(RingingWinOverlay).evaluate().isNotEmpty) return;
+      await tester.tap(find.byKey(const ValueKey('step-quest-step')));
       await tester.pump(const Duration(milliseconds: 60));
     }
     return;

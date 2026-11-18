@@ -1,22 +1,34 @@
 # Current phase
 
-**Phase 15 — Motion games: done, 2026-11-18 (unattended). `Current phase: 16`
-— Capy Step Quest, which is BLOCKED on an owner decision (a step-count
-permission: ACTIVITY_RECOGNITION on Android 10+, Motion & Fitness on iOS).
-Phase 17 (QR Treasure Hunt, camera) is blocked the same way. Do not start
-either without the owner's answer.**
+**Phase 16 — Capy Step Quest: done, 2026-11-18 (owner unblocked it this
+session). `Current phase: 17` — QR Treasure Hunt, which is BLOCKED on an owner
+decision (a camera dependency + camera permission). Do not start it without the
+owner's answer; Phase 18 needs the owner to re-point the tracker.**
 
-**Motion check built after Phase 15 (owner); a core ring defect fixed with it
-— every real alarm went silent 35 ms in.** **2,133 tests** (before the
-follow-up), analyze clean including infos, lib 98.55% / `lib/core` 99.72% /
-`lib/core/games` **100%** / `lib/features/games` **100%** / `lib/core/motion`
-**100%** / `lib/data` 89.31% / `lib/features/ringing` 98.71%, **557 ARB keys ×
-10 locales**. Comment baseline 113 (+0).
+**2,302 tests**, analyze clean including infos, lib 98.64% / `lib/core` 99.73%
+/ `lib/core/games`, `lib/core/motion`, `lib/features/games`, `lib/data/motion`
+**100%** / `lib/data` 90.16%, **568 ARB keys × 10 locales**. Comment baseline
+113 (+0). Motion check (owner) built and committed after Phase 15 (`005bf3f`),
+with the fix for alarms going silent 35 ms in.
 
-Eight games are playable: Catch the Capy, Memory Hideout, Rhythm Rescue, Capy
-Rocket, Morning Sort, Find the Impostor, **Shake DJ, Tilt Maze**. Only Step
-Quest and QR Treasure Hunt remain, both `blocked`; no catalogue entry is
-`comingSoon` any more (the sheet is tested with a synthetic entry).
+Nine games are playable; only QR Treasure Hunt is `blocked`.
+
+## What Phase 16 adds to the recipe
+
+- **Step counting:** `GameLaunch.steps` (a `StepSensor`), hosts read
+  `stepSensorProvider` (an unavailable `FakeStepSensor` by default,
+  `platformStepOverride()` in production). Listen to `steps` **only after
+  `access()` is `ready`**; `StepTally` picks sensor → accelerometer; the button
+  always works. Re-read access on resume, on `accessChanges`, or a new sensor —
+  never on every rebuild.
+- **Never ask for a permission on a ring.** `StepAccessPrompt` lives in
+  practice and the pool sheet only.
+- **A platform event channel has one handler:** cache the stream
+  (`late final`), never `receiveBroadcastStream()` per read — a second listener
+  silently kills the first. Fakes cannot show this.
+- **The iOS app now declares ten localizations**; any new Info.plist purpose
+  string needs all ten `InfoPlist.strings`.
+
 
 ## What Phase 15 adds to the recipe
 

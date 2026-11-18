@@ -151,6 +151,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
               onCompleted: () => _onGameWon(controller, gameId),
               reduceMotion: reduceMotion,
               motion: ref.watch(motionSensorProvider),
+              steps: ref.watch(stepSensorProvider),
             ),
             key: ValueKey(_ringSeed(session)),
           )!,

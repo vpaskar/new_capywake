@@ -3,10 +3,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('GameCatalogue', () {
-    test('exactly the eight games built so far are playable', () {
+    test('exactly the nine games built so far are playable', () {
       expect(
         GameCatalogue.playable.map((e) => e.id),
         [
+          'step_quest',
           'shake_dj',
           'catch_the_capy',
           'find_the_impostor',
@@ -83,12 +84,19 @@ void main() {
       }
     });
 
-    test('Step Quest is blocked on step counting', () {
-      final entry = GameCatalogue.entries.firstWhere(
-        (e) => e.id == 'step_quest',
+    test('Step Quest is playable, solvable by ear, and counts steps', () {
+      final entry = GameCatalogue.byId('step_quest')!;
+      expect(entry.availability, GameAvailability.playable);
+      expect(entry.blockedReason, isNull);
+      expect(entry.screenReaderSolvable, isTrue);
+      expect(entry.countsSteps, isTrue);
+    });
+
+    test('only Step Quest counts steps', () {
+      expect(
+        GameCatalogue.entries.where((e) => e.countsSteps).map((e) => e.id),
+        ['step_quest'],
       );
-      expect(entry.availability, GameAvailability.blocked);
-      expect(entry.blockedReason, GameBlockedReason.stepCount);
     });
 
     test('QR Treasure Hunt is blocked on the camera', () {
@@ -99,11 +107,11 @@ void main() {
       expect(entry.blockedReason, GameBlockedReason.camera);
     });
 
-    test('only Step Quest and QR Treasure Hunt are blocked', () {
+    test('only QR Treasure Hunt is blocked', () {
       final blocked = GameCatalogue.entries
           .where((e) => e.availability == GameAvailability.blocked)
           .map((e) => e.id);
-      expect(blocked, unorderedEquals(['step_quest', 'qr_treasure_hunt']));
+      expect(blocked, ['qr_treasure_hunt']);
     });
 
     test('a blocked entry carries a reason and others do not', () {

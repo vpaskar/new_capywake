@@ -557,5 +557,15 @@
   "gameTiltMazeWall": "{direction}、壁",
   "gameTiltMazeSteps": "{count, plural, other{旗まであと{count}歩。}}",
   "gameTiltMazeBumped": "壁だよ。別の道へ。",
-  "gameTiltMazeEscaped": "脱出！次の迷路へ。"
+  "gameTiltMazeEscaped": "脱出！次の迷路へ。",
+  "gameStepQuestInstruction": "スマホを持って歩いてカピを進めよう。",
+  "gameStepQuestStep": "1歩進む",
+  "gameStepQuestStalled": "カピが待ってるよ。歩くかタップ。",
+  "gameStepQuestCount": "{count} / {total} 歩",
+  "gameStepQuestSourceSensor": "歩数センサーで計測中",
+  "gameStepQuestSourceMotion": "動きから計測中",
+  "stepAccessTitle": "本当の歩数を数える",
+  "stepAccessBody": "{game}はスマホの歩数センサーで数えるのがいちばん正確です。CapyWakeはプレイ中だけ読み取り、データはスマホの外に出ません。使わない場合は動きから数えるため、精度が下がります。",
+  "stepAccessAllow": "歩数の計測を許可",
+  "stepAccessDeniedBody": "CapyWakeの歩数計測はオフです。設定でオンにできます。それまでは動きから数えます。"
 }

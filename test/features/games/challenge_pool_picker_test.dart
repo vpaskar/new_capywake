@@ -28,7 +28,8 @@ void main() {
     expect(find.text('Capy Rocket'), findsOneWidget);
     expect(find.text('Shake DJ'), findsOneWidget);
     expect(find.text('Tilt Maze'), findsOneWidget);
-    expect(find.text('Step Quest'), findsNothing);
+    expect(find.text('Step Quest'), findsOneWidget);
+    expect(find.text('QR Treasure Hunt'), findsNothing);
     expect(find.text('Try it'), findsNothing);
   });
 
@@ -76,7 +77,11 @@ void main() {
 
     _toggle(tester, 'Memory Hideout').onChanged!(true);
     _toggle(tester, 'Puzzles').onChanged!(false);
-    await tester.tap(find.text('Try it').at(3));
+    await tester.tap(
+      find.byWidgetPredicate(
+        (w) => w is Text && w.semanticsLabel == 'Try it, Memory Hideout',
+      ),
+    );
     await tester.tap(find.text('Try it').last);
 
     expect(changes, ['memory_hideout:true', 'puzzles:false']);

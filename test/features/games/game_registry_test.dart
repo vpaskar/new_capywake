@@ -1,5 +1,6 @@
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/motion/fake_motion_sensor.dart';
+import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
@@ -8,6 +9,7 @@ import 'package:capywake/features/games/game_registry.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/games/shake_dj_view.dart';
+import 'package:capywake/features/games/step_quest_view.dart';
 import 'package:capywake/features/games/tilt_maze_view.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,6 +17,7 @@ import 'package:flutter_test/flutter_test.dart';
 import '_pump.dart';
 
 final _motion = FakeMotionSensor();
+final _steps = FakeStepSensor();
 
 GameLaunch _launch() => GameLaunch(
   seed: 1,
@@ -23,6 +26,7 @@ GameLaunch _launch() => GameLaunch(
   onCompleted: () {},
   reduceMotion: true,
   motion: _motion,
+  steps: _steps,
 );
 
 void main() {
@@ -64,12 +68,16 @@ void main() {
     final tilt = GameRegistry.build('tilt_maze', _launch());
     expect(tilt, isA<TiltMazeView>());
     expect((tilt! as TiltMazeView).motion, same(_motion));
+    final walk = GameRegistry.build('step_quest', _launch());
+    expect(walk, isA<StepQuestView>());
+    expect((walk! as StepQuestView).motion, same(_motion));
+    expect((walk as StepQuestView).steps, same(_steps));
   });
 
   test('a non-playable or unknown id cannot launch', () {
-    expect(GameRegistry.isLaunchable('step_quest'), isFalse);
+    expect(GameRegistry.isLaunchable('qr_treasure_hunt'), isFalse);
     expect(GameRegistry.isLaunchable('nope'), isFalse);
-    expect(GameRegistry.build('step_quest', _launch()), isNull);
+    expect(GameRegistry.build('qr_treasure_hunt', _launch()), isNull);
   });
 
   for (final id in GameRegistry.builders.keys) {

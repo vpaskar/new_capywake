@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:capywake/core/games/game_catalogue.dart';
+import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
+import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
@@ -10,6 +14,7 @@ import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/games/game_registry.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
+import 'package:capywake/features/games/step_access_prompt.dart';
 import 'package:capywake/features/ringing/game_ringing_view.dart';
 import 'package:capywake/features/settings/settings_header.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
@@ -35,9 +40,39 @@ class GamePracticeScreen extends ConsumerStatefulWidget {
   ConsumerState<GamePracticeScreen> createState() => _GamePracticeScreenState();
 }
 
-class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen> {
+class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen>
+    with WidgetsBindingObserver {
   late int _seed = ref.read(practiceSeedProvider)();
   bool _done = false;
+  StepAccess? _stepAccess;
+  bool _stepPromptDismissed = false;
+
+  bool get _countsSteps =>
+      GameCatalogue.byId(widget.gameId)?.countsSteps ?? false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!_countsSteps) return;
+    WidgetsBinding.instance.addObserver(this);
+    unawaited(_readStepAccess());
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) unawaited(_readStepAccess());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  Future<void> _readStepAccess() async {
+    final access = await ref.read(stepSensorProvider).access();
+    if (mounted) setState(() => _stepAccess = access);
+  }
 
   void _again() => setState(() {
     _done = false;
@@ -108,6 +143,19 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
+        if (_offersStepAccess) ...[
+          CapyCard(
+            child: StepAccessPrompt(
+              key: const ValueKey('step-access-card'),
+              sensor: ref.read(stepSensorProvider),
+              access: _stepAccess!,
+              gameName: gameName(l10n, entry),
+              onResolved: (access) => setState(() => _stepAccess = access),
+              onNotNow: () => setState(() => _stepPromptDismissed = true),
+            ),
+          ),
+          const SizedBox(height: CapySpacing.md),
+        ],
         Text(
           l10n.gamePracticeNote,
           textAlign: TextAlign.center,
@@ -124,6 +172,7 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen> {
               onCompleted: () => setState(() => _done = true),
               reduceMotion: reduceMotion,
               motion: ref.watch(motionSensorProvider),
+              steps: ref.watch(stepSensorProvider),
             ),
             key: ValueKey(_seed),
           )!,
@@ -131,4 +180,9 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen> {
       ],
     );
   }
+
+  bool get _offersStepAccess =>
+      !_stepPromptDismissed &&
+      _stepAccess != null &&
+      stepAccessCanImprove(_stepAccess!);
 }

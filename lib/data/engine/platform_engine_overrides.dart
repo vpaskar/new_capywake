@@ -59,6 +59,7 @@ Future<Widget Function(Widget)> platformEngineScope({
       scheduleLocationProvider.overrideWith((ref) => location),
       engineNowProvider.overrideWith((ref) => now),
       platformMotionOverride(),
+      platformStepOverride(),
     ],
     child: child,
   );

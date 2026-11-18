@@ -1,28 +1,26 @@
 # Next session — start here
 
-> **Phase 15 done (2026-11-18, unattended).** The pointer is `16` — **Capy
-> Step Quest, which is BLOCKED**: it needs a step-count permission
-> (ACTIVITY_RECOGNITION / Motion & Fitness), a store-visible owner decision.
-> Phase 17 (QR Treasure Hunt) needs a camera dependency, also the owner's call.
-> **Do not start either without the owner's answer.** If the owner wants to
-> skip ahead to Phase 18 (animation and visual polish), the tracker must be
-> re-pointed by the owner — never by a session.
+> **Phase 16 done (2026-11-18).** The pointer is `17` — **QR Treasure Hunt,
+> which is BLOCKED**: it needs a camera dependency and the camera permission,
+> a store-visible owner decision. **Do not start it without the owner's
+> answer.** If the owner wants Phase 18 (animation and visual polish) next,
+> the owner re-points the tracker — never a session.
 
 ## State
 
-Phases 00–15 are **done** and committed.
+Phases 00–16 are **done** and committed.
 
-**Current phase: `16` — blocked on the owner.**
+**Current phase: `17` — blocked on the owner.**
 
-**2,133 tests** pass. `lib` 98.55%, `lib/core` 99.72%, `lib/core/games`,
-`lib/features/games`, `lib/core/motion` and `lib/data/motion` **100%**,
-`lib/data` 89.31%, `lib/features/ringing` 98.71%. **557 ARB keys × 10
-locales.** Comment baseline **113**.
+**2,302 tests** pass. `lib` 98.64%, `lib/core` 99.73%, `lib/core/games`,
+`lib/core/motion`, `lib/features/games` and `lib/data/motion` **100%**,
+`lib/data` 90.16%. **568 ARB keys × 10 locales.** Comment baseline **113**.
 
-Eight games are playable, including the two motion games. **Read
-`docs/sessions/OPEN_QUESTIONS.md` first** — ten owner questions are open; three
-are new (buttons always work in the motion games; the iOS motion purpose
-string; shake/tilt thresholds never felt on a phone).
+Nine games are playable, Step Quest included. **Read
+`docs/sessions/OPEN_QUESTIONS.md` first** — Phase 16 added three: the new
+store-visible step permission (Play "physical activity", iOS Motion & Fitness),
+step thresholds never walked on a phone, and Android building for the first
+time (never run).
 
 ## Read in this order
 
@@ -39,6 +37,8 @@ string; shake/tilt thresholds never felt on a phone).
    G38).
 8. `docs/phases/PHASE_15_POST_REVIEW.md` — the accelerometer, why the fallback
    is always on screen, and the three ways tilt was read wrongly.
+9. `docs/phases/PHASE_16_POST_REVIEW.md` — three step counters, access never
+   on a ring, and the event-channel defect only the platform could show.
 
 ## How a game plugs in now (Phase 11 contract + Phase 12 model)
 
@@ -81,6 +81,9 @@ string; shake/tilt thresholds never felt on a phone).
   (first grip is level; `suppressUntilLevel()` after a press, never a new
   baseline on a tilted grip). The non-motion control is always live.
 - **`GameOutcomeLine(reserveFor:)`** — every result the game can show.
+- **Steps** (Phase 16): `GameLaunch.steps`; listen only once `access()` is
+  `ready`; never ask on a ring; cache any platform event stream (one handler
+  per channel).
 - **Never a `CapyButton` inside a game** — Snooze is one, right below.
 
 ## The measurement rule, now with a ninth entry

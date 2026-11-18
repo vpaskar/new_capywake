@@ -55,11 +55,22 @@ Future<ProviderContainer> _pump(
 AppLocalizations _l10n(WidgetTester tester) =>
     AppLocalizations.of(tester.element(find.byType(PuzzleChooserScreen)));
 
+/// The chooser is a lazy list; a row below the fold is not built until shown.
+Future<void> scrollTo(WidgetTester tester, Finder target) async {
+  await tester.scrollUntilVisible(
+    target,
+    200,
+    scrollable: find.byType(Scrollable).first,
+  );
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets('renders all ten puzzle types', (tester) async {
     await _pump(tester);
     final l10n = _l10n(tester);
     for (final type in PuzzleType.values) {
+      await scrollTo(tester, find.text(puzzleTypeLabel(type, l10n)));
       expect(
         find.text(puzzleTypeLabel(type, l10n)),
         findsOneWidget,
@@ -76,8 +87,7 @@ void main() {
     final l10n = _l10n(tester);
 
     final tile = find.text(puzzleTypeLabel(PuzzleType.shapeRotation, l10n));
-    await tester.ensureVisible(tile);
-    await tester.pumpAndSettle();
+    await scrollTo(tester, tile);
     await tester.tap(tile);
     await tester.pumpAndSettle();
 
@@ -96,7 +106,9 @@ void main() {
     );
     final l10n = _l10n(tester);
 
-    await tester.tap(find.text(puzzleTypeLabel(PuzzleType.arithmetic, l10n)));
+    final arithmetic = find.text(puzzleTypeLabel(PuzzleType.arithmetic, l10n));
+    await scrollTo(tester, arithmetic);
+    await tester.tap(arithmetic);
     await tester.pumpAndSettle();
 
     final saved = await container
@@ -112,20 +124,12 @@ void main() {
     await _pump(tester);
     final l10n = _l10n(tester);
 
+    await scrollTo(tester, find.text(l10n.puzzleSettingsEscapeExplanation));
     expect(find.text(l10n.puzzleSettingsEscapeConfirm), findsOneWidget);
     expect(find.text(l10n.puzzleSettingsEscapeHold), findsOneWidget);
     // The always-reachable explanation is on the surface.
     expect(find.text(l10n.puzzleSettingsEscapeExplanation), findsOneWidget);
   });
-
-  Future<void> scrollTo(WidgetTester tester, Finder target) async {
-    await tester.scrollUntilVisible(
-      target,
-      200,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.pumpAndSettle();
-  }
 
   testWidgets('difficulty persists', (tester) async {
     final container = await _pump(tester);
@@ -175,6 +179,7 @@ void main() {
       ),
     );
     final l10n = _l10n(tester);
+    await scrollTo(tester, find.text(l10n.puzzleSettingsVisualOnlyTitle));
     expect(find.text(l10n.puzzleSettingsVisualOnlyTitle), findsOneWidget);
   });
 
@@ -184,6 +189,10 @@ void main() {
       seed: PuzzleSettings(enabledTypes: const {PuzzleType.arithmetic}),
     );
     final l10n = _l10n(tester);
+    await scrollTo(
+      tester,
+      find.text(puzzleTypeLabel(PuzzleType.values.last, l10n)),
+    );
     expect(find.text(l10n.puzzleSettingsVisualOnlyTitle), findsNothing);
   });
 

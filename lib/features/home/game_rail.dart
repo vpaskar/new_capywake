@@ -13,7 +13,9 @@ import 'package:go_router/go_router.dart';
 /// The four tiles from `01_HOME.png`. A playable tile opens practice, which
 /// never touches an alarm; an unavailable one opens a sheet saying so.
 class GameRail extends StatelessWidget {
-  const GameRail({super.key});
+  const GameRail({this.entries = GameCatalogue.homeRail, super.key});
+
+  final List<GameEntry> entries;
 
   /// Crop of `01_HOME.png`: tiles end 559.7pt, labels run 568.5 - 593.9.
   static const tileSize = 74.0;
@@ -31,9 +33,9 @@ class GameRail extends StatelessWidget {
         padding: const EdgeInsetsDirectional.symmetric(
           horizontal: CapySpacing.gutter,
         ),
-        itemCount: GameCatalogue.homeRail.length,
+        itemCount: entries.length,
         separatorBuilder: (_, _) => const SizedBox(width: CapySpacing.md),
-        itemBuilder: (context, i) => _Tile(entry: GameCatalogue.homeRail[i]),
+        itemBuilder: (context, i) => _Tile(entry: entries[i]),
       ),
     );
   }

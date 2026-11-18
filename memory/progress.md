@@ -493,3 +493,18 @@ write re-ran the schedule, whose `stopAll()` silenced it. Fixed;
 `integration_test/ring_lifecycle_test.dart` (by hand) proves the ring and the
 re-ring keep ringing. Committed apart from the concurrent Phase 16 session's
 work in the same checkout.
+
+---
+
+## Phase 16 — Capy Step Quest
+
+**Done 2026-11-18.** The owner unblocked it at the start of the session ("the
+most accurate one … for as many phones as possible"). Step sensor over our own
+channel → accelerometer step detector → a step button, merged by `StepTally`;
+access asked in practice and the pool, never on a ring. iOS purpose string in
+ten languages; Android builds for the first time (desugaring), never run. The
+unanchored reviewer found a second event-channel stream silently killing a
+ringing game's sensor. 18 guards mutation-checked. Built beside the
+motion-check session in the same checkout; that commit landed first. 2,302
+tests, 568 ARB keys. G41 (no walk cycle).
+

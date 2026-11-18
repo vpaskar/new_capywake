@@ -1086,3 +1086,17 @@ on an accent disc. The walls are drawn as UI geometry, like the poster's.
 **Needed:** a round curled Capy (orange nightcap) seen from above or the side,
 no "zz", transparent, ≥ 160 × 160; and a small checkered flag on a glow,
 transparent, ≥ 160 × 160.
+
+## G41 — Step Quest: no walking cycle for the backpack Capy (Phase 16, Tier B, reported)
+
+`01_STEP_QUEST.png` draws Capy **walking with a rolled-sleeping-bag backpack
+and an orange scarf** on a path, with motion marks. The package has one still
+pose of a capybara with a backpack (`collection_02`, blue backpack, 230 × 242 px)
+and no walk frames; the run cycle (`run_00`–`run_07`) is the nightcap runner
+from Catch the Capy. **Used meanwhile:** `game.capy.hiking` (`collection_02`,
+76 pt, sharp at 3×) moving from the start edge to the end edge as steps land,
+with a small lift-and-tilt per step (none under reduce-motion or a screen
+reader), over `game.meadow`. The count is a UI pill, not art. **Needed:** the
+backpack Capy (orange scarf, rolled bag) in a 4–8 frame side-on walk cycle,
+one canvas and baseline per frame, transparent, ≥ 240 × 240 — cut like
+`run_00`–`run_07`.

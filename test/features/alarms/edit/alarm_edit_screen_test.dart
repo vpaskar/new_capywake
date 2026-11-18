@@ -1,6 +1,8 @@
 import 'package:capywake/app/router.dart';
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/data/database/app_database.dart';
+import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/data/repositories/capy_wake_repository.dart';
 import 'package:capywake/design/capy_button.dart';
@@ -45,6 +47,7 @@ Future<EditHarness> pumpEdit(
   String? alarmId,
   Locale locale = const Locale('en'),
   TextScaler textScaler = TextScaler.noScaling,
+  StepSensor? steps,
 }) async {
   final db = AppDatabase.forTesting(NativeDatabase.memory());
   addTearDown(db.close);
@@ -58,6 +61,7 @@ Future<EditHarness> pumpEdit(
       appDatabaseProvider.overrideWithValue(db),
       alarmEditClockProvider.overrideWithValue(() => _fixedNow),
       alarmIdFactoryProvider.overrideWithValue(() => 'generated-id'),
+      if (steps != null) stepSensorProvider.overrideWithValue(steps),
     ],
   );
   addTearDown(container.dispose);

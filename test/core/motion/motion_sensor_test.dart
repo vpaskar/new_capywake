@@ -25,12 +25,27 @@ void main() {
       expect(a, isNot(const MotionSample(x: 1, y: 9, z: 3)));
       expect(a, isNot(const MotionSample(x: 1, y: 2, z: 9)));
       expect(a, isNot(const Object()));
+      final at = DateTime.utc(2026, 11, 18);
+      expect(
+        MotionSample(x: 1, y: 2, z: 3, timestamp: at),
+        isNot(a),
+        reason: 'two readings at different times are different readings',
+      );
     });
 
     test('toString names every axis', () {
       expect(
         const MotionSample(x: 1, y: 2, z: 3).toString(),
         'MotionSample(x: 1.0, y: 2.0, z: 3.0)',
+      );
+      expect(
+        MotionSample(
+          x: 1,
+          y: 2,
+          z: 3,
+          timestamp: DateTime.utc(2026),
+        ).toString(),
+        'MotionSample(x: 1.0, y: 2.0, z: 3.0, at: 2026-01-01T00:00:00.000Z)',
       );
     });
   });

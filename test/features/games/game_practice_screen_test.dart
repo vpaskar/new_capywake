@@ -1,18 +1,27 @@
+import 'package:capywake/core/motion/fake_step_sensor.dart';
+import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/data/database/app_database.dart';
+import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
 import 'package:capywake/features/games/game_practice_screen.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
+import 'package:capywake/features/games/step_access_prompt.dart';
+import 'package:capywake/features/games/step_quest_view.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-Future<ProviderContainer> _pump(WidgetTester tester, String gameId) async {
+Future<ProviderContainer> _pump(
+  WidgetTester tester,
+  String gameId, {
+  StepSensor? steps,
+}) async {
   final db = AppDatabase.forTesting(NativeDatabase.memory());
   tester.view.physicalSize = const Size(393, 852) * 3;
   tester.view.devicePixelRatio = 3;
@@ -22,6 +31,7 @@ Future<ProviderContainer> _pump(WidgetTester tester, String gameId) async {
     overrides: [
       appDatabaseProvider.overrideWithValue(db),
       practiceSeedProvider.overrideWithValue(() => seed++),
+      if (steps != null) stepSensorProvider.overrideWithValue(steps),
     ],
   );
   addTearDown(() async {
@@ -92,8 +102,11 @@ void main() {
   });
 
   testWidgets('an unbuilt game shows the not-built copy (L2)', (tester) async {
-    await _pump(tester, 'step_quest');
-    expect(find.textContaining('Step Quest is on the way'), findsOneWidget);
+    await _pump(tester, 'qr_treasure_hunt');
+    expect(
+      find.textContaining('QR Treasure Hunt is on the way'),
+      findsOneWidget,
+    );
     expect(find.byType(CatchTheCapyView), findsNothing);
   });
 
@@ -136,5 +149,84 @@ void main() {
     expect(find.text('0 / 5'), findsNothing, reason: 'no medium fallback');
     await tester.pumpAndSettle();
     expect(find.text('0 / 7'), findsOneWidget);
+  });
+
+  group('Step Quest practice offers the step sensor', () {
+    final card = find.byKey(const ValueKey('step-access-card'));
+
+    testWidgets('asks first, then counts with the sensor', (tester) async {
+      final steps = FakeStepSensor(
+        current: StepAccess.needsPermission,
+        afterRequest: StepAccess.ready,
+      );
+      await _pump(tester, 'step_quest', steps: steps);
+      expect(card, findsOneWidget);
+      expect(find.byType(StepQuestView), findsOneWidget);
+      expect(steps.requestCount, 0, reason: 'the reason is shown first');
+      expect(steps.listenCount, 0);
+
+      await tester.tap(find.text('Allow step counting'));
+      await tester.pumpAndSettle();
+      expect(steps.requestCount, 1);
+      expect(card, findsNothing);
+      expect(steps.hasListener, isTrue);
+      expect(
+        tester
+            .widget<Text>(find.byKey(const ValueKey('step-quest-source')))
+            .data,
+        'Counted by your step sensor',
+      );
+    });
+
+    testWidgets('Not now hides it and asks nothing', (tester) async {
+      final steps = FakeStepSensor(current: StepAccess.needsPermission);
+      await _pump(tester, 'step_quest', steps: steps);
+      await tester.tap(find.text('Not now'));
+      await tester.pumpAndSettle();
+      expect(card, findsNothing);
+      expect(steps.requestCount, 0);
+    });
+
+    testWidgets('a refusal points to Settings, and a return re-reads', (
+      tester,
+    ) async {
+      final steps = FakeStepSensor(current: StepAccess.permanentlyDenied);
+      await _pump(tester, 'step_quest', steps: steps);
+      expect(
+        find.textContaining('Step counting is off for CapyWake'),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Open Settings'));
+      await tester.pumpAndSettle();
+      expect(steps.settingsCount, 1);
+      expect(steps.requestCount, 0, reason: 'iOS never asks twice');
+      expect(card, findsOneWidget, reason: 'nothing changed yet');
+
+      steps.current = StepAccess.ready;
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(card, findsNothing);
+      expect(steps.hasListener, isTrue);
+    });
+
+    for (final access in [StepAccess.ready, StepAccess.unavailable]) {
+      testWidgets('shows nothing when access is ${access.name}', (
+        tester,
+      ) async {
+        await _pump(
+          tester,
+          'step_quest',
+          steps: FakeStepSensor(current: access),
+        );
+        expect(card, findsNothing);
+      });
+    }
+
+    testWidgets('other games never offer it', (tester) async {
+      final steps = FakeStepSensor(current: StepAccess.needsPermission);
+      await _pump(tester, 'shake_dj', steps: steps);
+      expect(card, findsNothing);
+      expect(find.byType(StepAccessPrompt), findsNothing);
+    });
   });
 }
