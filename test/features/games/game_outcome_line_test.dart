@@ -14,6 +14,8 @@ Future<void> _show(WidgetTester tester, String? text, int? serial) =>
     );
 
 void main() {
+  _reservesTallest();
+
   testWidgets('a repeated result from a new answer is announced again', (
     tester,
   ) async {
@@ -38,5 +40,41 @@ void main() {
     final empty = tester.getSize(find.byType(GameOutcomeLine)).height;
     await _show(tester, 'One line.', 1);
     expect(tester.getSize(find.byType(GameOutcomeLine)).height, empty);
+  });
+}
+
+void _reservesTallest() {
+  testWidgets('reserves the tallest result it may show, at any text size', (
+    tester,
+  ) async {
+    const long =
+        'A much longer result that wraps onto a third line at this width.';
+    for (final scale in [1.0, 2.0]) {
+      Future<double> heightOf(String? text) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: MediaQuery(
+              data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+              child: Scaffold(
+                body: Center(
+                  child: SizedBox(
+                    width: 240,
+                    child: GameOutcomeLine(
+                      text: text,
+                      reserveFor: const ['Short.', long],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        return tester.getSize(find.byType(GameOutcomeLine)).height;
+      }
+
+      final empty = await heightOf(null);
+      expect(await heightOf('Short.'), empty, reason: '${scale}x');
+      expect(await heightOf(long), empty, reason: '${scale}x');
+    }
   });
 }

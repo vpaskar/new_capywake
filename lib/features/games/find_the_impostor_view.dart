@@ -116,6 +116,10 @@ class _FindTheImpostorViewState extends State<FindTheImpostorView> {
           GameOutcomeLine(
             text: outcome,
             serial: _round.found + _round.wrongTaps,
+            reserveFor: [
+              l10n.gameFindTheImpostorFound,
+              l10n.gameFindTheImpostorMissed,
+            ],
           ),
         ],
       ),

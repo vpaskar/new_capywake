@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:capywake/app/router.dart';
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/design/art.dart';
@@ -5,6 +7,7 @@ import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/home/game_rail.dart';
+import 'package:capywake/features/home/game_unavailable_sheet.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -130,12 +133,34 @@ void main() {
       expect(find.text('Not built yet'), findsNothing);
     });
 
-    testWidgets('a comingSoon tap opens the sheet, never a dead tap', (
-      tester,
-    ) async {
+    testWidgets('Shake DJ, now built, opens practice', (tester) async {
       await _pumpRail(tester);
 
       await tester.tap(find.text('Shake DJ'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('practice:shake_dj'), findsOneWidget);
+      expect(find.text('Not built yet'), findsNothing);
+    });
+
+    testWidgets('a comingSoon game still gets the not-built sheet', (
+      tester,
+    ) async {
+      await _pumpRail(tester);
+      const unbuilt = GameEntry(
+        id: 'unbuilt',
+        nameKey: 'gameShakeDj',
+        tileAssetId: 'tile.shakeDj',
+        availability: GameAvailability.comingSoon,
+        screenReaderSolvable: false,
+      );
+
+      unawaited(
+        showGameUnavailableSheet(
+          tester.element(find.byType(GameRail)),
+          unbuilt,
+        ),
+      );
       await tester.pumpAndSettle();
 
       expect(find.text('Not built yet'), findsOneWidget);

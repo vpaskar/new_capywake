@@ -1,4 +1,5 @@
 import 'package:capywake/core/games/game_catalogue.dart';
+import 'package:capywake/core/motion/fake_motion_sensor.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
@@ -6,7 +7,14 @@ import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_registry.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
+import 'package:capywake/features/games/shake_dj_view.dart';
+import 'package:capywake/features/games/tilt_maze_view.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import '_pump.dart';
+
+final _motion = FakeMotionSensor();
 
 GameLaunch _launch() => GameLaunch(
   seed: 1,
@@ -14,6 +22,7 @@ GameLaunch _launch() => GameLaunch(
   onProgress: (_) {},
   onCompleted: () {},
   reduceMotion: true,
+  motion: _motion,
 );
 
 void main() {
@@ -49,11 +58,29 @@ void main() {
       GameRegistry.build('capy_rocket', _launch()),
       isA<CapyRocketView>(),
     );
+    final shake = GameRegistry.build('shake_dj', _launch());
+    expect(shake, isA<ShakeDjView>());
+    expect((shake! as ShakeDjView).motion, same(_motion));
+    final tilt = GameRegistry.build('tilt_maze', _launch());
+    expect(tilt, isA<TiltMazeView>());
+    expect((tilt! as TiltMazeView).motion, same(_motion));
   });
 
   test('a non-playable or unknown id cannot launch', () {
-    expect(GameRegistry.isLaunchable('shake_dj'), isFalse);
+    expect(GameRegistry.isLaunchable('step_quest'), isFalse);
     expect(GameRegistry.isLaunchable('nope'), isFalse);
-    expect(GameRegistry.build('shake_dj', _launch()), isNull);
+    expect(GameRegistry.build('step_quest', _launch()), isNull);
   });
+
+  for (final id in GameRegistry.builders.keys) {
+    testWidgets('$id fits a 320 pt phone in the ringing slot', (tester) async {
+      await pumpInApp(
+        tester,
+        ringingSlotWidth(GameRegistry.build(id, _launch())!),
+        size: const Size(320, 568),
+      );
+      expect(tester.takeException(), isNull, reason: id);
+      await tester.pumpWidget(const SizedBox());
+    });
+  }
 }

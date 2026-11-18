@@ -3,13 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('GameCatalogue', () {
-    test('exactly the six touch games built so far are playable', () {
+    test('exactly the eight games built so far are playable', () {
       expect(
         GameCatalogue.playable.map((e) => e.id),
         [
+          'shake_dj',
           'catch_the_capy',
           'find_the_impostor',
           'memory_hideout',
+          'tilt_maze',
           'morning_sort',
           'rhythm_rescue',
           'capy_rocket',

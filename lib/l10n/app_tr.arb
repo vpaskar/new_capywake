@@ -543,5 +543,18 @@
   "gameCapyPoseHoldingMug": "sıcak bir kupa tutuyor",
   "gameCapyPoseReading": "kitap okuyor",
   "gameCapyPoseListening": "kulaklık takıyor",
-  "gameCapyPoseDetective": "büyüteçle"
+  "gameCapyPoseDetective": "büyüteçle",
+  "gameShakeDjInstruction": "Ritim için telefonu salla.",
+  "gameShakeDjBeat": "Ritme dokun",
+  "gameShakeDjStalled": "Ritim durdu. Salla ya da dokun.",
+  "gameTiltMazeInstruction": "Telefonu eğ, Capy bayrağa gitsin.",
+  "gameTiltMazeInstructionArrows": "Oklarla Capy'yi bayrağa götür.",
+  "gameTiltMazeUp": "Yukarı",
+  "gameTiltMazeDown": "Aşağı",
+  "gameTiltMazeLeft": "Sola",
+  "gameTiltMazeRight": "Sağa",
+  "gameTiltMazeWall": "{direction}, duvar",
+  "gameTiltMazeSteps": "{count, plural, other{Bayrağa {count} adım.}}",
+  "gameTiltMazeBumped": "Bir duvar. Başka bir yol dene.",
+  "gameTiltMazeEscaped": "Çıktın! Yeni labirent."
 }

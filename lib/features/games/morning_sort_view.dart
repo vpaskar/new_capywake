@@ -128,7 +128,15 @@ class _MorningSortViewState extends State<MorningSortView> {
             cellBuilder: (context, index) => _card(l10n, index),
           ),
           const SizedBox(height: CapySpacing.sm),
-          GameOutcomeLine(text: outcome, serial: _answers),
+          GameOutcomeLine(
+            text: outcome,
+            serial: _answers,
+            reserveFor: [
+              l10n.gameMorningSortPacked,
+              l10n.gameMorningSortLeftOut,
+              l10n.gameMorningSortBagDone,
+            ],
+          ),
         ],
       ),
     );

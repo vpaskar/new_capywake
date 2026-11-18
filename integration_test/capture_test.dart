@@ -19,6 +19,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
+import '../test/features/games/_maze_by_ear.dart';
+
 Alarm _seedAlarm({
   required String id,
   required String label,
@@ -214,6 +216,8 @@ Future<void> main() async {
     'capy_rocket',
     'morning_sort',
     'find_the_impostor',
+    'shake_dj',
+    'tilt_maze',
   ]) {
     testWidgets('capture ringing_$game', (tester) async {
       await bootstrap();
@@ -295,6 +299,21 @@ Future<void> main() async {
 
 /// Finishes the ringing game the way a user would, by its own targets.
 Future<void> _win(WidgetTester tester, String game) async {
+  if (game == 'shake_dj') {
+    for (var i = 0; i < 30; i++) {
+      await tester.tap(find.byKey(const ValueKey('shake-dj-beat')));
+      await tester.pump(const Duration(milliseconds: 60));
+    }
+    return;
+  }
+  if (game == 'tilt_maze') {
+    final handle = tester.ensureSemantics();
+    for (var maze = 0; maze < 3; maze++) {
+      await solveMazeByEar(tester);
+    }
+    handle.dispose();
+    return;
+  }
   if (game == 'rhythm_rescue') {
     for (var attempt = 0; attempt < 10; attempt++) {
       if (find.byType(RingingWinOverlay).evaluate().isNotEmpty) return;

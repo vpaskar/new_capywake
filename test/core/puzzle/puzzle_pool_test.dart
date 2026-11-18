@@ -96,11 +96,11 @@ void main() {
         expect(
           PuzzleSettings(
             enabledTypes: const {PuzzleType.arithmetic},
-            enabledGames: const {'shake_dj'},
+            enabledGames: const {'step_quest'},
             includePuzzles: false,
           ).isVisualOnly,
           isTrue,
-          reason: 'shake_dj is not screen-reader solvable',
+          reason: 'step_quest is not screen-reader solvable',
         );
       });
     });

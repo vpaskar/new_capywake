@@ -44,3 +44,9 @@ Re-captured. `MeadowFooter` now draws the owner's meadow band
 669.7 vs 672.4 (−2.7, inside tolerance); 6 → 5 blocks outside tolerance, worst
 delta 1.4 → 2.7 pt, all others unchanged. Home keeps its rounded card — the
 mockup draws no cloud here. Catch the Capy's tile now wears the nightcap (G33).
+
+## 2026-11-18 — Phase 15: Shake DJ is playable
+
+Shake DJ's tile lost its "Soon" badge. `compare.dart home 01_HOME`: worst delta
+2.7 pt (meadow footer), tiles −1.4, labels +1.1 — the same five blocks absent
+as before. No Tier A change.

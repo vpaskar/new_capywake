@@ -116,6 +116,6 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(tryIt);
     await tester.pumpAndSettle();
-    expect(find.text('practice:catch_the_capy'), findsOneWidget);
+    expect(find.text('practice:shake_dj'), findsOneWidget);
   });
 }

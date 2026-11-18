@@ -38,5 +38,7 @@ poses are in. Per-file verdicts: `asset_gaps.md`, "Owner replacements".
 | 10 | **Morning Sort: 18 item icons**, one style, no text — toothbrush, toothpaste, apple, banana, water bottle, keys, socks, shoes, comb, towel, brick, anchor, traffic cone, bowling ball, cactus, rubber duck, anvil, snowman | each ≥ 160 × 160, transparent | G37 |
 | 11 | *(optional)* **Morning Sort: an open backpack** with three pockets | ≥ 600 × 360, transparent | G37 |
 | 12 | *(optional)* **Find the Impostor: lookalike faces** — capybara + beaver, otter, hamster, guinea pig, marmot, head and shoulders, one canvas | each ≥ 240 × 240, transparent | G38 |
+| 13 | **Shake DJ: Capy in headphones behind DJ decks**, orange nightcap, arms up; dance frames optional (one canvas) | ≥ 330 × 300, transparent | G39 |
+| 14 | **Tilt Maze: a round curled Capy** (orange nightcap, no "zz") **and a checkered goal flag** | each ≥ 160 × 160, transparent | G40 |
 
 Every item here is polish; the app works with what it has.

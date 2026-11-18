@@ -543,5 +543,18 @@
   "gameCapyPoseHoldingMug": "あたたかいマグを持っている",
   "gameCapyPoseReading": "本を読んでいる",
   "gameCapyPoseListening": "ヘッドホンをしている",
-  "gameCapyPoseDetective": "虫めがねを持っている"
+  "gameCapyPoseDetective": "虫めがねを持っている",
+  "gameShakeDjInstruction": "スマホを振ってビートを続けよう。",
+  "gameShakeDjBeat": "ビートをタップ",
+  "gameShakeDjStalled": "ビートが止まったよ。振るかタップ。",
+  "gameTiltMazeInstruction": "スマホを傾けて、カピを旗まで転がそう。",
+  "gameTiltMazeInstructionArrows": "矢印でカピを旗まで連れていこう。",
+  "gameTiltMazeUp": "上",
+  "gameTiltMazeDown": "下",
+  "gameTiltMazeLeft": "左",
+  "gameTiltMazeRight": "右",
+  "gameTiltMazeWall": "{direction}、壁",
+  "gameTiltMazeSteps": "{count, plural, other{旗まであと{count}歩。}}",
+  "gameTiltMazeBumped": "壁だよ。別の道へ。",
+  "gameTiltMazeEscaped": "脱出！次の迷路へ。"
 }

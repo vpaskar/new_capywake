@@ -463,3 +463,18 @@ find-the-odd-one grid either showed nothing or pointed at the answer — replace
 by a carousel. Found by an unanchored review: taps mid-slide went to the wrong
 card, and a "names fit" test could not fail. Repeated outcomes are now
 re-announced in four games. 1,987 tests, 544 ARB keys, 37 findings, all applied.
+
+---
+
+## Phase 15 — Motion games: Shake DJ, Tilt Maze
+
+**Done 2026-11-18, unattended.** The last two unblocked games, plus the app's
+accelerometer (`sensors_plus`, fenced to `lib/data/motion/`, faked in tests,
+`NSMotionUsageDescription` on iOS, no Android permission). The on-screen
+fallback (beat button, four arrows) always works; a screen reader ignores tilt
+and solves Tilt Maze by ear. Found: the beat button was a twin of Snooze one
+line below (capture); tilt angles inverted face down, then saturated upright
+(now a full turn, wrapped); letting go of a tilt read as the reverse
+(unanchored subagent). Cross-app: result lines reserve their tallest result;
+every game fits a 320 pt phone. No accelerometer exercised — thresholds
+untested on hardware. 2,133 tests, 557 ARB keys, 34 findings applied. G39, G40.

@@ -1,5 +1,6 @@
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
+import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/scene_header.dart';
@@ -122,6 +123,7 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen> {
               onProgress: (_) {},
               onCompleted: () => setState(() => _done = true),
               reduceMotion: reduceMotion,
+              motion: ref.watch(motionSensorProvider),
             ),
             key: ValueKey(_seed),
           )!,

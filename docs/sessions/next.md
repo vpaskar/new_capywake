@@ -1,28 +1,28 @@
 # Next session — start here
 
-> **Phase 14 done (2026-11-18, unattended).** Start Phase 15 — **Motion games
-> (Shake DJ, Tilt Maze)** — in a new session started from the owner's own
-> session (a linked session cannot start the next one): **"Run Phase 15 — Motion
-> games (Shake DJ, Tilt Maze), following the unattended-chain brief"**. A
-> non-motion fallback is mandatory for both (`GameChallenge.motion` asserts it).
+> **Phase 15 done (2026-11-18, unattended).** The pointer is `16` — **Capy
+> Step Quest, which is BLOCKED**: it needs a step-count permission
+> (ACTIVITY_RECOGNITION / Motion & Fitness), a store-visible owner decision.
+> Phase 17 (QR Treasure Hunt) needs a camera dependency, also the owner's call.
+> **Do not start either without the owner's answer.** If the owner wants to
+> skip ahead to Phase 18 (animation and visual polish), the tracker must be
+> re-pointed by the owner — never by a session.
 
 ## State
 
-Phases 00–14 are **done** and committed.
+Phases 00–15 are **done** and committed.
 
-**Current phase: `15` — Motion games (Shake DJ, Tilt Maze).** No
-`PHASE_15_PLAN.md` exists yet — the phase writes it.
+**Current phase: `16` — blocked on the owner.**
 
-**1,987 tests** pass. `lib` 98.46%, `lib/core` 99.70%, `lib/core/games` and
-`lib/features/games` **100%**, `lib/data` 89.17%, `lib/features/ringing` 98.71%.
-**544 ARB keys × 10 locales.** Comment baseline **113**.
+**2,133 tests** pass. `lib` 98.55%, `lib/core` 99.72%, `lib/core/games`,
+`lib/features/games`, `lib/core/motion` and `lib/data/motion` **100%**,
+`lib/data` 89.31%, `lib/features/ringing` 98.71%. **557 ARB keys × 10
+locales.** Comment baseline **113**.
 
-Six games are playable — Catch the Capy, Memory Hideout, Rhythm Rescue, Capy
-Rocket, **Morning Sort**, **Find the Impostor** — on a ringing alarm (via the
-wake pool) and in practice (chooser "Try it"; Home tiles for the mockup's four,
-so Find the Impostor's Home tile lost its "Soon" badge). **Read
-`docs/sessions/OPEN_QUESTIONS.md` first** — seven owner questions are open, one
-per decision taken meanwhile.
+Eight games are playable, including the two motion games. **Read
+`docs/sessions/OPEN_QUESTIONS.md` first** — ten owner questions are open; three
+are new (buttons always work in the motion games; the iOS motion purpose
+string; shake/tilt thresholds never felt on a phone).
 
 ## Read in this order
 
@@ -37,6 +37,8 @@ per decision taken meanwhile.
 7. `docs/phases/PHASE_14_POST_REVIEW.md` — `DriftingGrid`, why a motion must
    not point at the answer, and the art the authored games still lack (G37,
    G38).
+8. `docs/phases/PHASE_15_POST_REVIEW.md` — the accelerometer, why the fallback
+   is always on screen, and the three ways tilt was read wrongly.
 
 ## How a game plugs in now (Phase 11 contract + Phase 12 model)
 
@@ -75,6 +77,11 @@ per decision taken meanwhile.
 - **Authored banks** (Morning Sort, Find the Impostor only): an enum in
   `lib/core/games/` + one ARB key per entry in all ten locales; a pose label is
   the screen-reader answer key — written against the picture.
+- **Motion** (Phase 15): `GameLaunch.motion`; `ShakeDetector`, `TiltReader`
+  (first grip is level; `suppressUntilLevel()` after a press, never a new
+  baseline on a tilted grip). The non-motion control is always live.
+- **`GameOutcomeLine(reserveFor:)`** — every result the game can show.
+- **Never a `CapyButton` inside a game** — Snooze is one, right below.
 
 ## The measurement rule, now with a ninth entry
 
@@ -101,6 +108,11 @@ there is a hole in six phases. And a review's own earlier finding is still subje
 to the later review: the pre-review's L1 ("See All" is dangling) was wrong, and
 the full-project pass caught it against `PHASE_03_PLAN.md`.**
 
+**Phase 15: a guard you have not watched fail is a guard on trust — four were,
+two of them because of how the test pumped or played, not the code.** And a
+reviewer who was not told the author's reasoning found the defect the author's
+two passes reasoned past (letting go of a tilt read as the reverse).
+
 **Phase 14: a test that reads the screen in the same pump that changed it reads
 the old frame.** One `pump(every * 3)` fires the timer, but the frame it builds
 only starts the slide — the H3/H5 drift guards passed with the guards deleted.
@@ -120,6 +132,9 @@ in a screenshot was the harness, not the app (pre-cache before capturing).
 
 ## Owed by nobody — carried forward
 
+- **Settings' motion-check switch still governs nothing.** Phase 15 wired the
+  accelerometer and the ported `MotionCheckService` is tested; the post-dismiss
+  check itself is unbuilt.
 - **The sleep-boundary restoration — still owed, now five times over.**
   `package:health` and `live_sleep_gateway.dart` did **not** land in 07, 08, 09,
   10 or 11. `test/core/sleep/sleep_boundary_test.dart` stays at `at most one`
@@ -173,7 +188,7 @@ log for "Dart VM Service".
 control panel BEFORE building. If writes fail silently, `xcrun simctl uninstall
 0B2FFE02-34B9-4C9A-9A86-61AE61F508E2 com.capywake.capywake` then relaunch.
 
-`integration_test/capture_test.dart` captures six screens: home, alarms,
+`integration_test/capture_test.dart` captures six screens plus every game's ring and win (eight games): home, alarms,
 add_edit_alarm, stats, settings, ringing. The chooser and onboarding are NOT in
 it (no block table → `compare.dart` `exit(2)`s).
 

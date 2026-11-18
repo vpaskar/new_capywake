@@ -40,7 +40,7 @@ void main() {
 
     test('a game this build cannot launch is left out', () {
       final pool = WakeChallengeSelector.poolFor(
-        _settings(games: {'catch_the_capy', 'shake_dj'}),
+        _settings(games: {'catch_the_capy', 'step_quest'}),
         isLaunchable: (id) => id == 'catch_the_capy',
       );
       expect(pool, [

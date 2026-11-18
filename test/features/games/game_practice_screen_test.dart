@@ -92,8 +92,8 @@ void main() {
   });
 
   testWidgets('an unbuilt game shows the not-built copy (L2)', (tester) async {
-    await _pump(tester, 'shake_dj');
-    expect(find.textContaining('Shake DJ is on the way'), findsOneWidget);
+    await _pump(tester, 'step_quest');
+    expect(find.textContaining('Step Quest is on the way'), findsOneWidget);
     expect(find.byType(CatchTheCapyView), findsNothing);
   });
 

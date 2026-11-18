@@ -53,6 +53,11 @@ dependencies:
   # lib/data/ imports it.
   permission_handler: ^12.0.1
 
+  # The accelerometer for the two motion games, behind core/motion/MotionSensor.
+  # Only lib/data/ imports it. No runtime permission on either platform; iOS
+  # needs NSMotionUsageDescription in Info.plist or the plugin crashes.
+  sensors_plus: ^7.1.0
+
   # Native SQLite for device and simulator. Ships prebuilt iOS/Android
   # libraries, so it changes the pod install and the shipped binary —
   # check_bundle_size.dart measures the art budget and cannot see it.

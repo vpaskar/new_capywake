@@ -543,5 +543,18 @@
   "gameCapyPoseHoldingMug": "hält eine warme Tasse",
   "gameCapyPoseReading": "liest ein Buch",
   "gameCapyPoseListening": "trägt Kopfhörer",
-  "gameCapyPoseDetective": "mit Lupe"
+  "gameCapyPoseDetective": "mit Lupe",
+  "gameShakeDjInstruction": "Schüttel das Handy für den Beat.",
+  "gameShakeDjBeat": "Beat antippen",
+  "gameShakeDjStalled": "Beat weg. Schüttel oder tipp.",
+  "gameTiltMazeInstruction": "Neige das Handy: Capy rollt zur Fahne.",
+  "gameTiltMazeInstructionArrows": "Führe Capy mit den Pfeilen zur Fahne.",
+  "gameTiltMazeUp": "Nach oben",
+  "gameTiltMazeDown": "Nach unten",
+  "gameTiltMazeLeft": "Nach links",
+  "gameTiltMazeRight": "Nach rechts",
+  "gameTiltMazeWall": "{direction}, Wand",
+  "gameTiltMazeSteps": "{count, plural, =1{1 Schritt bis zur Fahne.} other{{count} Schritte bis zur Fahne.}}",
+  "gameTiltMazeBumped": "Eine Wand. Versuch einen anderen Weg.",
+  "gameTiltMazeEscaped": "Raus! Nächstes Labyrinth."
 }

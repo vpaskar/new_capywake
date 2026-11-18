@@ -3,11 +3,16 @@ import 'package:capywake/app/router.dart';
 import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/games/memory_hideout.dart';
 import 'package:capywake/core/games/morning_sort.dart';
+import 'package:capywake/core/games/shake_dj.dart';
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/core/motion/fake_motion_sensor.dart';
+import 'package:capywake/core/motion/motion_sensor.dart';
+import 'package:capywake/core/motion/tilt_reader.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
+import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/data/repositories/capy_wake_repository.dart';
 import 'package:capywake/design/capy_button.dart';
@@ -20,6 +25,8 @@ import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/games/morning_sort_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
+import 'package:capywake/features/games/shake_dj_view.dart';
+import 'package:capywake/features/games/tilt_maze_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
@@ -32,6 +39,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
+
+import '../games/_maze_by_ear.dart';
 
 Alarm _alarm({
   DismissMethod dismissMethod = DismissMethod.normalButton,
@@ -641,6 +650,105 @@ void main() {
     });
   });
 
+  group('motion games', () {
+    void phone(WidgetTester tester) {
+      tester.view.physicalSize = const Size(393, 852) * 3;
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+    }
+
+    FakeMotionSensor sensorOf(ProviderContainer container) =>
+        container.read(motionSensorProvider) as FakeMotionSensor;
+
+    Future<void> dismissedOnce(
+      WidgetTester tester,
+      CapyWakeRepository repository,
+    ) async {
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(RingingScreen), findsNothing);
+      final rows = await repository.listOccurrencesForAlarm('a1');
+      expect(
+        rows.where((o) => o.status == AlarmStatus.dismissed),
+        hasLength(1),
+      );
+    }
+
+    testWidgets('Shake DJ launches on a card, escape beside it', (
+      tester,
+    ) async {
+      final app = await ring(tester, gamesOnly('shake_dj'));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(ShakeDjView), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      expect(sensorOf(app.container).hasListener, isTrue);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a stalled beat raises the escape at tolerance 0', (
+      tester,
+    ) async {
+      phone(tester);
+      await ring(tester, gamesOnly('shake_dj', tolerated: 0));
+      expect(prominentEscape(), findsNothing);
+      await tester.pump(ShakeDjRound.stallAfter);
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('shaking the phone to the goal dismisses the alarm, once', (
+      tester,
+    ) async {
+      phone(tester);
+      final app = await ring(tester, gamesOnly('shake_dj'));
+      final sensor = sensorOf(app.container);
+      for (var i = 0; i < 30; i++) {
+        sensor
+          ..emit(const MotionSample(x: 0, y: 0, z: 22))
+          ..emit(FakeMotionSensor.still);
+        await tester.pump();
+      }
+      await dismissedOnce(tester, app.repository);
+      expect(sensor.hasListener, isFalse);
+    });
+
+    testWidgets('Tilt Maze launches on a card, escape beside it', (
+      tester,
+    ) async {
+      await ring(tester, gamesOnly('tilt_maze'));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(TiltMazeView), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a wall raises the escape at tolerance 0', (tester) async {
+      final handle = tester.ensureSemantics();
+      phone(tester);
+      await ring(tester, gamesOnly('tilt_maze', tolerated: 0));
+      final wall = TiltDirection.values.firstWhere(
+        (d) => tester.getSemantics(mazeArrow(d)).label.contains('wall'),
+      );
+      await tester.tap(mazeArrow(wall));
+      await tester.pump();
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      handle.dispose();
+    });
+
+    testWidgets('three mazes solved by ear dismiss the alarm, once', (
+      tester,
+    ) async {
+      final handle = tester.ensureSemantics();
+      phone(tester);
+      final app = await ring(tester, gamesOnly('tilt_maze'));
+      for (var maze = 0; maze < 3; maze++) {
+        await solveMazeByEar(tester);
+      }
+      await dismissedOnce(tester, app.repository);
+      handle.dispose();
+    });
+  });
+
   const allGames = [
     'catch_the_capy',
     'memory_hideout',
@@ -648,6 +756,8 @@ void main() {
     'capy_rocket',
     'morning_sort',
     'find_the_impostor',
+    'shake_dj',
+    'tilt_maze',
   ];
 
   Future<({Rect clock, Rect card})> ringOn(

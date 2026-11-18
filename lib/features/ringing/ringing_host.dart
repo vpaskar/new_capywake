@@ -6,6 +6,7 @@ import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_round.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
+import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_registry.dart';
@@ -149,6 +150,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
               onProgress: (progress) => _onGameProgress(progress, settings),
               onCompleted: () => _onGameWon(controller, gameId),
               reduceMotion: reduceMotion,
+              motion: ref.watch(motionSensorProvider),
             ),
             key: ValueKey(_ringSeed(session)),
           )!,

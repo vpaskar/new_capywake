@@ -85,8 +85,8 @@ abstract final class GameCatalogue {
     nameKey: 'gameShakeDj',
     tileAssetId: 'tile.shakeDj',
     winPoseAssetId: 'pose.shakeDj',
-    availability: GameAvailability.comingSoon,
-    screenReaderSolvable: false,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const _catchTheCapy = GameEntry(
@@ -121,8 +121,8 @@ abstract final class GameCatalogue {
     nameKey: 'gameTiltMaze',
     tileAssetId: 'tile.tiltMaze',
     winPoseAssetId: 'pose.tiltMaze',
-    availability: GameAvailability.comingSoon,
-    screenReaderSolvable: false,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const _morningSort = GameEntry(

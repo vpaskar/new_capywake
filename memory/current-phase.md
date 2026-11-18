@@ -1,16 +1,37 @@
 # Current phase
 
-**Phase 14 — Authored games: done, 2026-11-18 (unattended). `Current phase: 15`
-— Motion games (Shake DJ, Tilt Maze).**
+**Phase 15 — Motion games: done, 2026-11-18 (unattended). `Current phase: 16`
+— Capy Step Quest, which is BLOCKED on an owner decision (a step-count
+permission: ACTIVITY_RECOGNITION on Android 10+, Motion & Fitness on iOS).
+Phase 17 (QR Treasure Hunt, camera) is blocked the same way. Do not start
+either without the owner's answer.**
 
-**1,987 tests**, analyze clean including infos, lib 98.46% / `lib/core` 99.70% /
-`lib/core/games` **100%** / `lib/features/games` **100%** / `lib/data` 89.17% /
-`lib/features/ringing` 98.71%, **544 ARB keys × 10 locales**. Comment baseline
-113 (+0).
+**2,133 tests**, analyze clean including infos, lib 98.55% / `lib/core` 99.72% /
+`lib/core/games` **100%** / `lib/features/games` **100%** / `lib/core/motion`
+**100%** / `lib/data` 89.31% / `lib/features/ringing` 98.71%, **557 ARB keys ×
+10 locales**. Comment baseline 113 (+0).
 
-Six games are playable: Catch the Capy, Memory Hideout, Rhythm Rescue, Capy
-Rocket, Morning Sort, Find the Impostor — on a ringing alarm (wake pool) and in
-practice (chooser "Try it"; Home tiles only for the mockup's four).
+Eight games are playable: Catch the Capy, Memory Hideout, Rhythm Rescue, Capy
+Rocket, Morning Sort, Find the Impostor, **Shake DJ, Tilt Maze**. Only Step
+Quest and QR Treasure Hunt remain, both `blocked`; no catalogue entry is
+`comingSoon` any more (the sheet is tested with a synthetic entry).
+
+## What Phase 15 adds to the recipe
+
+- **Motion input:** `GameLaunch.motion` (a `MotionSensor`); hosts read
+  `motionSensorProvider` (a silent `FakeMotionSensor` by default,
+  `platformMotionOverride()` in production). Subscribe once, cancel on win and
+  dispose, resubscribe in `didUpdateWidget` when the sensor changes, ignore
+  stream errors.
+- **The fallback is always live**, never gated behind a mode or a timer.
+- **`ShakeDetector`** (8 m/s² from gravity, re-arm under 4) and **`TiltReader`**
+  (angles from the first grip, full-turn pitch, 18° engage / 9° release,
+  `suppressUntilLevel()` after a press or escape). Never re-baseline on a
+  tilted grip — letting go reads as the reverse.
+- **`GameOutcomeLine(reserveFor:)`**: pass every result the game can show.
+- **A game control is never a `CapyButton`** — Snooze is one, right below.
+- **Mutation-check every guard**, and pump timers one beat at a time: a long
+  `pump` coalesces several timers into one frame.
 
 ## Carried from Phases 12–13 (unchanged)
 
@@ -40,6 +61,7 @@ adaptation; word-only item cards.
 
 ## Owed by nobody (carried)
 
-Sleep boundary / `package:health` (unbuilt 07–14); `CapyNavBar` 98.7 vs 79.9;
+Sleep boundary / `package:health` (unbuilt 07–15); Settings' motion-check
+switch governs nothing (the sensor now exists; the check does not); `CapyNavBar` 98.7 vs 79.9;
 Alarms 3 / Add-Edit 9 Tier A failures; `ringNow` uncalled; art G35–G38. Android
 untested, no emulator.

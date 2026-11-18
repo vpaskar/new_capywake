@@ -2607,5 +2607,67 @@
   "gameCapyPoseDetective": "with a magnifying glass",
   "@gameCapyPoseDetective": {
     "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameShakeDjInstruction": "Shake the phone to keep the beat going.",
+  "@gameShakeDjInstruction": {
+    "description": "Shake DJ: how to play. A shake, never shaking hard; the beat button is always there too."
+  },
+  "gameShakeDjBeat": "Tap the beat",
+  "@gameShakeDjBeat": {
+    "description": "Shake DJ: the button that drops one beat without shaking."
+  },
+  "gameShakeDjStalled": "Beat stopped. Shake or tap.",
+  "@gameShakeDjStalled": {
+    "description": "Shake DJ: shown after a long pause. Calm, offers the button; never about effort."
+  },
+  "gameTiltMazeInstruction": "Tilt the phone to roll Capy to the flag.",
+  "@gameTiltMazeInstruction": {
+    "description": "Tilt Maze: how to play. The arrow buttons below work too."
+  },
+  "gameTiltMazeInstructionArrows": "Use the arrows to guide Capy to the flag.",
+  "@gameTiltMazeInstructionArrows": {
+    "description": "Tilt Maze instruction with a screen reader on, when tilting is ignored and the arrows are the way to play."
+  },
+  "gameTiltMazeUp": "Up",
+  "@gameTiltMazeUp": {
+    "description": "Tilt Maze arrow button: move Capy up the screen."
+  },
+  "gameTiltMazeDown": "Down",
+  "@gameTiltMazeDown": {
+    "description": "Tilt Maze arrow button: move Capy down the screen."
+  },
+  "gameTiltMazeLeft": "Left",
+  "@gameTiltMazeLeft": {
+    "description": "Tilt Maze arrow button: move Capy left. Physical left, also in right-to-left languages."
+  },
+  "gameTiltMazeRight": "Right",
+  "@gameTiltMazeRight": {
+    "description": "Tilt Maze arrow button: move Capy right. Physical right, also in right-to-left languages."
+  },
+  "gameTiltMazeWall": "{direction}, wall",
+  "@gameTiltMazeWall": {
+    "description": "Tilt Maze: screen-reader label of an arrow blocked by a wall, e.g. \"Up, wall\".",
+    "placeholders": {
+      "direction": {
+        "type": "String"
+      }
+    }
+  },
+  "gameTiltMazeSteps": "{count, plural, =1{1 step to the flag.} other{{count} steps to the flag.}}",
+  "@gameTiltMazeSteps": {
+    "description": "Tilt Maze: after a step, how far the flag is along the maze.",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "gameTiltMazeBumped": "A wall. Try another way.",
+  "@gameTiltMazeBumped": {
+    "description": "Tilt Maze: Capy tried to move into a wall. Neutral."
+  },
+  "gameTiltMazeEscaped": "Out! Next maze.",
+  "@gameTiltMazeEscaped": {
+    "description": "Tilt Maze: Capy reached the flag; a new maze follows. The next step reads the new distance."
   }
 }

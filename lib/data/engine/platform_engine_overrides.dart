@@ -4,6 +4,7 @@ import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/engine/local_location_resolver.dart';
 import 'package:capywake/data/engine/platform_alarm_engine.dart';
 import 'package:capywake/data/engine/platform_notification_service.dart';
+import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/permissions/platform_permission_service.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/widgets.dart';
@@ -57,6 +58,7 @@ Future<Widget Function(Widget)> platformEngineScope({
       ),
       scheduleLocationProvider.overrideWith((ref) => location),
       engineNowProvider.overrideWith((ref) => now),
+      platformMotionOverride(),
     ],
     child: child,
   );

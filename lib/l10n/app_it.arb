@@ -543,5 +543,18 @@
   "gameCapyPoseHoldingMug": "tiene una tazza calda",
   "gameCapyPoseReading": "legge un libro",
   "gameCapyPoseListening": "con le cuffie",
-  "gameCapyPoseDetective": "con una lente d'ingrandimento"
+  "gameCapyPoseDetective": "con una lente d'ingrandimento",
+  "gameShakeDjInstruction": "Scuoti il telefono per il ritmo.",
+  "gameShakeDjBeat": "Tocca il ritmo",
+  "gameShakeDjStalled": "Ritmo fermo. Scuoti o tocca.",
+  "gameTiltMazeInstruction": "Inclina il telefono verso la bandiera.",
+  "gameTiltMazeInstructionArrows": "Usa le frecce per portare Capy alla bandiera.",
+  "gameTiltMazeUp": "Su",
+  "gameTiltMazeDown": "Giù",
+  "gameTiltMazeLeft": "Sinistra",
+  "gameTiltMazeRight": "Destra",
+  "gameTiltMazeWall": "{direction}, muro",
+  "gameTiltMazeSteps": "{count, plural, =1{1 passo alla bandiera.} other{{count} passi alla bandiera.}}",
+  "gameTiltMazeBumped": "Un muro. Prova un'altra strada.",
+  "gameTiltMazeEscaped": "Fuori! Nuovo labirinto."
 }

@@ -26,7 +26,9 @@ void main() {
     expect(find.text('Memory Hideout'), findsOneWidget);
     expect(find.text('Rhythm Rescue'), findsOneWidget);
     expect(find.text('Capy Rocket'), findsOneWidget);
-    expect(find.text('Shake DJ'), findsNothing);
+    expect(find.text('Shake DJ'), findsOneWidget);
+    expect(find.text('Tilt Maze'), findsOneWidget);
+    expect(find.text('Step Quest'), findsNothing);
     expect(find.text('Try it'), findsNothing);
   });
 
@@ -74,7 +76,7 @@ void main() {
 
     _toggle(tester, 'Memory Hideout').onChanged!(true);
     _toggle(tester, 'Puzzles').onChanged!(false);
-    await tester.tap(find.text('Try it').at(2));
+    await tester.tap(find.text('Try it').at(3));
     await tester.tap(find.text('Try it').last);
 
     expect(changes, ['memory_hideout:true', 'puzzles:false']);

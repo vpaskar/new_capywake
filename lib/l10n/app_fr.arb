@@ -543,5 +543,18 @@
   "gameCapyPoseHoldingMug": "tient une tasse chaude",
   "gameCapyPoseReading": "lit un livre",
   "gameCapyPoseListening": "porte un casque",
-  "gameCapyPoseDetective": "avec une loupe"
+  "gameCapyPoseDetective": "avec une loupe",
+  "gameShakeDjInstruction": "Secoue le téléphone pour le rythme.",
+  "gameShakeDjBeat": "Taper le rythme",
+  "gameShakeDjStalled": "Rythme stoppé. Secoue ou touche.",
+  "gameTiltMazeInstruction": "Incline le téléphone vers le drapeau.",
+  "gameTiltMazeInstructionArrows": "Guide Capy jusqu'au drapeau avec les flèches.",
+  "gameTiltMazeUp": "Haut",
+  "gameTiltMazeDown": "Bas",
+  "gameTiltMazeLeft": "Gauche",
+  "gameTiltMazeRight": "Droite",
+  "gameTiltMazeWall": "{direction}, mur",
+  "gameTiltMazeSteps": "{count, plural, =1{1 pas jusqu'au drapeau.} other{{count} pas jusqu'au drapeau.}}",
+  "gameTiltMazeBumped": "Un mur. Essaie un autre chemin.",
+  "gameTiltMazeEscaped": "Sorti ! Labyrinthe suivant."
 }

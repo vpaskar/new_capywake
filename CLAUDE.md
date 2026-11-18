@@ -232,7 +232,9 @@ lib/
 
 - `core/` imports no Flutter. It is headless and fully testable.
 - The platform alarm engine sits behind `core/engine/AlarmEngine`; only `data/`
-  imports the `alarm` package.
+  imports the `alarm` package. Likewise the accelerometer sits behind
+  `core/motion/MotionSensor`, and only `data/motion/platform_motion_sensor.dart`
+  imports `sensors_plus` (a test fails otherwise).
 - Clock times are **integer minutes since local midnight** in data/calc layers,
   formatted at the UI boundary via `intl`. Durations are integer minutes.
 - Models carry no derived state — no cached "next fire time".

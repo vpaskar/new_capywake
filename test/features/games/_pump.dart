@@ -1,4 +1,5 @@
 import 'package:capywake/design/theme.dart';
+import 'package:capywake/design/tokens.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,8 +13,9 @@ Future<void> pumpInApp(
   bool accessibleNavigation = false,
   double textScale = 1,
   Brightness brightness = Brightness.light,
+  Size size = const Size(393, 852),
 }) async {
-  tester.view.physicalSize = const Size(393, 852) * 3;
+  tester.view.physicalSize = size * 3;
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   await tester.pumpWidget(
@@ -57,3 +59,9 @@ List<String> recordAnnouncements(WidgetTester tester) {
   );
   return said;
 }
+
+/// [child] at the width `RingingScreen` gives its game slot.
+Widget ringingSlotWidth(Widget child) => Padding(
+  padding: const EdgeInsets.symmetric(horizontal: CapySpacing.lg),
+  child: child,
+);

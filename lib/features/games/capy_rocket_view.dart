@@ -177,6 +177,10 @@ class _CapyRocketViewState extends State<CapyRocketView> {
             GameOutcomeLine(
               text: outcome,
               serial: _round.boosts + _round.wobbles,
+              reserveFor: [
+                l10n.gameCapyRocketBoosted,
+                l10n.gameCapyRocketWobbled,
+              ],
             ),
           ],
         ),

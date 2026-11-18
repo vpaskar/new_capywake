@@ -185,6 +185,10 @@ class _RhythmRescueViewState extends State<RhythmRescueView> {
           GameOutcomeLine(
             text: outcome,
             serial: _round.rescued + _round.wrongTaps,
+            reserveFor: [
+              l10n.gameRhythmRescueRescued,
+              l10n.gameRhythmRescueMissed,
+            ],
           ),
         ],
       ),

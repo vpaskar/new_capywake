@@ -1061,3 +1061,28 @@ nightcap-and-duck sleeper) so the header mascot keeps a unique path.
 **Needed (if the owner wants the poster's game):** head-and-shoulders faces of
 a capybara and 4–6 lookalikes (beaver, otter, hamster, guinea pig, marmot) in
 one style, one canvas size, transparent, ≥ 240 × 240.
+
+## G39 — Shake DJ: no DJ decks and no dancing headphones Capy (Phase 15, Tier B, reported)
+
+`03_SHAKE_DJ.png` draws Capy in **orange headphones, arms up, dancing behind
+two turntables** with a mixer, music notes and EQ bars either side. The package
+has no decks or turntable art, and no dancing headphones cutout: the win pose
+`pose.shakeDj` (213 px, blue headphones, baked confetti) is a celebration, not
+a game sprite. **Used meanwhile:** `game.capy.listening` (`collection_06`,
+purple headphones, eyes closed, 260 px → 86 pt, sharp at 3×) bobbing to the
+groove and kicking on each beat; the EQ bars and the rising note are UI
+(rounded rects, a Material icon), not art; no decks. **Needed:** Capy in the
+orange nightcap wearing headphones, arms up, behind a two-deck DJ table,
+transparent, ≥ 330 × 300; optionally 2–4 dance frames on one canvas.
+
+## G40 — Tilt Maze: no rolling Capy and no goal flag (Phase 15, Tier B, reported)
+
+`07_TILT_MAZE.png` draws a small **round Capy rolling** (motion lines) and a
+**checkered flag on a glowing spot**. The package has neither as a cutout: the
+win pose `pose.tiltMaze` (246 px) holds a flag but bakes Capy and confetti in.
+**Used meanwhile:** `game.capy.curledAsleep` (`moments_00`, 270 px, with a
+baked "zz") drawn in a 27–35 pt cell, and the flag as a Material icon in cocoa
+on an accent disc. The walls are drawn as UI geometry, like the poster's.
+**Needed:** a round curled Capy (orange nightcap) seen from above or the side,
+no "zz", transparent, ≥ 160 × 160; and a small checkered flag on a glow,
+transparent, ≥ 160 × 160.

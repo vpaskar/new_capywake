@@ -543,5 +543,18 @@
   "gameCapyPoseHoldingMug": "держит тёплую кружку",
   "gameCapyPoseReading": "читает книгу",
   "gameCapyPoseListening": "в наушниках",
-  "gameCapyPoseDetective": "с лупой"
+  "gameCapyPoseDetective": "с лупой",
+  "gameShakeDjInstruction": "Тряси телефон, чтобы бит играл.",
+  "gameShakeDjBeat": "Отбить бит",
+  "gameShakeDjStalled": "Бит затих. Тряси или нажми.",
+  "gameTiltMazeInstruction": "Наклоняй телефон, Капи покатится к флажку.",
+  "gameTiltMazeInstructionArrows": "Веди Капи к флажку стрелками.",
+  "gameTiltMazeUp": "Вверх",
+  "gameTiltMazeDown": "Вниз",
+  "gameTiltMazeLeft": "Влево",
+  "gameTiltMazeRight": "Вправо",
+  "gameTiltMazeWall": "{direction}, стена",
+  "gameTiltMazeSteps": "{count, plural, one{{count} шаг до флажка.} few{{count} шага до флажка.} many{{count} шагов до флажка.} other{{count} шага до флажка.}}",
+  "gameTiltMazeBumped": "Стена. Попробуй другой путь.",
+  "gameTiltMazeEscaped": "Выбрались! Новый лабиринт."
 }

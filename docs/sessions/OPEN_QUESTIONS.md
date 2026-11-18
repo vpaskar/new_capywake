@@ -76,3 +76,32 @@ Morning Sort's cards show the item's name with no picture (G37, request #10).
 Meanwhile they are plain, readable and screen-reader complete. When the icons
 arrive they go above the name; the card height is measured, so nothing else
 changes.
+
+## 2026-11-18 — Phase 15 — Motion games: should the buttons always work?
+
+The posters say the motion games wake you "because they need movement, not
+just taps". The a11y rule says a motion game needs a non-motion way to finish.
+Built meanwhile: **the buttons are always on screen and always work** — Shake
+DJ's "Tap the beat", Tilt Maze's four arrows — and shaking or tilting works
+alongside. Hiding the buttons until a screen reader is on would lock out a
+sighted user with a dead sensor, a phone on a stand or a hand in a cast
+(safety). The alternative, if the owner wants motion to be required: a small
+"Can't shake?" switch that reveals the buttons — one boolean in each view, no
+change to the rounds.
+
+## 2026-11-18 — Phase 15 — iOS motion purpose string (store-visible)
+
+`ios/Runner/Info.plist` now carries `NSMotionUsageDescription` — the
+`sensors_plus` plugin crashes without it. Text: "CapyWake reads motion only
+while you play Shake DJ or Tilt Maze, to notice a shake or a tilt. Nothing
+leaves your phone." English only: the accelerometer never prompts, so the
+string is never shown on screen; App Review may read it. Reword freely.
+
+## 2026-11-18 — Phase 15 — Shake and tilt thresholds were never felt on a device
+
+Shake: 8 m/s² away from gravity, re-arm under 4. Tilt: 18° from the grip
+where the game started (or the last arrow press), release under 9°. Chosen
+from the physics and the plugin's source; **no physical phone was run** (the
+simulator has no accelerometer, Android has no emulator here). If the owner
+tries it and a shake is missed or a tilt fires too easily, the constants are
+`ShakeDetector.defaultShakeDeviation` and `TiltReader(engageDegrees:)`.
