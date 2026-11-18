@@ -1,6 +1,7 @@
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Future<void> pumpInApp(
@@ -33,4 +34,26 @@ Future<void> pumpInApp(
     ),
   );
   await tester.pumpAndSettle();
+}
+
+/// What the app announces to a screen reader outside live regions.
+List<String> recordAnnouncements(WidgetTester tester) {
+  final said = <String>[];
+  final messenger = tester.binding.defaultBinaryMessenger
+    ..setMockDecodedMessageHandler<dynamic>(SystemChannels.accessibility, (
+      message,
+    ) async {
+      final map = message as Map<Object?, Object?>;
+      if (map['type'] == 'announce') {
+        said.add((map['data']! as Map<Object?, Object?>)['message']! as String);
+      }
+      return null;
+    });
+  addTearDown(
+    () => messenger.setMockDecodedMessageHandler<dynamic>(
+      SystemChannels.accessibility,
+      null,
+    ),
+  );
+  return said;
 }

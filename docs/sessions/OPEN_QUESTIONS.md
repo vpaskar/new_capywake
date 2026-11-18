@@ -50,3 +50,29 @@ session. Meanwhile: Phase 13 is committed (ea784fe, 52b8c5d), `Current phase:
 there with one click, or start a new session with the command at the top of
 `docs/sessions/next.md`. If the owner wants the chain to run hands-off, each
 phase must be started from the owner's own session, not from a linked one.
+
+## 2026-11-18 — Phase 14 — Morning Sort's bank: is every entry fair?
+
+Built meanwhile: Capy needs a toothbrush, toothpaste, apple, banana, water
+bottle, keys, socks, shoes, comb, towel; Capy leaves at home a brick, anchor,
+traffic cone, bowling ball, cactus, rubber duck, anvil, snowman. The decoys are
+absurd on purpose — a half-asleep choice must be quick and never a judgement
+call. **The poster's pizza is dropped** (some people do eat it for breakfast).
+To change the bank: one `MorningItem` value in `lib/core/games/morning_sort.dart`
+and one ARB key in all ten locales.
+
+## 2026-11-18 — Phase 14 — Find the Impostor: "different Capy" instead of "real capybara"
+
+The poster's lookalike animals do not exist in the package (G38), and art is
+never generated. Built meanwhile: one Capy doing something different among
+identical Capys, from the 16 bundled poses; hard pairs two poses of the same
+kind (two sleepers, two calm ones). If the owner supplies the lookalike faces
+(`ART_REQUESTS.md` #12), the game becomes the poster's: the bank swaps poses
+for species, the round and view stay.
+
+## 2026-11-18 — Phase 14 — Item cards are words only until icons arrive
+
+Morning Sort's cards show the item's name with no picture (G37, request #10).
+Meanwhile they are plain, readable and screen-reader complete. When the icons
+arrive they go above the name; the card height is measured, so nothing else
+changes.

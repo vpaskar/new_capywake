@@ -103,8 +103,8 @@ abstract final class GameCatalogue {
     nameKey: 'gameFindTheImpostor',
     tileAssetId: 'tile.findTheImpostor',
     winPoseAssetId: 'pose.findTheImpostor',
-    availability: GameAvailability.comingSoon,
-    screenReaderSolvable: false,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const _memoryHideout = GameEntry(
@@ -130,8 +130,8 @@ abstract final class GameCatalogue {
     nameKey: 'gameMorningSort',
     tileAssetId: 'tile.morningSort',
     winPoseAssetId: 'pose.morningSort',
-    availability: GameAvailability.comingSoon,
-    screenReaderSolvable: false,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const _rhythmRescue = GameEntry(

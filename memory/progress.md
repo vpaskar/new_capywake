@@ -448,3 +448,18 @@ rocket drawn from a stale aspect 28 % past its pixels. Short-phone clock overlap
 (Catch the Capy since Phase 12) capped and logged for the owner. 1,888 tests,
 498 ARB keys, 32 findings, all applied. Art gaps G35, G36.
 
+
+---
+
+## Phase 14 — Authored games: Morning Sort, Find the Impostor
+
+**Done 2026-11-18, unattended.** Two games on authored banks (content-bank ban
+lifted for these two, now recorded in `CLAUDE.md`): Morning Sort packs useful
+items and leaves absurd decoys at home; Find the Impostor finds the one Capy
+doing something different among identical bundled poses. No item art and no
+lookalike animals exist (G37, G38): names-only cards, Capy poses instead. A
+shared `DriftingGrid` makes both dynamic. Found on device: pairwise swaps in a
+find-the-odd-one grid either showed nothing or pointed at the answer — replaced
+by a carousel. Found by an unanchored review: taps mid-slide went to the wrong
+card, and a "names fit" test could not fail. Repeated outcomes are now
+re-announced in four games. 1,987 tests, 544 ARB keys, 37 findings, all applied.

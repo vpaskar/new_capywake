@@ -316,7 +316,8 @@ run. Two carry real platform blockers:
 Also: `Morning Sort` and `Find the Impostor` need authored content banks, which
 the legacy `CLAUDE.md` bans for locale reasons. The ban was lifted for these
 two specifically (owner, 2026-11-15) — to be recorded in guardrail docs when
-those games are built, not before.
+those games are built, not before. **Recorded in `CLAUDE.md` ("Content
+integrity") by Phase 14, which built both.**
 
 They are sequenced late and tracked individually as
 implemented / adapted / blocked with test evidence. **Four game cards appear on

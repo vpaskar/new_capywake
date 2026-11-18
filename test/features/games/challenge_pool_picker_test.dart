@@ -74,7 +74,7 @@ void main() {
 
     _toggle(tester, 'Memory Hideout').onChanged!(true);
     _toggle(tester, 'Puzzles').onChanged!(false);
-    await tester.tap(find.text('Try it').at(1));
+    await tester.tap(find.text('Try it').at(2));
     await tester.tap(find.text('Try it').last);
 
     expect(changes, ['memory_hideout:true', 'puzzles:false']);

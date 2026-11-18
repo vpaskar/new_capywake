@@ -60,7 +60,10 @@ enum ArtUse {
   hero(renderBoxPt: 240),
 
   /// A game's still win pose.
-  winPose(renderBoxPt: 100);
+  winPose(renderBoxPt: 100),
+
+  /// A Capy on a game card: the impostor grid, the Morning Sort bag.
+  gameCapy(renderBoxPt: 72);
 
   const ArtUse({required this.renderBoxPt});
 
@@ -287,6 +290,33 @@ abstract final class CapyArt {
     ),
   ];
 
+  /// Bundled poses on game cards, keyed `game.capy.<CapyPose name>`.
+  static final gameCapys = List<ArtAsset>.unmodifiable([
+    for (final (pose, file) in const [
+      ('asleepNightcap', 'moments_13'),
+      ('curledAsleep', 'moments_00'),
+      ('underBlanket', 'moments_01'),
+      ('onCushion', 'moments_07'),
+      ('hiking', 'collection_02'),
+      ('jogging', 'collection_10'),
+      ('liftingWeights', 'moments_03'),
+      ('holdingClock', 'collection_11'),
+      ('cheering', 'collection_03'),
+      ('partying', 'collection_09'),
+      ('superhero', 'moments_12'),
+      ('blushing', 'moments_09'),
+      ('holdingMug', 'collection_07'),
+      ('reading', 'moments_06'),
+      ('listening', 'collection_06'),
+      ('detective', 'collection_05'),
+    ])
+      ArtAsset(
+        'game.capy.$pose',
+        'assets/art/mascots/$file.webp',
+        ArtUse.gameCapy,
+      ),
+  ]);
+
   /// The sleeping capybara beside the wordmark on `01_HOME.png`. The choice
   /// is recorded against the mockup crop in `docs/visual/home/`.
   static const mascots = <ArtAsset>[
@@ -335,6 +365,7 @@ abstract final class CapyArt {
     ...runFrames,
     ...dustFrames,
     ...games,
+    ...gameCapys,
     ...mascots,
     ...thumbnails,
     ...winFrames,

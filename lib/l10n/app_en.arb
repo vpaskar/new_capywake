@@ -2373,5 +2373,239 @@
   "gameCapyRocketWobbled": "Other way. Follow the arrow.",
   "@gameCapyRocketWobbled": {
     "description": "Neutral result after a swipe the wrong way; no progress is lost."
+  },
+  "gameMorningSortInstruction": "Tap what Capy needs this morning.",
+  "@gameMorningSortInstruction": {
+    "description": "Morning Sort instruction, shown all game. A quiet instruction, never a taunt."
+  },
+  "gameMorningSortPacked": "In the bag.",
+  "@gameMorningSortPacked": {
+    "description": "Morning Sort result: a useful item went into the bag. Never names the item."
+  },
+  "gameMorningSortLeftOut": "Capy can leave that at home.",
+  "@gameMorningSortLeftOut": {
+    "description": "Morning Sort result: the tapped item is not needed. Neutral, never \"wrong\" or \"failed\"."
+  },
+  "gameMorningSortBagDone": "Bag packed.",
+  "@gameMorningSortBagDone": {
+    "description": "Morning Sort result: every pocket of a bag is filled."
+  },
+  "gameMorningSortPocketEmpty": "Pocket {number} of {total}: empty",
+  "@gameMorningSortPocketEmpty": {
+    "description": "Screen-reader label of an empty bag pocket.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "2"
+      },
+      "total": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gameMorningSortPocketPacked": "Pocket {number} of {total}: {item}",
+  "@gameMorningSortPocketPacked": {
+    "description": "Screen-reader label of a filled bag pocket; item is an item name.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "2"
+      },
+      "total": {
+        "type": "int",
+        "example": "2"
+      },
+      "item": {
+        "type": "String",
+        "example": "Apple"
+      }
+    }
+  },
+  "gameMorningSortItemPacked": "{item}: packed",
+  "@gameMorningSortItemPacked": {
+    "description": "Screen-reader label of an item card already packed.",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Apple"
+      }
+    }
+  },
+  "gameMorningSortItemLeftOut": "{item}: left at home",
+  "@gameMorningSortItemLeftOut": {
+    "description": "Screen-reader label of an item card set aside as not needed.",
+    "placeholders": {
+      "item": {
+        "type": "String",
+        "example": "Apple"
+      }
+    }
+  },
+  "gameMorningItemToothbrush": "Toothbrush",
+  "@gameMorningItemToothbrush": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemToothpaste": "Toothpaste",
+  "@gameMorningItemToothpaste": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemApple": "Apple",
+  "@gameMorningItemApple": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemBanana": "Banana",
+  "@gameMorningItemBanana": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemWaterBottle": "Water bottle",
+  "@gameMorningItemWaterBottle": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemKeys": "Keys",
+  "@gameMorningItemKeys": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemSocks": "Socks",
+  "@gameMorningItemSocks": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemShoes": "Shoes",
+  "@gameMorningItemShoes": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemComb": "Comb",
+  "@gameMorningItemComb": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemTowel": "Towel",
+  "@gameMorningItemTowel": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemBrick": "Brick",
+  "@gameMorningItemBrick": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemAnchor": "Anchor",
+  "@gameMorningItemAnchor": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemTrafficCone": "Traffic cone",
+  "@gameMorningItemTrafficCone": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemBowlingBall": "Bowling ball",
+  "@gameMorningItemBowlingBall": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemCactus": "Cactus",
+  "@gameMorningItemCactus": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemRubberDuck": "Rubber duck",
+  "@gameMorningItemRubberDuck": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemAnvil": "Anvil",
+  "@gameMorningItemAnvil": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameMorningItemSnowman": "Snowman",
+  "@gameMorningItemSnowman": {
+    "description": "Morning Sort item name, on its card. A plain noun, no article."
+  },
+  "gameFindTheImpostorInstruction": "One Capy is doing something different. Tap it.",
+  "@gameFindTheImpostorInstruction": {
+    "description": "Find the Impostor instruction, shown all game. A quiet instruction, never a taunt."
+  },
+  "gameFindTheImpostorFound": "Found the different one.",
+  "@gameFindTheImpostorFound": {
+    "description": "Find the Impostor result: the different Capy was tapped."
+  },
+  "gameFindTheImpostorMissed": "That one matches. Look again.",
+  "@gameFindTheImpostorMissed": {
+    "description": "Find the Impostor result: the tapped Capy matches the others. Neutral, never \"wrong\"."
+  },
+  "gameFindTheImpostorCellLabel": "Capy {number} of {total}: {pose}",
+  "@gameFindTheImpostorCellLabel": {
+    "description": "Screen-reader label of a Capy card; pose is one of the gameCapyPose phrases.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "2"
+      },
+      "total": {
+        "type": "int",
+        "example": "2"
+      },
+      "pose": {
+        "type": "String",
+        "example": "cheering"
+      }
+    }
+  },
+  "gameCapyPoseAsleepNightcap": "asleep in a nightcap",
+  "@gameCapyPoseAsleepNightcap": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseCurledAsleep": "curled up asleep",
+  "@gameCapyPoseCurledAsleep": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseUnderBlanket": "tucked under a blanket",
+  "@gameCapyPoseUnderBlanket": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseOnCushion": "resting on a cushion",
+  "@gameCapyPoseOnCushion": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseHiking": "walking with a backpack",
+  "@gameCapyPoseHiking": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseJogging": "jogging in a headband",
+  "@gameCapyPoseJogging": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseLiftingWeights": "lifting weights",
+  "@gameCapyPoseLiftingWeights": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseHoldingClock": "holding an alarm clock",
+  "@gameCapyPoseHoldingClock": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseCheering": "cheering",
+  "@gameCapyPoseCheering": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPosePartying": "in a party hat",
+  "@gameCapyPosePartying": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseSuperhero": "in a superhero cape",
+  "@gameCapyPoseSuperhero": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseBlushing": "blushing with a heart",
+  "@gameCapyPoseBlushing": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseHoldingMug": "holding a warm mug",
+  "@gameCapyPoseHoldingMug": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseReading": "reading a book",
+  "@gameCapyPoseReading": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseListening": "wearing headphones",
+  "@gameCapyPoseListening": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
+  },
+  "gameCapyPoseDetective": "with a magnifying glass",
+  "@gameCapyPoseDetective": {
+    "description": "Find the Impostor: what one Capy card shows, read after \"Capy 2 of 6:\". Describes the bundled picture exactly."
   }
 }

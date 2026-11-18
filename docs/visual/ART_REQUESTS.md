@@ -35,5 +35,8 @@ poses are in. Per-file verdicts: `asset_gaps.md`, "Owner replacements".
 | 4 | *(optional)* **Alarms and Add/Edit heroes** as wide header scenes, orange cap, no black bars — the replacement is an app-icon square on black bars | 1536 × 1024 | G17 |
 | 8 | **Rhythm Rescue: Capy in headphones**, orange nightcap, head-bob frames optional (one canvas) | ≥ 300 × 300, transparent | G35 |
 | 9 | **Capy Rocket: Capy riding a rocket in flight**, nose up-right, with a flame; flame frames optional | ≥ 330 × 280, transparent | G36 |
+| 10 | **Morning Sort: 18 item icons**, one style, no text — toothbrush, toothpaste, apple, banana, water bottle, keys, socks, shoes, comb, towel, brick, anchor, traffic cone, bowling ball, cactus, rubber duck, anvil, snowman | each ≥ 160 × 160, transparent | G37 |
+| 11 | *(optional)* **Morning Sort: an open backpack** with three pockets | ≥ 600 × 360, transparent | G37 |
+| 12 | *(optional)* **Find the Impostor: lookalike faces** — capybara + beaver, otter, hamster, guinea pig, marmot, head and shoulders, one canvas | each ≥ 240 × 240, transparent | G38 |
 
 Every item here is polish; the app works with what it has.

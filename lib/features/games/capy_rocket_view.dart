@@ -174,7 +174,10 @@ class _CapyRocketViewState extends State<CapyRocketView> {
               ),
             ),
             const SizedBox(height: CapySpacing.sm),
-            GameOutcomeLine(text: outcome),
+            GameOutcomeLine(
+              text: outcome,
+              serial: _round.boosts + _round.wobbles,
+            ),
           ],
         ),
       ),

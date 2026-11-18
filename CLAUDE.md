@@ -182,6 +182,12 @@ why the previous attempt could not match the mockups.
   cannot be forgotten.
 - **Settings:** show only implemented rows. Backup & Sync and Restore Purchases
   are dropped — there is no backend and nothing to restore.
+- **Authored content banks — Morning Sort and Find the Impostor only** (owner,
+  2026-11-15; built in Phase 14). The legacy ban stands for every other game:
+  a bank entry is an enum value in `lib/core/games/` plus an ARB key in all
+  ten locales, never a Dart string, and a test asserts each entry resolves.
+  Find the Impostor's pose labels are its screen-reader answer key — written
+  against the picture, never the file name.
 - **Home:** the game rail reads from a typed catalogue; a `comingSoon` card is
   marked and opens a "not built yet" sheet, never a dead tap; a playable card
   opens practice, which never touches an alarm.

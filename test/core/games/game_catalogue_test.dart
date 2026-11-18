@@ -3,10 +3,17 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('GameCatalogue', () {
-    test('exactly the four touch games built so far are playable', () {
+    test('exactly the six touch games built so far are playable', () {
       expect(
         GameCatalogue.playable.map((e) => e.id),
-        ['catch_the_capy', 'memory_hideout', 'rhythm_rescue', 'capy_rocket'],
+        [
+          'catch_the_capy',
+          'find_the_impostor',
+          'memory_hideout',
+          'morning_sort',
+          'rhythm_rescue',
+          'capy_rocket',
+        ],
         reason:
             'A game is playable only once its view is registered. Another '
             'playable entry means a game was marked available before it '

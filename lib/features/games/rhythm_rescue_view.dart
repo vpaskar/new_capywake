@@ -182,7 +182,10 @@ class _RhythmRescueViewState extends State<RhythmRescueView> {
           const SizedBox(height: CapySpacing.md),
           _pads(l10n),
           const SizedBox(height: CapySpacing.sm),
-          GameOutcomeLine(text: outcome),
+          GameOutcomeLine(
+            text: outcome,
+            serial: _round.rescued + _round.wrongTaps,
+          ),
         ],
       ),
     );

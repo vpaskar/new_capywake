@@ -1030,3 +1030,34 @@ the shared `GameHeader` pips, not a sun bar. The small sprite also limits the
 visible climb to ~12 pt per boost on a 228 pt field. **Needed:** Capy (orange
 nightcap) on a rocket in flight, nose up-right, with a flame, transparent,
 ≥ 330 × 280; optionally 2–3 flame frames on one canvas.
+
+## G37 — Morning Sort: no item art and no open backpack (Phase 14, Tier B, reported)
+
+`08_MORNING_SORT.png` draws six **illustrated item cards** (toothbrush, apple,
+sock / rubber duck, brick, pizza), each icon above its name, and an **open
+backpack** with three dashed pockets under Capy's paws. The package has none of
+it: `asset_library/icons/` are 65–128 px UI icons (carrot, healthy_food, book …),
+none an item from the bank and all too small for a 48 pt icon (144 px); there
+is no backpack cutout. **Used meanwhile:** each card shows the item's **name
+only** (a real `Text`, 18 names × 10 locales); the pockets are drawn as UI
+(outlined squares that fill with a check), not art; beside them the bundled
+backpack Capy `mascots/collection_02.webp` (`game.capy.hiking`, 230 px, 56 pt).
+**Needed:** 18 item icons in one style — toothbrush, toothpaste, apple, banana,
+water bottle, keys, socks, shoes, comb, towel / brick, anchor, traffic cone,
+bowling ball, cactus, rubber duck, anvil, snowman — transparent, ≥ 160 × 160,
+no text; optionally an open backpack with pockets, ≥ 600 × 360, transparent.
+
+## G38 — Find the Impostor: no lookalike animals (Phase 14, Tier B adaptation, reported)
+
+`05_FIND_THE_IMPOSTOR.png` asks "Which one is the real capybara?" over a 3×3
+grid of **lookalike faces** — beaver, otter, hamster, guinea pig — and one
+capybara. The package has no animal other than Capy. **Used meanwhile:** the
+bundled capybara poses (`assets/art/mascots/`, 230–288 px, drawn at 72 pt =
+216 px): one Capy doing something different among identical ones, 16 poses in
+four groups (`game.capy.<pose>`). Five near-twin pairs in the bundle are kept
+out of the bank, and cheering / party hat are never paired (only the hat
+differs at card size). `moments_13` stands in for `collection_00` (the same
+nightcap-and-duck sleeper) so the header mascot keeps a unique path.
+**Needed (if the owner wants the poster's game):** head-and-shoulders faces of
+a capybara and 4–6 lookalikes (beaver, otter, hamster, guinea pig, marmot) in
+one style, one canvas size, transparent, ≥ 240 × 240.

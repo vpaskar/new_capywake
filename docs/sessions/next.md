@@ -1,29 +1,28 @@
 # Next session — start here
 
-> **Chain paused after Phase 13 (2026-11-18).** The Phase 13 session could not
-> start Phase 14: the app refuses `start_session` from a session that another
-> session started. To continue, start a new session in this folder (Opus 5.5,
-> high effort) with: **"Run Phase 14 — Authored games (Morning Sort, Find the
-> Impostor), following the unattended-chain brief"** — the full brief is the
-> Phase 13 session's task, with the phase number and name updated. A proposal
-> card for it is waiting in the Phase 13 session.
+> **Phase 14 done (2026-11-18, unattended).** Start Phase 15 — **Motion games
+> (Shake DJ, Tilt Maze)** — in a new session started from the owner's own
+> session (a linked session cannot start the next one): **"Run Phase 15 — Motion
+> games (Shake DJ, Tilt Maze), following the unattended-chain brief"**. A
+> non-motion fallback is mandatory for both (`GameChallenge.motion` asserts it).
 
 ## State
 
-Phases 00–13 are **done** and committed (13 ran unattended, 2026-11-18).
+Phases 00–14 are **done** and committed.
 
-**Current phase: `14` — Authored games (Morning Sort, Find the Impostor).**
-The content-bank ban is lifted for these two (owner, 2026-11-15). No
-`PHASE_14_PLAN.md` exists yet — the phase writes it.
+**Current phase: `15` — Motion games (Shake DJ, Tilt Maze).** No
+`PHASE_15_PLAN.md` exists yet — the phase writes it.
 
-**1,888 tests** pass. `lib` 98.34%, `lib/core` 99.69%, `lib/core/games` and
+**1,987 tests** pass. `lib` 98.46%, `lib/core` 99.70%, `lib/core/games` and
 `lib/features/games` **100%**, `lib/data` 89.17%, `lib/features/ringing` 98.71%.
-**498 ARB keys × 10 locales.** Comment baseline **113**.
+**544 ARB keys × 10 locales.** Comment baseline **113**.
 
-Four games are playable — Catch the Capy, Memory Hideout, Rhythm Rescue, Capy
-Rocket — on a ringing alarm (via the wake pool) and in practice (chooser "Try
-it"). **Read `docs/sessions/OPEN_QUESTIONS.md` first** — four owner questions
-are open, one per phase decision taken meanwhile.
+Six games are playable — Catch the Capy, Memory Hideout, Rhythm Rescue, Capy
+Rocket, **Morning Sort**, **Find the Impostor** — on a ringing alarm (via the
+wake pool) and in practice (chooser "Try it"; Home tiles for the mockup's four,
+so Find the Impostor's Home tile lost its "Soon" badge). **Read
+`docs/sessions/OPEN_QUESTIONS.md` first** — seven owner questions are open, one
+per decision taken meanwhile.
 
 ## Read in this order
 
@@ -35,6 +34,9 @@ are open, one per phase decision taken meanwhile.
 5. `docs/phases/PHASE_12_FULL_PROJECT_REVIEW.md` — the two cross-app defects.
 6. `docs/visual/asset_gaps.md` — G29–G32 closed by owner art; how sprite sheets
    were validated and imported.
+7. `docs/phases/PHASE_14_POST_REVIEW.md` — `DriftingGrid`, why a motion must
+   not point at the answer, and the art the authored games still lack (G37,
+   G38).
 
 ## How a game plugs in now (Phase 11 contract + Phase 12 model)
 
@@ -65,6 +67,14 @@ are open, one per phase decision taken meanwhile.
 - **Size sprites from the decoded file.** The win poses are 205–246 px: sharp
   only to ~72 pt.
 - Add the game to `capture_test.dart`'s list and teach `_win` to play it.
+- **A grid that moves:** `DriftingGrid` (Phase 14) — `swap` trades two
+  unresolved cards, `carousel` steps every card round a two-row ring. Pick the
+  one whose motion does not point at the answer (a find-the-odd-one game must
+  carousel). No beat while a finger is down anywhere on the grid; still snaps
+  every card home. Rest ≥ 2.6 s at medium when cards carry words.
+- **Authored banks** (Morning Sort, Find the Impostor only): an enum in
+  `lib/core/games/` + one ARB key per entry in all ten locales; a pose label is
+  the screen-reader answer key — written against the picture.
 
 ## The measurement rule, now with a ninth entry
 
@@ -90,6 +100,12 @@ foundation is the one place the ten games inherit their invariants, so a hole
 there is a hole in six phases. And a review's own earlier finding is still subject
 to the later review: the pre-review's L1 ("See All" is dangling) was wrong, and
 the full-project pass caught it against `PHASE_03_PLAN.md`.**
+
+**Phase 14: a test that reads the screen in the same pump that changed it reads
+the old frame.** One `pump(every * 3)` fires the timer, but the frame it builds
+only starts the slide — the H3/H5 drift guards passed with the guards deleted.
+Pump rest and slide per beat, then prove the test fails without the guard. And
+a test cell that does not hit-test never receives the finger it claims to hold.
 
 **Phase 13: a guard measured on a surface the user never sees is a guard on
 trust.** The clock guard passed at zero status-bar inset while a real capture

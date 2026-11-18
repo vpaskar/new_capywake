@@ -2,6 +2,7 @@ import 'package:capywake/app/app.dart';
 import 'package:capywake/app/router.dart';
 import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/games/memory_hideout.dart';
+import 'package:capywake/core/games/morning_sort.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
@@ -13,14 +14,17 @@ import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
+import 'package:capywake/features/games/find_the_impostor_view.dart';
 import 'package:capywake/features/games/game_header.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
+import 'package:capywake/features/games/morning_sort_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
 import 'package:capywake/features/ringing/ringing_win_overlay.dart';
+import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -516,11 +520,134 @@ void main() {
     });
   });
 
-  const fourGames = [
+  group('authored games', () {
+    int oddCell(WidgetTester tester) {
+      final keys = <String>[];
+      for (var c = 0; ; c++) {
+        final cell = find.byKey(ValueKey('find-the-impostor-cell-$c'));
+        if (cell.evaluate().isEmpty) break;
+        final art = tester.widget<Image>(
+          find.descendant(of: cell, matching: find.byType(Image)),
+        );
+        keys.add((art.key! as ValueKey<String>).value);
+      }
+      return keys.indexWhere((k) => keys.where((o) => o == k).length == 1);
+    }
+
+    Future<Map<String, bool>> usefulByName() async {
+      final l10n = await AppLocalizations.delegate.load(const Locale('en'));
+      return {
+        for (final item in MorningItem.values)
+          morningItemName(l10n, item): item.useful,
+      };
+    }
+
+    Future<int> sortCard(WidgetTester tester, {required bool useful}) async {
+      final byName = await usefulByName();
+      for (var i = 0; ; i++) {
+        final card = find.byKey(ValueKey('morning-sort-card-$i'));
+        final name = tester
+            .widget<Text>(
+              find.descendant(of: card, matching: find.byType(Text)),
+            )
+            .data!;
+        final done = find
+            .descendant(of: card, matching: find.byType(Icon))
+            .evaluate()
+            .isNotEmpty;
+        if (byName[name] == useful && !done) return i;
+      }
+    }
+
+    testWidgets('Find the Impostor launches on a card, escape beside it', (
+      tester,
+    ) async {
+      await ring(tester, gamesOnly('find_the_impostor'));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(FindTheImpostorView), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a matching Capy raises the escape at tolerance 0', (
+      tester,
+    ) async {
+      await ring(tester, gamesOnly('find_the_impostor', tolerated: 0));
+      final odd = oddCell(tester);
+      expect(prominentEscape(), findsNothing);
+      await tester.tap(
+        find.byKey(ValueKey('find-the-impostor-cell-${odd == 0 ? 1 : 0}')),
+      );
+      await tester.pump();
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('finding every odd Capy dismisses the alarm, once', (
+      tester,
+    ) async {
+      final app = await ring(tester, gamesOnly('find_the_impostor'));
+      for (var i = 0; i < 3; i++) {
+        await tester.tap(
+          find.byKey(ValueKey('find-the-impostor-cell-${oddCell(tester)}')),
+        );
+        await tester.pump();
+      }
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(RingingScreen), findsNothing);
+      final rows = await app.repository.listOccurrencesForAlarm('a1');
+      expect(
+        rows.where((o) => o.status == AlarmStatus.dismissed),
+        hasLength(1),
+      );
+    });
+
+    testWidgets('Morning Sort launches on a card, escape beside it', (
+      tester,
+    ) async {
+      await ring(tester, gamesOnly('morning_sort'));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(MorningSortView), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a decoy raises the escape at tolerance 0', (tester) async {
+      await ring(tester, gamesOnly('morning_sort', tolerated: 0));
+      expect(prominentEscape(), findsNothing);
+      final decoy = await sortCard(tester, useful: false);
+      await tester.tap(find.byKey(ValueKey('morning-sort-card-$decoy')));
+      await tester.pump();
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('packing every bag dismisses the alarm, once', (
+      tester,
+    ) async {
+      final app = await ring(tester, gamesOnly('morning_sort'));
+      for (var i = 0; i < 9; i++) {
+        final card = await sortCard(tester, useful: true);
+        await tester.tap(find.byKey(ValueKey('morning-sort-card-$card')));
+        await tester.pump();
+      }
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(RingingScreen), findsNothing);
+      final rows = await app.repository.listOccurrencesForAlarm('a1');
+      expect(
+        rows.where((o) => o.status == AlarmStatus.dismissed),
+        hasLength(1),
+      );
+    });
+  });
+
+  const allGames = [
     'catch_the_capy',
     'memory_hideout',
     'rhythm_rescue',
     'capy_rocket',
+    'morning_sort',
+    'find_the_impostor',
   ];
 
   Future<({Rect clock, Rect card})> ringOn(
@@ -554,7 +681,7 @@ void main() {
     return (clock: clock, card: card);
   }
 
-  for (final game in fourGames) {
+  for (final game in allGames) {
     testWidgets('$game on the reference phone never covers the clock', (
       tester,
     ) async {
@@ -576,7 +703,7 @@ void main() {
     tester,
   ) async {
     final tops = <String, double>{};
-    for (final game in fourGames) {
+    for (final game in allGames) {
       final at = await ringOn(
         tester,
         game,
@@ -587,7 +714,7 @@ void main() {
       );
       tops[game] = at.card.top;
     }
-    for (final game in fourGames) {
+    for (final game in allGames) {
       expect(
         tops[game],
         greaterThanOrEqualTo(tops['catch_the_capy']! - 0.5),

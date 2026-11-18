@@ -2,6 +2,7 @@ import 'package:capywake/app/app.dart';
 import 'package:capywake/app/bootstrap.dart';
 import 'package:capywake/app/router.dart';
 import 'package:capywake/core/engine/fake_alarm_engine.dart';
+import 'package:capywake/core/games/morning_sort.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/data/database/app_database.dart';
@@ -9,7 +10,9 @@ import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
+import 'package:capywake/features/games/morning_sort_view.dart';
 import 'package:capywake/features/ringing/ringing_win_overlay.dart';
+import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -209,6 +212,8 @@ Future<void> main() async {
     'memory_hideout',
     'rhythm_rescue',
     'capy_rocket',
+    'morning_sort',
+    'find_the_impostor',
   ]) {
     testWidgets('capture ringing_$game', (tester) async {
       await bootstrap();
@@ -314,6 +319,33 @@ Future<void> _win(WidgetTester tester, String game) async {
     }
     return;
   }
+  if (game == 'find_the_impostor') {
+    for (var i = 0; i < 3; i++) {
+      await tester.tap(
+        find.byKey(ValueKey('find-the-impostor-cell-${_oddCell(tester)}')),
+      );
+      await tester.pump(const Duration(milliseconds: 700));
+    }
+    return;
+  }
+  if (game == 'morning_sort') {
+    final l10n = AppLocalizations.of(
+      tester.element(find.byType(MorningSortView)),
+    );
+    final useful = {
+      for (final item in MorningItem.values)
+        morningItemName(l10n, item): item.useful,
+    };
+    for (var i = 0; i < 9; i++) {
+      await tester.tap(
+        find.byKey(
+          ValueKey('morning-sort-card-${_usefulCard(tester, useful)}'),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 700));
+    }
+    return;
+  }
   if (game == 'catch_the_capy') {
     for (var i = 0; i < 5; i++) {
       await tester.tap(find.byKey(const ValueKey('catch-the-capy-target')));
@@ -349,4 +381,33 @@ Future<List<int>> _watchRhythm(WidgetTester tester) async {
     last = now;
   }
   return seen;
+}
+
+/// The Find the Impostor card whose picture appears only once.
+int _oddCell(WidgetTester tester) {
+  final keys = <String>[];
+  for (var c = 0; ; c++) {
+    final cell = find.byKey(ValueKey('find-the-impostor-cell-$c'));
+    if (cell.evaluate().isEmpty) break;
+    final art = tester.widget<Image>(
+      find.descendant(of: cell, matching: find.byType(Image)),
+    );
+    keys.add((art.key! as ValueKey<String>).value);
+  }
+  return keys.indexWhere((k) => keys.where((o) => o == k).length == 1);
+}
+
+/// A Morning Sort card Capy needs and has not packed yet, read by its name.
+int _usefulCard(WidgetTester tester, Map<String, bool> useful) {
+  for (var i = 0; ; i++) {
+    final card = find.byKey(ValueKey('morning-sort-card-$i'));
+    final name = tester
+        .widget<Text>(find.descendant(of: card, matching: find.byType(Text)))
+        .data!;
+    final done = find
+        .descendant(of: card, matching: find.byType(Icon))
+        .evaluate()
+        .isNotEmpty;
+    if ((useful[name] ?? false) && !done) return i;
+  }
 }

@@ -151,6 +151,18 @@ void main() {
       handle.dispose();
     });
 
+    testWidgets('a second miss in a row is announced again', (tester) async {
+      final said = recordAnnouncements(tester);
+      await _pump(tester);
+      final wrong = (_mirror().pattern.first + 1) % 4;
+      await tester.tap(_pad(wrong));
+      await tester.pump();
+      expect(said, isEmpty);
+      await tester.tap(_pad(wrong));
+      await tester.pump();
+      expect(said, hasLength(1));
+    });
+
     testWidgets('the pads are large targets in every mode', (tester) async {
       await _pump(tester);
       for (var p = 0; p < 4; p++) {
