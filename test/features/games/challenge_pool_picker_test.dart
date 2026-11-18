@@ -11,7 +11,7 @@ CapyToggle _toggle(WidgetTester tester, String label) => tester.widget(
 );
 
 void main() {
-  testWidgets('lists the puzzles and both playable games', (tester) async {
+  testWidgets('lists the puzzles and every playable game', (tester) async {
     await pumpInApp(
       tester,
       ChallengePoolPicker(
@@ -24,6 +24,8 @@ void main() {
     expect(find.text('Puzzles'), findsOneWidget);
     expect(find.text('Catch the Capy'), findsOneWidget);
     expect(find.text('Memory Hideout'), findsOneWidget);
+    expect(find.text('Rhythm Rescue'), findsOneWidget);
+    expect(find.text('Capy Rocket'), findsOneWidget);
     expect(find.text('Shake DJ'), findsNothing);
     expect(find.text('Try it'), findsNothing);
   });
@@ -72,10 +74,11 @@ void main() {
 
     _toggle(tester, 'Memory Hideout').onChanged!(true);
     _toggle(tester, 'Puzzles').onChanged!(false);
+    await tester.tap(find.text('Try it').at(1));
     await tester.tap(find.text('Try it').last);
 
     expect(changes, ['memory_hideout:true', 'puzzles:false']);
-    expect(tried, ['memory_hideout']);
+    expect(tried, ['memory_hideout', 'capy_rocket']);
   });
 
   testWidgets('Try it names its game for a screen reader', (tester) async {

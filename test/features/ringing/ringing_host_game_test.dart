@@ -11,9 +11,12 @@ import 'package:capywake/data/providers.dart';
 import 'package:capywake/data/repositories/capy_wake_repository.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/capy_card.dart';
+import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
+import 'package:capywake/features/games/game_header.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
+import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
@@ -385,5 +388,211 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  group('Rhythm Rescue and Capy Rocket on the real surface', () {
+    Finder lit(int pad) => find.byKey(ValueKey('rhythm-rescue-lit-$pad'));
+
+    /// Watches the pads light, as a user would, until it is their turn.
+    Future<List<int>> watchRhythm(WidgetTester tester) async {
+      final seen = <int>[];
+      int? last;
+      for (var i = 0; i < 200; i++) {
+        if (find.text('Your turn').evaluate().isNotEmpty) break;
+        await tester.pump(const Duration(milliseconds: 60));
+        int? now;
+        for (var p = 0; p < 4; p++) {
+          if (lit(p).evaluate().isNotEmpty) now = p;
+        }
+        if (now != null && now != last) seen.add(now);
+        last = now;
+      }
+      return seen;
+    }
+
+    Future<void> tapPads(WidgetTester tester, List<int> pads) async {
+      for (final p in pads) {
+        await tester.tap(find.byKey(ValueKey('rhythm-rescue-pad-$p')));
+        await tester.pump();
+      }
+    }
+
+    testWidgets('Rhythm Rescue launches on a card, escape beside it', (
+      tester,
+    ) async {
+      await ring(tester, gamesOnly('rhythm_rescue'));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(RhythmRescueView), findsOneWidget);
+      expect(
+        find.ancestor(
+          of: find.text('Tap the pads in the order shown.'),
+          matching: find.byType(CapyCard),
+        ),
+        findsOneWidget,
+      );
+      expect(find.text('Stop without solving'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+    });
+
+    testWidgets('a wrong pad raises the escape at tolerance 0', (
+      tester,
+    ) async {
+      await ring(tester, gamesOnly('rhythm_rescue', tolerated: 0));
+      final pattern = await watchRhythm(tester);
+      expect(prominentEscape(), findsNothing);
+      await tapPads(tester, [(pattern.first + 1) % 4]);
+      await tester.pump();
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pump(const Duration(seconds: 5));
+    });
+
+    testWidgets('repeating every pattern dismisses the alarm, once', (
+      tester,
+    ) async {
+      final app = await ring(tester, gamesOnly('rhythm_rescue'));
+      for (var round = 0; round < 3; round++) {
+        await tapPads(tester, await watchRhythm(tester));
+      }
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(RingingScreen), findsNothing);
+      final rows = await app.repository.listOccurrencesForAlarm('a1');
+      expect(
+        rows.where((o) => o.status == AlarmStatus.dismissed),
+        hasLength(1),
+      );
+    });
+
+    Finder button(String side) => find.byKey(ValueKey('capy-rocket-$side'));
+
+    void phone(WidgetTester tester) {
+      tester.view.physicalSize = const Size(393, 852) * 3;
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+    }
+
+    Future<void> boostCued(WidgetTester tester) async {
+      final cueRight = find.text('Swipe right').evaluate().isNotEmpty;
+      await tester.tap(button(cueRight ? 'end' : 'start'));
+      await tester.pump();
+    }
+
+    testWidgets('Capy Rocket launches on a card, escape beside it', (
+      tester,
+    ) async {
+      await ring(tester, gamesOnly('capy_rocket'));
+      expect(tester.takeException(), isNull);
+      expect(find.byType(CapyRocketView), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a wrong-way boost raises the escape at tolerance 0', (
+      tester,
+    ) async {
+      phone(tester);
+      await ring(tester, gamesOnly('capy_rocket', tolerated: 0));
+      final cueRight = find.text('Swipe right').evaluate().isNotEmpty;
+      await tester.tap(button(cueRight ? 'start' : 'end'));
+      await tester.pump();
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('flying all the way up dismisses the alarm, once', (
+      tester,
+    ) async {
+      phone(tester);
+      final app = await ring(tester, gamesOnly('capy_rocket'));
+      for (var i = 0; i < 8; i++) {
+        await boostCued(tester);
+      }
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(RingingScreen), findsNothing);
+      final rows = await app.repository.listOccurrencesForAlarm('a1');
+      expect(
+        rows.where((o) => o.status == AlarmStatus.dismissed),
+        hasLength(1),
+      );
+    });
+  });
+
+  const fourGames = [
+    'catch_the_capy',
+    'memory_hideout',
+    'rhythm_rescue',
+    'capy_rocket',
+  ];
+
+  Future<({Rect clock, Rect card})> ringOn(
+    WidgetTester tester,
+    String game, {
+    required Size size,
+    required double ratio,
+    required double top,
+    required double bottom,
+  }) async {
+    tester.view.physicalSize = size * ratio;
+    tester.view.devicePixelRatio = ratio;
+    tester.view.padding = FakeViewPadding(
+      top: top * ratio,
+      bottom: bottom * ratio,
+    );
+    addTearDown(tester.view.reset);
+    await ring(tester, gamesOnly(game));
+    final clock = tester.getRect(
+      find.byWidgetPredicate((w) => w.runtimeType.toString() == '_Clock'),
+    );
+    final card = tester.getRect(
+      find
+          .ancestor(
+            of: find.byType(GameHeader),
+            matching: find.byType(CapyCard),
+          )
+          .first,
+    );
+    await tester.pumpWidget(const SizedBox());
+    return (clock: clock, card: card);
+  }
+
+  for (final game in fourGames) {
+    testWidgets('$game on the reference phone never covers the clock', (
+      tester,
+    ) async {
+      final at = await ringOn(
+        tester,
+        game,
+        size: const Size(393, 852),
+        ratio: 3,
+        top: 47,
+        bottom: 34,
+      );
+      expect(at.card.top, greaterThan(at.clock.bottom), reason: game);
+    });
+  }
+
+  // On a 375 x 667 phone Catch the Capy already reaches over the clock's
+  // foot; until the owner settles that trade-off, no game may reach further.
+  testWidgets('on a small phone no game reaches higher than Catch the Capy', (
+    tester,
+  ) async {
+    final tops = <String, double>{};
+    for (final game in fourGames) {
+      final at = await ringOn(
+        tester,
+        game,
+        size: const Size(375, 667),
+        ratio: 2,
+        top: 20,
+        bottom: 0,
+      );
+      tops[game] = at.card.top;
+    }
+    for (final game in fourGames) {
+      expect(
+        tops[game],
+        greaterThanOrEqualTo(tops['catch_the_capy']! - 0.5),
+        reason: game,
+      );
+    }
   });
 }

@@ -31,6 +31,16 @@ abstract final class CapyColors {
   static const error = Color(0xFFC4452B);
 }
 
+/// Rhythm Rescue's pads, sampled from `games/posters/09_RHYTHM_RESCUE.png`.
+abstract final class CapyPadColors {
+  static const orange = Color(0xFFF8A455);
+  static const yellow = Color(0xFFFED181);
+  static const green = Color(0xFFB7D187);
+  static const blue = Color(0xFFB3D2E1);
+
+  static const List<Color> all = [orange, yellow, green, blue];
+}
+
 /// Icon and inline-art sizes. Widgets name these rather than carrying a
 /// literal, so a change lands everywhere at once.
 abstract final class CapyIconSize {

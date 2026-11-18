@@ -56,6 +56,7 @@ class GameHeader extends StatelessWidget {
         ),
         const SizedBox(height: CapySpacing.sm),
         Semantics(
+          liveRegion: true,
           label: l10n.gameProgressSemantics(done, total),
           excludeSemantics: true,
           child: Wrap(

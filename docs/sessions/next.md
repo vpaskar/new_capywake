@@ -2,16 +2,20 @@
 
 ## State
 
-Phases 00–12 are **done** and committed.
+Phases 00–13 are **done** and committed (13 ran unattended, 2026-11-18).
 
-**Current phase: `13` — Touch games II (Rhythm Rescue, Capy Rocket).**
+**Current phase: `14` — Authored games (Morning Sort, Find the Impostor).**
+The content-bank ban is lifted for these two (owner, 2026-11-15). No
+`PHASE_14_PLAN.md` exists yet — the phase writes it.
 
-**1,767 tests** pass. `lib` 98.20%, `lib/core` 99.67%, `lib/core/games` and
-`lib/features/games` **100%**, `lib/data` 89.17%, `lib/features/ringing` 98.62%.
-**466 ARB keys × 10 locales.** Comment baseline **113**.
+**1,888 tests** pass. `lib` 98.34%, `lib/core` 99.69%, `lib/core/games` and
+`lib/features/games` **100%**, `lib/data` 89.17%, `lib/features/ringing` 98.71%.
+**498 ARB keys × 10 locales.** Comment baseline **113**.
 
-Two games are playable — Catch the Capy and Memory Hideout — on a ringing alarm
-(via the wake pool) and in practice (Home tile, chooser "Try it").
+Four games are playable — Catch the Capy, Memory Hideout, Rhythm Rescue, Capy
+Rocket — on a ringing alarm (via the wake pool) and in practice (chooser "Try
+it"). **Read `docs/sessions/OPEN_QUESTIONS.md` first** — four owner questions
+are open, one per phase decision taken meanwhile.
 
 ## Read in this order
 
@@ -41,6 +45,18 @@ Two games are playable — Catch the Capy and Memory Hideout — on a ringing al
 - Copy: keep the puzzle and game vocabularies apart in all ten locales — the
   vocabulary guard fails otherwise.
 - Art: never generated. Report every gap in session, then log it.
+- **Still mode is re-read every build** (`didChangeDependencies`), never once:
+  VoiceOver turned on mid-game must stop motion and show what was hidden.
+- **Results go in `GameOutcomeLine`** (live region, two measured lines
+  reserved); nothing that changes per phase may change height above the
+  controls — `IndexedStack` the variants or put them on a fixed field.
+  `GameHeader` progress is a live region already.
+- **Card height ≤ 424 pt** (Catch the Capy's). `ringing_host_game_test`'s clock
+  guard fails otherwise: at 393×852 + 47 pt inset the card must clear the
+  clock; at 375×667 nothing may reach higher than Catch the Capy.
+- **Size sprites from the decoded file.** The win poses are 205–246 px: sharp
+  only to ~72 pt.
+- Add the game to `capture_test.dart`'s list and teach `_win` to play it.
 
 ## The measurement rule, now with a ninth entry
 
@@ -66,6 +82,12 @@ foundation is the one place the ten games inherit their invariants, so a hole
 there is a hole in six phases. And a review's own earlier finding is still subject
 to the later review: the pre-review's L1 ("See All" is dangling) was wrong, and
 the full-project pass caught it against `PHASE_03_PLAN.md`.**
+
+**Phase 13: a guard measured on a surface the user never sees is a guard on
+trust.** The clock guard passed at zero status-bar inset while a real capture
+showed the card over the clock; it now runs at the device's inset and was
+proven to fail. And a size read off a sheet goes stale when the art is
+replaced — decode the bundled file.
 
 **Phase 12: a layout box is not what is painted.** Settings' title painted over
 its value for five phases while every rect-overlap check would have passed —

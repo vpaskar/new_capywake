@@ -2267,5 +2267,111 @@
   "gameWinHeadlineQrTreasureHunt": "Treasure found!",
   "@gameWinHeadlineQrTreasureHunt": {
     "description": "Headline over the win animation for this game. Warm and short; never a score, streak, 'best' or hype."
+  },
+  "gameRhythmRescueInstruction": "Tap the pads in the order shown.",
+  "@gameRhythmRescueInstruction": {
+    "description": "Rhythm Rescue's one instruction, true whether the pads light up or the pattern is shown as numerals."
+  },
+  "gameRhythmRescueStatusWatch": "Watch the pads",
+  "@gameRhythmRescueStatusWatch": {
+    "description": "Status while the pads light the pattern; taps do nothing yet."
+  },
+  "gameRhythmRescueStatusYourTurn": "Your turn",
+  "@gameRhythmRescueStatusYourTurn": {
+    "description": "Status once the user may tap the pads."
+  },
+  "gameRhythmRescueReplayLabel": "Show the rhythm again",
+  "@gameRhythmRescueReplayLabel": {
+    "description": "Screen-reader label of the play button that shows the pattern again, at no cost."
+  },
+  "gameRhythmRescuePadNumber": "{number}",
+  "@gameRhythmRescuePadNumber": {
+    "description": "The numeral drawn on a pad and in a pattern slot, so the pads are not told apart by colour alone.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gameRhythmRescuePadLabel": "Pad {number}",
+  "@gameRhythmRescuePadLabel": {
+    "description": "Screen-reader label of one of the four pads.",
+    "placeholders": {
+      "number": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gameRhythmRescueBeatPad": "Beat {beat}: pad {pad}",
+  "@gameRhythmRescueBeatPad": {
+    "description": "Screen-reader label of a pattern slot that shows its pad.",
+    "placeholders": {
+      "beat": {
+        "type": "int",
+        "example": "2"
+      },
+      "pad": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gameRhythmRescueBeatDone": "Beat {beat}: done",
+  "@gameRhythmRescueBeatDone": {
+    "description": "Screen-reader label of a pattern slot already tapped correctly.",
+    "placeholders": {
+      "beat": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gameRhythmRescueBeatHidden": "Beat {beat}",
+  "@gameRhythmRescueBeatHidden": {
+    "description": "Screen-reader label of a pattern slot not yet tapped.",
+    "placeholders": {
+      "beat": {
+        "type": "int",
+        "example": "2"
+      }
+    }
+  },
+  "gameRhythmRescueRescued": "That's the rhythm.",
+  "@gameRhythmRescueRescued": {
+    "description": "Calm result after the whole pattern was repeated."
+  },
+  "gameRhythmRescueMissed": "Not quite. Start again from the first beat.",
+  "@gameRhythmRescueMissed": {
+    "description": "Neutral result after a wrong pad; the same pattern starts again. True whether or not it is replayed."
+  },
+  "gameCapyRocketInstruction": "Swipe the way the arrow points.",
+  "@gameCapyRocketInstruction": {
+    "description": "Capy Rocket's one-line instruction: swipe toward the arrow; each such swipe flies the rocket up."
+  },
+  "gameCapyRocketCueLeft": "Swipe left",
+  "@gameCapyRocketCueLeft": {
+    "description": "The current cue, also announced: swipe to the left."
+  },
+  "gameCapyRocketCueRight": "Swipe right",
+  "@gameCapyRocketCueRight": {
+    "description": "The current cue, also announced: swipe to the right."
+  },
+  "gameCapyRocketFlyLeft": "Fly left",
+  "@gameCapyRocketFlyLeft": {
+    "description": "Screen-reader label of the button on the left side, an alternative to swiping left."
+  },
+  "gameCapyRocketFlyRight": "Fly right",
+  "@gameCapyRocketFlyRight": {
+    "description": "Screen-reader label of the button on the right side, an alternative to swiping right."
+  },
+  "gameCapyRocketBoosted": "Up we go.",
+  "@gameCapyRocketBoosted": {
+    "description": "Calm result after a swipe the right way."
+  },
+  "gameCapyRocketWobbled": "Other way. Follow the arrow.",
+  "@gameCapyRocketWobbled": {
+    "description": "Neutral result after a swipe the wrong way; no progress is lost."
   }
 }

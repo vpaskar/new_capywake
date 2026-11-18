@@ -186,4 +186,35 @@ void main() {
     }
     expect(CapyColors.artScrim.a, lessThan(1.0));
   });
+
+  group('Rhythm Rescue pads', () {
+    test('four distinct opaque colours', () {
+      expect(CapyPadColors.all.toSet(), hasLength(4));
+      for (final pad in CapyPadColors.all) {
+        expect(pad.a, 1.0);
+      }
+    });
+
+    test('the numeral (cocoa) reads on every pad as body text', () {
+      for (final pad in CapyPadColors.all) {
+        expect(_ratio(CapyColors.cocoa, pad), greaterThanOrEqualTo(bodyMin));
+      }
+    });
+
+    test('the pad border clears 3:1 on the light card', () {
+      expect(
+        _ratio(CapyColors.cocoaSoft, CapyColors.surface),
+        greaterThanOrEqualTo(largeMin),
+      );
+    });
+
+    test('every pad stands out from the dark card as a component', () {
+      for (final pad in CapyPadColors.all) {
+        expect(
+          _ratio(pad, CapyColors.darkSurface),
+          greaterThanOrEqualTo(largeMin),
+        );
+      }
+    });
+  });
 }

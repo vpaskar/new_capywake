@@ -432,3 +432,19 @@ reader. Full-project review fixed a Phase 07 Settings overlap and puzzle/game
 vocabulary collisions in four locales, both guarded. Asset gaps G29–G32 reported
 in session; leg animation needs run-cycle frames. 1,751 tests, lib 98.20%, games
 100%, 466 ARB keys. 33 findings across four passes, 31 applied, 2 invalid.
+
+---
+
+## Phase 13 — Touch games II: Rhythm Rescue, Capy Rocket
+
+**Done 2026-11-18, unattended.** Two games on the Phase 11/12 contract, no
+dependency, permission or schema change. Rhythm Rescue: repeat a lit pattern of
+four numbered pads in order (timing never judged). Capy Rocket: swipe or tap
+toward the cue to fly up; a wrong way wobbles, loses nothing. Both dynamic, both
+still and finishable under reduce-motion or a screen reader (re-read every
+build). Found by measurement: slots that filled whole rows, a 566 pt card that
+covered the clock on a real capture while the clock guard (no inset) passed, a
+rocket drawn from a stale aspect 28 % past its pixels. Short-phone clock overlap
+(Catch the Capy since Phase 12) capped and logged for the owner. 1,888 tests,
+498 ARB keys, 32 findings, all applied. Art gaps G35, G36.
+

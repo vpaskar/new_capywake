@@ -33,5 +33,7 @@ poses are in. Per-file verdicts: `asset_gaps.md`, "Owner replacements".
 | 2 | **All ten win poses drawn natively** — cut from a sheet and upscaled, 205–246 px of ink, soft at 100 pt | Capy ≥ 300 px wide in the 512 × 308 cell | G34 |
 | 3 | **Puzzle hero as one painted scene**, head and piece in the middle 40 % of the height — the replacement pastes the old cutout as a framed card | 1536 × 1024 | G22 |
 | 4 | *(optional)* **Alarms and Add/Edit heroes** as wide header scenes, orange cap, no black bars — the replacement is an app-icon square on black bars | 1536 × 1024 | G17 |
+| 8 | **Rhythm Rescue: Capy in headphones**, orange nightcap, head-bob frames optional (one canvas) | ≥ 300 × 300, transparent | G35 |
+| 9 | **Capy Rocket: Capy riding a rocket in flight**, nose up-right, with a flame; flame frames optional | ≥ 330 × 280, transparent | G36 |
 
 Every item here is polish; the app works with what it has.

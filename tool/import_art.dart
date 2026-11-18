@@ -103,6 +103,7 @@ const _jobs = <_Job>[
     360,
     cutout: false,
   ),
+  _Job('themes/morning_sunrise.png', 'games/sky.webp', 360, cutout: false),
   // Supplied with a baked frame on black corners; cut inside it.
   _Job(
     'game_art/memory_hideout_tile.png',

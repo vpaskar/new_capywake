@@ -278,6 +278,7 @@ abstract final class CapyArt {
   static const games = <ArtAsset>[
     ArtAsset('game.paw', 'assets/art/games/paw.webp', ArtUse.gamePaw),
     ArtAsset('game.meadow', 'assets/art/games/meadow.webp', ArtUse.gameScene),
+    ArtAsset('game.sky', 'assets/art/games/sky.webp', ArtUse.gameScene),
     ArtAsset('game.bush', 'assets/art/games/plain_bush.webp', ArtUse.gameBush),
     ArtAsset(
       'game.memoryCapy',

@@ -204,7 +204,12 @@ Future<void> main() async {
   });
 
   // A ring whose alarm draws only one game: the game on the real surface.
-  for (final game in ['catch_the_capy', 'memory_hideout']) {
+  for (final game in [
+    'catch_the_capy',
+    'memory_hideout',
+    'rhythm_rescue',
+    'capy_rocket',
+  ]) {
     testWidgets('capture ringing_$game', (tester) async {
       await bootstrap();
 
@@ -285,6 +290,30 @@ Future<void> main() async {
 
 /// Finishes the ringing game the way a user would, by its own targets.
 Future<void> _win(WidgetTester tester, String game) async {
+  if (game == 'rhythm_rescue') {
+    for (var attempt = 0; attempt < 10; attempt++) {
+      if (find.byType(RingingWinOverlay).evaluate().isNotEmpty) return;
+      await _watchRhythm(tester);
+      await tester.tap(find.byKey(const ValueKey('rhythm-rescue-replay')));
+      await tester.pump();
+      for (final pad in await _watchRhythm(tester)) {
+        await tester.tap(find.byKey(ValueKey('rhythm-rescue-pad-$pad')));
+        await tester.pump();
+      }
+      await tester.pump(const Duration(milliseconds: 300));
+    }
+    return;
+  }
+  if (game == 'capy_rocket') {
+    for (var i = 0; i < 8; i++) {
+      final right = find.text('Swipe right').evaluate().isNotEmpty;
+      await tester.tap(
+        find.byKey(ValueKey('capy-rocket-${right ? 'end' : 'start'}')),
+      );
+      await tester.pump(const Duration(milliseconds: 600));
+    }
+    return;
+  }
   if (game == 'catch_the_capy') {
     for (var i = 0; i < 5; i++) {
       await tester.tap(find.byKey(const ValueKey('catch-the-capy-target')));
@@ -301,4 +330,23 @@ Future<void> _win(WidgetTester tester, String game) async {
     );
     await tester.pumpAndSettle();
   }
+}
+
+/// Watches Rhythm Rescue's pads light until it is the user's turn.
+Future<List<int>> _watchRhythm(WidgetTester tester) async {
+  final seen = <int>[];
+  int? last;
+  for (var i = 0; i < 200; i++) {
+    if (find.text('Your turn').evaluate().isNotEmpty) break;
+    await tester.pump(const Duration(milliseconds: 60));
+    int? now;
+    for (var p = 0; p < 4; p++) {
+      if (find.byKey(ValueKey('rhythm-rescue-lit-$p')).evaluate().isNotEmpty) {
+        now = p;
+      }
+    }
+    if (now != null && now != last) seen.add(now);
+    last = now;
+  }
+  return seen;
 }

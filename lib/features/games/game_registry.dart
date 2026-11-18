@@ -1,7 +1,9 @@
 import 'package:capywake/core/games/game_catalogue.dart';
+import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
 import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
+import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/ringing/game_ringing_view.dart';
 import 'package:flutter/widgets.dart';
 
@@ -14,6 +16,8 @@ abstract final class GameRegistry {
   static const Map<String, GameViewBuilder> builders = {
     'catch_the_capy': CatchTheCapyView.fromLaunch,
     'memory_hideout': MemoryHideoutView.fromLaunch,
+    'rhythm_rescue': RhythmRescueView.fromLaunch,
+    'capy_rocket': CapyRocketView.fromLaunch,
   };
 
   static bool isLaunchable(String gameId) =>

@@ -139,8 +139,8 @@ abstract final class GameCatalogue {
     nameKey: 'gameRhythmRescue',
     tileAssetId: 'tile.rhythmRescue',
     winPoseAssetId: 'pose.rhythmRescue',
-    availability: GameAvailability.comingSoon,
-    screenReaderSolvable: false,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const _capyRocket = GameEntry(
@@ -148,8 +148,8 @@ abstract final class GameCatalogue {
     nameKey: 'gameCapyRocket',
     tileAssetId: 'tile.capyRocket',
     winPoseAssetId: 'pose.capyRocket',
-    availability: GameAvailability.comingSoon,
-    screenReaderSolvable: false,
+    availability: GameAvailability.playable,
+    screenReaderSolvable: true,
   );
 
   static const entries = <GameEntry>[

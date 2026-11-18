@@ -1,9 +1,11 @@
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
+import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
 import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_registry.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
+import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 GameLaunch _launch() => GameLaunch(
@@ -38,6 +40,14 @@ void main() {
     expect(
       GameRegistry.build('memory_hideout', _launch()),
       isA<MemoryHideoutView>(),
+    );
+    expect(
+      GameRegistry.build('rhythm_rescue', _launch()),
+      isA<RhythmRescueView>(),
+    );
+    expect(
+      GameRegistry.build('capy_rocket', _launch()),
+      isA<CapyRocketView>(),
     );
   });
 
