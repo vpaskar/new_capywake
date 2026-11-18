@@ -23,22 +23,15 @@ per-file findings are in `asset_gaps.md`, "Owner art package".
 
 ## Still pending from the owner
 
+Answered again on 2026-11-18 by `CapyWake_Art_Replacements_2026_11_18`: the
+thumbnails, puzzle icons, System tile and win frames are closed; eight orange
+poses are in. Per-file verdicts: `asset_gaps.md`, "Owner replacements".
+
 | # | Request | Size | Gap |
 |---|---|---|---|
-| 1 | **Ten per-game win poses with the orange nightcap.** The supplied set (2026-11-18) wears **blue** caps; it is in the app meanwhile. | 512 × 308 each, transparent | G34 |
-| 1a | **Step Quest win pose, uncut.** `09_capy_step_quest.png` is cut flat through the top of the cap, in the sheet too; not imported. | 512 × 308 | G34 |
-| 1b | *(optional)* **Morning Sort win pose** showing cards or sorting; the supplied one shows a backpack. | 512 × 308 | G34 |
+| 1 | **Morning Sort and Find the Impostor win poses**, orange cap, whole body — the supplied ones are cut at the waist; the blue-capped poses stay | 512 × 308, Capy ≥ 300 px wide | G34 |
+| 2 | **All ten win poses drawn natively** — cut from a sheet and upscaled, 205–246 px of ink, soft at 100 pt | Capy ≥ 300 px wide in the 512 × 308 cell | G34 |
+| 3 | **Puzzle hero as one painted scene**, head and piece in the middle 40 % of the height — the replacement pastes the old cutout as a framed card | 1536 × 1024 | G22 |
+| 4 | *(optional)* **Alarms and Add/Edit heroes** as wide header scenes, orange cap, no black bars — the replacement is an app-icon square on black bars | 1536 × 1024 | G17 |
 
-## Replacements for files that arrived short
-
-| # | Request | Size | What was wrong | Gap |
-|---|---|---|---|---|
-| 2 | **Four alarm-row thumbnails**, same drawings, native | ≥ 372 × 264 each, full-bleed | Upscaled crops with white rounded corners; 332 px after cutting them off | G15 |
-| 3 | **Ten puzzle-type icons** as transparent glyphs, each centred with a margin | ≥ 96 × 96 each | Cream tile backing, white corners, soft; two crops cut the glyph | G21 |
-| 4 | **Puzzle hero as a painted scene**, the Capy's head and the piece in the middle 40 % of the height | 1536 × 1024 | A cutout on white, upscaled; a 109 pt band would cut the face | G22 |
-| 5 | **System theme tile**, same drawing, native | ≥ 171 × 135, full-bleed | Board crop, soft, white margins; 145 px after the cut | G12 |
-| 6 | **Win celebration**, same eight frames with a clean matte edge | ≥ 360 × 360 each | A light halo along every outline, visible on dark | G34 |
-| 7 | *(optional)* **Alarms and Add/Edit heroes** showing the mockups' Capy hugging an alarm clock | 1536 × 1024 each | The two supplied are the existing Alarms and Settings scenes, unchanged | G17 |
-
-Items 2–6 are polish: every one is in the app now and works. Nothing here
-blocks the app.
+Every item here is polish; the app works with what it has.

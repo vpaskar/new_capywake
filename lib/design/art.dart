@@ -143,6 +143,11 @@ abstract final class CapyArt {
 
   static const winPoses = <ArtAsset>[
     ArtAsset(
+      'pose.stepQuest',
+      'assets/art/animations/pose_step_quest.webp',
+      ArtUse.winPose,
+    ),
+    ArtAsset(
       'pose.qrTreasureHunt',
       'assets/art/animations/pose_qr_treasure_hunt.webp',
       ArtUse.winPose,

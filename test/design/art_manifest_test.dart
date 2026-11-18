@@ -8,15 +8,18 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:image/image.dart' as img;
 import 'package:yaml/yaml.dart';
 
-/// Assets below the pixels their box needs, by measured width (G12, G15,
-/// G18). Recorded by name so the gate still protects everything else.
+/// Assets below the pixels their box needs, by measured width (G18, G34).
+/// Recorded by name so the gate still protects everything else.
 const knownUnderResolution = <String, int>{
-  'thumb.sleeping': 332,
-  'thumb.workout': 332,
-  'thumb.walk': 332,
-  'thumb.music': 332,
-  'theme.system': 145,
   'decor.cloudEdge': 1177,
+  'pose.catchTheCapy': 219,
+  'pose.memoryHideout': 242,
+  'pose.rhythmRescue': 213,
+  'pose.capyRocket': 217,
+  'pose.shakeDj': 213,
+  'pose.tiltMaze': 246,
+  'pose.stepQuest': 217,
+  'pose.qrTreasureHunt': 205,
 };
 
 void main() {

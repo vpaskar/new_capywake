@@ -64,6 +64,7 @@ abstract final class GameCatalogue {
     id: 'step_quest',
     nameKey: 'gameStepQuest',
     tileAssetId: 'tile.stepQuest',
+    winPoseAssetId: 'pose.stepQuest',
     availability: GameAvailability.blocked,
     screenReaderSolvable: false,
     blockedReason: GameBlockedReason.stepCount,

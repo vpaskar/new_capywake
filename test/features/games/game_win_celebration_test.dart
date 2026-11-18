@@ -148,14 +148,13 @@ void winPanelTests() {
     expect(find.text('You did it!'), findsOneWidget);
   });
 
-  test('every pose a game names exists; Step Quest has none', () {
+  test('every game names a pose that exists', () {
     for (final entry in GameCatalogue.entries) {
-      final id = entry.winPoseAssetId;
-      if (entry.id == 'step_quest') {
-        expect(id, isNull, reason: 'its supplied pose is cut at the top');
-        continue;
-      }
-      expect(CapyArt.byId(id!).use, ArtUse.winPose, reason: entry.id);
+      expect(
+        CapyArt.byId(entry.winPoseAssetId!).use,
+        ArtUse.winPose,
+        reason: entry.id,
+      );
     }
   });
 

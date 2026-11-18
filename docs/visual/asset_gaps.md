@@ -1002,3 +1002,47 @@ card 3 bottom +4.8 → −2.6).
 `meadow footer top` on Add/Edit for the first time: 755.7 vs 749.4 (+6.3). The
 footer's box did not move; the painter's taller grass used to hide the edge.
 It joins Add/Edit's existing Tier A failures (owed, `memory/current-phase.md`).
+
+## G35 — Rhythm Rescue: no headphones capybara cutout (Phase 13, Tier B, reported)
+
+`09_RHYTHM_RESCUE.png` draws Capy in **orange headphones** as a cutout above the
+pads, bobbing to the beat. The package has no such file: `asset_library/mascots/
+music_headphones.png` (194 × 237, grey headphones, a softer 3-D style) is
+under-resolved for an 88 pt box (264 px) and off-style; `alarm_thumbnails/
+headphones.png` is a full-bleed panel, not a cutout. **Used meanwhile:** the
+painted tile `tile.rhythmRescue` (360 px, already bundled, itself Tier B — G26)
+in an 88 pt rounded panel that scales up on each lit beat. **Needed:** Capy in
+the orange nightcap wearing headphones, transparent, ≥ 300 × 300, ideally 2–4
+frames of a head-bob on one canvas.
+
+## G36 — Capy Rocket: no flying rocket cutout and no sun (Phase 13, Tier B, reported)
+
+`10_CAPY_ROCKET.png` draws Capy in goggles and a scarf **riding a flying rocket
+with a flame**, a sun at the top and a "Reach the sun!" bar. The package has no
+flying-rocket cutout: `game_tiles/capy_rocket.png` is a full-bleed painting (no
+alpha) and `poses/04_capy_rocket.png` is a **landed** rocket on legs with baked
+confetti and a blue nightcap. **Used meanwhile:** `pose.capyRocket` (the win
+pose, 300 × 256) at its own 100 pt box — never larger — climbing the
+`themes/morning_sunrise.png` sky (1200 × 800, imported as `games/sky.webp` at
+1080 px, 21 KB). Progress is the shared `GameHeader` pips, not a sun bar.
+**Needed:** Capy (orange nightcap) on a rocket in flight, nose up-right, with a
+flame, transparent, ≥ 330 × 280; optionally 2–3 flame frames on one canvas.
+
+## Owner replacements — `CapyWake_Art_Replacements_2026_11_18`
+
+36 files, copied unmodified to `reference/02_ASSETS/replacements_2026_11_18/`
+(kept apart so the earlier supplies stay reviewable). Checked on dark and cream,
+then captured on the simulator (`win_*`, `alarms`, `settings`).
+
+| Gap | Supplied | Verdict |
+|---|---|---|
+| G34 poses | 10 poses, 512×308, **orange** nightcaps | **Used for 8 games.** Cut from a sheet and upscaled: ink is only 205–246 px wide, under the 300 px a 100 pt pose needs — recorded per pose in `knownUnderResolution`, soft on device. Rocket, Shake DJ, Tilt Maze and Step Quest stand on flat ground lines and get the `margin: 2` the flat-based bush got (checked intact). **`05_morning_sort` and `06_find_the_impostor` are cut off at the waist** (as the README warns): **not used**; those two games keep the blue-capped poses. **Step Quest's pose is now complete** and is used. |
+| G34 frames | 8 frames, 360² | **Used.** Same motion, the halo is mostly gone; feet on row 341 in every frame. |
+| G15 | 4 thumbnails, 372×264, full-bleed | **Closed.** No white corners; the full 372 px. Orange caps. Soft (sheet crops, upscaled), not under-sized. |
+| G21 | 10 icons, 256², transparent vector | **Closed.** Clean, centred, with margins; file names now match drawings (Remember digits shows memory cards). Imported on their own canvas, not trimmed. |
+| G12 | `themes/system.png` 342×270 | **Closed.** Crisp, full-bleed; flat vector sun/moon. |
+| G22 | `puzzle_hero.png` 1536×1024 | **Not used.** A new meadow backdrop with the earlier cutout pasted on as a framed card — a picture inside a picture, the Capy smaller than before. The onboarding step keeps the earlier hero. |
+| G17 | `alarms_hero.png` | **Not used.** The right subject (Capy hugging a clock), but an app-icon composition: a rounded square on **black side bars**, the Capy filling the frame, and a **blue** cap. A 148.6 pt band would cut its face. |
+| G17 | `add_edit_hero.png` | **Not new:** pixel-identical to `alarms_integrated.png`, already the Alarms scene. |
+
+Tier A unchanged: Alarms 3 / Settings 3 blocks outside tolerance, as before.

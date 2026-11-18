@@ -156,44 +156,34 @@ const _jobs = <_Job>[
     knownShort: true,
   ),
   _Job(
-    'alarm_thumbnails/sleeping.png',
+    'replacements_2026_11_18/alarm_thumbnails/sleeping.png',
     'thumbnails/sleeping.webp',
     124,
     cutout: false,
-    inset: 20,
-    knownShort: true,
   ),
   _Job(
-    'alarm_thumbnails/workout.png',
+    'replacements_2026_11_18/alarm_thumbnails/workout.png',
     'thumbnails/workout.webp',
     124,
     cutout: false,
-    inset: 20,
-    knownShort: true,
   ),
   _Job(
-    'alarm_thumbnails/backpack_walk.png',
+    'replacements_2026_11_18/alarm_thumbnails/backpack_walk.png',
     'thumbnails/walk.webp',
     124,
     cutout: false,
-    inset: 20,
-    knownShort: true,
   ),
   _Job(
-    'alarm_thumbnails/headphones.png',
+    'replacements_2026_11_18/alarm_thumbnails/headphones.png',
     'thumbnails/music.webp',
     124,
     cutout: false,
-    inset: 20,
-    knownShort: true,
   ),
   _Job(
-    'themes/system.png',
+    'replacements_2026_11_18/themes/system.png',
     'themes/system.webp',
     57,
     cutout: false,
-    inset: 13,
-    knownShort: true,
   ),
   // A 3:2 scene covering a 1.27:1 tile is scaled to its height, 44.8 x 1.5 pt.
   _Job('themes/morning_sunrise.png', 'themes/light.webp', 68, cutout: false),
@@ -214,32 +204,37 @@ const _jobs = <_Job>[
   ..._winPoseJobs,
 ];
 
-/// Per-game win poses. `09_capy_step_quest.png` is cut through the nightcap
-/// at the cell's top edge in the source sheet too, so it is not imported.
+/// Orange-capped poses cut from a sheet, so short; flat feet get a margin.
+/// Morning Sort and Find the Impostor keep the blue poses (cropped bodies).
 const _winPoseJobs = <_Job>[
   _Job(
-    'animations/07_game_celebrations/poses/01_catch_the_capy.png',
+    'replacements_2026_11_18/celebrations/poses/01_catch_the_capy.png',
     'animations/pose_catch_the_capy.webp',
     100,
     lossyColour: true,
+    knownShort: true,
   ),
   _Job(
-    'animations/07_game_celebrations/poses/02_memory_hideout.png',
+    'replacements_2026_11_18/celebrations/poses/02_memory_hideout.png',
     'animations/pose_memory_hideout.webp',
     100,
     lossyColour: true,
+    knownShort: true,
   ),
   _Job(
-    'animations/07_game_celebrations/poses/03_rhythm_rescue.png',
+    'replacements_2026_11_18/celebrations/poses/03_rhythm_rescue.png',
     'animations/pose_rhythm_rescue.webp',
     100,
     lossyColour: true,
+    knownShort: true,
   ),
   _Job(
-    'animations/07_game_celebrations/poses/04_capy_rocket.png',
+    'replacements_2026_11_18/celebrations/poses/04_capy_rocket.png',
     'animations/pose_capy_rocket.webp',
     100,
     lossyColour: true,
+    margin: 2,
+    knownShort: true,
   ),
   _Job(
     'animations/07_game_celebrations/poses/05_morning_sort.png',
@@ -254,97 +249,98 @@ const _winPoseJobs = <_Job>[
     lossyColour: true,
   ),
   _Job(
-    'animations/07_game_celebrations/poses/07_shake_dj.png',
+    'replacements_2026_11_18/celebrations/poses/07_shake_dj.png',
     'animations/pose_shake_dj.webp',
     100,
     lossyColour: true,
+    margin: 2,
+    knownShort: true,
   ),
   _Job(
-    'animations/07_game_celebrations/poses/08_tilt_maze.png',
+    'replacements_2026_11_18/celebrations/poses/08_tilt_maze.png',
     'animations/pose_tilt_maze.webp',
     100,
     lossyColour: true,
+    margin: 2,
+    knownShort: true,
   ),
   _Job(
-    'animations/07_game_celebrations/poses/10_qr_treasure_hunt.png',
+    'replacements_2026_11_18/celebrations/poses/09_capy_step_quest.png',
+    'animations/pose_step_quest.webp',
+    100,
+    lossyColour: true,
+    margin: 2,
+    knownShort: true,
+  ),
+  _Job(
+    'replacements_2026_11_18/celebrations/poses/10_qr_treasure_hunt.png',
     'animations/pose_qr_treasure_hunt.webp',
     100,
     lossyColour: true,
+    knownShort: true,
   ),
 ];
 
-/// Four supplied file names are shifted against their drawings; each icon is
-/// matched by what it shows (`asset_gaps.md` G21).
 const _puzzleIconJobs = <_Job>[
   _Job(
-    'puzzle_icons/arithmetic.png',
+    'replacements_2026_11_18/puzzle_icons/arithmetic.png',
     'icons/puzzle_arithmetic.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/number_sequences.png',
+    'replacements_2026_11_18/puzzle_icons/number_sequences.png',
     'icons/puzzle_sequence_next.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/missing_sign.png',
+    'replacements_2026_11_18/puzzle_icons/missing_sign.png',
     'icons/puzzle_missing_operator.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/compare_numbers.png',
+    'replacements_2026_11_18/puzzle_icons/compare_numbers.png',
     'icons/puzzle_compare_values.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/odd_one_out.png',
+    'replacements_2026_11_18/puzzle_icons/odd_one_out.png',
     'icons/puzzle_odd_one_out.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/digits_backwards.png',
+    'replacements_2026_11_18/puzzle_icons/remember_digits.png',
     'icons/puzzle_digit_recall.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/grid_patterns.png',
+    'replacements_2026_11_18/puzzle_icons/digits_backwards.png',
     'icons/puzzle_digit_recall_reversed.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/spot_the_change.png',
+    'replacements_2026_11_18/puzzle_icons/grid_patterns.png',
     'icons/puzzle_grid_pattern.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/remember_digits.png',
+    'replacements_2026_11_18/puzzle_icons/spot_the_change.png',
     'icons/puzzle_spot_the_change.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
   _Job(
-    'puzzle_icons/rotated_shapes.png',
+    'replacements_2026_11_18/puzzle_icons/rotated_shapes.png',
     'icons/puzzle_shape_rotation.webp',
     32,
     cutout: false,
-    inset: 14,
   ),
 ];
 
@@ -630,7 +626,7 @@ void _sliceFrameSheets() {
 
 /// Frames supplied one file each, already on a shared canvas.
 const _frameFolders = {
-  'animations/06_win_celebration/frames': 'animations/win',
+  'replacements_2026_11_18/animations/win_celebration/frames': 'animations/win',
 };
 
 void _importFrameFolders() {

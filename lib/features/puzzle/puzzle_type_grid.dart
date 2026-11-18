@@ -173,13 +173,10 @@ class _TypeCard extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(CapyRadius.sm),
-                    child: Image.asset(
-                      puzzleTypeArt(type).path,
-                      width: iconSize,
-                      height: iconSize,
-                    ),
+                  Image.asset(
+                    puzzleTypeArt(type).path,
+                    width: iconSize,
+                    height: iconSize,
                   ),
                   const SizedBox(width: CapySpacing.sm),
                   Expanded(
