@@ -1,16 +1,16 @@
 import 'package:capywake/core/motion/fake_step_sensor.dart';
-import 'package:capywake/core/motion/step_sensor.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('answers its access and changes it on request', () async {
     final sensor = FakeStepSensor(
-      current: StepAccess.needsPermission,
-      afterRequest: StepAccess.ready,
+      current: DeviceAccess.needsPermission,
+      afterRequest: DeviceAccess.ready,
     );
-    expect(await sensor.access(), StepAccess.needsPermission);
+    expect(await sensor.access(), DeviceAccess.needsPermission);
     final changed = sensor.accessChanges.first;
-    expect(await sensor.requestAccess(), StepAccess.ready);
+    expect(await sensor.requestAccess(), DeviceAccess.ready);
     await changed;
     expect(sensor.requestCount, 1);
     expect(sensor.accessCount, 1);
@@ -20,7 +20,7 @@ void main() {
 
   test('a request with no outcome leaves the access as it was', () async {
     final sensor = FakeStepSensor();
-    expect(await sensor.requestAccess(), StepAccess.unavailable);
+    expect(await sensor.requestAccess(), DeviceAccess.unavailable);
   });
 
   test('emits, fails and counts listeners', () async {

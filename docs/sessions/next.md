@@ -1,26 +1,23 @@
 # Next session — start here
 
-> **Phase 16 done (2026-11-18).** The pointer is `17` — **QR Treasure Hunt,
-> which is BLOCKED**: it needs a camera dependency and the camera permission,
-> a store-visible owner decision. **Do not start it without the owner's
-> answer.** If the owner wants Phase 18 (animation and visual polish) next,
-> the owner re-points the tracker — never a session.
+> **Phase 17 done (2026-11-18).** All ten games are playable and nothing is
+> blocked. The pointer is `18` — **Animation and visual polish** (the five
+> WebP loops, reduce-motion, a dark-mode pass). Not blocked: start it with
+> the usual checklist.
 
 ## State
 
-Phases 00–16 are **done** and committed.
+Phases 00–17 are **done** and committed.
 
-**Current phase: `17` — blocked on the owner.**
+**Current phase: `18` — not blocked.**
 
-**2,302 tests** pass. `lib` 98.64%, `lib/core` 99.73%, `lib/core/games`,
-`lib/core/motion`, `lib/features/games` and `lib/data/motion` **100%**,
-`lib/data` 90.16%. **568 ARB keys × 10 locales.** Comment baseline **113**.
+**2,390 tests** pass. `lib` 98.67%, `lib/core` 99.74%, `lib/core/games` and
+`lib/features/games` **100%**, `lib/data` 90.94%. **587 ARB keys × 10
+locales.** Comment baseline **113**.
 
-Nine games are playable, Step Quest included. **Read
-`docs/sessions/OPEN_QUESTIONS.md` first** — Phase 16 added three: the new
-store-visible step permission (Play "physical activity", iOS Motion & Fitness),
-step thresholds never walked on a phone, and Android building for the first
-time (never run).
+All ten games are playable. **Read `docs/sessions/OPEN_QUESTIONS.md` first** —
+Phase 17 added three: the camera permission and the scanner's size, one
+checkpoint for every alarm, and that no real camera was ever run.
 
 ## Read in this order
 
@@ -39,6 +36,8 @@ time (never run).
    is always on screen, and the three ways tilt was read wrongly.
 9. `docs/phases/PHASE_16_POST_REVIEW.md` — three step counters, access never
    on a ring, and the event-channel defect only the platform could show.
+10. `docs/phases/PHASE_17_POST_REVIEW.md` — the checkpoint, "rings only when
+   ready", and the camera held under a ring.
 
 ## How a game plugs in now (Phase 11 contract + Phase 12 model)
 

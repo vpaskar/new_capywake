@@ -9,8 +9,7 @@ enum GameAvailability {
   /// Not built yet. Tapping opens a sheet saying so.
   comingSoon,
 
-  /// Needs a platform capability CapyWake does not ask for. Carries a
-  /// [GameEntry.blockedReason] the sheet shows.
+  /// Needs a platform capability CapyWake does not ask for yet.
   blocked,
 }
 
@@ -24,13 +23,10 @@ class GameEntry {
     required this.tileAssetId,
     required this.availability,
     required this.screenReaderSolvable,
-    this.blockedReason,
     this.winPoseAssetId,
     this.countsSteps = false,
-  }) : assert(
-         (availability == GameAvailability.blocked) == (blockedReason != null),
-         'A blocked game carries a reason; a non-blocked game carries none.',
-       );
+    this.usesCamera = false,
+  });
 
   final String id;
   final String nameKey;
@@ -40,22 +36,17 @@ class GameEntry {
   /// Whether a screen-reader user can finish the game without sight.
   final bool screenReaderSolvable;
 
-  /// Why the game is unavailable, for [GameAvailability.blocked] only.
-  final GameBlockedReason? blockedReason;
-
   /// The game's own win pose; `null` shows the shared win animation.
   final String? winPoseAssetId;
 
   /// Whether the game counts steps, so a host may offer the step sensor.
   final bool countsSteps;
 
-  bool get isPlayable => availability == GameAvailability.playable;
-}
+  /// Whether the game scans a code, so it rings only once a checkpoint is
+  /// saved and the camera allowed.
+  final bool usesCamera;
 
-/// Why a game is blocked. Unblocking one is an owner decision, not a phase's.
-enum GameBlockedReason {
-  /// A camera dependency the app does not have.
-  camera,
+  bool get isPlayable => availability == GameAvailability.playable;
 }
 
 /// The ten wake-up games, in the owner's poster order. [homeRail] is the four
@@ -76,9 +67,9 @@ abstract final class GameCatalogue {
     nameKey: 'gameQrTreasureHunt',
     tileAssetId: 'tile.qrTreasureHunt',
     winPoseAssetId: 'pose.qrTreasureHunt',
-    availability: GameAvailability.blocked,
+    availability: GameAvailability.playable,
     screenReaderSolvable: false,
-    blockedReason: GameBlockedReason.camera,
+    usesCamera: true,
   );
 
   static const _shakeDj = GameEntry(

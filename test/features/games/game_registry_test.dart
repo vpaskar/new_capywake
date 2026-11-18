@@ -2,6 +2,7 @@ import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/motion/fake_motion_sensor.dart';
 import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
+import 'package:capywake/data/camera/code_scanner.dart';
 import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
 import 'package:capywake/features/games/game_launch.dart';
@@ -27,6 +28,7 @@ GameLaunch _launch() => GameLaunch(
   reduceMotion: true,
   motion: _motion,
   steps: _steps,
+  scanner: FakeCodeScanner(),
 );
 
 void main() {
@@ -75,9 +77,8 @@ void main() {
   });
 
   test('a non-playable or unknown id cannot launch', () {
-    expect(GameRegistry.isLaunchable('qr_treasure_hunt'), isFalse);
     expect(GameRegistry.isLaunchable('nope'), isFalse);
-    expect(GameRegistry.build('qr_treasure_hunt', _launch()), isNull);
+    expect(GameRegistry.build('nope', _launch()), isNull);
   });
 
   for (final id in GameRegistry.builders.keys) {

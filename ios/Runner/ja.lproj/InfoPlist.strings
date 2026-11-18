@@ -1,1 +1,2 @@
 NSMotionUsageDescription = "CapyWakeは、Step Quest、Shake DJ、Tilt Mazeのプレイ中だけ動きを読み取り、歩数を数えたり振る・傾ける動作を検知したりします。データはスマホの外に出ません。";
+NSCameraUsageDescription = "CapyWakeは、QR Treasure Huntのチェックポイントをスキャンする間だけカメラを使います。何も記録されず、データはスマホの外に出ません。";

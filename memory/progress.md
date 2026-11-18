@@ -508,3 +508,15 @@ ringing game's sensor. 18 guards mutation-checked. Built beside the
 motion-check session in the same checkout; that commit landed first. 2,302
 tests, 568 ARB keys. G41 (no walk cycle).
 
+---
+
+## Phase 17 — QR Treasure Hunt
+
+**Done 2026-11-18.** Owner: "Add the camera". A checkpoint code set once
+(salted digest), scanned on a ring after a tap; the game rings only when a
+checkpoint is saved and the camera allowed, never prompts on a ring.
+`mobile_scanner` fenced to one file, iOS permission over our own channel.
+The unanchored reviewer found a practice camera held under a ring and a
+cold-start pick on unloaded readiness. 25 guards mutation-checked; no real
+camera run. 2,390 tests, 587 ARB keys. G42. All ten games playable.
+

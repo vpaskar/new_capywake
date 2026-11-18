@@ -1,17 +1,30 @@
 # Current phase
 
-**Phase 16 — Capy Step Quest: done, 2026-11-18 (owner unblocked it this
-session). `Current phase: 17` — QR Treasure Hunt, which is BLOCKED on an owner
-decision (a camera dependency + camera permission). Do not start it without the
-owner's answer; Phase 18 needs the owner to re-point the tracker.**
+**Phase 17 — QR Treasure Hunt: done, 2026-11-18 (owner: "Add the camera").
+`Current phase: 18` — Animation and visual polish (5 WebP loops,
+reduce-motion, dark mode pass). Not blocked.**
 
-**2,302 tests**, analyze clean including infos, lib 98.64% / `lib/core` 99.73%
-/ `lib/core/games`, `lib/core/motion`, `lib/features/games`, `lib/data/motion`
-**100%** / `lib/data` 90.16%, **568 ARB keys × 10 locales**. Comment baseline
-113 (+0). Motion check (owner) built and committed after Phase 15 (`005bf3f`),
-with the fix for alarms going silent 35 ms in.
+**2,390 tests**, analyze clean including infos, lib 98.67% / `lib/core` 99.74%
+/ `lib/core/games`, `lib/features/games` **100%** / `lib/data` 90.94% /
+`lib/data/camera` 96.04%, **587 ARB keys × 10 locales**. Comment baseline 113.
 
-Nine games are playable; only QR Treasure Hunt is `blocked`.
+**All ten games are playable; nothing is blocked.**
+
+## What Phase 17 adds to the recipe
+
+- **Camera:** `GameLaunch.scanner` (a `CodeScanner`) and `qrCheckpoint`;
+  hosts read `codeScannerProvider`, `qrCheckpointProvider`. Build a scanner
+  only after the user taps and only with a grant — the plugin prompts
+  otherwise. Stop it on win, tap, pause, and when a ring is above practice.
+- **A game that can be unfinishable rings only when ready**
+  (`RingingHost._canRing`); a pick waits ≤ 2 s on loading readiness.
+- **Riverpod 3 pauses unlistened providers:** never `read(x.future)` unless
+  something watches `x`; read the source directly instead.
+- **Permissions:** `DeviceAccess` + `DevicePermission`; `DeviceAccessPrompt`
+  with `DeviceAccessCopy.steps/camera`; every OS purpose string × 10
+  `InfoPlist.strings`.
+- **Fakes must model late events** (`FakeCodeScanner.showLate`): a platform
+  event can arrive after the view closed.
 
 ## What Phase 16 adds to the recipe
 

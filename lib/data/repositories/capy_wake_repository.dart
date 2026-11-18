@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:capywake/core/games/qr_checkpoint.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/sleep/sleep.dart';
@@ -210,6 +213,29 @@ class CapyWakeRepository {
       now,
     );
   }
+
+  // ---------- QR Treasure Hunt checkpoint (singleton) ----------
+
+  Future<QrCheckpoint?> getQrCheckpoint() async => _qrCheckpointOf(
+    await _readSingleton(AppDatabase.qrCheckpointSingletonKey),
+  );
+
+  Stream<QrCheckpoint?> watchQrCheckpoint() => _watchSingleton(
+    AppDatabase.qrCheckpointSingletonKey,
+  ).map(_qrCheckpointOf);
+
+  Future<void> saveQrCheckpoint(QrCheckpoint checkpoint, {DateTime? now}) =>
+      _writeSingleton(
+        AppDatabase.qrCheckpointSingletonKey,
+        jsonEncode(checkpoint.toJson()),
+        now,
+      );
+
+  static QrCheckpoint? _qrCheckpointOf(SingletonRow? row) => row == null
+      ? null
+      : QrCheckpoint.fromJson(
+          (jsonDecode(row.valueJson) as Map).cast<String, Object?>(),
+        );
 
   // ---------- Pro status (singleton) ----------
 

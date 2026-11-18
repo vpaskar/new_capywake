@@ -1,5 +1,5 @@
 import 'package:capywake/core/motion/fake_step_sensor.dart';
-import 'package:capywake/core/motion/step_sensor.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/design/capy_toggle.dart';
 import 'package:capywake/features/alarms/edit/dismiss_method_section.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
@@ -97,7 +97,7 @@ void main() {
   testWidgets('adding Step Quest to an alarm offers the step sensor', (
     tester,
   ) async {
-    final steps = FakeStepSensor(current: StepAccess.needsPermission);
+    final steps = FakeStepSensor(current: DeviceAccess.needsPermission);
     final harness = await pumpEdit(tester, steps: steps);
     await _customPuzzle(tester);
     await tapVisible(tester, _toggle('Step Quest'));

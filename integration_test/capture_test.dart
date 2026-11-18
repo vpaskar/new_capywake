@@ -1,12 +1,17 @@
 import 'package:capywake/app/app.dart';
 import 'package:capywake/app/bootstrap.dart';
 import 'package:capywake/app/router.dart';
+import 'package:capywake/core/camera/fake_camera_access.dart';
 import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/games/morning_sort.dart';
+import 'package:capywake/core/games/qr_checkpoint.dart';
 import 'package:capywake/core/games/step_quest.dart';
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
+import 'package:capywake/data/camera/camera_providers.dart';
+import 'package:capywake/data/camera/code_scanner.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/providers.dart';
@@ -221,6 +226,7 @@ Future<void> main() async {
     'shake_dj',
     'tilt_maze',
     'step_quest',
+    'qr_treasure_hunt',
   ]) {
     testWidgets('capture ringing_$game', (tester) async {
       await bootstrap();
@@ -235,9 +241,18 @@ Future<void> main() async {
           appDatabaseProvider.overrideWithValue(db),
           alarmEngineProvider.overrideWithValue(engine),
           engineNowProvider.overrideWithValue(() => clock),
+          cameraAccessProvider.overrideWithValue(
+            FakeCameraAccess(current: DeviceAccess.ready),
+          ),
+          codeScannerProvider.overrideWithValue(_scanner),
         ],
       );
       addTearDown(container.dispose);
+      await container
+          .read(capywakeRepositoryProvider)
+          .saveQrCheckpoint(
+            QrCheckpoint.of(_checkpointCode, savedAt: clock),
+          );
       await container
           .read(capywakeRepositoryProvider)
           .upsertAlarm(
@@ -300,6 +315,9 @@ Future<void> main() async {
   }
 }
 
+final _scanner = FakeCodeScanner();
+const _checkpointCode = 'CAPTURE-CHECKPOINT';
+
 /// Finishes the ringing game the way a user would, by its own targets.
 Future<void> _win(WidgetTester tester, String game) async {
   if (game == 'shake_dj') {
@@ -307,6 +325,13 @@ Future<void> _win(WidgetTester tester, String game) async {
       await tester.tap(find.byKey(const ValueKey('shake-dj-beat')));
       await tester.pump(const Duration(milliseconds: 60));
     }
+    return;
+  }
+  if (game == 'qr_treasure_hunt') {
+    await tester.tap(find.byKey(const ValueKey('qr-hunt-scan')));
+    await tester.pump();
+    _scanner.show(_checkpointCode);
+    await tester.pump();
     return;
   }
   if (game == 'step_quest') {

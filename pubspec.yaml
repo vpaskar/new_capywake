@@ -42,6 +42,10 @@ dependencies:
   # @immutable for the pure-Dart domain models ported in phase 02.
   meta: ^1.16.0
 
+  # Scans the QR Treasure Hunt checkpoint (CameraX + bundled ML Kit, iOS
+  # Vision). Only lib/data/camera/platform_code_scanner.dart imports it.
+  mobile_scanner: ^7.5.0
+
   # Joins the database path in AppDatabase's lazy connection.
   path: ^1.9.1
 

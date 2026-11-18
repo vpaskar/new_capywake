@@ -1100,3 +1100,16 @@ reader), over `game.meadow`. The count is a UI pill, not art. **Needed:** the
 backpack Capy (orange scarf, rolled bag) in a 4–8 frame side-on walk cycle,
 one canvas and baseline per frame, transparent, ≥ 240 × 240 — cut like
 `run_00`–`run_07`.
+
+## G42 — QR Treasure Hunt: no checkpoint scene and no peeking Capy (Phase 17, Tier B, reported)
+
+`02_QR_TREASURE_HUNT.png` draws a **bathroom wall with a taped QR**, a towel
+and a toothbrush, and a nightcap Capy **peeking over the card's top edge**.
+The package has neither: no bathroom or "checkpoint" scene, no peeking cutout.
+**Used meanwhile:** a plain field in the card's surface colour, viewfinder
+brackets drawn as UI geometry (they pulse; still under reduce-motion or a
+screen reader), and `game.capy.detective` (`collection_05`, magnifier, 72 pt)
+in the middle; once "Scan QR" is tapped the real camera replaces the field.
+**Needed:** a nightcap Capy peeking over an edge (head and paws only),
+transparent, ≥ 300 × 160; optionally a soft bathroom-wall backdrop with an
+empty taped note (no QR baked in), ≥ 1080 × 600.

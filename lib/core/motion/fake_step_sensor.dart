@@ -1,11 +1,12 @@
 import 'dart:async';
 
 import 'package:capywake/core/motion/step_sensor.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 
 /// Test double for [StepSensor]: answers [current], emits on demand, and
 /// counts listeners so a test can prove the sensor is off again.
 class FakeStepSensor implements StepSensor {
-  FakeStepSensor({this.current = StepAccess.unavailable, this.afterRequest}) {
+  FakeStepSensor({this.current = DeviceAccess.unavailable, this.afterRequest}) {
     _controller = StreamController<int>.broadcast(
       onListen: () => listenCount++,
       onCancel: () => cancelCount++,
@@ -15,10 +16,10 @@ class FakeStepSensor implements StepSensor {
   late final StreamController<int> _controller;
   final _accessChanges = StreamController<void>.broadcast();
 
-  StepAccess current;
+  DeviceAccess current;
 
   /// What [requestAccess] turns [current] into; `null` leaves it unchanged.
-  StepAccess? afterRequest;
+  DeviceAccess? afterRequest;
 
   int listenCount = 0;
   int accessCount = 0;
@@ -29,13 +30,13 @@ class FakeStepSensor implements StepSensor {
   bool get hasListener => listenCount > cancelCount;
 
   @override
-  Future<StepAccess> access() async {
+  Future<DeviceAccess> access() async {
     accessCount++;
     return current;
   }
 
   @override
-  Future<StepAccess> requestAccess() async {
+  Future<DeviceAccess> requestAccess() async {
     requestCount++;
     current = afterRequest ?? current;
     _accessChanges.add(null);

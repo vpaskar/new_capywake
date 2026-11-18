@@ -2,13 +2,12 @@ import 'dart:async';
 
 import 'package:capywake/app/router.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
-import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/games/challenge_pool_picker.dart';
-import 'package:capywake/features/games/step_access_prompt.dart';
+import 'package:capywake/features/games/game_setup_offer.dart';
 import 'package:capywake/features/puzzle/puzzle_settings_controller.dart';
 import 'package:capywake/features/puzzle/puzzle_settings_fields.dart';
 import 'package:capywake/features/settings/settings_header.dart';
@@ -87,12 +86,7 @@ class _Body extends ConsumerWidget {
           onGameChanged: (id, {required enabled}) {
             unawaited(controller.setGameEnabled(id, enabled: enabled));
             unawaited(
-              offerStepAccess(
-                context,
-                sensor: ref.read(stepSensorProvider),
-                gameId: id,
-                enabled: enabled,
-              ),
+              offerGameSetup(context, ref, gameId: id, enabled: enabled),
             );
           },
           onTryGame: (id) => context.push(Routes.gamePractice(id)),

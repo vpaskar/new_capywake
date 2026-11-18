@@ -29,7 +29,7 @@ void main() {
     expect(find.text('Shake DJ'), findsOneWidget);
     expect(find.text('Tilt Maze'), findsOneWidget);
     expect(find.text('Step Quest'), findsOneWidget);
-    expect(find.text('QR Treasure Hunt'), findsNothing);
+    expect(find.text('QR Treasure Hunt'), findsOneWidget);
     expect(find.text('Try it'), findsNothing);
   });
 

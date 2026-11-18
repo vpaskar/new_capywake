@@ -142,3 +142,32 @@ as walking on the accelerometer path; the step sensor is not fooled as easily.
 needs core-library desugaring. Enabled in `android/app/build.gradle.kts` (its
 README's lines). The debug APK builds; **it has never run** — no device, no
 emulator.
+
+## 2026-11-18 — Phase 17 — The camera permission and the scanner's size
+
+Owner decision this session: "Add the camera". QR Treasure Hunt now uses
+`mobile_scanner` 7.5.0 with **bundled ML Kit on Android** (works without
+Google Play Services, so on more phones; costs a few MB per ABI — the APK size
+change is recorded in `PHASE_17_POST_REVIEW.md`). The unbundled alternative
+(`dev.steenbakker.mobile_scanner.useUnbundled=true`) saves that space but needs
+Play Services and downloads the model on first use.
+
+Store-visible: Android declares `CAMERA` (feature not required); iOS shows the
+`NSCameraUsageDescription` text, in all ten languages. The camera is asked for
+only in practice or after switching the game on, with the reason first, and
+never during a ring. A ring picks QR only when a checkpoint is saved **and**
+the camera is allowed; otherwise it picks another pool member or a puzzle.
+
+## 2026-11-18 — Phase 17 — One checkpoint for every alarm
+
+The checkpoint is app-wide (one code, replaceable from practice). Per-alarm
+checkpoints (a different room on weekends) would be a small addition to the
+alarm override; not built. The code itself is never stored — only a digest —
+because a QR can carry a Wi-Fi password.
+
+## 2026-11-18 — Phase 17 — No camera was run
+
+The simulator has no camera and Android has no device here. The camera
+permission channel is proven on the simulator (it answers), the scanner's
+failure path in a widget test over the plugin's channel; **no code was ever
+scanned by a real camera**.

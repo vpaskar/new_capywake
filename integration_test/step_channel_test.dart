@@ -1,4 +1,4 @@
-import 'package:capywake/core/motion/step_sensor.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/data/motion/platform_step_sensor.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -18,9 +18,9 @@ void main() {
     final sensor = PlatformStepSensor();
     final access = await sensor.access();
     if (available!) {
-      expect(access, isNot(StepAccess.unavailable));
+      expect(access, isNot(DeviceAccess.unavailable));
     } else {
-      expect(access, StepAccess.unavailable);
+      expect(access, DeviceAccess.unavailable);
     }
     await sensor.dispose();
   });

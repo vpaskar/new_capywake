@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:capywake/core/motion/fake_step_sensor.dart';
-import 'package:capywake/core/motion/step_sensor.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/motion/platform_step_sensor.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
@@ -65,13 +65,13 @@ void main() {
   group('iOS', () {
     test('no pedometer is unavailable, and nothing else is asked', () async {
       native({'isAvailable': false});
-      expect(await ios.access(), StepAccess.unavailable);
+      expect(await ios.access(), DeviceAccess.unavailable);
       expect(calls, ['isAvailable']);
     });
 
     test('reads CoreMotion authorization', () async {
       native({'isAvailable': true, 'authorization': 'authorized'});
-      expect(await ios.access(), StepAccess.ready);
+      expect(await ios.access(), DeviceAccess.ready);
     });
 
     test('a request shows the prompt and reads the answer', () async {
@@ -86,13 +86,13 @@ void main() {
           _ => auth,
         };
       });
-      expect(await ios.requestAccess(), StepAccess.ready);
+      expect(await ios.requestAccess(), DeviceAccess.ready);
       expect(calls, contains('requestAuthorization'));
     });
 
     test('a request never prompts when there is nothing to ask', () async {
       native({'isAvailable': true, 'authorization': 'denied'});
-      expect(await ios.requestAccess(), StepAccess.permanentlyDenied);
+      expect(await ios.requestAccess(), DeviceAccess.permanentlyDenied);
       expect(calls, isNot(contains('requestAuthorization')));
     });
   });
@@ -101,21 +101,21 @@ void main() {
     test('a step sensor with the permission is ready', () async {
       native({'isAvailable': true});
       android(statuses: [_granted]);
-      expect(await droid.access(), StepAccess.ready);
+      expect(await droid.access(), DeviceAccess.ready);
     });
 
     test('asks for ACTIVITY_RECOGNITION and reads the result', () async {
       native({'isAvailable': true});
       android(statuses: [_denied, _granted]);
-      expect(await droid.access(), StepAccess.needsPermission);
-      expect(await droid.requestAccess(), StepAccess.ready);
+      expect(await droid.access(), DeviceAccess.needsPermission);
+      expect(await droid.requestAccess(), DeviceAccess.ready);
       expect(calls, contains('requestPermissions'));
     });
 
     test('a permanent refusal is reported, not re-asked', () async {
       native({'isAvailable': true});
       android(statuses: [_permanentlyDenied]);
-      expect(await droid.requestAccess(), StepAccess.permanentlyDenied);
+      expect(await droid.requestAccess(), DeviceAccess.permanentlyDenied);
       expect(calls, isNot(contains('requestPermissions')));
     });
 
@@ -127,14 +127,14 @@ void main() {
 
   group('a channel that fails is unavailable, never a throw', () {
     test('no handler at all (MissingPluginException)', () async {
-      expect(await ios.access(), StepAccess.unavailable);
-      expect(await ios.requestAccess(), StepAccess.unavailable);
+      expect(await ios.access(), DeviceAccess.unavailable);
+      expect(await ios.requestAccess(), DeviceAccess.unavailable);
       expect(await ios.openSettings(), isFalse);
     });
 
     test('a platform error', () async {
       native({'isAvailable': PlatformException(code: 'boom')});
-      expect(await droid.access(), StepAccess.unavailable);
+      expect(await droid.access(), DeviceAccess.unavailable);
       messenger.setMockMethodCallHandler(
         _permissions,
         (_) async => throw PlatformException(code: 'boom'),
@@ -203,7 +203,7 @@ void main() {
     addTearDown(defaults.dispose);
     final fake = defaults.read(stepSensorProvider);
     expect(fake, isA<FakeStepSensor>());
-    expect((fake as FakeStepSensor).current, StepAccess.unavailable);
+    expect((fake as FakeStepSensor).current, DeviceAccess.unavailable);
 
     final production = ProviderContainer(overrides: [platformStepOverride()]);
     addTearDown(production.dispose);

@@ -1,1 +1,2 @@
 NSMotionUsageDescription = "CapyWake lee el movimiento solo mientras juegas a Step Quest, Shake DJ o Tilt Maze, para contar pasos o notar una sacudida o una inclinación. Nada sale de tu teléfono.";
+NSCameraUsageDescription = "CapyWake usa la cámara solo mientras escaneas tu punto de control de QR Treasure Hunt. No se graba nada y nada sale de tu teléfono.";

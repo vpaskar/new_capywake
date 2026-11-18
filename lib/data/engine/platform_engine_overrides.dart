@@ -1,5 +1,6 @@
 import 'package:capywake/core/alarm_format.dart';
 import 'package:capywake/core/models/models.dart';
+import 'package:capywake/data/camera/camera_providers.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/engine/local_location_resolver.dart';
 import 'package:capywake/data/engine/platform_alarm_engine.dart';
@@ -60,6 +61,7 @@ Future<Widget Function(Widget)> platformEngineScope({
       engineNowProvider.overrideWith((ref) => now),
       platformMotionOverride(),
       platformStepOverride(),
+      ...platformCameraOverrides(),
     ],
     child: child,
   );

@@ -203,6 +203,9 @@ class AppDatabase extends _$AppDatabase {
   /// succeeded, and the last failure category). One concern, one singleton
   /// row, as above.
   static const sleepSyncSingletonKey = 'sleep_sync';
+
+  /// The QR Treasure Hunt checkpoint: a digest, never the code.
+  static const qrCheckpointSingletonKey = 'qr_checkpoint';
 }
 
 LazyDatabase _openConnection() {

@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:capywake/core/games/game_catalogue.dart';
-import 'package:capywake/core/motion/step_sensor.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
+import 'package:capywake/data/camera/camera_providers.dart';
 import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
@@ -10,12 +11,14 @@ import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/design/scene_header.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
+import 'package:capywake/features/games/device_access_prompt.dart';
 import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/games/game_registry.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
-import 'package:capywake/features/games/step_access_prompt.dart';
+import 'package:capywake/features/games/qr_checkpoint_setup.dart';
 import 'package:capywake/features/ringing/game_ringing_view.dart';
+import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/settings/settings_header.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -44,23 +47,36 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen>
     with WidgetsBindingObserver {
   late int _seed = ref.read(practiceSeedProvider)();
   bool _done = false;
-  StepAccess? _stepAccess;
+  DeviceAccess? _stepAccess;
   bool _stepPromptDismissed = false;
+  bool _changingCheckpoint = false;
+  DeviceAccess? _cameraAccess;
 
   bool get _countsSteps =>
       GameCatalogue.byId(widget.gameId)?.countsSteps ?? false;
 
+  bool get _usesCamera =>
+      GameCatalogue.byId(widget.gameId)?.usesCamera ?? false;
+
   @override
   void initState() {
     super.initState();
-    if (!_countsSteps) return;
+    if (!_countsSteps && !_usesCamera) return;
     WidgetsBinding.instance.addObserver(this);
-    unawaited(_readStepAccess());
+    unawaited(_readAccess());
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) unawaited(_readStepAccess());
+    if (state == AppLifecycleState.resumed) unawaited(_readAccess());
+  }
+
+  Future<void> _readAccess() =>
+      _countsSteps ? _readStepAccess() : _readCameraAccess();
+
+  Future<void> _readCameraAccess() async {
+    final access = await ref.read(cameraAccessProvider).access();
+    if (mounted) setState(() => _cameraAccess = access);
   }
 
   @override
@@ -140,16 +156,42 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen>
     }
     final difficulty = settings.value?.difficulty ?? PuzzleDifficulty.medium;
 
+    final checkpoint = ref.watch(qrCheckpointProvider);
+    if (entry.usesCamera) {
+      // One camera: a ring above this screen needs it, and must not be read
+      // as a new checkpoint.
+      if (ref.watch(ringingSessionProvider).value != null) {
+        return const SizedBox.shrink();
+      }
+      final camera = _cameraAccess;
+      if ((!checkpoint.hasValue && !checkpoint.hasError) || camera == null) {
+        return const SizedBox.shrink();
+      }
+      // Without the camera, the plugin would raise the OS prompt itself.
+      if (checkpoint.value == null ||
+          _changingCheckpoint ||
+          camera != DeviceAccess.ready) {
+        return QrCheckpointSetup(
+          gameName: gameName(l10n, entry),
+          onAccessChanged: (access) => setState(() => _cameraAccess = access),
+          onSaved: () => setState(() => _changingCheckpoint = false),
+          onCancel: checkpoint.value == null
+              ? null
+              : () => setState(() => _changingCheckpoint = false),
+        );
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (_offersStepAccess) ...[
           CapyCard(
-            child: StepAccessPrompt(
+            child: DeviceAccessPrompt(
               key: const ValueKey('step-access-card'),
-              sensor: ref.read(stepSensorProvider),
+              permission: ref.read(stepSensorProvider),
               access: _stepAccess!,
-              gameName: gameName(l10n, entry),
+              copy: DeviceAccessCopy.steps(l10n, gameName(l10n, entry)),
               onResolved: (access) => setState(() => _stepAccess = access),
               onNotNow: () => setState(() => _stepPromptDismissed = true),
             ),
@@ -173,10 +215,22 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen>
               reduceMotion: reduceMotion,
               motion: ref.watch(motionSensorProvider),
               steps: ref.watch(stepSensorProvider),
+              scanner: ref.watch(codeScannerProvider),
+              qrCheckpoint: checkpoint.value,
             ),
             key: ValueKey(_seed),
           )!,
         ),
+        if (entry.usesCamera) ...[
+          const SizedBox(height: CapySpacing.sm),
+          TextButton(
+            onPressed: () => setState(() => _changingCheckpoint = true),
+            style: TextButton.styleFrom(
+              foregroundColor: dark ? CapyColors.darkInk : CapyColors.cocoa,
+            ),
+            child: Text(l10n.qrCheckpointChange),
+          ),
+        ],
       ],
     );
   }
@@ -184,5 +238,5 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen>
   bool get _offersStepAccess =>
       !_stepPromptDismissed &&
       _stepAccess != null &&
-      stepAccessCanImprove(_stepAccess!);
+      deviceAccessCanImprove(_stepAccess!);
 }

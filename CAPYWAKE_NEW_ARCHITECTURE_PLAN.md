@@ -339,7 +339,9 @@ Two entries were `blocked` from day one, each carrying its reason:
   (2026-11-18):** the phone's own step sensor (Android `ACTIVITY_RECOGNITION`,
   iOS Motion & Fitness, asked just-in-time and never on a ring), else the
   accelerometer, and a step button that always works.
-- **QR Treasure Hunt** needs a camera dependency that does not exist.
+- **QR Treasure Hunt** needed a camera dependency. **Unblocked by the owner in
+  Phase 17 (2026-11-18):** `mobile_scanner`, a checkpoint saved once, and the
+  game rings only when the camera is already allowed.
 
 Each adds a store-visible permission, so each needs an explicit owner decision
 to unblock, and both are sequenced last.
@@ -373,7 +375,7 @@ sequencing; this table is a summary and must be updated with it.
 | 14 | Authored games | Morning Sort, Find the Impostor |
 | 15 | Motion games | Shake DJ, Tilt Maze — a11y fallback mandatory |
 | 16 | Capy Step Quest | Step sensor → accelerometer → button (owner, 2026-11-18) |
-| 17 | QR Treasure Hunt | **Blocked** — needs a camera dependency |
+| 17 | QR Treasure Hunt | `mobile_scanner`; checkpoint + camera ready, or it never rings (owner, 2026-11-18) |
 | 18 | Animation and visual polish | The 5 WebP loops, reduce-motion, dark mode pass |
 | 19 | Release QA | iOS + Android regression, bundle size, store readiness |
 

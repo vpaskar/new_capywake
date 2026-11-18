@@ -1,8 +1,12 @@
 import 'package:capywake/app/router.dart';
+import 'package:capywake/core/camera/fake_camera_access.dart';
+import 'package:capywake/core/games/qr_checkpoint.dart';
 import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/motion/step_sensor.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
+import 'package:capywake/data/camera/camera_providers.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
@@ -19,6 +23,8 @@ Future<ProviderContainer> _pump(
   WidgetTester tester, {
   PuzzleSettings? seed,
   StepSensor? steps,
+  FakeCameraAccess? camera,
+  bool checkpoint = false,
 }) async {
   final db = AppDatabase.forTesting(NativeDatabase.memory());
   tester.view.physicalSize = const Size(393, 852) * 3;
@@ -28,12 +34,18 @@ Future<ProviderContainer> _pump(
     overrides: [
       appDatabaseProvider.overrideWithValue(db),
       if (steps != null) stepSensorProvider.overrideWithValue(steps),
+      if (camera != null) cameraAccessProvider.overrideWithValue(camera),
     ],
   );
   addTearDown(() async {
     container.dispose();
     await db.close();
   });
+  if (checkpoint) {
+    await container
+        .read(capywakeRepositoryProvider)
+        .saveQrCheckpoint(QrCheckpoint.of('MIRROR', savedAt: DateTime(2026)));
+  }
   if (seed != null) {
     await container.read(capywakeRepositoryProvider).savePuzzleSettings(seed);
   }
@@ -123,7 +135,9 @@ void main() {
 
   testWidgets('Try it opens practice for that game', (tester) async {
     await _pump(tester);
-    final tryIt = find.text('Try it').at(1);
+    final tryIt = find.byWidgetPredicate(
+      (w) => w is Text && w.semanticsLabel == 'Try it, Shake DJ',
+    );
     await tester.ensureVisible(tryIt);
     await tester.pumpAndSettle();
     await tester.tap(tryIt);
@@ -137,7 +151,7 @@ void main() {
     testWidgets('after the switch is saved, never instead of it (M4)', (
       tester,
     ) async {
-      final steps = FakeStepSensor(current: StepAccess.needsPermission);
+      final steps = FakeStepSensor(current: DeviceAccess.needsPermission);
       final c = await _pump(tester, steps: steps);
       await _flip(tester, 'Step Quest');
       expect(sheet, findsOneWidget);
@@ -151,8 +165,8 @@ void main() {
 
     testWidgets('Allow shows the OS prompt and closes', (tester) async {
       final steps = FakeStepSensor(
-        current: StepAccess.needsPermission,
-        afterRequest: StepAccess.ready,
+        current: DeviceAccess.needsPermission,
+        afterRequest: DeviceAccess.ready,
       );
       await _pump(tester, steps: steps);
       await _flip(tester, 'Step Quest');
@@ -163,7 +177,7 @@ void main() {
     });
 
     testWidgets('Open Settings closes the sheet', (tester) async {
-      final steps = FakeStepSensor(current: StepAccess.permanentlyDenied);
+      final steps = FakeStepSensor(current: DeviceAccess.permanentlyDenied);
       await _pump(tester, steps: steps);
       await _flip(tester, 'Step Quest');
       await tester.tap(find.text('Open Settings'));
@@ -175,7 +189,7 @@ void main() {
     testWidgets('nothing is offered when there is nothing to ask', (
       tester,
     ) async {
-      for (final access in [StepAccess.ready, StepAccess.unavailable]) {
+      for (final access in [DeviceAccess.ready, DeviceAccess.unavailable]) {
         await _pump(tester, steps: FakeStepSensor(current: access));
         await _flip(tester, 'Step Quest');
         expect(sheet, findsNothing, reason: access.name);
@@ -185,7 +199,7 @@ void main() {
     testWidgets('switching it off, or another game on, offers nothing', (
       tester,
     ) async {
-      final steps = FakeStepSensor(current: StepAccess.needsPermission);
+      final steps = FakeStepSensor(current: DeviceAccess.needsPermission);
       await _pump(
         tester,
         steps: steps,
@@ -197,6 +211,44 @@ void main() {
       await _flip(tester, 'Step Quest');
       expect(sheet, findsNothing);
       await _flip(tester, 'Shake DJ');
+      expect(sheet, findsNothing);
+    });
+  });
+
+  group('switching QR Treasure Hunt on offers the checkpoint setup', () {
+    final sheet = find.byKey(const ValueKey('qr-setup-sheet'));
+
+    testWidgets('not ready: the switch is saved, then the sheet (M7)', (
+      tester,
+    ) async {
+      final c = await _pump(tester);
+      await _flip(tester, 'QR Treasure Hunt');
+      expect(sheet, findsOneWidget);
+      expect(
+        find.textContaining('Alarms skip QR Treasure Hunt'),
+        findsOneWidget,
+      );
+      expect((await _saved(c)).enabledGames, contains('qr_treasure_hunt'));
+      await tester.tap(find.text('Set a checkpoint'));
+      await tester.pumpAndSettle();
+      expect(find.text('practice:qr_treasure_hunt'), findsOneWidget);
+    });
+
+    testWidgets('Not now closes it', (tester) async {
+      await _pump(tester);
+      await _flip(tester, 'QR Treasure Hunt');
+      await tester.tap(find.text('Not now'));
+      await tester.pumpAndSettle();
+      expect(sheet, findsNothing);
+    });
+
+    testWidgets('ready: nothing is offered', (tester) async {
+      await _pump(
+        tester,
+        camera: FakeCameraAccess(current: DeviceAccess.ready),
+        checkpoint: true,
+      );
+      await _flip(tester, 'QR Treasure Hunt');
       expect(sheet, findsNothing);
     });
   });

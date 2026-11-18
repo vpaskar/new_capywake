@@ -5,6 +5,7 @@ import 'package:capywake/features/games/find_the_impostor_view.dart';
 import 'package:capywake/features/games/game_launch.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/games/morning_sort_view.dart';
+import 'package:capywake/features/games/qr_treasure_hunt_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/games/shake_dj_view.dart';
 import 'package:capywake/features/games/step_quest_view.dart';
@@ -28,6 +29,7 @@ abstract final class GameRegistry {
     'shake_dj': ShakeDjView.fromLaunch,
     'tilt_maze': TiltMazeView.fromLaunch,
     'step_quest': StepQuestView.fromLaunch,
+    'qr_treasure_hunt': QrTreasureHuntView.fromLaunch,
   };
 
   static bool isLaunchable(String gameId) =>

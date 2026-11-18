@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/games/game_challenge.dart';
 import 'package:capywake/core/games/wake_challenge.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_round.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
 import 'package:capywake/core/puzzle/puzzle_type.dart';
+import 'package:capywake/data/camera/camera_providers.dart';
 import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/features/games/game_launch.dart';
@@ -24,6 +26,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// `ringingSessionProvider` is load-bearing — unwatched, no alarm rings.
 class RingingHost extends ConsumerStatefulWidget {
   const RingingHost({required this.child, super.key});
+
+  /// Holds the challenge's place for the moment a pick waits on readiness.
+  static const pendingSlotHeight = 240.0;
+
+  /// On a cold start the camera game's readiness may still be loading when
+  /// the ring arrives; wait this long before ringing without it.
+  static const readinessWait = Duration(seconds: 2);
 
   final Widget child;
 
@@ -46,10 +55,13 @@ class _RingingHostState extends ConsumerState<RingingHost> {
   WakeChallenge? _challenge;
   GameChallenge? _gameProgress;
   ({Timer timer, String gameId})? _win;
+  Timer? _readinessWait;
+  bool _readinessGaveUp = false;
 
   @override
   void dispose() {
     _win?.timer.cancel();
+    _readinessWait?.cancel();
     super.dispose();
   }
 
@@ -73,8 +85,15 @@ class _RingingHostState extends ConsumerState<RingingHost> {
 
   @override
   Widget build(BuildContext context) {
+    // Kept warm from app start, so a ring never picks on a loading value.
+    ref
+      ..watch(qrHuntReadyProvider)
+      ..watch(qrCheckpointProvider);
     final session = ref.watch(ringingSessionProvider).value;
     if (session == null) {
+      _readinessWait?.cancel();
+      _readinessWait = null;
+      _readinessGaveUp = false;
       _round = null;
       _roundOccurrenceId = null;
       _challenge = null;
@@ -122,6 +141,19 @@ class _RingingHostState extends ConsumerState<RingingHost> {
     if (session == null) return const SizedBox.shrink();
     final controller = ref.read(ringingControllerProvider);
     final settings = _renderableSettings(session.alarm);
+    if (_awaitsCameraReadiness(session, settings)) {
+      return RingingScreen(
+        session: session,
+        escapeStrictness: settings.escapeStrictness,
+        onDismiss: controller.dismiss,
+        onSnooze: controller.snooze,
+        onEscape: controller.escape,
+        puzzleSlot: const SizedBox(
+          key: ValueKey('challenge-pending'),
+          height: RingingHost.pendingSlotHeight,
+        ),
+      );
+    }
     final challenge = _challengeFor(session, settings);
     final round = challenge is PuzzleWakeChallenge ? _round : null;
 
@@ -152,12 +184,45 @@ class _RingingHostState extends ConsumerState<RingingHost> {
               reduceMotion: reduceMotion,
               motion: ref.watch(motionSensorProvider),
               steps: ref.watch(stepSensorProvider),
+              scanner: ref.watch(codeScannerProvider),
+              qrCheckpoint: ref.watch(qrCheckpointProvider).value,
             ),
             key: ValueKey(_ringSeed(session)),
           )!,
         ),
       },
     );
+  }
+
+  /// Whether this ring's pick must wait for the camera game's readiness: its
+  /// pool has one, nothing is picked yet, and the answer is loading or stale.
+  bool _awaitsCameraReadiness(RingingSession session, PuzzleSettings settings) {
+    if (session.alarm.dismissMethod != DismissMethod.puzzle) return false;
+    if (_readinessGaveUp) return false;
+    final picked =
+        _challenge != null &&
+        _roundOccurrenceId == session.occurrence.id &&
+        _roundSnoozeCount == session.occurrence.snoozeCount;
+    if (picked) return false;
+    final hasCameraGame = settings.enabledGames.any(
+      (id) => GameCatalogue.byId(id)?.usesCamera ?? false,
+    );
+    final readiness = ref.read(qrHuntReadyProvider);
+    final settled =
+        !readiness.isLoading && (readiness.hasValue || readiness.hasError);
+    if (!hasCameraGame || settled) return false;
+    _readinessWait ??= Timer(RingingHost.readinessWait, () {
+      if (mounted) setState(() => _readinessGaveUp = true);
+    });
+    return true;
+  }
+
+  /// A camera game rings only once it can be finished; otherwise the pool's
+  /// other members ring, and an empty pool is a puzzle.
+  bool _canRing(String gameId) {
+    if (!GameRegistry.isLaunchable(gameId)) return false;
+    if (!(GameCatalogue.byId(gameId)?.usesCamera ?? false)) return true;
+    return ref.read(qrHuntReadyProvider).value ?? false;
   }
 
   int _ringSeed(RingingSession session) =>
@@ -180,7 +245,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
     final challenge = WakeChallengeSelector.pick(
       settings: settings,
       seed: seed,
-      isLaunchable: GameRegistry.isLaunchable,
+      isLaunchable: _canRing,
     );
     _challenge = challenge;
     _gameProgress = null;

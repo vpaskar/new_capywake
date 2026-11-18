@@ -8,6 +8,7 @@ import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/motion/motion_sensor.dart';
 import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/motion/step_tally.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_button.dart';
@@ -95,12 +96,12 @@ String? _outcome(WidgetTester tester) =>
 
 /// A step sensor whose access answer arrives only when the test says so.
 class _SlowStepSensor extends FakeStepSensor {
-  _SlowStepSensor() : super(current: StepAccess.ready);
+  _SlowStepSensor() : super(current: DeviceAccess.ready);
 
-  final answer = Completer<StepAccess>();
+  final answer = Completer<DeviceAccess>();
 
   @override
-  Future<StepAccess> access() => answer.future;
+  Future<DeviceAccess> access() => answer.future;
 }
 
 String _caption(WidgetTester tester) => tester.widget<Text>(_source).data!;
@@ -154,7 +155,7 @@ void main() {
     tester,
   ) async {
     final motion = FakeMotionSensor();
-    final steps = FakeStepSensor(current: StepAccess.ready);
+    final steps = FakeStepSensor(current: DeviceAccess.ready);
     final calls = await _pump(tester, motion: motion, steps: steps);
     for (var i = 0; i < 25; i++) {
       await tester.tap(_step);
@@ -202,7 +203,7 @@ void main() {
     testWidgets('counts once access is ready, and the accelerometer stops '
         'after its first delivery (M1)', (tester) async {
       final motion = FakeMotionSensor();
-      final steps = FakeStepSensor(current: StepAccess.ready);
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
       final calls = await _pump(tester, motion: motion, steps: steps);
       expect(steps.hasListener, isTrue);
       expect(_caption(tester), _sensorCaption);
@@ -215,9 +216,9 @@ void main() {
     });
 
     for (final access in [
-      StepAccess.needsPermission,
-      StepAccess.permanentlyDenied,
-      StepAccess.unavailable,
+      DeviceAccess.needsPermission,
+      DeviceAccess.permanentlyDenied,
+      DeviceAccess.unavailable,
     ]) {
       testWidgets('is never opened when access is ${access.name} (H1)', (
         tester,
@@ -236,7 +237,7 @@ void main() {
       tester,
     ) async {
       final motion = FakeMotionSensor();
-      final steps = FakeStepSensor(current: StepAccess.ready);
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
       final calls = await _pump(tester, motion: motion, steps: steps);
       await _walk(tester, motion, steps: 6);
       expect(calls.progress, isEmpty);
@@ -247,7 +248,7 @@ void main() {
     testWidgets('a failed stream hands over to the accelerometer at once '
         '(H2)', (tester) async {
       final motion = FakeMotionSensor();
-      final steps = FakeStepSensor(current: StepAccess.ready);
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
       final calls = await _pump(tester, motion: motion, steps: steps);
       await _sensorSteps(tester, steps, 2);
       expect(motion.hasListener, isFalse);
@@ -262,7 +263,7 @@ void main() {
     });
 
     testWidgets('a stream that closes is a failure too', (tester) async {
-      final steps = FakeStepSensor(current: StepAccess.ready);
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
       await _pump(tester, steps: steps);
       await steps.close();
       await tester.pump();
@@ -273,7 +274,7 @@ void main() {
       tester,
     ) async {
       final motion = FakeMotionSensor();
-      final steps = FakeStepSensor(current: StepAccess.ready);
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
       final calls = await _pump(tester, motion: motion, steps: steps);
       await _walk(tester, motion, steps: StepTally.defaultDemoteAfter - 1);
       expect(calls.progress, isEmpty);
@@ -290,8 +291,8 @@ void main() {
     testWidgets('allowed mid-round, it takes over at once, keeping every '
         'step (H3)', (tester) async {
       final steps = FakeStepSensor(
-        current: StepAccess.needsPermission,
-        afterRequest: StepAccess.ready,
+        current: DeviceAccess.needsPermission,
+        afterRequest: DeviceAccess.ready,
       );
       final calls = await _pump(tester, steps: steps);
       await tester.tap(_step);
@@ -306,7 +307,7 @@ void main() {
     testWidgets('a rebuild does not read access again (review #6)', (
       tester,
     ) async {
-      final steps = FakeStepSensor(current: StepAccess.needsPermission);
+      final steps = FakeStepSensor(current: DeviceAccess.needsPermission);
       final calls = await _pump(tester, steps: steps);
       expect(steps.accessCount, 1);
       for (var i = 0; i < 5; i++) {
@@ -319,7 +320,7 @@ void main() {
     });
 
     testWidgets('after a demotion, resuming reads nothing', (tester) async {
-      final steps = FakeStepSensor(current: StepAccess.ready);
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
       await _pump(tester, steps: steps);
       steps.fail();
       await tester.pump();
@@ -334,9 +335,9 @@ void main() {
     testWidgets('allowed in Settings, it takes over when the app resumes', (
       tester,
     ) async {
-      final steps = FakeStepSensor(current: StepAccess.permanentlyDenied);
+      final steps = FakeStepSensor(current: DeviceAccess.permanentlyDenied);
       await _pump(tester, steps: steps);
-      steps.current = StepAccess.ready;
+      steps.current = DeviceAccess.ready;
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
       await tester.pump();
@@ -347,8 +348,8 @@ void main() {
     testWidgets('a new step sensor on rebuild is heard; the old one let go', (
       tester,
     ) async {
-      final first = FakeStepSensor(current: StepAccess.ready);
-      final second = FakeStepSensor(current: StepAccess.ready);
+      final first = FakeStepSensor(current: DeviceAccess.ready);
+      final second = FakeStepSensor(current: DeviceAccess.ready);
       final calls = await _pump(tester, steps: first);
       await _pump(tester, steps: second);
       expect(first.hasListener, isFalse);
@@ -360,7 +361,7 @@ void main() {
     testWidgets('changing the counter does not move the button', (
       tester,
     ) async {
-      final steps = FakeStepSensor(current: StepAccess.ready);
+      final steps = FakeStepSensor(current: DeviceAccess.ready);
       for (final locale in const [Locale('en'), Locale('de')]) {
         await _pump(tester, steps: steps, locale: locale, textScale: 2);
         final top = tester.getTopLeft(_step).dy;
@@ -391,10 +392,10 @@ void main() {
     tester,
   ) async {
     final slow = _SlowStepSensor();
-    final ready = FakeStepSensor(current: StepAccess.ready);
+    final ready = FakeStepSensor(current: DeviceAccess.ready);
     await _pump(tester, steps: slow);
     await _pump(tester, steps: ready);
-    slow.answer.complete(StepAccess.ready);
+    slow.answer.complete(DeviceAccess.ready);
     await tester.pump();
     expect(slow.hasListener, isFalse);
     expect(ready.hasListener, isTrue);
@@ -404,7 +405,7 @@ void main() {
     tester,
   ) async {
     final motion = FakeMotionSensor();
-    final steps = FakeStepSensor(current: StepAccess.ready);
+    final steps = FakeStepSensor(current: DeviceAccess.ready);
     await _pump(tester, motion: motion, steps: steps);
     await _sensorSteps(tester, steps, 2);
     expect(motion.hasListener, isFalse);
@@ -432,7 +433,7 @@ void main() {
     tester,
   ) async {
     final motion = FakeMotionSensor();
-    final steps = FakeStepSensor(current: StepAccess.ready);
+    final steps = FakeStepSensor(current: DeviceAccess.ready);
     final calls = await _pump(tester, motion: motion, steps: steps);
     await tester.pumpWidget(const SizedBox());
     expect(motion.hasListener, isFalse);

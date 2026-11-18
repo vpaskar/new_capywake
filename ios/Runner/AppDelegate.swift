@@ -1,3 +1,4 @@
+import AVFoundation
 import CoreMotion
 import Flutter
 import UIKit
@@ -15,6 +16,9 @@ import UIKit
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
     if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CapyStepCounter") {
       StepCounterChannel.register(with: registrar)
+    }
+    if let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "CapyCameraAccess") {
+      CameraAccessChannel.register(with: registrar)
     }
   }
 }
@@ -93,5 +97,37 @@ final class StepCounterChannel: NSObject, FlutterStreamHandler {
     session += 1
     sink = nil
     return nil
+  }
+}
+
+/// Camera access for QR Treasure Hunt. The scanner itself is mobile_scanner;
+/// this only reads and asks for permission. Names match `PlatformCameraAccess`.
+enum CameraAccessChannel {
+  static func register(with registrar: FlutterPluginRegistrar) {
+    FlutterMethodChannel(name: "capywake/camera", binaryMessenger: registrar.messenger())
+      .setMethodCallHandler { call, result in
+        switch call.method {
+        case "isAvailable":
+          result(AVCaptureDevice.default(for: .video) != nil)
+        case "authorization":
+          result(authorizationName())
+        case "requestAuthorization":
+          AVCaptureDevice.requestAccess(for: .video) { _ in
+            DispatchQueue.main.async { result(authorizationName()) }
+          }
+        default:
+          result(FlutterMethodNotImplemented)
+        }
+      }
+  }
+
+  private static func authorizationName() -> String {
+    switch AVCaptureDevice.authorizationStatus(for: .video) {
+    case .authorized: return "authorized"
+    case .notDetermined: return "notDetermined"
+    case .denied: return "denied"
+    case .restricted: return "restricted"
+    @unknown default: return "restricted"
+    }
   }
 }

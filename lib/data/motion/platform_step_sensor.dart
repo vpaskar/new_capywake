@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:capywake/core/motion/step_sensor.dart';
-import 'package:capywake/data/motion/step_access_mapper.dart';
+import 'package:capywake/core/permissions/device_access.dart';
+import 'package:capywake/data/permissions/device_access_mapper.dart';
 import 'package:capywake/data/permissions/permission_mapper.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -21,25 +22,25 @@ class PlatformStepSensor implements StepSensor {
   final _accessChanges = StreamController<void>.broadcast();
 
   @override
-  Future<StepAccess> access() => _orUnavailable(() async {
+  Future<DeviceAccess> access() => _orUnavailable(() async {
     final available = await methods.invokeMethod<bool>('isAvailable') ?? false;
-    if (!available) return StepAccess.unavailable;
+    if (!available) return DeviceAccess.unavailable;
     if (_isAndroid) {
       final status = await plugin.Permission.activityRecognition.status;
-      return StepAccessMapper.android(
+      return DeviceAccessMapper.android(
         available: true,
         grant: PermissionMapper.grantOf(status),
       );
     }
-    return StepAccessMapper.ios(
+    return DeviceAccessMapper.ios(
       available: true,
       authorization: await methods.invokeMethod<String>('authorization'),
     );
   });
 
   @override
-  Future<StepAccess> requestAccess() => _orUnavailable(() async {
-    if (await access() != StepAccess.needsPermission) return access();
+  Future<DeviceAccess> requestAccess() => _orUnavailable(() async {
+    if (await access() != DeviceAccess.needsPermission) return access();
     if (_isAndroid) {
       await plugin.Permission.activityRecognition.request();
     } else {
@@ -73,15 +74,15 @@ class PlatformStepSensor implements StepSensor {
 
   Future<void> dispose() => _accessChanges.close();
 
-  static Future<StepAccess> _orUnavailable(
-    Future<StepAccess> Function() body,
+  static Future<DeviceAccess> _orUnavailable(
+    Future<DeviceAccess> Function() body,
   ) async {
     try {
       return await body();
     } on PlatformException {
-      return StepAccess.unavailable;
+      return DeviceAccess.unavailable;
     } on MissingPluginException {
-      return StepAccess.unavailable;
+      return DeviceAccess.unavailable;
     }
   }
 }

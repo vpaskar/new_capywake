@@ -1,18 +1,24 @@
+import 'dart:async';
+
 import 'package:capywake/app/app.dart';
 import 'package:capywake/app/router.dart';
+import 'package:capywake/core/camera/fake_camera_access.dart';
 import 'package:capywake/core/engine/fake_alarm_engine.dart';
 import 'package:capywake/core/games/memory_hideout.dart';
 import 'package:capywake/core/games/morning_sort.dart';
+import 'package:capywake/core/games/qr_checkpoint.dart';
 import 'package:capywake/core/games/shake_dj.dart';
 import 'package:capywake/core/games/step_quest.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/motion/fake_motion_sensor.dart';
 import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/motion/motion_sensor.dart';
-import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/motion/tilt_reader.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/alarm_puzzle_override.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
+import 'package:capywake/data/camera/camera_providers.dart';
+import 'package:capywake/data/camera/code_scanner.dart';
 import 'package:capywake/data/database/app_database.dart';
 import 'package:capywake/data/engine/engine_providers.dart';
 import 'package:capywake/data/motion/motion_providers.dart';
@@ -22,17 +28,19 @@ import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/capy_card.dart';
 import 'package:capywake/features/games/capy_rocket_view.dart';
 import 'package:capywake/features/games/catch_the_capy_view.dart';
+import 'package:capywake/features/games/device_access_prompt.dart';
 import 'package:capywake/features/games/find_the_impostor_view.dart';
 import 'package:capywake/features/games/game_header.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
 import 'package:capywake/features/games/memory_hideout_view.dart';
 import 'package:capywake/features/games/morning_sort_view.dart';
+import 'package:capywake/features/games/qr_treasure_hunt_view.dart';
 import 'package:capywake/features/games/rhythm_rescue_view.dart';
 import 'package:capywake/features/games/shake_dj_view.dart';
-import 'package:capywake/features/games/step_access_prompt.dart';
 import 'package:capywake/features/games/step_quest_view.dart';
 import 'package:capywake/features/games/tilt_maze_view.dart';
 import 'package:capywake/features/ringing/puzzle_view.dart';
+import 'package:capywake/features/ringing/ringing_host.dart';
 import 'package:capywake/features/ringing/ringing_providers.dart';
 import 'package:capywake/features/ringing/ringing_screen.dart';
 import 'package:capywake/features/ringing/ringing_win_overlay.dart';
@@ -41,6 +49,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
@@ -93,7 +102,7 @@ void main() {
       ProviderContainer container,
     })
   >
-  pumpApp(WidgetTester tester) async {
+  pumpApp(WidgetTester tester, {List<Override> extra = const []}) async {
     final db = AppDatabase.forTesting(NativeDatabase.memory());
     final engine = FakeAlarmEngine(now: () => clock);
     final container = ProviderContainer(
@@ -101,6 +110,7 @@ void main() {
         appDatabaseProvider.overrideWithValue(db),
         alarmEngineProvider.overrideWithValue(engine),
         engineNowProvider.overrideWithValue(() => clock),
+        ...extra,
       ],
     );
 
@@ -145,12 +155,25 @@ void main() {
   ring(
     WidgetTester tester,
     AlarmPuzzleOverride override, {
-    StepAccess? stepAccess,
+    DeviceAccess? stepAccess,
+    DeviceAccess? cameraAccess,
+    String? checkpoint,
+    List<Override> extra = const [],
   }) async {
-    final app = await pumpApp(tester);
+    final app = await pumpApp(tester, extra: extra);
     if (stepAccess != null) {
       (app.container.read(stepSensorProvider) as FakeStepSensor).current =
           stepAccess;
+    }
+    if (cameraAccess != null) {
+      (app.container.read(cameraAccessProvider) as FakeCameraAccess).current =
+          cameraAccess;
+      app.container.invalidate(qrHuntReadyProvider);
+    }
+    if (checkpoint != null) {
+      await app.repository.saveQrCheckpoint(
+        QrCheckpoint.of(checkpoint, savedAt: clock),
+      );
     }
     await app.repository.upsertAlarm(
       _alarm(dismissMethod: DismissMethod.puzzle, puzzleOverride: override),
@@ -780,12 +803,12 @@ void main() {
       final app = await ring(
         tester,
         gamesOnly('step_quest'),
-        stepAccess: StepAccess.needsPermission,
+        stepAccess: DeviceAccess.needsPermission,
       );
       expect(tester.takeException(), isNull);
       expect(find.byType(StepQuestView), findsOneWidget);
       expect(find.text('Stop without solving'), findsOneWidget);
-      expect(find.byType(StepAccessPrompt), findsNothing);
+      expect(find.byType(DeviceAccessPrompt), findsNothing);
       final steps = stepsOf(app.container);
       expect(steps.requestCount, 0);
       expect(steps.listenCount, 0);
@@ -811,7 +834,7 @@ void main() {
       final app = await ring(
         tester,
         gamesOnly('step_quest'),
-        stepAccess: StepAccess.ready,
+        stepAccess: DeviceAccess.ready,
       );
       final steps = stepsOf(app.container);
       expect(steps.hasListener, isTrue);
@@ -830,6 +853,131 @@ void main() {
     });
   });
 
+  group('QR Treasure Hunt', () {
+    void phone(WidgetTester tester) {
+      tester.view.physicalSize = const Size(393, 852) * 3;
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+    }
+
+    FakeCodeScanner scannerOf(ProviderContainer container) =>
+        container.read(codeScannerProvider) as FakeCodeScanner;
+
+    FakeCameraAccess cameraOf(ProviderContainer container) =>
+        container.read(cameraAccessProvider) as FakeCameraAccess;
+
+    testWidgets('ready, it rings with the camera off until a tap (H1)', (
+      tester,
+    ) async {
+      final app = await ring(
+        tester,
+        gamesOnly('qr_treasure_hunt'),
+        cameraAccess: DeviceAccess.ready,
+        checkpoint: 'MIRROR',
+      );
+      expect(tester.takeException(), isNull);
+      expect(find.byType(QrTreasureHuntView), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      expect(scannerOf(app.container).starts, 0);
+      expect(cameraOf(app.container).requestCount, 0);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    for (final (why, access, code) in [
+      ('no checkpoint', DeviceAccess.ready, null),
+      ('no camera grant', DeviceAccess.needsPermission, 'MIRROR'),
+      ('no camera', DeviceAccess.unavailable, 'MIRROR'),
+    ]) {
+      testWidgets('with $why it never rings; a puzzle does', (tester) async {
+        final app = await ring(
+          tester,
+          gamesOnly('qr_treasure_hunt'),
+          cameraAccess: access,
+          checkpoint: code,
+        );
+        expect(find.byType(QrTreasureHuntView), findsNothing);
+        expect(find.byType(PuzzleView), findsOneWidget);
+        expect(cameraOf(app.container).requestCount, 0, reason: 'no prompt');
+        expect(scannerOf(app.container).starts, 0);
+        await tester.pumpWidget(const SizedBox());
+      });
+    }
+
+    testWidgets('a cold start waits for readiness, then rings without it '
+        '(R2, R5)', (tester) async {
+      final app = await pumpApp(
+        tester,
+        extra: [cameraAccessProvider.overrideWithValue(_SilentCamera())],
+      );
+      await app.repository.saveQrCheckpoint(
+        QrCheckpoint.of('MIRROR', savedAt: clock),
+      );
+      await app.repository.upsertAlarm(
+        _alarm(
+          dismissMethod: DismissMethod.puzzle,
+          puzzleOverride: gamesOnly('qr_treasure_hunt'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      app.engine.fire('a1', firedAt: clock);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('challenge-pending')), findsOneWidget);
+      expect(find.text('Stop without solving'), findsOneWidget);
+      expect(find.byType(PuzzleView), findsNothing);
+      await tester.pump(RingingHost.readinessWait);
+      await tester.pump();
+      expect(find.byKey(const ValueKey('challenge-pending')), findsNothing);
+      expect(find.byType(PuzzleView), findsOneWidget);
+      expect(find.byType(QrTreasureHuntView), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('a wrong code raises the escape at tolerance 0', (
+      tester,
+    ) async {
+      phone(tester);
+      final app = await ring(
+        tester,
+        gamesOnly('qr_treasure_hunt', tolerated: 0),
+        cameraAccess: DeviceAccess.ready,
+        checkpoint: 'MIRROR',
+      );
+      await tester.tap(find.byKey(const ValueKey('qr-hunt-scan')));
+      await tester.pump();
+      scannerOf(app.container).show('COFFEE');
+      await tester.pump();
+      expect(prominentEscape(), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+    });
+
+    testWidgets('scanning the checkpoint dismisses the alarm, once', (
+      tester,
+    ) async {
+      phone(tester);
+      final app = await ring(
+        tester,
+        gamesOnly('qr_treasure_hunt'),
+        cameraAccess: DeviceAccess.ready,
+        checkpoint: 'MIRROR',
+      );
+      final scanner = scannerOf(app.container);
+      await tester.tap(find.byKey(const ValueKey('qr-hunt-scan')));
+      await tester.pump();
+      scanner
+        ..show('MIRROR')
+        ..show('MIRROR');
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 5));
+      expect(find.byType(RingingScreen), findsNothing);
+      final rows = await app.repository.listOccurrencesForAlarm('a1');
+      expect(
+        rows.where((o) => o.status == AlarmStatus.dismissed),
+        hasLength(1),
+      );
+      expect(scanner.isLive, isFalse);
+    });
+  });
+
   const allGames = [
     'catch_the_capy',
     'memory_hideout',
@@ -840,6 +988,7 @@ void main() {
     'shake_dj',
     'tilt_maze',
     'step_quest',
+    'qr_treasure_hunt',
   ];
 
   Future<({Rect clock, Rect card})> ringOn(
@@ -857,7 +1006,12 @@ void main() {
       bottom: bottom * ratio,
     );
     addTearDown(tester.view.reset);
-    await ring(tester, gamesOnly(game));
+    await ring(
+      tester,
+      gamesOnly(game),
+      cameraAccess: DeviceAccess.ready,
+      checkpoint: 'MIRROR',
+    );
     final clock = tester.getRect(
       find.byWidgetPredicate((w) => w.runtimeType.toString() == '_Clock'),
     );
@@ -914,4 +1068,10 @@ void main() {
       );
     }
   });
+}
+
+/// A camera whose access is never answered, as on a slow cold start.
+class _SilentCamera extends FakeCameraAccess {
+  @override
+  Future<DeviceAccess> access() => Completer<DeviceAccess>().future;
 }

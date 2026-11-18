@@ -6,6 +6,7 @@ import 'package:capywake/core/motion/motion_sensor.dart';
 import 'package:capywake/core/motion/step_detector.dart';
 import 'package:capywake/core/motion/step_sensor.dart';
 import 'package:capywake/core/motion/step_tally.dart';
+import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/capy_card.dart';
@@ -139,7 +140,7 @@ class _StepQuestViewState extends State<StepQuestView>
     _readingAccess = false;
     if (!mounted || _round.isComplete) return;
     if (sensor != widget.steps) return _readAccess();
-    if (access == StepAccess.ready && _sensorSteps == null) _listenSensor();
+    if (access == DeviceAccess.ready && _sensorSteps == null) _listenSensor();
   }
 
   void _listenSensor() {

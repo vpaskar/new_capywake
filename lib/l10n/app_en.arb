@@ -2729,5 +2729,105 @@
   "stepAccessDeniedBody": "Step counting is off for CapyWake. You can turn it on in Settings. Until then, steps are counted from motion.",
   "@stepAccessDeniedBody": {
     "description": "Step counting was refused and only device Settings can turn it on."
+  },
+  "gameQrInstruction": "Scan your checkpoint.",
+  "@gameQrInstruction": {
+    "description": "QR Treasure Hunt: the instruction under the game's name."
+  },
+  "gameQrScan": "Scan QR",
+  "@gameQrScan": {
+    "description": "QR Treasure Hunt: button that turns the camera on to scan."
+  },
+  "gameQrStopScan": "Stop camera",
+  "@gameQrStopScan": {
+    "description": "QR Treasure Hunt: button that turns the camera off again."
+  },
+  "gameQrWrongCode": "Not your checkpoint. Keep looking.",
+  "@gameQrWrongCode": {
+    "description": "QR Treasure Hunt: a code was scanned that is not the saved checkpoint."
+  },
+  "gameQrCameraFailed": "The camera did not start.",
+  "@gameQrCameraFailed": {
+    "description": "QR Treasure Hunt: the camera failed to start."
+  },
+  "gameQrNoCheckpoint": "No checkpoint set yet.",
+  "@gameQrNoCheckpoint": {
+    "description": "QR Treasure Hunt: no checkpoint code is saved."
+  },
+  "qrCheckpointTitle": "Your morning checkpoint",
+  "@qrCheckpointTitle": {
+    "description": "Title of the checkpoint setup: the code the user walks to each morning."
+  },
+  "qrCheckpointBody": "Pick a code in another room, like a QR on the bathroom mirror or the barcode on the coffee jar. Every alarm with {game} asks you to scan it.",
+  "@qrCheckpointBody": {
+    "description": "Explains what a checkpoint is. {game} is the game's name.",
+    "placeholders": {
+      "game": {
+        "type": "String",
+        "example": "QR Treasure Hunt"
+      }
+    }
+  },
+  "qrCheckpointScan": "Scan a code",
+  "@qrCheckpointScan": {
+    "description": "Button that opens the camera to save a checkpoint code."
+  },
+  "qrCheckpointSaved": "Checkpoint saved.",
+  "@qrCheckpointSaved": {
+    "description": "Shown after a checkpoint code is saved."
+  },
+  "qrCheckpointChange": "Change checkpoint",
+  "@qrCheckpointChange": {
+    "description": "Button to replace the saved checkpoint code."
+  },
+  "qrCheckpointSet": "Set a checkpoint",
+  "@qrCheckpointSet": {
+    "description": "Button that opens checkpoint setup."
+  },
+  "qrCheckpointSkipped": "Alarms skip {game} until a checkpoint is set and the camera is allowed.",
+  "@qrCheckpointSkipped": {
+    "description": "Why alarms do not pick the game yet. {game} is the game's name.",
+    "placeholders": {
+      "game": {
+        "type": "String",
+        "example": "QR Treasure Hunt"
+      }
+    }
+  },
+  "cameraAccessTitle": "Use the camera",
+  "@cameraAccessTitle": {
+    "description": "Prompt before asking the OS for the camera."
+  },
+  "cameraAccessBody": "{game} uses the camera only while you scan a code. Nothing is recorded, and nothing leaves your phone.",
+  "@cameraAccessBody": {
+    "description": "Why the camera is asked for. {game} is the game's name.",
+    "placeholders": {
+      "game": {
+        "type": "String",
+        "example": "QR Treasure Hunt"
+      }
+    }
+  },
+  "cameraAccessAllow": "Allow the camera",
+  "@cameraAccessAllow": {
+    "description": "Button that shows the OS camera prompt."
+  },
+  "cameraAccessDeniedBody": "The camera is off for CapyWake. You can turn it on in Settings.",
+  "@cameraAccessDeniedBody": {
+    "description": "The camera was refused and only device Settings can turn it on."
+  },
+  "qrCheckpointSaveFailed": "Could not save the checkpoint. Try again.",
+  "qrCameraUnavailable": "This phone has no camera CapyWake can use, so alarms skip {game}.",
+  "@qrCheckpointSaveFailed": {
+    "description": "Saving the scanned checkpoint failed."
+  },
+  "@qrCameraUnavailable": {
+    "description": "The phone has no usable camera (none, or parental controls). {game} is the game's name.",
+    "placeholders": {
+      "game": {
+        "type": "String",
+        "example": "QR Treasure Hunt"
+      }
+    }
   }
 }

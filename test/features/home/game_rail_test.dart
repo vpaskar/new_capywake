@@ -52,12 +52,11 @@ Future<void> _pumpRail(
 
 /// The Home rail has no blocked game left; this one keeps that state tested.
 const _blocked = GameEntry(
-  id: 'qr_treasure_hunt',
+  id: 'unbuilt_blocked',
   nameKey: 'gameQrTreasureHunt',
   tileAssetId: 'tile.qrTreasureHunt',
   availability: GameAvailability.blocked,
   screenReaderSolvable: false,
-  blockedReason: GameBlockedReason.camera,
 );
 
 void main() {

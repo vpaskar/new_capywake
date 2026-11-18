@@ -6,7 +6,6 @@ import 'package:capywake/core/alarm_sound.dart' show AlarmSoundCatalog;
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
-import 'package:capywake/data/motion/motion_providers.dart';
 import 'package:capywake/data/providers.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/capy_card.dart';
@@ -22,7 +21,7 @@ import 'package:capywake/features/alarms/edit/motion_check_card.dart';
 import 'package:capywake/features/alarms/edit/time_stepper_field.dart';
 import 'package:capywake/features/alarms/edit/weekday_chip_row.dart';
 import 'package:capywake/features/games/game_names.dart';
-import 'package:capywake/features/games/step_access_prompt.dart';
+import 'package:capywake/features/games/game_setup_offer.dart';
 import 'package:capywake/features/puzzle/puzzle_labels.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -308,12 +307,7 @@ class _FormState extends ConsumerState<_Form> {
       onGameChanged: (id, {required enabled}) {
         setState(() => _draft = _draft.withGameInPool(id, enabled: enabled));
         unawaited(
-          offerStepAccess(
-            context,
-            sensor: ref.read(stepSensorProvider),
-            gameId: id,
-            enabled: enabled,
-          ),
+          offerGameSetup(context, ref, gameId: id, enabled: enabled),
         );
       },
       onFollowDefaultsChanged: ({required follow}) => setState(

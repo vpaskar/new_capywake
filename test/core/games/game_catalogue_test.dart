@@ -3,11 +3,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('GameCatalogue', () {
-    test('exactly the nine games built so far are playable', () {
+    test('all ten games are playable', () {
       expect(
         GameCatalogue.playable.map((e) => e.id),
         [
           'step_quest',
+          'qr_treasure_hunt',
           'shake_dj',
           'catch_the_capy',
           'find_the_impostor',
@@ -24,10 +25,24 @@ void main() {
       );
     });
 
-    test('every playable game is screen-reader solvable', () {
-      for (final entry in GameCatalogue.playable) {
-        expect(entry.screenReaderSolvable, isTrue, reason: entry.id);
-      }
+    test(
+      'every playable game is screen-reader solvable but the camera one',
+      () {
+        for (final entry in GameCatalogue.playable) {
+          expect(
+            entry.screenReaderSolvable,
+            !entry.usesCamera,
+            reason: '${entry.id}: a camera cannot be aimed by ear',
+          );
+        }
+      },
+    );
+
+    test('only QR Treasure Hunt uses the camera', () {
+      expect(
+        GameCatalogue.entries.where((e) => e.usesCamera).map((e) => e.id),
+        ['qr_treasure_hunt'],
+      );
     });
 
     test('byId finds an entry and returns null for an unknown id', () {
@@ -87,7 +102,6 @@ void main() {
     test('Step Quest is playable, solvable by ear, and counts steps', () {
       final entry = GameCatalogue.byId('step_quest')!;
       expect(entry.availability, GameAvailability.playable);
-      expect(entry.blockedReason, isNull);
       expect(entry.screenReaderSolvable, isTrue);
       expect(entry.countsSteps, isTrue);
     });
@@ -99,55 +113,12 @@ void main() {
       );
     });
 
-    test('QR Treasure Hunt is blocked on the camera', () {
-      final entry = GameCatalogue.entries.firstWhere(
-        (e) => e.id == 'qr_treasure_hunt',
-      );
-      expect(entry.availability, GameAvailability.blocked);
-      expect(entry.blockedReason, GameBlockedReason.camera);
-    });
-
-    test('only QR Treasure Hunt is blocked', () {
-      final blocked = GameCatalogue.entries
-          .where((e) => e.availability == GameAvailability.blocked)
-          .map((e) => e.id);
-      expect(blocked, ['qr_treasure_hunt']);
-    });
-
-    test('a blocked entry carries a reason and others do not', () {
-      for (final entry in GameCatalogue.entries) {
-        expect(
-          entry.blockedReason != null,
-          entry.availability == GameAvailability.blocked,
-          reason: entry.id,
-        );
-      }
-    });
-
-    test('constructing a blocked entry without a reason throws', () {
+    test('no game is blocked any more', () {
       expect(
-        () => GameEntry(
-          id: 'x',
-          nameKey: 'x',
-          tileAssetId: 'x',
-          availability: GameAvailability.blocked,
-          screenReaderSolvable: false,
+        GameCatalogue.entries.where(
+          (e) => e.availability == GameAvailability.blocked,
         ),
-        throwsA(isA<AssertionError>()),
-      );
-    });
-
-    test('constructing a non-blocked entry with a reason throws', () {
-      expect(
-        () => GameEntry(
-          id: 'x',
-          nameKey: 'x',
-          tileAssetId: 'x',
-          availability: GameAvailability.comingSoon,
-          screenReaderSolvable: false,
-          blockedReason: GameBlockedReason.camera,
-        ),
-        throwsA(isA<AssertionError>()),
+        isEmpty,
       );
     });
 
