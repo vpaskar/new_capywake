@@ -41,3 +41,12 @@ phone; Capy Rocket was cut to Catch the Capy's height (424 pt). On the
 reference phone (393 × 852) every game clears the clock, tested. Options for
 the owner: (a) keep; (b) shrink game fields on short screens; (c) a smaller
 clock on short screens while a game is up.
+
+## 2026-11-18 — Phase 13 — The chain could not start Phase 14 by itself
+
+`start_session` is refused to a session that was itself started by another
+session. Meanwhile: Phase 13 is committed (ea784fe, 52b8c5d), `Current phase:
+14`, and a proposal card for Phase 14 sits in the Phase 13 session. Start it
+there with one click, or start a new session with the command at the top of
+`docs/sessions/next.md`. If the owner wants the chain to run hands-off, each
+phase must be started from the owner's own session, not from a linked one.

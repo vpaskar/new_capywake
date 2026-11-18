@@ -1,5 +1,13 @@
 # Next session — start here
 
+> **Chain paused after Phase 13 (2026-11-18).** The Phase 13 session could not
+> start Phase 14: the app refuses `start_session` from a session that another
+> session started. To continue, start a new session in this folder (Opus 5.5,
+> high effort) with: **"Run Phase 14 — Authored games (Morning Sort, Find the
+> Impostor), following the unattended-chain brief"** — the full brief is the
+> Phase 13 session's task, with the phase number and name updated. A proposal
+> card for it is waiting in the Phase 13 session.
+
 ## State
 
 Phases 00–13 are **done** and committed (13 ran unattended, 2026-11-18).
