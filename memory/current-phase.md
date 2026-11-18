@@ -21,8 +21,12 @@ store readiness). Not blocked.**
   Riverpod pauses it (the shell's alarm arming).
 - **Art:** check on cream *and* dark; `outlineCoverage` gates masked outlines.
 - **Disabled rows are full ink** (mockup); the toggle carries the state.
+- **Win art is picked per win** (`WinArt.forSeed`): own pose, shared cheer
+  or the trophy loop. A new win art joins the enum.
+- **Capturing an animation:** pump, wait in real time (`runAsync`), pump —
+  a live binding's animation clock starts on its first pumped frame.
 
 ## Open for the owner
 
-Loops G43–G47 (`ART_REQUESTS.md` #15–16); white on orange/green below
+Loops G43–G46 (`ART_REQUESTS.md` #15); G47 closed; white on orange/green below
 contrast; everything Phase 17 listed.

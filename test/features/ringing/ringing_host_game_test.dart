@@ -9,6 +9,7 @@ import 'package:capywake/core/games/morning_sort.dart';
 import 'package:capywake/core/games/qr_checkpoint.dart';
 import 'package:capywake/core/games/shake_dj.dart';
 import 'package:capywake/core/games/step_quest.dart';
+import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/motion/fake_motion_sensor.dart';
 import 'package:capywake/core/motion/fake_step_sensor.dart';
@@ -272,6 +273,22 @@ void main() {
     await tester.pump(RingingWinOverlay.visibleFor);
     await tester.pumpAndSettle();
     expect(find.byType(RingingWinOverlay), findsNothing);
+  });
+
+  testWidgets("the celebration's art is picked from the ring's seed", (
+    tester,
+  ) async {
+    final app = await ring(tester, gamesOnly('catch_the_capy'));
+    await win(tester);
+
+    final rows = await app.repository.listOccurrencesForAlarm('a1');
+    final ring1 = rows.single;
+    expect(
+      tester.widget<RingingWinOverlay>(find.byType(RingingWinOverlay)).art,
+      WinArt.forSeed(Object.hash(ring1.id, ring1.snoozeCount)),
+    );
+    await tester.pump(RingingWinOverlay.visibleFor);
+    await tester.pumpAndSettle();
   });
 
   testWidgets('Close ends the celebration early', (tester) async {

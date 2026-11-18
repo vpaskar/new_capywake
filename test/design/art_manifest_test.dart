@@ -97,6 +97,7 @@ void main() {
         ...CapyArt.gameCapys,
         ...CapyArt.winPoses,
         ...CapyArt.winFrames,
+        CapyArt.celebrationLoop,
       ];
       for (final asset in stickers) {
         final decoded = img.decodeImage(File(asset.path).readAsBytesSync())!;
@@ -109,6 +110,13 @@ void main() {
               'was probably removed with the background.',
         );
       }
+    });
+
+    test('the celebration loop is a 36-frame animation', () {
+      final decoder = img.WebPDecoder(
+        File(CapyArt.celebrationLoop.path).readAsBytesSync(),
+      );
+      expect(decoder.numFrames(), 36);
     });
 
     test("the cloud edge's geometry matches SceneHeader's constants", () {

@@ -370,6 +370,7 @@ Future<void> main() async {
   _sliceSheets();
   _sliceFrameSheets();
   _importFrameFolders();
+  _importLoops();
 
   stdout.writeln(
     '\n$_files files, ${(_bytes / 1024).toStringAsFixed(0)} KB '
@@ -680,6 +681,73 @@ void _importFrameFolders() {
       _write('$_dst/$name', frame, lossless: false, quality: 90);
     }
   }
+}
+
+/// A supplied loop's PNG frames, encoded as one animated WebP.
+const _loops = {
+  'animations/05_celebration/frames': 'animations/loop_celebration.webp',
+};
+
+const loopFrameMs = 80;
+
+void _importLoops() {
+  final target = (ArtUse.animation.renderBoxPt * devicePixelRatio).ceil();
+  for (final MapEntry(key: from, value: to) in _loops.entries) {
+    final dir = Directory('$_src/$from');
+    if (!dir.existsSync()) {
+      _problems.add('MISSING  $from');
+      continue;
+    }
+    final files =
+        dir
+            .listSync()
+            .whereType<File>()
+            .where((f) => f.path.endsWith('.png'))
+            .toList()
+          ..sort((a, b) => a.path.compareTo(b.path));
+    final frames = [
+      for (final f in files)
+        normalizeAlpha(img.decodeImage(f.readAsBytesSync())!),
+    ];
+    final audit = auditAnimation(frames);
+    if (!audit.sameCanvas) _problems.add('MIXED CANVAS  $to');
+    if (audit.ghostPixels > 0) _problems.add('GHOSTS REMAIN  $to');
+    if (audit.edgeContactPixels > 20) {
+      _problems.add('SEVERED CROP?  $to (${audit.edgeContactPixels} edge px)');
+    }
+    if (audit.width < target) {
+      _problems.add('UNDER-RESOLVED $to (${audit.width}px < ${target}px)');
+    }
+    if (audit.outlineCoverage < minOutlineCoverage) {
+      _problems.add('OUTLINE MASKED?  $to (${audit.outlineCoverage})');
+    }
+    _writeLoop('$_dst/$to', frames);
+  }
+}
+
+void _writeLoop(String path, List<img.Image> frames) {
+  final out = File(path)..parent.createSync(recursive: true);
+  final tmp = Directory.systemTemp.createTempSync('capy_loop');
+  final args = ['-loop', '0', '-min_size'];
+  for (var i = 0; i < frames.length; i++) {
+    final png = File('${tmp.path}/f$i.png')
+      ..writeAsBytesSync(img.encodePng(frames[i]));
+    args.addAll(['-lossy', '-q', '82', '-d', '$loopFrameMs', png.path]);
+  }
+  args.addAll(['-o', out.path]);
+  final r = Process.runSync('img2webp', args);
+  tmp.deleteSync(recursive: true);
+  if (r.exitCode != 0) {
+    _problems.add('ENCODE FAILED  $path: ${r.stderr}');
+    return;
+  }
+  final size = out.lengthSync();
+  _bytes += size;
+  _files++;
+  stdout.writeln(
+    '  ${path.padRight(46)} ${frames.first.width}x${frames.first.height} '
+    '${frames.length} frames ${(size / 1024).toStringAsFixed(0)}KB',
+  );
 }
 
 ArtRect? _inkBounds(img.Image image) {

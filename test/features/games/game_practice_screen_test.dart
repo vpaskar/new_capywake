@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:capywake/core/camera/fake_camera_access.dart';
 import 'package:capywake/core/games/qr_checkpoint.dart';
+import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/motion/fake_step_sensor.dart';
 import 'package:capywake/core/motion/step_sensor.dart';
@@ -104,6 +105,22 @@ void main() {
     await tester.tap(find.text('Play again'));
     await tester.pumpAndSettle();
     expect(find.text('0 / 5'), findsOneWidget);
+  });
+
+  testWidgets("each practice win picks its art from that round's seed", (
+    tester,
+  ) async {
+    await _pump(tester, 'catch_the_capy');
+    final seen = <WinArt>{};
+    for (var round = 0; round < 6; round++) {
+      await _catchAll(tester);
+      final art = tester.widget<GameWinPanel>(find.byType(GameWinPanel)).art;
+      expect(art, WinArt.forSeed(round));
+      seen.add(art);
+      await tester.tap(find.text('Play again'));
+      await tester.pumpAndSettle();
+    }
+    expect(seen.length, greaterThan(1), reason: 'the art varies across wins');
   });
 
   testWidgets('uses the user difficulty and writes nothing', (tester) async {

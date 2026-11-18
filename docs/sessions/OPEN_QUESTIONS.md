@@ -191,3 +191,7 @@ for large text, in both themes. It is the palette recorded in Phase 02 and a
 Tier A choice, so it is counted (and pinned per screen in
 `test/design/text_contrast_test.dart`), not retuned. Cocoa on orange passes
 (7.9:1) if you want the labels dark.
+
+**Answered 2026-11-18 (owner):** the trophy loop goes in — every win picks one
+of the game's own pose, the shared cheer, or the trophy at random (by the
+ring's or practice round's seed). The trophy Capy has no nightcap (Tier B).

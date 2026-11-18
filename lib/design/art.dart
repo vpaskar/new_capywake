@@ -359,6 +359,13 @@ abstract final class CapyArt {
     ArtUse.wordmark,
   );
 
+  /// Animated WebP loops; frame 0 is the still shown when motion is off.
+  static const celebrationLoop = ArtAsset(
+    'loop.celebration',
+    'assets/art/animations/loop_celebration.webp',
+    ArtUse.animation,
+  );
+
   static List<ArtAsset> get all => [
     ...scenes,
     ...tiles,
@@ -370,6 +377,7 @@ abstract final class CapyArt {
     ...thumbnails,
     ...winFrames,
     ...winPoses,
+    celebrationLoop,
     ...puzzleIcons,
     meadowFooter,
     cloudEdge,

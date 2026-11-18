@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:image/image.dart' as img;
 import 'package:meta/meta.dart';
 
@@ -182,6 +184,47 @@ double outlineCoverage(img.Image image) {
     }
   }
   return edge == 0 ? 1 : outlined / edge;
+}
+
+/// An animation's frames audited together: one canvas, and the worst
+/// frame's ghosts, edge contact and outline coverage.
+@immutable
+class AnimationAuditResult {
+  const AnimationAuditResult({
+    required this.frameCount,
+    required this.sameCanvas,
+    required this.width,
+    required this.ghostPixels,
+    required this.edgeContactPixels,
+    required this.outlineCoverage,
+  });
+
+  final int frameCount;
+  final bool sameCanvas;
+  final int width;
+  final int ghostPixels;
+  final int edgeContactPixels;
+  final double outlineCoverage;
+}
+
+AnimationAuditResult auditAnimation(List<img.Image> frames) {
+  var ghosts = 0;
+  var edge = 0;
+  var coverage = 1.0;
+  for (final frame in frames) {
+    final audit = auditImage(frame);
+    ghosts = math.max(ghosts, audit.ghostPixels);
+    edge = math.max(edge, audit.edgeContactPixels);
+    coverage = math.min(coverage, outlineCoverage(frame));
+  }
+  return AnimationAuditResult(
+    frameCount: frames.length,
+    sameCanvas: frames.map((f) => (f.width, f.height)).toSet().length <= 1,
+    width: frames.isEmpty ? 0 : frames.first.width,
+    ghostPixels: ghosts,
+    edgeContactPixels: edge,
+    outlineCoverage: coverage,
+  );
 }
 
 img.Image trimToInk(img.Image image) {

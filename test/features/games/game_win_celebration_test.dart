@@ -1,4 +1,5 @@
 import 'package:capywake/core/games/game_catalogue.dart';
+import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
@@ -76,6 +77,40 @@ void main() {
     });
   }
 
+  bool loopTicks(WidgetTester tester) => TickerMode.valuesOf(
+    tester.element(find.byKey(const ValueKey('win-loop'))),
+  ).enabled;
+
+  testWidgets('a loop plays while motion is on', (tester) async {
+    await pumpInApp(
+      tester,
+      const GameWinCelebration(
+        semanticLabel: label,
+        loop: CapyArt.celebrationLoop,
+      ),
+    );
+    expect(_shownFrame(tester), CapyArt.celebrationLoop.path);
+    expect(loopTicks(tester), isTrue);
+  });
+
+  for (final (name, reduce, reader) in [
+    ('reduce-motion', true, false),
+    ('a screen reader', false, true),
+  ]) {
+    testWidgets('under $name a loop holds its first frame', (tester) async {
+      await pumpInApp(
+        tester,
+        const GameWinCelebration(
+          semanticLabel: label,
+          loop: CapyArt.celebrationLoop,
+        ),
+        disableAnimations: reduce,
+        accessibleNavigation: reader,
+      );
+      expect(loopTicks(tester), isFalse);
+    });
+  }
+
   testWidgets('is announced as an image with its label', (tester) async {
     final handle = tester.ensureSemantics();
     await pumpInApp(
@@ -91,6 +126,31 @@ void main() {
 }
 
 void winPanelTests() {
+  testWidgets("the cheer replaces even a game's own pose", (tester) async {
+    await pumpInApp(
+      tester,
+      const GameWinPanel(
+        gameId: 'catch_the_capy',
+        subline: 's',
+        art: WinArt.cheer,
+      ),
+    );
+    expect(_shownFrame(tester), CapyArt.winFrames.first.path);
+    expect(find.text('Nice catch!'), findsOneWidget);
+  });
+
+  testWidgets('the trophy is the celebration loop', (tester) async {
+    await pumpInApp(
+      tester,
+      const GameWinPanel(
+        gameId: 'catch_the_capy',
+        subline: 's',
+        art: WinArt.trophy,
+      ),
+    );
+    expect(_shownFrame(tester), CapyArt.celebrationLoop.path);
+  });
+
   testWidgets('a game with a pose springs it in, then holds it', (
     tester,
   ) async {

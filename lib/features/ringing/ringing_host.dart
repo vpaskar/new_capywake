@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:capywake/core/games/game_catalogue.dart';
 import 'package:capywake/core/games/game_challenge.dart';
 import 'package:capywake/core/games/wake_challenge.dart';
+import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/core/models/models.dart';
 import 'package:capywake/core/puzzle/puzzle_round.dart';
 import 'package:capywake/core/puzzle/puzzle_settings.dart';
@@ -54,7 +55,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
   int _roundSnoozeCount = -1;
   WakeChallenge? _challenge;
   GameChallenge? _gameProgress;
-  ({Timer timer, String gameId})? _win;
+  ({Timer timer, String gameId, WinArt art})? _win;
   Timer? _readinessWait;
   bool _readinessGaveUp = false;
 
@@ -66,13 +67,18 @@ class _RingingHostState extends ConsumerState<RingingHost> {
   }
 
   /// Stops the alarm first, then shows the win for a moment.
-  void _onGameWon(RingingController controller, String gameId) {
+  void _onGameWon(
+    RingingController controller,
+    String gameId,
+    RingingSession session,
+  ) {
     unawaited(controller.dismiss());
     _win?.timer.cancel();
     setState(() {
       _win = (
         timer: Timer(RingingWinOverlay.visibleFor, _closeWin),
         gameId: gameId,
+        art: WinArt.forSeed(_ringSeed(session)),
       );
     });
   }
@@ -106,6 +112,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
           Positioned.fill(
             child: RingingWinOverlay(
               gameId: win.gameId,
+              art: win.art,
               onClose: _closeWin,
             ),
           ),
@@ -187,7 +194,7 @@ class _RingingHostState extends ConsumerState<RingingHost> {
               seed: PuzzleRound.advanceSeed(_ringSeed(session)),
               difficulty: settings.difficulty,
               onProgress: (progress) => _onGameProgress(progress, settings),
-              onCompleted: () => _onGameWon(controller, gameId),
+              onCompleted: () => _onGameWon(controller, gameId, session),
               reduceMotion: reduceMotion,
               motion: ref.watch(motionSensorProvider),
               steps: ref.watch(stepSensorProvider),

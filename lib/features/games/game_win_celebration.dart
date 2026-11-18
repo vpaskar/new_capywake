@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:capywake/core/games/game_catalogue.dart';
+import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/design/art.dart';
 import 'package:capywake/design/theme.dart';
 import 'package:capywake/design/tokens.dart';
@@ -8,19 +9,27 @@ import 'package:capywake/features/games/game_names.dart';
 import 'package:capywake/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
 
-/// A finished game's art, headline and a calm [subline]: the game's own pose
-/// when it has one, else the shared animation.
+/// A finished game's art, headline and a calm [subline]. [art] picks the
+/// game's own pose (the cheer when it has none), the cheer or the trophy.
 class GameWinPanel extends StatelessWidget {
-  const GameWinPanel({required this.gameId, required this.subline, super.key});
+  const GameWinPanel({
+    required this.gameId,
+    required this.subline,
+    this.art = WinArt.pose,
+    super.key,
+  });
 
   final String gameId;
   final String subline;
+  final WinArt art;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final poseId = GameCatalogue.byId(gameId)?.winPoseAssetId;
+    final poseId = art == WinArt.pose
+        ? GameCatalogue.byId(gameId)?.winPoseAssetId
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -29,6 +38,7 @@ class GameWinPanel extends StatelessWidget {
           child: GameWinCelebration(
             semanticLabel: l10n.gameWinImageLabel,
             pose: poseId == null ? null : CapyArt.byId(poseId),
+            loop: art == WinArt.trophy ? CapyArt.celebrationLoop : null,
             size: poseId == null
                 ? GameWinCelebration.defaultSize
                 : ArtUse.winPose.renderBoxPt,
@@ -73,13 +83,14 @@ class GameWinPanel extends StatelessWidget {
   }
 }
 
-/// The win art. A still [pose] springs in; [frames] play twice, then rest.
-/// Under reduce-motion or a screen reader it is one still frame.
+/// The win art. A still [pose] springs in; [frames] play twice, then rest; a
+/// [loop] plays on. Under reduce-motion or a screen reader it is one still.
 class GameWinCelebration extends StatefulWidget {
   const GameWinCelebration({
     required this.semanticLabel,
     this.pose,
     this.frames,
+    this.loop,
     this.size = defaultSize,
     super.key,
   });
@@ -87,6 +98,7 @@ class GameWinCelebration extends StatefulWidget {
   final String semanticLabel;
   final ArtAsset? pose;
   final List<ArtAsset>? frames;
+  final ArtAsset? loop;
   final double size;
 
   static const defaultSize = 120.0;
@@ -107,6 +119,7 @@ class _GameWinCelebrationState extends State<GameWinCelebration>
         : GameWinCelebration.entrance,
   );
   bool _started = false;
+  bool _still = false;
 
   List<ArtAsset> get _frames =>
       widget.pose != null ? [widget.pose!] : widget.frames ?? CapyArt.winFrames;
@@ -116,13 +129,14 @@ class _GameWinCelebrationState extends State<GameWinCelebration>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _still =
+        MediaQuery.disableAnimationsOf(context) ||
+        MediaQuery.accessibleNavigationOf(context);
+    if (widget.loop != null) return;
     for (final frame in _frames) {
       unawaited(precacheImage(AssetImage(frame.path), context));
     }
-    final still =
-        MediaQuery.disableAnimationsOf(context) ||
-        MediaQuery.accessibleNavigationOf(context);
-    if (still) {
+    if (_still) {
       _controller
         ..stop()
         ..value = _rest;
@@ -152,7 +166,11 @@ class _GameWinCelebrationState extends State<GameWinCelebration>
         dimension: widget.size,
         child: AnimatedBuilder(
           animation: _controller,
-          builder: (context, _) => widget.pose == null ? _frame() : _springIn(),
+          builder: (context, _) => switch (widget) {
+            GameWinCelebration(:final loop?) => _loop(loop),
+            GameWinCelebration(pose: null) => _frame(),
+            _ => _springIn(),
+          },
         ),
       ),
     );
@@ -170,6 +188,18 @@ class _GameWinCelebrationState extends State<GameWinCelebration>
       excludeFromSemantics: true,
     );
   }
+
+  /// The WebP's own frames drive it; `TickerMode` holds it on frame 0, which
+  /// `Image` alone does only for reduce-motion, not a screen reader.
+  Widget _loop(ArtAsset loop) => TickerMode(
+    enabled: !_still,
+    child: Image.asset(
+      loop.path,
+      key: const ValueKey('win-loop'),
+      gaplessPlayback: true,
+      excludeFromSemantics: true,
+    ),
+  );
 
   Widget _springIn() {
     final t = _controller.value;

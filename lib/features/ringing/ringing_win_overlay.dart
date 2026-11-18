@@ -1,3 +1,4 @@
+import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/design/capy_button.dart';
 import 'package:capywake/design/tokens.dart';
 import 'package:capywake/features/games/game_win_celebration.dart';
@@ -10,10 +11,12 @@ class RingingWinOverlay extends StatelessWidget {
   const RingingWinOverlay({
     required this.gameId,
     required this.onClose,
+    this.art = WinArt.pose,
     super.key,
   });
 
   final String gameId;
+  final WinArt art;
   final VoidCallback onClose;
 
   static const visibleFor = Duration(milliseconds: 2600);
@@ -32,6 +35,7 @@ class RingingWinOverlay extends StatelessWidget {
               const Spacer(),
               GameWinPanel(
                 gameId: gameId,
+                art: art,
                 subline: l10n.ringingGameWonTitle,
               ),
               const Spacer(),

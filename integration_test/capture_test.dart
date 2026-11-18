@@ -326,7 +326,13 @@ Future<void> main() async {
           await precacheImage((element.widget as Image).image, element);
         }
       });
-      await tester.pump(GameWinCelebration.entrance);
+      // A live binding draws only pumped frames, and an animation's clock
+      // starts on its first: draw it, wait in real time, then draw the end.
+      await tester.pump();
+      await tester.runAsync(
+        () => Future<void>.delayed(GameWinCelebration.entrance * 2),
+      );
+      await tester.pump();
       await binding.takeScreenshot('win_$game');
       binding.reportData = <String, dynamic>{
         ...?binding.reportData,

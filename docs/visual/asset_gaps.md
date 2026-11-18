@@ -1137,3 +1137,10 @@ sticker's silhouette edge with dark ink within 3 px. Every bundled sticker
 (mascots, game Capys, win poses, win frames) measures 0.30 or more; the floor
 is 0.25; `art_manifest_test` enforces it. It catches G44 and G46; G43 and G45
 still need eyes. **Needed:** `ART_REQUESTS.md` #15 and #16.
+
+**G47 closed (owner, 2026-11-18):** "show all of them in random order". Each
+win now picks one of three by seed (`WinArt.forSeed`): the game's own pose, the
+shared 8-frame cheer, or `05_celebration` as `animations/loop_celebration.webp`
+(36 frames × 80 ms, 360², lossy colour + lossless alpha, **320 KB**; audited per
+frame: no ghosts, edge contact 8 px, outline coverage ≥ 0.25). **Tier B:** its
+Capy wears no nightcap.

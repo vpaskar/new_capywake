@@ -71,3 +71,19 @@ Removing the disabled-row fade changes no geometry: worst delta is card 4 top
 everything else within ±3.6; the compare reports the hero edge and nav bar
 `absent`, its known blind spots. The tracker's earlier "card 3 bottom +4.8,
 meadow +10.0" now read −2.2 and +0.4.
+
+## Follow-up (owner, same day): every win picks its art
+
+Owner: "show all of them in random order". `WinArt.forSeed` (pure, uniform —
+checked over 3,000 sequential and 30,000 random-id seeds) picks the game's own
+pose, the shared cheer or the trophy loop per win, from the ring's seed (a
+random occurrence id) or the practice round's. The trophy is
+`animations/loop_celebration.webp` (36 × 80 ms, 320 KB, audited per frame;
+art budget still inside). `TickerMode` holds it on frame 0 under reduce-motion
+**and** a screen reader. Ten device captures show all three kinds.
+
+**Harness defect found on the way:** three win captures (QR, Step Quest, Tilt
+Maze) had been taken mid fade-in since Phase 16–17 — a live binding draws only
+pumped frames and an animation's clock starts on its first, so the single
+pump before the screenshot was the entrance's frame 0. The capture now pumps,
+waits in real time, pumps again.

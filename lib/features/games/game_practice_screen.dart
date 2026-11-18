@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:capywake/core/games/game_catalogue.dart';
+import 'package:capywake/core/games/win_art.dart';
 import 'package:capywake/core/permissions/device_access.dart';
 import 'package:capywake/core/puzzle/puzzle_difficulty.dart';
 import 'package:capywake/data/camera/camera_providers.dart';
@@ -140,6 +141,7 @@ class _GamePracticeScreenState extends ConsumerState<GamePracticeScreen>
         children: [
           GameWinPanel(
             gameId: entry.id,
+            art: WinArt.forSeed(_seed),
             subline: l10n.gamePracticeDoneTitle,
           ),
           const SizedBox(height: CapySpacing.lg),

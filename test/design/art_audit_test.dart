@@ -114,6 +114,41 @@ void main() {
     });
   });
 
+  group('auditAnimation', () {
+    img.Image frame({int size = 20, bool ghost = false, bool edge = false}) {
+      final im = _blank(size, size);
+      _fill(im, const ArtRect(5, 5, 14, 14), 255);
+      if (ghost) _fill(im, const ArtRect(0, 0, 0, 0), 8);
+      if (edge) _fill(im, ArtRect(0, 0, size - 1, 0), 255);
+      return im;
+    }
+
+    test('reports the worst frame on one canvas', () {
+      final result = auditAnimation([
+        frame(),
+        frame(ghost: true),
+        frame(edge: true),
+      ]);
+      expect(result.frameCount, 3);
+      expect(result.sameCanvas, isTrue);
+      expect(result.width, 20);
+      expect(result.ghostPixels, 1);
+      expect(result.edgeContactPixels, 20);
+      expect(result.outlineCoverage, lessThan(minOutlineCoverage));
+    });
+
+    test('notices a frame on another canvas', () {
+      expect(
+        auditAnimation([frame(), frame(size: 24)]).sameCanvas,
+        isFalse,
+      );
+    });
+
+    test('an empty animation has no width', () {
+      expect(auditAnimation(const []).width, 0);
+    });
+  });
+
   group('normalizeAlpha', () {
     test('clears ghosts and snaps the near-solid band', () {
       final im = _blank(6, 1)
