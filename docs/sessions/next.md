@@ -1,8 +1,7 @@
 # Next session — start here
 
-> **Phase 20 (Settings / Wake puzzle redesign) is done but uncommitted**, mixed
-> in the same files with the owner-requests session's work. First: ask the
-> owner how to commit (`docs/phases/PHASE_20_POST_REVIEW.md`).
+> **Phase 20 (Settings / Wake puzzle redesign) done, `91c8a34`**, committed
+> together with the 2026-11-18 owner requests. `Current phase: none`.
 
 > **Phase 19 done (2026-11-18). The phase plan is complete — `Current phase:
 > none`.** Start with `docs/sessions/OPEN_QUESTIONS.md` and

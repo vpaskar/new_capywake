@@ -1,8 +1,7 @@
 # Current phase
 
-**Phase 20 — Settings and Wake puzzle redesign: done, 2026-11-18, not yet
-committed** (the owner-requests session's work shares the same files; the
-owner picks the commit split). `Current phase: none`.
+**Phase 20 — Settings and Wake puzzle redesign: done, 2026-11-18, `91c8a34`**
+(one combined commit with the owner requests, owner's choice). `Current phase: none`.
 
 **2,629 tests**, analyze clean, lib 98.72% / `lib/core` 99.74% / `lib/data`
 91.20%. Settings' Tier A reference is now `01_SETTINGS_REFINED.png`

@@ -549,7 +549,7 @@ signing, `1.0.0+1`, store drafts in `docs/release/`.
 never fired; `ring_lifecycle_test` failed twice, then passed 9 times — cause not
 found.
 
-## Phase 20 — Settings and Wake puzzle redesign (2026-11-18, uncommitted)
+## Phase 20 — Settings and Wake puzzle redesign (2026-11-18, `91c8a34`)
 
 Owner's five-mockup package (`reference/01_REFERENCES/screens/settings_redesign/`).
 Routes `/settings/puzzle{,/games,/types,/advanced}`; old chooser deleted.

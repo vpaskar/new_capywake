@@ -59,7 +59,6 @@ gates pass; coverage lib 98.72%, `lib/core` 99.74%, `lib/data` 91.20%.
 iOS simulator only (iPhone 14 Pro, iOS 16.4). **Android not run.** No real
 device.
 
-## Not done
+## Commit
 
-- **Not committed:** this checkout also holds the "Home stats removal"
-  session's uncommitted work in the same files (P6).
+`91c8a34`, one combined commit with the owner requests (owner's choice, P6).
